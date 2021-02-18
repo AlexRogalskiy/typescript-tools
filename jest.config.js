@@ -1,12 +1,12 @@
 module.exports = {
-    roots: [ '<rootDir>/tests/' ],
+    roots: ['<rootDir>/tests/'],
     verbose: true,
     clearMocks: true,
-    moduleFileExtensions: [ 'ts', 'tsx', 'js', 'jsx', 'json', 'node' ],
+    moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
     testEnvironment: 'node',
-    testMatch: [ '**/*.test.ts', '**/*.test.js', '**/__tests__/**/?(*.)+(spec|test).ts' ],
+    testMatch: ['**/*.test.ts', '**/*.test.js', '**/__tests__/**/?(*.)+(spec|test).ts'],
     testRunner: 'jest-circus/runner',
-    testPathIgnorePatterns: [ '/node_modules/', '/__fixtures__/' ],
+    testPathIgnorePatterns: ['/node_modules/', '/__fixtures__/'],
     transform: {
         '^.+\\.(js|ts)$': 'ts-jest',
     },
@@ -25,12 +25,12 @@ module.exports = {
     ],
     coverageThreshold: {
         global: {
-            branches: 4,
-            functions: 4,
-            lines: 4,
-            statements: 4,
+            branches: 0,
+            functions: 0,
+            lines: 0,
+            statements: 0,
         },
     },
     coverageDirectory: './coverage',
-    coverageReporters: [ 'json', 'lcov', 'text', 'clover', 'html' ],
+    coverageReporters: ['json', 'lcov', 'text', 'clover', 'html'],
 }
