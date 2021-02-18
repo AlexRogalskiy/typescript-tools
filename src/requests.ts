@@ -33,7 +33,7 @@ export const toBase64ImageUrl = async (imgUrl: string): Promise<string> => {
     const responseArrBuffer = await fetchImageUrl.arrayBuffer()
 
     return `data:${fetchImageUrl.headers.get('Content-Type') || 'image/png'};base64,${Buffer.from(
-        responseArrBuffer
+        responseArrBuffer,
     ).toString('base64')}`
 }
 
@@ -118,6 +118,6 @@ export const stateToQueryString = ({ query, selectedTags, sort, page }): any => 
             encode: false,
             arrayFormat: 'repeat',
             skipNulls: true,
-        }
+        },
     )
 }

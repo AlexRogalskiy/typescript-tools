@@ -1,6 +1,7 @@
 name: Stale issues and pull requests
 
 on:
+  # every day at 0:00 UTC
   schedule:
     - cron: "0 0 * * *"
 
@@ -8,6 +9,7 @@ jobs:
   stale:
     runs-on: ubuntu-latest
     steps:
+      - name: Mark issue stale
       - uses: actions/stale@v3
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
