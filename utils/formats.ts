@@ -53,3 +53,60 @@ export function prettyBytes(number: number, options?): string {
 
     return `${prefix + numberString} ${unit}`
 }
+
+// Format a URL to be displayed, removing `http://` and trailing `/`
+export const formatUrl = (url: string): string => {
+    const result = url.replace(/\/$/, '').toLowerCase()
+    return result.replace(/^https?:\/\/(.*)$/, '$1')
+}
+
+//    decimal=Math.round(parseInt(valNum, 16));
+//    percent=Math.round(parseInt(valNum, 16)/255*100);
+export const fromHex = (valNum: number): string => {
+    return valNum.toString(16).toUpperCase()
+}
+
+// percent=Math.round((valNum / 255) * 100)
+export const fromDecimal = (valNum: number): string => {
+    const decimalValue = Math.round(valNum)
+
+    if (valNum < 16) {
+        return `0${decimalValue.toString(16).toUpperCase()}`
+    }
+
+    return decimalValue.toString(16).toUpperCase()
+}
+
+// decimal=Math.round(valNum*255/100);
+export const fromPercent = (valNum: number): string => {
+    const decimalValue = Math.round((valNum * 255) / 100)
+
+    if (valNum < 7) {
+        return `0${decimalValue.toString(16).toUpperCase()}`
+    }
+
+    return decimalValue.toString(16).toUpperCase()
+}
+
+export const toInt = (str: string, defaultValue?: number): number | undefined => {
+    try {
+        return parseInt(str) || defaultValue
+    } catch (e) {
+        return defaultValue
+    }
+}
+
+export const toFormatString = (obj): string => {
+    return `(${objToString(obj)})`
+}
+
+const objToString = (obj): string => {
+    let str = ''
+    for (const p in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, p)) {
+            str += `${p} => ${typeof obj[p] === 'object' ? `[${objToString(obj[p])}]` : `${obj[p]},`}`
+        }
+    }
+
+    return str
+}
