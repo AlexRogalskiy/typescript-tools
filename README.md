@@ -30,6 +30,17 @@
 ## _Table of contents_
 
 <!--ts-->
+   * [<em>Justory</em>](#justory)
+      * [<em>Table of contents</em>](#table-of-contents)
+      * [<em>Description</em>](#description)
+      * [<em>Visitor stats</em>](#visitor-stats)
+      * [<em>Licensing</em>](#licensing)
+      * [<em>Authors</em>](#authors)
+      * [<em>Versioning</em>](#versioning)
+      * [<em>Contribution</em>](#contribution)
+      * [<em>Acknowledgement</em>](#acknowledgement)
+      * [<em>Forks</em>](#forks)
+      * [<em>Development Support</em>](#development-support)
 <!--te-->
 
 ## _Description_
