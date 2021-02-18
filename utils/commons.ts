@@ -2,6 +2,7 @@ import fetch from 'isomorphic-unfetch'
 import _ from 'lodash'
 import { existsSync, mkdirSync } from 'fs'
 import { join } from 'path'
+import { ConfigOptions } from '../typings/types'
 
 export const random = (max: number): number => {
     return Math.floor(Math.random() * max)
@@ -45,6 +46,7 @@ export const toInt = (str: string, defaultValue?: number): number | undefined =>
 export const randomEnum = <T>(anEnum: T): T[keyof T] => {
     const enumValues = (Object.values(anEnum) as unknown) as T[keyof T][]
     const randomIndex = random(enumValues.length)
+
     return enumValues[randomIndex]
 }
 
@@ -59,6 +61,7 @@ const objToString = (obj): string => {
             str += `${p} => ${typeof obj[p] === 'object' ? `[${objToString(obj[p])}]` : `${obj[p]},`}`
         }
     }
+
     return str
 }
 
@@ -105,6 +108,7 @@ export const composeAsync = async (...funcs) => async x =>
 export const isValidUrl = (str: string): boolean => {
     try {
         new URL(str)
+
         return true
     } catch (e) {
         return false
@@ -120,8 +124,8 @@ export const requireValidUrl = (str: string): string => {
 
 export const fetchJsonUrl = async (url: RequestInfo): Promise<string> => {
     const data = await fetch(url)
-
     const json = await data.json()
+
     if ('layout' in json) {
         if ('height' in json.layout) {
             json.layout.height = null
@@ -130,6 +134,7 @@ export const fetchJsonUrl = async (url: RequestInfo): Promise<string> => {
             json.layout.width = null
         }
     }
+
     return json
 }
 
@@ -137,6 +142,7 @@ export const toJsonUrl = (str: string): string => {
     if (isBlankString(str)) throw Error('Source URL should not be blank or empty')
     str = withHttpUrl(str)
     str = withJsonUrl(str)
+
     return str
 }
 
@@ -167,6 +173,7 @@ export const omitNull = <T>(obj: T): T => {
     Object.keys(obj)
         .filter(k => obj[k] === null || obj[k] === undefined)
         .forEach(k => delete obj[k])
+
     return obj
 }
 
@@ -184,4 +191,47 @@ export const toBoolean = (value: unknown): boolean => {
 
 export const separator = (num: number, delim = '='): string => {
     return Array(num).join(delim)
+}
+
+export const getApiRootURL = async (setup: ConfigOptions, key: string): Promise<string> => {
+    const { NODE_ENV } = process.env
+    const isLocalEnv = NODE_ENV === 'development'
+    const options = isLocalEnv ? setup.options.dev : setup.options.prod
+    if (!options[key]) throw new Error(`No API end point defined for ${key}`)
+
+    return options[key]
+}
+
+export const getTagsByCode = (tags): unknown => {
+    return tags.reduce((acc, tag) => {
+        return { ...acc, [tag.code]: { ...tag, id: tag.code } }
+    }, {})
+}
+
+//    decimal=Math.round(parseInt(valNum, 16));
+//    percent=Math.round(parseInt(valNum, 16)/255*100);
+export const fromHex = (valNum: number): string => {
+    return valNum.toString(16).toUpperCase()
+}
+
+// percent=Math.round((valNum / 255) * 100)
+export const fromDecimal = (valNum: number): string => {
+    const decimalValue = Math.round(valNum)
+
+    if (valNum < 16) {
+        return `0${decimalValue.toString(16).toUpperCase()}`
+    }
+
+    return decimalValue.toString(16).toUpperCase()
+}
+
+// decimal=Math.round(valNum*255/100);
+export const fromPercent = (valNum: number): string => {
+    const decimalValue = Math.round((valNum * 255) / 100)
+
+    if (valNum < 7) {
+        return `0${decimalValue.toString(16).toUpperCase()}`
+    }
+
+    return decimalValue.toString(16).toUpperCase()
 }

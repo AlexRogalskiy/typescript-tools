@@ -6,7 +6,7 @@ semi: false
 singleQuote: true
 quoteProps: 'consistent'
 jsxSingleQuote: false
-trailingComma: 'es5'
+trailingComma: 'es6'
 bracketSpacing: true
 jsxBracketSameLine: true
 arrowParens: 'avoid'

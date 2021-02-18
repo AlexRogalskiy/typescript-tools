@@ -122,7 +122,18 @@ export interface ImageOptions {
     readonly height: string
 }
 
+export enum BrowserProfile {
+    dev = 'dev',
+    prod = 'prod',
+}
+
+export type BrowserProfileOptions = {
+    [K in BrowserProfile]: string
+}
+
 export interface ConfigOptions {
-    readonly colorOptions: ColorOptions
-    readonly imageOptions: ImageOptions
+    /**
+     * Configuration options.
+     */
+    readonly options: BrowserProfileOptions
 }
