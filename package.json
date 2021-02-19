@@ -7,6 +7,8 @@
     "scripts": {
         "lint": "eslint --cache --fix --quiet --format codeframe --ext js,ts .",
         "reinstall": "del-cli ./node_modules ./package-lock.json ./yarn.lock",
+        "format": "prettier --write \"./src/**/*.ts\"",
+        "format:check": "prettier --check \"./src/**/*.ts\"",
         "postreinstall": "yarn setup",
         "setup": "yarn",
         "semantic-release": "semantic-release",
