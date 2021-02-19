@@ -1,7 +1,7 @@
 import { Mixins } from '../src/mixins'
 
 export namespace MixinsTest {
-    import Scale = Mixins.Scale
+    import Scale = Mixins.Scale;
 
     type GConstructor<T = {}> = new (...args: any[]) => T
     type Positionable = GConstructor<{ setPos: (x: number, y: number) => void }>;
@@ -84,4 +84,49 @@ export namespace MixinsTest2 {
             });
         });
     }
+}
+
+export namespace MixinTests3 {
+    // A decorator function which replicates the mixin pattern:
+    const Pausable = (target: typeof Player) => {
+        return class Pausable extends target {
+            shouldFreeze = false;
+        };
+    };
+
+    @Pausable
+    class Player {
+        x = 0;
+        y = 0;
+    }
+
+    // It the runtime aspect could be manually replicated via
+    // type composition or interface merging.
+    type FreezablePlayer = Player & { shouldFreeze: boolean };
+    const playerTwo = (new Player() as unknown) as FreezablePlayer;
+    playerTwo.shouldFreeze;
+}
+
+export namespace MixinTests4 {
+    function base<T>() {
+        class Base {
+            static prop: T;
+        }
+
+        return Base;
+    }
+
+    function derived<T>() {
+        class Derived extends base<T>() {
+            static anotherProp: T;
+        }
+
+        return Derived;
+    }
+
+    class Spec extends derived<string>() {
+    }
+
+    Spec.prop; // string
+    Spec.anotherProp; // string
 }
