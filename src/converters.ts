@@ -1,4 +1,4 @@
-export namespace Conversion {
+export namespace Converters {
     const regex = /^([-+]?[0-9]+(\.[0-9]+)?)(m?s)$/
 
     export const from = (cssTime: string): number => {

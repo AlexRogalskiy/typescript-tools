@@ -1,6 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
+import { Requests } from '../src/requests'
 
-import { toBase64ImageUrl } from '../src/requests'
+import toBase64ImageUrl = Requests.toBase64ImageUrl
 
 require('https').globalAgent.options.rejectUnauthorized = false
 
