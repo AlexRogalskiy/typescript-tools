@@ -11,6 +11,7 @@ bracketSpacing: true
 jsxBracketSameLine: true
 arrowParens: 'avoid'
 proseWrap: 'always'
+parser: typescript
 overrides:
   - files: '*.test.js'
     options:

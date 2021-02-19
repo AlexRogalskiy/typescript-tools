@@ -1,13 +1,14 @@
 import fetch from 'isomorphic-unfetch'
 import { parse, stringify } from 'qs'
 
-import { makeArray } from './arrays'
 import { Formats } from './formats'
 import { Strings } from './strings'
+import { Arrays } from './arrays'
 
 export namespace Requests {
     import isBlankString = Strings.isBlankString
     import toInt = Formats.toInt
+    import makeArray = Arrays.makeArray
 
     export async function fetchJSON(url: string, options?): Promise<unknown> {
         const data = await fetch(url, options)

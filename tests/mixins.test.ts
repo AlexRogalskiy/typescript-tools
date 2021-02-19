@@ -1,6 +1,8 @@
+import { describe, test } from '@jest/globals'
+
 import { Mixins } from '../src/mixins'
 
-export namespace MixinsTest {
+export namespace Mixins_Test {
     import Scale = Mixins.Scale;
 
     type GConstructor<T = {}> = new (...args: any[]) => T
@@ -19,14 +21,6 @@ export namespace MixinsTest {
         }
     }
 
-    // Compose a new class from the Sprite class,
-    // with the Mixin Scale applier:
-    const EightBitSprite = Scale(Sprite);
-
-    const flappySprite = new EightBitSprite("Bird");
-    flappySprite.setScale(0.8);
-    console.log(flappySprite.scale);
-
     // @ts-ignore
     const Jumpable = <TBase extends Positionable>(Base: TBase) => {
         return class Jumpable extends Base {
@@ -38,9 +32,23 @@ export namespace MixinsTest {
             }
         };
     }
+
+    describe("Test type-based mixin utils", () => {
+        test('it should be a valid type-based property',
+            async () => {
+                // Compose a new class from the Sprite class,
+                // with the Mixin Scale applier:
+                const EightBitSprite = Scale(Sprite);
+
+                const flappySprite = new EightBitSprite("Bird");
+                flappySprite.setScale(0.8);
+                console.log(flappySprite.scale);
+            }
+        )
+    })
 }
 
-export namespace MixinsTest2 {
+export namespace Mixins_Test2 {
     // Each mixin is a traditional ES class
     class Jumpable {
         jump() {
@@ -67,10 +75,6 @@ export namespace MixinsTest2 {
     // the JS at runtime
     applyMixins(Sprite, [Jumpable, Duckable]);
 
-    let player = new Sprite();
-    player.jump();
-    console.log(player.x, player.y);
-
     // This can live anywhere in your codebase:
     function applyMixins(derivedCtor: any, constructors: any[]) {
         constructors.forEach((baseCtor) => {
@@ -84,9 +88,19 @@ export namespace MixinsTest2 {
             });
         });
     }
+
+    describe("Test class-based mixin utils", () => {
+        test('it should be a valid class-based property',
+            async () => {
+                let player = new Sprite();
+                player.jump();
+                console.log(player.x, player.y);
+            }
+        )
+    })
 }
 
-export namespace MixinTests3 {
+export namespace Mixin_Tests3 {
     // A decorator function which replicates the mixin pattern:
     const Pausable = (target: typeof Player) => {
         return class Pausable extends target {
@@ -100,11 +114,18 @@ export namespace MixinTests3 {
         y = 0;
     }
 
-    // It the runtime aspect could be manually replicated via
-    // type composition or interface merging.
-    type FreezablePlayer = Player & { shouldFreeze: boolean };
-    const playerTwo = (new Player() as unknown) as FreezablePlayer;
-    playerTwo.shouldFreeze;
+    describe("Test decorator-based mixin utils", () => {
+        test('it should be a valid decorator-based property',
+            async () => {
+                // It the runtime aspect could be manually replicated via
+                // type composition or interface merging.
+                type FreezablePlayer = Player & { shouldFreeze: boolean };
+                const playerTwo = (new Player() as unknown) as FreezablePlayer;
+
+                console.log(playerTwo.shouldFreeze)
+            }
+        )
+    })
 }
 
 export namespace MixinTests4 {
@@ -127,6 +148,15 @@ export namespace MixinTests4 {
     class Spec extends derived<string>() {
     }
 
-    Spec.prop; // string
-    Spec.anotherProp; // string
+    describe("Test function-based mixin utils", () => {
+        test('it should be a valid function-based property',
+            async () => {
+                Spec.prop = 'test property'
+                Spec.anotherProp = 'test another property'
+
+                console.log(Spec.prop)
+                console.log(Spec.anotherProp)
+            }
+        )
+    })
 }
