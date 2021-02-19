@@ -39,7 +39,9 @@
         "noImplicitThis": true,
         "alwaysStrict": true,
         "strictNullChecks": true,
-        "strictFunctionTypes": false
+        "strictFunctionTypes": false,
+        "noEmitOnError": true,
+        "preserveConstEnums": true
     },
     "exclude": [
         "node_modules",
