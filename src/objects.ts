@@ -22,4 +22,8 @@ export namespace Objects {
 
         return obj
     }
+
+    export const isBuffer = (value): boolean => {
+        return value && value.buffer instanceof ArrayBuffer && value.byteLength !== undefined
+    }
 }

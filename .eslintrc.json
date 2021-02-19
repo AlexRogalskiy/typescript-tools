@@ -27,7 +27,10 @@
         ],
         "quotes": [
             "error",
-            "single"
+            "single",
+            {
+                "avoidEscape": true
+            }
         ],
         "comma-dangle": [
             "error",
@@ -88,7 +91,7 @@
         "@typescript-eslint/prefer-string-starts-ends-with": "error",
         "@typescript-eslint/promise-function-async": "error",
         "@typescript-eslint/require-array-sort-compare": "error",
-        "@typescript-eslint/restrict-plus-operands": "error",
+        "@typescript-eslint/restrict-plus-operands": "off",
         "semi": "off",
         "@typescript-eslint/semi": [
             "error",
