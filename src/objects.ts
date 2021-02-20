@@ -1,7 +1,7 @@
 import { Numbers } from './numbers'
 
 export namespace Objects {
-    import random = Numbers.random;
+    import random = Numbers.random
 
     export const randomEnum = <T>(anEnum: T): T[keyof T] => {
         const enumValues = (Object.values(anEnum) as unknown) as T[keyof T][]
