@@ -18,12 +18,18 @@ export namespace Files {
         return join(path, fileName)
     }
 
-    export const checkExistence = async (path: string): Promise<boolean> => {
+    export const checkFileExist = async (path: string): Promise<boolean> => {
         try {
             await promises.access(path)
             return true
         } catch (error) {
             return false
         }
+    }
+
+    export const checkFilesExist = async (fileList: string[]): Promise<boolean> => {
+        return fileList.every(async (file: string) => {
+            return await checkFileExist(file)
+        })
     }
 }
