@@ -91,14 +91,30 @@ export namespace Strings {
         return str.replace(/-\w/g, match => match[1].toUpperCase())
     }
 
-    export const capFirstLetter = (string: string): string => string.charAt(0).toUpperCase() + string.slice(1)
+    export const capFirstLetter = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1)
 
-    export const parseJson = (json: string, defaultValue: any = undefined): string | undefined => {
+    export const parseJson = (str: string, defaultValue: any = undefined): string | undefined => {
         try {
-            return JSON.parse(json)
+            return JSON.parse(str)
         } catch (e) {
             return defaultValue
         }
+    }
+
+    export const escape = (str: string): string => {
+        return (
+            str
+                .replace(/\\n/g, '\\n')
+                .replace(/\\'/g, "\\'")
+                .replace(/\\"/g, '\\"')
+                .replace(/\\&/g, '\\&')
+                .replace(/\\r/g, '\\r')
+                .replace(/\\t/g, '\\t')
+                .replace(/\\b/g, '\\b')
+                .replace(/\\f/g, '\\f')
+                // eslint-disable-next-line no-control-regex
+                .replace(/[\u0000-\u0019]+/g, '')
+        )
     }
 
     export const replaceBy = (regex: string | RegExp, str: string, replace = ''): string =>
