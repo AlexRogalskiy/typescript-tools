@@ -90,4 +90,19 @@ export namespace Strings {
     export const toParamName = (str: string): string => {
         return str.replace(/-\w/g, match => match[1].toUpperCase())
     }
+
+    export const capFirstLetter = (string: string): string => string.charAt(0).toUpperCase() + string.slice(1)
+
+    export const parseJson = (json: string, defaultValue: any = undefined): string | undefined => {
+        try {
+            return JSON.parse(json)
+        } catch (e) {
+            return defaultValue
+        }
+    }
+
+    export const replaceBy = (regex: string | RegExp, str: string, replace = ''): string =>
+        str.replace(regex, replace)
+
+    export const pad = (num: number, size = 2, type = '0'): string => `${num}`.padStart(size, type)
 }

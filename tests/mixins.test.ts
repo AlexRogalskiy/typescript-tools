@@ -1,9 +1,9 @@
 import { describe, test } from '@jest/globals'
 
-import { Mixins } from '../src/mixins'
+import { Mixins } from '../src'
 
 export namespace Mixins_Test {
-    import Scale = Mixins.Scale;
+    import Scale = Mixins.Scale
 
     type GConstructor<T = {}> = new (...args: any[]) => T
     type Positionable = GConstructor<{ setPos: (x: number, y: number) => void }>;

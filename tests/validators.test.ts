@@ -1,6 +1,6 @@
 import { describe, test } from '@jest/globals'
 
-import { Validators } from '../src/validators'
+import { Validators } from '../src'
 
 export namespace Validators_Test {
 

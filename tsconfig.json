@@ -41,7 +41,8 @@
         "strictNullChecks": true,
         "strictFunctionTypes": false,
         "noEmitOnError": true,
-        "preserveConstEnums": true
+        "preserveConstEnums": true,
+        "strictPropertyInitialization": true
     },
     "exclude": [
         "node_modules",

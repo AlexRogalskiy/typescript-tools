@@ -1,6 +1,6 @@
-export namespace Networks {
-    const LOCALHOST_REGEX = new RegExp(/^127(?:\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
+import { LOCALHOST_REGEX } from './regex'
 
+export namespace Networks {
     export const isLocalhost = (str: string): boolean => {
         return (
             str === 'localhost' ||

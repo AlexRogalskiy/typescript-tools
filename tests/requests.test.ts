@@ -1,9 +1,9 @@
 import { describe, expect, test } from '@jest/globals'
 
-import { Requests } from '../src/requests'
+import { Requests } from '../src'
 
 export namespace Requests_Test {
-    import toBase64ImageUrl = Requests.toBase64ImageUrl;
+    import toBase64ImageUrl = Requests.toBase64ImageUrl
 
     require('https').globalAgent.options.rejectUnauthorized = false
 

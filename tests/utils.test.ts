@@ -1,9 +1,9 @@
 import { describe, test } from '@jest/globals'
 
-import { TranslationUtils } from '../src/utils'
+import { TranslationUtils } from '../src'
 
 export namespace TranslationUtils_Test {
-    import translateBy = TranslationUtils.translateBy;
+    import translateBy = TranslationUtils.translateBy
 
     type TranslationPattern<T extends string, V> = { [K in T]: V }
 

@@ -91,5 +91,18 @@ export namespace Arrays {
             })
     }
 
+    export const groupBy = <T, K extends keyof any>(list: T[], getKey: (item: T) => K): Record<K, T[]> => {
+        return list.reduce((previous, currentItem) => {
+            const group = getKey(currentItem)
+            if (!previous[group]) {
+                previous[group] = []
+            }
+            previous[group].push(currentItem)
+            return previous
+        }, {} as Record<K, T[]>)
+    }
+
+    export const average = (arr: number[]): number => arr.reduce((p, c) => p + c, 0) / arr.length
+
     export const makeArray = <T>(value: T): T[] => (Array.isArray(value) ? value : [value])
 }
