@@ -10,6 +10,16 @@ export namespace Requests {
     import toInt = Formats.toInt
     import makeArray = Arrays.makeArray
 
+    const checkStatus = async (response): Promise<Response> => {
+        if (response.ok) {
+            return response
+        }
+        const error = new Error(response.statusText)
+        error.message = response
+
+        return Promise.reject(error)
+    }
+
     export async function fetchJSON(url: string, options?): Promise<unknown> {
         const data = await fetch(url, options)
         const response = await checkStatus(data)
@@ -21,16 +31,6 @@ export namespace Requests {
         const data = await fetch(url, options)
 
         return await data.text()
-    }
-
-    const checkStatus = async (response): Promise<Response> => {
-        if (response.ok) {
-            return response
-        }
-        const error = new Error(response.statusText)
-        error.message = response
-
-        return Promise.reject(error)
     }
 
     export const toBase64ImageUrl = async (imgUrl: string): Promise<string> => {

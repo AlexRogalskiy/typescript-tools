@@ -57,6 +57,17 @@ export namespace ByteFormats {
 }
 
 export namespace Formats {
+    const objToString = (obj): string => {
+        let str = ''
+        for (const p in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, p)) {
+                str += `${p} => ${typeof obj[p] === 'object' ? `[${objToString(obj[p])}]` : `${obj[p]},`}`
+            }
+        }
+
+        return str
+    }
+
     // Format a URL to be displayed, removing `http://` and trailing `/`
     export const formatUrl = (url: string): string => {
         const result = url.replace(/\/$/, '').toLowerCase()
@@ -101,16 +112,5 @@ export namespace Formats {
 
     export const toFormatString = (obj): string => {
         return `(${objToString(obj)})`
-    }
-
-    const objToString = (obj): string => {
-        let str = ''
-        for (const p in obj) {
-            if (Object.prototype.hasOwnProperty.call(obj, p)) {
-                str += `${p} => ${typeof obj[p] === 'object' ? `[${objToString(obj[p])}]` : `${obj[p]},`}`
-            }
-        }
-
-        return str
     }
 }

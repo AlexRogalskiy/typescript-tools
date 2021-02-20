@@ -23,7 +23,8 @@
             "dom"
         ],
         "typeRoots": [
-            "node_modules/@types"
+            "node_modules/@types",
+            "./typings"
         ],
         "target": "ES2019",
         "module": "ESNext",
@@ -42,7 +43,8 @@
         "strictFunctionTypes": false,
         "noEmitOnError": true,
         "preserveConstEnums": true,
-        "strictPropertyInitialization": true
+        "strictPropertyInitialization": true,
+        "suppressImplicitAnyIndexErrors": true
     },
     "exclude": [
         "node_modules",
@@ -54,6 +56,8 @@
         "./src/index.ts"
     ],
     "include": [
-        "./src"
+        "./src",
+        "./typings",
+        "./jest.config.js"
     ]
 }

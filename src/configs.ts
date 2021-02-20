@@ -1,4 +1,4 @@
-import { ConfigOptions } from '../typings/types'
+import { ConfigOptions } from '../typings/domain-types'
 
 export namespace Configs {
     export const getApiRootURL = async (setup: ConfigOptions, key: string): Promise<string> => {

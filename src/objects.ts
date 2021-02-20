@@ -30,4 +30,37 @@ export namespace Objects {
     export const isBuffer = (value): boolean => {
         return value && value.buffer instanceof ArrayBuffer && value.byteLength !== undefined
     }
+
+    export const merge = <A, B>(a: A, b: B): A & B => {
+        return Object.assign({}, a, b)
+    }
+
+    export const isObject = (b, p): boolean => {
+        return null !== b[p] && typeof b[p] === 'object' && !Array.isArray(b[p])
+    }
+
+    export const shallowEquals = (a, b): boolean => {
+        if (Object.is(a, b)) {
+            return true
+        }
+
+        if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
+            return false
+        }
+
+        const keysA = Object.keys(a)
+        const keysB = Object.keys(b)
+
+        if (keysA.length !== keysB.length) {
+            return false
+        }
+
+        for (const key of keysA) {
+            if (!b.hasOwnProperty(key) || !Object.is(a[key], b[key])) {
+                return false
+            }
+        }
+
+        return true
+    }
 }

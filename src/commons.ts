@@ -1,4 +1,28 @@
 export namespace Commons {
+    const discardSingle = <A>(a: A, toDiscard: string): A => {
+        const result = {}
+        const keys = Object.keys(a)
+        for (const key of keys) {
+            if (key !== toDiscard && Object.prototype.hasOwnProperty.call(a, key)) {
+                result[key] = a[key]
+            }
+        }
+
+        return result as A
+    }
+
+    const discardMany = <A>(a: A, toDiscard: string[]): A => {
+        const result = {}
+        const keys = Object.keys(a)
+        for (const key of keys) {
+            if (-1 === toDiscard.indexOf(key) && Object.prototype.hasOwnProperty.call(a, key)) {
+                result[key] = a[key]
+            }
+        }
+
+        return result as A
+    }
+
     export const toBoolean = (value: unknown): boolean => {
         return (
             (typeof value === 'string' && /true/i.test(value)) ||
@@ -98,5 +122,9 @@ export namespace Commons {
             value === 'undefined' ||
             (typeof value === 'object' && Object.keys(value).length === 0)
         )
+    }
+
+    export function discard<A>(a: A, toDiscard: string | string[]): A {
+        return typeof toDiscard === 'string' ? discardSingle(a, toDiscard) : discardMany(a, toDiscard)
     }
 }
