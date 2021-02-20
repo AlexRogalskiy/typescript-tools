@@ -30,7 +30,7 @@
 ## _Table of contents_
 
 <!--ts-->
-   * [<em>Typescript Tools</em>](#typescript-tools)
+   * [<em>TypeScript Tools</em>](#typescript-tools)
       * [<em>Table of contents</em>](#table-of-contents)
       * [<em>Description</em>](#description)
       * [<em>Visitor stats</em>](#visitor-stats)
