@@ -38,12 +38,19 @@ jobs:
       - name: Trivy Scan
         shell: bash
         run: ./.automation/trivy-security-scan.sh
-
+      ################################
+      # Check generated report of security scan
+      ################################
+      - name: Check file existence
+        id: check_files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: 'report.sarif'
       ################################
       # Upload report to secrity tab #
       ################################
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v1
-        if: always()
+        if: steps.check_files.outputs.files_exists == 'true'
         with:
           sarif_file: 'report.sarif'

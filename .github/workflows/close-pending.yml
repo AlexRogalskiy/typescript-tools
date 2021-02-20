@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@master
 
       - name: Execute close-pending script
-        if: github.repository == 'AlexRogalskiy/justory'
+        if: github.repository == 'AlexRogalskiy/typescript-tools'
         run: ./.github/scripts/close-pending.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

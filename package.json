@@ -1,17 +1,18 @@
 {
-    "name": "justory",
+    "name": "typescript-tools",
     "version": "0.0.0-dev",
-    "description": "Collection of JavaScript & TypeScript stories",
-    "main": "index.js",
+    "description": "Collection of TypeScript tools & utilities",
     "license": "GPL-3.0",
     "scripts": {
-        "lint": "eslint --cache --fix --quiet --format codeframe --ext js,ts .",
-        "reinstall": "del-cli ./node_modules ./package-lock.json ./yarn.lock",
         "format": "prettier --write \"./src/**/*.ts\"",
         "format:check": "prettier --check \"./src/**/*.ts\"",
+        "postpublish": "npm run clean",
+        "lint": "eslint --cache --fix --quiet --format codeframe --ext js,ts .",
+        "reinstall": "del-cli ./node_modules ./package-lock.json ./yarn.lock",
         "postreinstall": "yarn setup",
         "setup": "yarn",
         "semantic-release": "semantic-release",
+        "test:folio": "folio tests/spec/",
         "test": "TZ=utc jest",
         "test:coverage": "jest --collectCoverage",
         "test:watch": "jest --watch"
@@ -41,6 +42,7 @@
         "jest-circus": "^26.6.3",
         "prettier": "^2.1.2",
         "semantic-release": ">=17.2.3",
+        "folio": "^0.3.18",
         "slugify": "^1.4.6",
         "ts-jest": "^26.4.4",
         "ts-node": ">=9.0.0",
@@ -49,17 +51,17 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/AlexRogalskiy/justory.git"
+        "url": "git+https://github.com/AlexRogalskiy/typescript-tools.git"
     },
     "publishConfig": {
         "access": "public"
     },
     "engines": {
-        "node": ">= 10.x"
+        "node": ">= 8.0.0"
     },
     "keywords": [
         "typescript",
-        "javascript"
+        "utilities"
     ],
     "release": {
         "tagFormat": "v${version}",
@@ -82,9 +84,9 @@
         ]
     },
     "bugs": {
-        "url": "https://github.com/AlexRogalskiy/justory/issues"
+        "url": "https://github.com/AlexRogalskiy/typescript-tools/issues"
     },
-    "homepage": "https://github.com/AlexRogalskiy/justory",
+    "homepage": "https://github.com/AlexRogalskiy/typescript-tools",
     "author": {
         "name": "Alexander Rogalskiy",
         "url": "https://github.com/AlexRogalskiy"
