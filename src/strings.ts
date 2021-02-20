@@ -117,6 +117,10 @@ export namespace Strings {
         )
     }
 
+    export const removeLines = (str: string): string => {
+        return str.replace(/\r?\n|\r/g, '')
+    }
+
     export const replaceBy = (regex: string | RegExp, str: string, replace = ''): string =>
         str.replace(regex, replace)
 
