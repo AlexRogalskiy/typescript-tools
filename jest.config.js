@@ -6,7 +6,7 @@ module.exports = {
     testEnvironment: 'node',
     testMatch: ['**/*.test.ts', '**/*.test.js', '**/__tests__/**/?(*.)+(spec|test).ts'],
     testRunner: 'jest-circus/runner',
-    testPathIgnorePatterns: ['/node_modules/', '/__fixtures__/'],
+    testPathIgnorePatterns: ['/node_modules/', '<rootDir>/templates/', '/__fixtures__/'],
     transform: {
         '^.+\\.(js|ts)$': 'ts-jest',
     },

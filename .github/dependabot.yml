@@ -30,6 +30,8 @@ updates:
     commit-message:
       # Prefix all commit messages with "npm"
       prefix: "npm"
+    # only increase version when required, don't bump every patch or minor
+    versioning-strategy: increase-if-necessary
     # Specify labels for npm pull requests
     labels:
       - "npm"

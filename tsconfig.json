@@ -26,7 +26,7 @@
             "node_modules/@types"
         ],
         "target": "ES2019",
-        "module": "commonjs",
+        "module": "ESNext",
         "resolveJsonModule": true,
         "moduleResolution": "node",
         "sourceMap": false,
@@ -50,7 +50,10 @@
         "**/*.test.js",
         "tmp"
     ],
+    "files": [
+        "./src/index.ts"
+    ],
     "include": [
-        "."
+        "./src"
     ]
 }
