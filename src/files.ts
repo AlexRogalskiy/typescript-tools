@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync } from 'fs'
+import { existsSync, mkdirSync, promises } from 'fs'
 import { join } from 'path'
 
 export namespace Files {
@@ -16,5 +16,14 @@ export namespace Files {
         }
 
         return join(path, fileName)
+    }
+
+    export const checkExistence = async (path: string): Promise<boolean> => {
+        try {
+            await promises.access(path)
+            return true
+        } catch (error) {
+            return false
+        }
     }
 }
