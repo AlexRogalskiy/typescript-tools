@@ -36,7 +36,7 @@ export namespace Commons {
                 }
             }
 
-            throw new Error('Default value is ambigious.')
+            throw new Error('Default value is ambiguous.')
         }
         return obj
     }

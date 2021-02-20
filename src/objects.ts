@@ -1,7 +1,7 @@
 import { Numbers } from './numbers'
 
 export namespace Objects {
-    import random = Numbers.random
+    import random = Numbers.random;
 
     export const randomEnum = <T>(anEnum: T): T[keyof T] => {
         const enumValues = (Object.values(anEnum) as unknown) as T[keyof T][]
@@ -12,6 +12,10 @@ export namespace Objects {
 
     export const pluckBy = <T, K extends keyof T>(o: T, propertyNames: K[]): T[K][] => {
         return propertyNames.map(n => o[n])
+    }
+
+    export const updateBy = <T>(todo: T, fieldsToUpdate: Partial<T>): T => {
+        return { ...todo, ...fieldsToUpdate }
     }
 
     export const omitNull = <T>(obj: T): T => {
