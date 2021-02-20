@@ -21,7 +21,7 @@
         "test": "TZ=utc jest",
         "test:coverage": "jest --collectCoverage",
         "test:watch": "jest --watch",
-        "all": "npm run format && npm run lint"
+        "all": "npm run format && npm run lint && npm run build"
     },
     "dependencies": {
         "isomorphic-unfetch": "^3.1.0",
