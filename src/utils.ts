@@ -174,6 +174,22 @@ export namespace ColorUtils {
             textShadowDefault: `0px 1px 2px rgba(${darken(baseColor, 25, true)}, 0.5)`,
         }
     }
+
+    /**
+     * Calculate an in-between color. Returns a "rgba()" string.
+     * Credit: Edwin Martin <edwin@bitstorm.org>
+     * http://www.bitstorm.org/jquery/color-animation/jquery.animate-colors.js
+     * @param begin
+     * @param end
+     * @param pos
+     */
+    export const calculateColor = (begin: number, end: number, pos: number): string => {
+        const r = parseInt(begin[0] + pos * (end[0] - begin[0]), 10)
+        const g = parseInt(begin[1] + pos * (end[1] - begin[1]), 10)
+        const b = parseInt(begin[2] + pos * (end[2] - begin[2]), 10)
+
+        return `rgba(${r},${g},${b},${begin && end ? parseFloat(begin[3] + pos * (end[3] - begin[3])) : 1})`
+    }
 }
 
 export namespace CalculationUtils {

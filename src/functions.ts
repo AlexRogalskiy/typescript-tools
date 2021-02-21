@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { Executor } from '../typings/standard-types'
 
 export namespace Functions {
     export const composeAsync = async (...funcs) => async x =>
@@ -29,4 +30,17 @@ export namespace Functions {
             }
             return item
         })
+
+    //var testDebounce = debounce(() => console.log(new Date().toString()), 1000);
+    export const debounce = (func, ms: number): Executor => {
+        let timerId
+        return () => {
+            if (timerId) {
+                clearTimeout(timerId)
+                timerId = setTimeout(func, ms)
+            } else {
+                timerId = setTimeout(func, ms)
+            }
+        }
+    }
 }

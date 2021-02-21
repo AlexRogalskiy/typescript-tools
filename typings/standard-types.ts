@@ -1,3 +1,4 @@
+// -------------------------------------------------------------------------------------------------
 /**
  * Primitive
  * @desc Type representing [`Primitive`](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) types in TypeScript: `string | number | bigint | boolean |  symbol | null | undefined`
@@ -8,58 +9,6 @@
  *   type Cleaned = Exclude<Various, Primitive>
  */
 export type Primitive = string | number | bigint | boolean | symbol | null | undefined
-
-/**
- * Falsy
- * @desc Type representing falsy values in TypeScript: `false | "" | 0 | null | undefined`
- * @example
- *   type Various = 'a' | 'b' | undefined | false;
- *
- *   // Expect: "a" | "b"
- *   Exclude<Various, Falsy>;
- */
-export type Falsy = false | '' | 0 | null | undefined
-
-/**
- * Nullish
- * @desc Type representing [nullish values][https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#nullish-coalescing] in TypeScript: `null | undefined`
- * @example
- *   type Various = 'a' | 'b' | undefined;
- *
- *   // Expect: "a" | "b"
- *   Exclude<Various, Nullish>;
- */
-export type Nullish = null | undefined
-
-/**
- * Tests for Falsy by simply applying negation `!` to the tested `val`.
- *
- * The value is mostly in added type-information and explicity,
- * but in case of this simple type much the same can often be archived by just using negation `!`:
- * @example
- *   const consumer = (value: boolean | Falsy) => {
- *     if (!value) {
- *         return ;
- *     }
- *     type newType = typeof value; // === true
- *     // do stuff
- *   };
- */
-export const isFalsy = (val: unknown): val is Falsy => !val
-
-/**
- * Tests for Nullish by simply comparing `val` for equality with `null`.
- * @example
- *   const consumer = (param: Nullish | string): string => {
- *     if (isNullish(param)) {
- *       // typeof param === Nullish
- *       return String(param) + ' was Nullish';
- *     }
- *     // typeof param === string
- *     return param.toString();
- *   };
- */
-export const isNullish = (val: unknown): val is Nullish => val == null
 
 /**
  * Tests for one of the [`Primitive`](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) types using the JavaScript [`typeof`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof) operator
@@ -89,3 +38,101 @@ export const isPrimitive = (val: any): val is Primitive => {
         typeof val === 'symbol'
     )
 }
+// -------------------------------------------------------------------------------------------------
+/**
+ * StringOrUndef
+ * @desc Type representing [`Primitive`](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) types in TypeScript: `string | null | undefined`
+ */
+export type StringOrUndef = string | null | undefined
+
+/**
+ * NumberOrUndef
+ * @desc Type representing [`Primitive`](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) types in TypeScript: `number | null | undefined`
+ */
+export type NumberOrUndef = number | null | undefined
+
+/**
+ * BooleanOrUndef
+ * @desc Type representing [`Primitive`](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) types in TypeScript: `boolean | null | undefined`
+ */
+export type BooleanOrUndef = boolean | null | undefined
+// -------------------------------------------------------------------------------------------------
+/**
+ * Truthy
+ * @desc Type representing truthy values in TypeScript: `true | 1 | 'on' | null | undefined`
+ * @example
+ *   type Various = 'a' | 'b' | undefined | true;
+ *
+ *   // Expect: "a" | "b"
+ *   Exclude<Various, Truthy>;
+ */
+export type Truthy = true | 1 | 'on' | null | undefined
+
+/**
+ * Tests for Truthy value
+ *
+ * The value is mostly in added type-information and explicity
+ * but in case of this simple type much the same can often be archived by just using double negation `!!`:
+ * @example
+ *   const consumer = (value: boolean | Truthy) => {
+ *     if (!!value) {
+ *         return ;
+ *     }
+ *     type newType = typeof value; // === true
+ *     // do stuff
+ *   };
+ */
+export const isTruthy = (val: unknown): val is Truthy => !!val
+// -------------------------------------------------------------------------------------------------
+/**
+ * Falsy
+ * @desc Type representing falsy values in TypeScript: `false | "" | 0 | null | undefined`
+ * @example
+ *   type Various = 'a' | 'b' | undefined | false;
+ *
+ *   // Expect: "a" | "b"
+ *   Exclude<Various, Falsy>;
+ */
+export type Falsy = false | '' | 0 | 'off' | null | undefined
+
+/**
+ * Tests for Falsy by simply applying negation `!` to the tested `val`.
+ *
+ * The value is mostly in added type-information and explicity,
+ * but in case of this simple type much the same can often be archived by just using negation `!`:
+ * @example
+ *   const consumer = (value: boolean | Falsy) => {
+ *     if (!value) {
+ *         return ;
+ *     }
+ *     type newType = typeof value; // === true
+ *     // do stuff
+ *   };
+ */
+export const isFalsy = (val: unknown): val is Falsy => !val
+// -------------------------------------------------------------------------------------------------
+/**
+ * Nullish
+ * @desc Type representing [nullish values][https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#nullish-coalescing] in TypeScript: `null | undefined`
+ * @example
+ *   type Various = 'a' | 'b' | undefined;
+ *
+ *   // Expect: "a" | "b"
+ *   Exclude<Various, Nullish>;
+ */
+export type Nullish = null | undefined
+
+/**
+ * Tests for Nullish by simply comparing `val` for equality with `null`.
+ * @example
+ *   const consumer = (param: Nullish | string): string => {
+ *     if (isNullish(param)) {
+ *       // typeof param === Nullish
+ *       return String(param) + ' was Nullish';
+ *     }
+ *     // typeof param === string
+ *     return param.toString();
+ *   };
+ */
+export const isNullish = (val: unknown): val is Nullish => val == null
+// -------------------------------------------------------------------------------------------------

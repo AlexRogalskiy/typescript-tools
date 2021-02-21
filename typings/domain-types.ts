@@ -1,3 +1,4 @@
+// -------------------------------------------------------------------------------------------------
 export enum HeroPattern {
     plus = 'plus',
     topography = 'topography',
@@ -14,6 +15,7 @@ export enum CategoryPattern {
     entrepreneurship = 'entrepreneurship',
 }
 
+// -------------------------------------------------------------------------------------------------
 export interface ParsedRequest {
     category?: CategoryPattern | undefined
     width?: string
@@ -25,6 +27,7 @@ export interface ParsedRequest {
     opacity?: string | string[]
 }
 
+// -------------------------------------------------------------------------------------------------
 export interface ColorOptions {
     readonly colorPattern: string | string[]
     readonly fontColor: string | string[]
@@ -33,23 +36,29 @@ export interface ColorOptions {
     readonly pattern?: string
 }
 
+// -------------------------------------------------------------------------------------------------
 export interface ImageOptions {
     readonly width: string
     readonly height: string
 }
 
+// -------------------------------------------------------------------------------------------------
 export enum Profile {
     dev = 'dev',
     prod = 'prod',
 }
 
+// -------------------------------------------------------------------------------------------------
 export type ProfileOptions = {
     [K in Profile]: string
 }
 
+// -------------------------------------------------------------------------------------------------
 export interface ConfigOptions {
     /**
      * Configuration options.
      */
     readonly options: ProfileOptions
 }
+
+// -------------------------------------------------------------------------------------------------

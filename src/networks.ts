@@ -10,4 +10,8 @@ export namespace Networks {
             LOCALHOST_REGEX.test(str)
         )
     }
+
+    export const addParamToUrl = (url: string, param: string): string => {
+        return url + (url.includes('?') ? '&' : '?') + param
+    }
 }
