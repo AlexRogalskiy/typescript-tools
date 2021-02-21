@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { Executor } from '../typings/standard-types'
+import { Executor } from '../typings/function-types'
 
 export namespace Functions {
     export const composeAsync = async (...funcs) => async x =>

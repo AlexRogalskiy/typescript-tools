@@ -328,6 +328,38 @@ export type StringProcessor<R> = Processor<string, R>
 export type BooleanProcessor<R> = Processor<boolean, R>
 
 /**
+ * NumberToStringProcessor
+ * @desc Type representing number to string processor function type in TypeScript
+ * @example
+ *   type NumberToStringProcessor = (v) => return new String(v)
+ */
+export type NumberToStringProcessor = Processor<number, string>
+
+/**
+ * StringToNumberProcessor
+ * @desc Type representing string to number processor function type in TypeScript
+ * @example
+ *   type StringToNumberProcessor = (v) => return parseInt(v)
+ */
+export type StringToNumberProcessor = Processor<string, number>
+
+/**
+ * BooleanToStringProcessor
+ * @desc Type representing boolean to string processor function type in TypeScript
+ * @example
+ *   type BooleanToStringProcessor = (v) => return new String(v)
+ */
+export type BooleanToStringProcessor = Processor<boolean, string>
+
+/**
+ * StringToBooleanProcessor
+ * @desc Type representing string to boolean processor function type in TypeScript
+ * @example
+ *   type StringToBooleanProcessor = (v) => return v == true
+ */
+export type StringToBooleanProcessor = Processor<string, boolean>
+
+/**
  * ToNumberProcessor
  * @desc Type representing processor function type with number result in TypeScript
  * @example
