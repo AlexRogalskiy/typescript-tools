@@ -19,7 +19,9 @@ jobs:
       - name: Edit version.txt
         run: |
           echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" > version.txt
-          echo "VERSION = \"$(git describe --tags `git rev-list --tags --max-count=1`)\"" >> version.txt
+          echo "TAG_NAME=${GITHUB_REF/refs\/tags\//}" >> version.txt
+          echo "MAJOR_VERSION=$(echo ${GITHUB_REF/refs\/tags\//} | cut -d'.' -f1)" >> version.txt
+          echo "VERSION=\"$(git describe --tags `git rev-list --tags --max-count=1`)\"" >> version.txt
 
       - name: Commit update
         uses: stefanzweifel/git-auto-commit-action@v4

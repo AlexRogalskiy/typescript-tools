@@ -49,6 +49,7 @@
         "import/no-namespace": "off",
         "no-unused-vars": "off",
         "camelcase": "off",
+        "no-invalid-this": "off",
         "no-angle-bracket-type-assertion": "off",
         "@typescript-eslint/no-unused-vars": "error",
         "@typescript-eslint/explicit-member-accessibility": [
@@ -98,7 +99,7 @@
             "never"
         ],
         "@typescript-eslint/type-annotation-spacing": "error",
-        "@typescript-eslint/unbound-method": "error",
+        "@typescript-eslint/unbound-method": "off",
         "@typescript-eslint/member-ordering": "off",
         "@typescript-eslint/no-use-before-define": "off",
         "@typescript-eslint/no-floating-promises": "warn",

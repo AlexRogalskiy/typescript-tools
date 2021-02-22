@@ -117,6 +117,10 @@ export namespace Strings {
         )
     }
 
+    export const join = (symbols: string[] | string, delim = ','): string => {
+        return Array.isArray(symbols) ? symbols.join(delim) : symbols
+    }
+
     export const removeLines = (str: string): string => {
         return str.replace(/\r?\n|\r/g, '')
     }

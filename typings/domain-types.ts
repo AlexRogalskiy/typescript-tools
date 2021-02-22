@@ -15,6 +15,10 @@ export enum CategoryPattern {
     entrepreneurship = 'entrepreneurship',
 }
 
+export enum Errors {
+    SOCKET_NOT_CONNECTED = 'You must connect before trying to emit messages. Please see https://github.com/1Forge/javascript-forex-quotes for examples',
+}
+
 // -------------------------------------------------------------------------------------------------
 export interface ParsedRequest {
     category?: CategoryPattern | undefined

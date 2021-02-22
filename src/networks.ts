@@ -14,4 +14,17 @@ export namespace Networks {
     export const addParamToUrl = (url: string, param: string): string => {
         return url + (url.includes('?') ? '&' : '?') + param
     }
+
+    export const getQueryParams = (object: { [index: string]: string }): string => {
+        let parameters = ''
+
+        // eslint-disable-next-line github/array-foreach
+        Object.keys(object).forEach((key, i) => {
+            const value: string = object[key]
+            const prefix = i === 0 ? '?' : '&'
+            parameters += `${prefix}${key}=${value}`
+        })
+
+        return parameters
+    }
 }

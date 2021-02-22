@@ -162,3 +162,7 @@ export type NumberPair = Pair<number, number>
  */
 export type StringPair = Pair<string, string>
 // -------------------------------------------------------------------------------------------------
+export type KeywordData = [string, number]
+
+export type KeywordDict = Record<string, KeywordData>
+// -------------------------------------------------------------------------------------------------
