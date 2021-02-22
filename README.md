@@ -12,6 +12,7 @@
 ![GitHub search hit counter](https://img.shields.io/github/search/AlexRogalskiy/typescript-tools/goto)
 ![GitHub Repository branches](https://badgen.net/github/branches/AlexRogalskiy/typescript-tools)
 ![GitHub Repository dependents](https://badgen.net/github/dependents-repo/AlexRogalskiy/typescript-tools)
+[![Tokei](https://tokei.rs/b1/github/AlexRogalskiy/typescript-tools?category=lines)](https://github.com/XAMPPRocky/tokei)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/alexrogalskiy/typescript-tools/master/LICENSE?token=AH44ZFH7IF2KSEDK7LSIW3C7YOFYC)
 [![Issue](https://img.shields.io/github/issues/alexrogalskiy/typescript-tools)](https://img.shields.io/github/issues/alexrogalskiy/typescript-tools)
@@ -19,6 +20,8 @@
 [![Stars](https://img.shields.io/github/stars/alexrogalskiy/typescript-tools)](https://img.shields.io/github/stars/alexrogalskiy/typescript-tools)
 ![code style](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)
 [![Maintainability](https://api.codeclimate.com/v1/badges/ed7702f8cf28917829fa/maintainability)](https://codeclimate.com/github/AlexRogalskiy/typescript-tools/maintainability)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/AlexRogalskiy/typescript-tools.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AlexRogalskiy/typescript-tools/alerts/)
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/AlexRogalskiy/typescript-tools.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AlexRogalskiy/typescript-tools/context:javascript)
 
 [![Renovatebot](https://badgen.net/badge/renovate/enabled/green?cache=300)](https://renovatebot.com/)
 [![Dependabot](https://img.shields.io/badge/dependabot-enabled-1f8ceb.svg?style=flat-square)](https://dependabot.com/)

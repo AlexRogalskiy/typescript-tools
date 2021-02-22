@@ -72,6 +72,12 @@
         "typescript",
         "utilities"
     ],
+    "maintainers": [
+        {
+            "name": "Alexander Rogalskiy",
+            "email": "hi@nullables.io"
+        }
+    ],
     "contributors": [
         {
             "name": "Alexander Rogalskiy",

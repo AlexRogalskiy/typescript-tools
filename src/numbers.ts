@@ -3,6 +3,22 @@ export namespace Numbers {
         return Math.floor(Math.random() * max)
     }
 
+    export const randomN = <T>(array: T[], n: number): T[] => {
+        const limit = array.length < n ? array.length : n
+        const randomIndicesSet = new Set<number>()
+
+        while (randomIndicesSet.size < limit) {
+            const rand = random(array.length)
+            if (!randomIndicesSet.has(rand)) {
+                randomIndicesSet.add(rand)
+            }
+        }
+
+        return Array.from(randomIndicesSet).map(random => {
+            return array[random]
+        })
+    }
+
     export const average = (delta: number, numberOfDays: number): number | undefined => {
         if (delta === undefined) return undefined
 
