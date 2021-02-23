@@ -136,3 +136,14 @@ export type Nullish = null | undefined
  */
 export const isNullish = (val: unknown): val is Nullish => val == null
 // -------------------------------------------------------------------------------------------------
+/**
+ * NullOrNotEmpty
+ * @desc Type representing [nullish values][https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#nullish-coalescing] in TypeScript: `null | undefined`
+ * @example
+ *   type Various = 'a' | 'b' | undefined;
+ *
+ *   // Expect: "a" | "b"
+ *   Exclude<Various, NullOrNotEmpty>;
+ */
+export type NullOrNotEmpty<T> = T | null | undefined
+// -------------------------------------------------------------------------------------------------

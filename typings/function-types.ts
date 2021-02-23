@@ -1,4 +1,5 @@
 // -------------------------------------------------------------------------------------------------
+
 export type Callback = (...args: any[]) => void
 // -------------------------------------------------------------------------------------------------
 /**
@@ -306,6 +307,14 @@ export type BooleanTriConsumer = TriConsumer<boolean, boolean, boolean>
 export type Processor<T, V> = (v: T) => V
 
 /**
+ * ReverseProcessor
+ * @desc Type representing reversed processor function type in TypeScript
+ * @example
+ *   type ReverseProcessor = (v) => return new String(v)
+ */
+export type ReverseProcessor<T, V> = Processor<V, T>
+
+/**
  * NumberProcessor
  * @desc Type representing number processor function type in TypeScript
  * @example
@@ -592,4 +601,92 @@ export type StringTernaryOperator = TernaryOperator<string>
  *   type BooleanTernaryOperator = (v1, v2, v3) => return v1 & v2 & v3
  */
 export type BooleanTernaryOperator = TernaryOperator<boolean>
+// -------------------------------------------------------------------------------------------------
+/**
+ * Filter
+ * @desc Type representing filter function type in TypeScript
+ * @example
+ *   type Filter = (v1 => true) => return [v1, v1]
+ */
+export type Filter<T> = (filter: Predicate<T>) => T[]
+
+/**
+ * NumberFilter
+ * @desc Type representing number filter function type in TypeScript
+ * @example
+ *   type NumberFilter = (v1 => true) => return [v1, v1]
+ */
+export type NumberFilter = Filter<number>
+
+/**
+ * StringFilter
+ * @desc Type representing string filter function type in TypeScript
+ * @example
+ *   type StringFilter = (v1 => true) => return [v1, v1]
+ */
+export type StringFilter = Filter<string>
+
+/**
+ * BooleanFilter
+ * @desc Type representing boolean filter function type in TypeScript
+ * @example
+ *   type BooleanFilter = (v1 => true) => return [v1, v1]
+ */
+export type BooleanFilter = Filter<boolean>
+// -------------------------------------------------------------------------------------------------
+/**
+ * ArrayGetter
+ * @desc Type representing array getter function type in TypeScript
+ * @example
+ *   type ArrayGetter = (v1) => v1[0]
+ */
+export type ArrayGetter<T> = Processor<T[], T>
+
+/**
+ * ArraySetter
+ * @desc Type representing array setter function type in TypeScript
+ * @example
+ *   type ArraySetter = (v1, v) => v1[0] = v
+ */
+export type ArraySetter<T> = BiConsumer<T[], T>
+
+/**
+ * NumberArrayGetter
+ * @desc Type representing array getter function type in TypeScript
+ * @example
+ *   type NumberArrayGetter = (num) => (v1) => return v1[num]
+ */
+export type NumberArrayGetter<T> = Processor<number, ArrayGetter<T>>
+
+/**
+ * NumberArraySetter
+ * @desc Type representing array setter function type in TypeScript
+ * @example
+ *   type NumberArraySetter = (num) => (v1, v) => v1[num] = v
+ */
+export type NumberArraySetter<T> = Processor<number, ArraySetter<T>>
+// -------------------------------------------------------------------------------------------------
+/**
+ * Comparator
+ * @desc Type representing comparator function type in TypeScript
+ * @example
+ *   type Comparator = (v1, v2) => return 0
+ */
+export type Comparator<T> = BiProcessor<T, T, number>
+// -------------------------------------------------------------------------------------------------
+/**
+ * Wrapper
+ * @desc Type representing wrapper function type in TypeScript
+ * @example
+ *   type Wrapper = (v1, v2) => return 0
+ */
+export type Wrapper<T> = () => Supplier<T>
+
+/**
+ * Factory
+ * @desc Type representing factory function type in TypeScript
+ * @example
+ *   type Factory = (v1, v2) => return 0
+ */
+export type Factory<T, V> = (v: T) => Supplier<V>
 // -------------------------------------------------------------------------------------------------

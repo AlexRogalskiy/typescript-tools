@@ -162,6 +162,42 @@ export type NumberPair = Pair<number, number>
  */
 export type StringPair = Pair<string, string>
 // -------------------------------------------------------------------------------------------------
+/**
+ * NameValue
+ * @desc NameValue type with name and value properties
+ * @see https://flow.org/en/docs/types/utilities/#toc-nonmaybe
+ * @example
+ *   type NumberOrNull = number | null;
+ *
+ *   // Expect: number
+ *   type Pair = NameValue<NumberOrNull, NumberOrNull>;
+ */
+export type NameValue<T, V> = { name: T; value: V }
+
+/**
+ * NumberNameValue
+ * @desc Number name-value type with name and value properties
+ */
+export type NumberNameValue = NameValue<number, number>
+
+/**
+ * StringNameValue
+ * @desc String name-value type with name and value properties
+ */
+export type StringNameValue = NameValue<string, string>
+// -------------------------------------------------------------------------------------------------
+/**
+ * RangeValue
+ * @desc RangeValue type with lower and upper bound properties
+ * @see https://flow.org/en/docs/types/utilities/#toc-nonmaybe
+ * @example
+ *   type NumberOrNull = number | null;
+ *
+ *   // Expect: number
+ *   type Pair = RangeValue<NumberOrNull, NumberOrNull>;
+ */
+export type RangeValue<T> = { lower: T; upper: T }
+// -------------------------------------------------------------------------------------------------
 export type KeywordData = [string, number]
 
 export type KeywordDict = Record<string, KeywordData>
