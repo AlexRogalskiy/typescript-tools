@@ -105,4 +105,13 @@ export namespace Arrays {
     export const average = (arr: number[]): number => arr.reduce((p, c) => p + c, 0) / arr.length
 
     export const makeArray = <T>(value: T): T[] => (Array.isArray(value) ? value : [value])
+
+    export const makeArray2 = <T>(arrayLike: any): T[] => {
+        return Array.prototype.slice.call(arrayLike)
+        //Array.from(arrayLike);
+    }
+
+    export const eliminateDuplicates = <T>(items: T[]): T[] => {
+        return [...new Set(items)]
+    }
 }

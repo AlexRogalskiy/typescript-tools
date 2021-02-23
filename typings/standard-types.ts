@@ -56,6 +56,12 @@ export type NumberOrUndef = number | null | undefined
  * @desc Type representing [`Primitive`](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) types in TypeScript: `boolean | null | undefined`
  */
 export type BooleanOrUndef = boolean | null | undefined
+
+/**
+ * ValueOrUndef
+ * @desc Type representing [`Primitive`](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) types in TypeScript: `boolean | null | undefined`
+ */
+export declare type ValueOrUndef<T> = T | null | undefined
 // -------------------------------------------------------------------------------------------------
 /**
  * Truthy

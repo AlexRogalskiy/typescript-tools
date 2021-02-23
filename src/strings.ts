@@ -129,4 +129,43 @@ export namespace Strings {
         str.replace(regex, replace)
 
     export const pad = (num: number, size = 2, type = '0'): string => `${num}`.padStart(size, type)
+
+    //let message = tag`${count} items cost $${count * price}.toFixed(2).`;
+    export const tag = <T>(literals: T[], ...substitutions: any[]): string => {
+        let result = ''
+        for (let i = 0; i < substitutions.length; i++) {
+            result += literals[i]
+            result += substitutions[i]
+        }
+        result += literals[literals.length - 1]
+        return result
+    }
+
+    export const parseStyleString = <T>(style: string, oStyle: T): void => {
+        let attr, value
+        // eslint-disable-next-line github/array-foreach
+        style
+            .replace(/;\s*$/, '')
+            .split(';')
+            .forEach(chunk => {
+                const pair = chunk.split(':')
+                attr = pair[0].trim().toLowerCase()
+                value = pair[1].trim()
+                oStyle[attr] = value
+            })
+    }
+
+    export const parseStyleObject = <T>(style: any, oStyle: T): void => {
+        let attr, value
+        for (const prop in style) {
+            if (Object.prototype.hasOwnProperty.call(style, prop)) {
+                if (typeof style[prop] === 'undefined') {
+                    continue
+                }
+                attr = prop.toLowerCase()
+                value = style[prop]
+                oStyle[attr] = value
+            }
+        }
+    }
 }

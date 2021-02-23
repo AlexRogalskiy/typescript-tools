@@ -1,6 +1,27 @@
 // -------------------------------------------------------------------------------------------------
-
+/**
+ * Callback
+ * @desc Type representing callback function type in TypeScript
+ * @example
+ *   type Callback = () => console.log("test")
+ */
 export type Callback = (...args: any[]) => void
+// -------------------------------------------------------------------------------------------------
+/**
+ * IteratorStep
+ * @desc Type representing iterator step type in TypeScript
+ * @example
+ *   type IteratorStep = { value: T, done: true }
+ */
+export type IteratorStep<T> = { value: T | undefined; done: boolean }
+
+/**
+ * Iterator
+ * @desc Type representing iterator type in TypeScript
+ * @example
+ *   type Iterator = { next: () => console.log("test") }
+ */
+export type Iterator<T> = { next: Supplier<IteratorStep<T>> }
 // -------------------------------------------------------------------------------------------------
 /**
  * Executor

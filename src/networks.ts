@@ -1,6 +1,8 @@
 import { LOCALHOST_REGEX } from './regex'
 
 export namespace Networks {
+    const ProtocolsExcept = ['127.0.0.1', '0.0.0.0', 'localhost', '::1']
+
     export const isLocalhost = (str: string): boolean => {
         return (
             str === 'localhost' ||
@@ -26,5 +28,23 @@ export namespace Networks {
         })
 
         return parameters
+    }
+
+    /**
+     * Normalize a port into a number, string, or false.
+     */
+    export const normalizePort = (val: string): number | undefined => {
+        const port = parseInt(val, 10)
+        return !isNaN(port) && port >= 0 ? port : undefined
+    }
+
+    /**
+     *    changes type of protocol of the current url
+     */
+    export const redirect = (protocol = 'https', except = ProtocolsExcept): void => {
+        const proto = `${protocol}:`
+        if (document.location.protocol !== proto && !except.includes(document.location.hostname)) {
+            document.location.protocol = proto
+        }
     }
 }

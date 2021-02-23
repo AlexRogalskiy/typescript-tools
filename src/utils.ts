@@ -1,3 +1,5 @@
+import { Iterator } from '../typings/function-types'
+
 export namespace TranslationUtils {
     export const translateBy = <T extends string>(value: T): string => {
         const code =
@@ -912,5 +914,40 @@ export namespace EasingUtils {
         if (t < d / 2) return inBounce(t * 2, 0, c, d) * 0.5 + b
 
         return outBounce(t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b
+    }
+}
+
+export namespace CommonUtils {
+    export const normalizeName = (name: string): string => {
+        if (!isString(name)) {
+            name = String(name)
+        }
+        if (/[^a-z0-9\-#$%&'*+.\\^_`|~]/i.test(name)) {
+            throw new TypeError('Invalid character in header field name')
+        }
+        return name.toLowerCase()
+    }
+
+    export const normalizeValue = (value: any): string => {
+        if (!isString(value)) {
+            value = String(value)
+        }
+        return value
+    }
+
+    // Build a destructive iterator for the value list
+    export const iteratorFor = <T>(items: T[]): Iterator<T> => {
+        const iterator = {
+            next: () => {
+                const value = items.shift()
+                return { value, done: value === undefined }
+            },
+        }
+
+        iterator[Symbol.iterator] = () => {
+            return iterator
+        }
+
+        return iterator
     }
 }

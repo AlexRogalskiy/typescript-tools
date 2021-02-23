@@ -3,6 +3,10 @@ export namespace Numbers {
         return Math.floor(Math.random() * max)
     }
 
+    export const randomBy = (min: number, max: number): number => {
+        return Math.floor(Math.random() * (max - min + 1)) + min
+    }
+
     export const randomN = <T>(array: T[], n: number): T[] => {
         const limit = array.length < n ? array.length : n
         const randomIndicesSet = new Set<number>()
@@ -72,5 +76,13 @@ export namespace Numbers {
 
     export const isInteger = (n): boolean => {
         return n === (n | 0)
+    }
+
+    export const toUint32 = (value: any): number => {
+        return Math.floor(Math.abs(Number(value))) % Math.pow(2, 32)
+    }
+
+    export const toFixed = (number: number, fractionDigits: number): number => {
+        return parseFloat(Number(number).toFixed(fractionDigits))
     }
 }

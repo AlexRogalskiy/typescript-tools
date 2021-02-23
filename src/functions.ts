@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { Executor } from '../typings/function-types'
+import { Callback, Executor, Supplier } from '../typings/function-types'
 
 export namespace Functions {
     export const composeAsync = async (...funcs) => async x =>
@@ -14,8 +14,19 @@ export namespace Functions {
         return new Promise(resolve => setTimeout(resolve, ms, args))
     }
 
-    // Use a closure to bind the outer scope's reference to this into the newly created inner scope.
-    export const proxy = (callback, self, ...args) => {
+    /*
+     var clicky = {
+         wasClicked: function() {},
+         addListeners: function() {
+             var self = this;
+             $('.clicky').click(globals.toolset.proxy(this.wasClicked, this)); //this.click.bind(this);
+         }
+     };
+    */
+    export const proxy = <T>(callback: Callback, self: any, ...args: any[]): Supplier<T> => {
+        if (!isFunction(callback)) {
+            throw typeException('TypeError', `incorrect type value: function < ${callback} >`)
+        }
         return () => {
             return callback.apply(self, args)
         }

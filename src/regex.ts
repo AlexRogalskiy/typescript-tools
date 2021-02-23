@@ -12,3 +12,18 @@ export const ZIPCODE_REGEX = new RegExp('^[a-z]{3}(-[A-Z]{3})?$')
  * @type {RegExp}
  */
 export const ALPHA_REGEX = /^[a-zA-Z]+$/
+
+export const getRegex = <T extends string>(arr: T[]): RegExp => {
+    return new RegExp(`^(${arr.join('|')})\\b`, 'i')
+}
+
+// let hasRegExpY = hasRegExp("y");
+// let hasRegExpU = hasRegExp("u");
+export const hasRegExp = (value: any): boolean => {
+    try {
+        new RegExp('.', value)
+        return true
+    } catch (ex) {
+        return false
+    }
+}
