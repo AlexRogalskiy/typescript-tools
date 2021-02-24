@@ -1,4 +1,5 @@
 import { Iterator } from '../typings/function-types'
+import { Checkers } from "./checkers";
 
 export namespace TranslationUtils {
     export const translateBy = <T extends string>(value: T): string => {
@@ -918,6 +919,7 @@ export namespace EasingUtils {
 }
 
 export namespace CommonUtils {
+    import isString = Checkers.isString;
     export const normalizeName = (name: string): string => {
         if (!isString(name)) {
             name = String(name)
@@ -932,6 +934,7 @@ export namespace CommonUtils {
         if (!isString(value)) {
             value = String(value)
         }
+
         return value
     }
 

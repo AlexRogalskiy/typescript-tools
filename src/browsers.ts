@@ -1,4 +1,11 @@
+import { Checkers } from './checkers'
+import { Exceptions } from './exceptions'
+import { DomElement } from '../typings/standard-types'
+
 export namespace Browsers {
+    import isDomElement = Checkers.isDomElement
+    import isString = Checkers.isString
+    import exception = Exceptions.exception
     /**
      * var supportsSlider = supportsInputOfType('range');
      * var supportsColorpicker = supportsInputOfType('color');
@@ -26,5 +33,27 @@ export namespace Browsers {
             const regex = new RegExp(`(&${param}=)[^&]+`) //(&page=)[^\&]+/
             location.assign(location.href.replace(regex, `$1${value}`))
         }
+    }
+
+    export const getElementsByClass = (searchClass: string, node, tag: string): DomElement[] => {
+        const classElements: DomElement[] = []
+
+        const nodeValue = node == null ? document : isDomElement(node) ? node : null
+        if (nodeValue == null) throw exception('ValueError', `incorrect node value: < ${nodeValue} >`)
+
+        const tagValue = tag == null ? '*' : isString(tag) ? tag : null
+        if (tagValue == null) throw exception('ValueError', `incorrect tag value: < ${tagValue} >`)
+
+        const els = nodeValue.getElementsByTagName(tagValue)
+        const regexp = `(^|\\s)${searchClass}(\\s|$)`
+        const pattern = new RegExp(regexp)
+
+        for (const item of els) {
+            if (pattern.test(item.className)) {
+                classElements.push(item)
+            }
+        }
+
+        return classElements
     }
 }

@@ -1,27 +1,26 @@
 import { Checkers } from './checkers'
 import { Exceptions } from './exceptions'
 import { Supplier } from '../typings/function-types'
-import { NumberOrUndef, StringOrUndef } from '../typings/standard-types'
-import { ValueOrUndef } from "../dist/typings/standard-types";
+import { NumberOrUndef, StringOrUndef, ValueOrUndef } from '../typings/standard-types'
 
 export namespace Maths {
-    import isIntNumber = Checkers.isIntNumber;
-    import exception = Exceptions.exception;
-    import isNumber = Checkers.isNumber;
-    import isString = Checkers.isString;
-    import isNull = Checkers.isNull;
+    import isIntNumber = Checkers.isIntNumber
+    import exception = Exceptions.exception
+    import isNumber = Checkers.isNumber
+    import isString = Checkers.isString
+    import isNull = Checkers.isNull
 
     type Vector2D = { x: number; y: number }
-    type Vector3D = { x: number; y: number; z: number }
+    //type Vector3D = { x: number; y: number; z: number }
 
-    const sqrt = Math.sqrt,
-        atan2 = Math.atan2,
-        pow = Math.pow,
-        abs = Math.abs,
-        PiBy180 = Math.PI / 180,
-        PiBy180Inv = 180 / Math.PI,
-        PiBy2 = Math.PI / 2,
-        invLog2 = 1 / Math.log(2)
+    // const sqrt = Math.sqrt
+    // const atan2 = Math.atan2
+    // const pow = Math.pow
+    // const abs = Math.abs
+    // const PiBy180 = Math.PI / 180
+    // const PiBy180Inv = 180 / Math.PI
+    const PiBy2 = Math.PI / 2
+    const invLog2 = 1 / Math.log(2)
 
     /**
      * Calculate the sin of an angle, avoiding returning floats for known results

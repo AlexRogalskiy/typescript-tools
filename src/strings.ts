@@ -1,6 +1,10 @@
 import slugify from 'slugify'
+import { Exceptions } from './exceptions'
+import { Checkers } from "./checkers";
 
 export namespace Strings {
+    import exception = Exceptions.exception
+    import isString = Checkers.isString;
     export const isNonEmptyString = (str: string): boolean => {
         return str !== undefined && str !== null && str.length > 0
     }
@@ -167,5 +171,14 @@ export namespace Strings {
                 oStyle[attr] = value
             }
         }
+    }
+
+    export const parseNum = (str: string): RegExpExecArray | null => {
+        if (!isString(str)) {
+            throw exception('ValueError', `incorrect input string: < ${str} >`)
+        }
+        const regExp = /^-?\d+(?:\.\d*)?(?:e[+\\-]?\d+)?$/i
+
+        return regExp.exec(str)
     }
 }

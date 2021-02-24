@@ -61,7 +61,13 @@ export type BooleanOrUndef = boolean | null | undefined
  * ValueOrUndef
  * @desc Type representing [`Primitive`](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) types in TypeScript: `boolean | null | undefined`
  */
-export declare type ValueOrUndef<T> = T | null | undefined
+export type ValueOrUndef<T> = T | null | undefined
+// -------------------------------------------------------------------------------------------------
+/**
+ * DomElement
+ * @desc Type representing [`DomElement`]
+ */
+export type DomElement = Element | Node | Document | HTMLElement
 // -------------------------------------------------------------------------------------------------
 /**
  * Truthy

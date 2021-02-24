@@ -1,7 +1,12 @@
 import _ from 'lodash'
 import { Callback, Executor, Supplier } from '../typings/function-types'
+import { Checkers } from './checkers'
+import { Exceptions } from './exceptions'
 
 export namespace Functions {
+    import isFunction = Checkers.isFunction
+    import exception = Exceptions.exception
+
     export const composeAsync = async (...funcs) => async x =>
         // eslint-disable-next-line github/no-then
         await funcs.reduce((acc, val) => acc.then(val), Promise.resolve(x))
@@ -25,7 +30,7 @@ export namespace Functions {
     */
     export const proxy = <T>(callback: Callback, self: any, ...args: any[]): Supplier<T> => {
         if (!isFunction(callback)) {
-            throw typeException('TypeError', `incorrect type value: function < ${callback} >`)
+            throw exception('TypeError', `incorrect type value: function < ${callback} >`)
         }
         return () => {
             return callback.apply(self, args)
