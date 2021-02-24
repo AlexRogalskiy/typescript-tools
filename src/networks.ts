@@ -1,4 +1,4 @@
-import { LOCALHOST_REGEX } from './regex'
+import { LOCALHOST_REGEX } from './regexes'
 import { Checkers } from './checkers'
 import { Exceptions } from './exceptions'
 

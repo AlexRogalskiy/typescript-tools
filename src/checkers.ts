@@ -1,4 +1,4 @@
-import { ALPHA_REGEX, EMAIL_REGEX, MOBILE_NAVIGATOR_CODE_REGEX, MOBILE_NAVIGATOR_TYPE_REGEX } from './regex'
+import { ALPHA_REGEX, EMAIL_REGEX, MOBILE_NAVIGATOR_CODE_REGEX, MOBILE_NAVIGATOR_TYPE_REGEX } from './regexes'
 import { Numbers } from './numbers'
 import { Exceptions } from './exceptions'
 
