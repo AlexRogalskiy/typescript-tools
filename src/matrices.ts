@@ -130,7 +130,7 @@ export namespace Matrix {
      * @return {Array} min-max array.
      *
      * @example
-     * var distance = [[1, 1, 2, 6, 0, 1],
+     * let distance = [[1, 1, 2, 6, 0, 1],
      *                [4, 0, 3, 8, 3, 1],
      *                [8, 0, 1, 5, 0, 9],
      *                [3, 1, 4, 8, 8, 3],
@@ -178,11 +178,11 @@ export namespace Matrix {
      * @return {String} multiplication order.
      *
      * @example
-     * var s = globals.algorithms.multiplicationOrder([10, 20, 50, 1], [20, 50, 1, 100]);
+     * let = globals.algorithms.multiplicationOrder([10, 20, 50, 1], [20, 50, 1, 100]);
      * document.writeln(s);
-     * var ss = globals.algorithms.multiplicationOrder([3, 5], [4, 2]);
+     * let ss = globals.algorithms.multiplicationOrder([3, 5], [4, 2]);
      * document.writeln(ss);
-     * var sss = globals.algorithms.multiplicationOrder([3, 5, 4], [4, 2, 5]);
+     * let sss = globals.algorithms.multiplicationOrder([3, 5, 4], [4, 2, 5]);
      * document.writeln(sss);
      */
     export const multiplicationOrder = (() => {
@@ -421,7 +421,7 @@ export namespace Matrix {
      * @return {Array} Matrix
      *
      * @example
-     * var distance = [[0, 7, 3, 7, 1],
+     * let distance = [[0, 7, 3, 7, 1],
      *                [1, 0, 8, 6, 3],
      *                [1, 1, 0, 0, 1],
      *                [0, 5, 0, 0, 0],
@@ -433,8 +433,8 @@ export namespace Matrix {
             throw valueException(`incorrect vertex order matrix < ${data} >`)
         }
 
-        //var mi1 = this.getRowsNum(), mj1 = this.getColumnsNum();
-        //if(mi1 === 0 || mj1 === 0/* || mi1 !== mj1*/) { throw {
+        // let mi1 = this.getRowsNum(), mj1 = this.getColumnsNum();
+        // if(mi1 === 0 || mj1 === 0/* || mi1 !== mj1*/) { throw {
         //											name: 'MatrixSizeError',
         //												message: 'incorrect matrix size: rows < ' + mi1 + ' >, columns < ' + mj1 + ' >'
         //											};
@@ -475,7 +475,7 @@ export namespace Matrix {
      * @return {Array} Matrix
      *
      * @example
-     * var distance = [[0, 7, 3, 7, 1],
+     * let distance = [[0, 7, 3, 7, 1],
      *                [1, 0, 8, 6, 3],
      *                [1, 1, 0, 0, 1],
      *                [0, 5, 0, 0, 0],
@@ -519,7 +519,7 @@ export namespace Matrix {
      * @return {Array} Matrix.
      *
      * @example
-     * var myMatrixIdentity = globals.toolset.identity(4);
+     * let myMatrixIdentity = globals.toolset.identity(4);
      */
     export const identity = (num: number): number[][] => {
         if (!isInteger(num) || num < 0) {
@@ -540,8 +540,8 @@ export namespace Matrix {
      * @return {Object} {row: row, col: col, squareSize: squareSize}.
      *
      * @example
-     * var matrix = [[0, 1, 2], [0, 1, 2], [0, 1, 2]];
-     * var mySquare = globals.toolset.findSquare(matrix);
+     * let matrix = [[0, 1, 2], [0, 1, 2], [0, 1, 2]];
+     * let mySquare = globals.toolset.findSquare(matrix);
      */
     export const findSquare = (() => {
         const subSquare = (row: number, col: number, squareSize: number): { row; col; squareSize } => {
@@ -609,8 +609,8 @@ export namespace Matrix {
      * @return {Object} {row: row, col: col, squareSize: squareSize}.
      *
      * @example
-     * var matrix = [[0, 1, 2], [0, 1, 2], [0, 1, 2]];
-     * var mySquare = globals.toolset.findSquare(matrix);
+     * let matrix = [[0, 1, 2], [0, 1, 2], [0, 1, 2]];
+     * let mySquare = globals.toolset.findSquare(matrix);
      */
     export const findSquare2 = (() => {
         const squareCell = (zerosRight = 0, zerosBelow = 0): { zerosRight; zerosBelow } => {
@@ -719,8 +719,8 @@ export namespace Matrix {
      * @return {Integer} maximum sum of submatrix elements.
      *
      * @example
-     * var matrix = [[0, 1, 2], [0, 1, 2], [0, 1, 2]];
-     * var maxSubmatrixSum = globals.toolset.getMaxSubMatrix(matrix);
+     * let matrix = [[0, 1, 2], [0, 1, 2], [0, 1, 2]];
+     * let maxSubmatrixSum = globals.toolset.getMaxSubMatrix(matrix);
      */
     export const getMaxSubMatrix = (() => {
         const precomputeMatrix = (data: number[][]): number[][] => {
@@ -797,8 +797,8 @@ export namespace Matrix {
      * @return {Integer} maximum sum of submatrix elements.
      *
      * @example
-     * var matrix = [[0, 1, 2], [0, 1, 2], [0, 1, 2]];
-     * var maxSubmatrixSum = globals.toolset.getMaxSubMatrix(matrix);
+     * let matrix = [[0, 1, 2], [0, 1, 2], [0, 1, 2]];
+     * let maxSubmatrixSum = globals.toolset.getMaxSubMatrix(matrix);
      */
     export const getMaxSubMatrix2 = (() => {
         const clearArray = (array: number[]): void => {
