@@ -1,49 +1,7 @@
 // -------------------------------------------------------------------------------------------------
-export enum HeroPattern {
-    plus = 'plus',
-    topography = 'topography',
-    texture = 'texture',
-}
-
-export enum CategoryPattern {
-    general = 'general',
-    life = 'life',
-    success = 'success',
-    motivational = 'motivational',
-    fun = 'fun',
-    programming = 'programming',
-    entrepreneurship = 'entrepreneurship',
-}
-
-export enum Errors {
-    SOCKET_NOT_CONNECTED = 'You must connect before trying to emit messages. Please see https://github.com/1Forge/javascript-forex-quotes for examples',
-}
-
-// -------------------------------------------------------------------------------------------------
-export interface ParsedRequest {
-    category?: CategoryPattern | undefined
-    width?: string
-    height?: string
-    colorPattern?: string | string[]
-    fontColor?: string | string[]
-    backgroundColor?: string | string[]
-    pattern?: HeroPattern | undefined
-    opacity?: string | string[]
-}
-
-// -------------------------------------------------------------------------------------------------
-export interface ColorOptions {
-    readonly colorPattern: string | string[]
-    readonly fontColor: string | string[]
-    readonly backgroundColor: string | string[]
-    readonly opacity: string | string[]
-    readonly pattern?: string
-}
-
-// -------------------------------------------------------------------------------------------------
-export interface ImageOptions {
-    readonly width: string
-    readonly height: string
+export enum ErrorType {
+    type_error = 'TypeError',
+    value_error = 'ValueError',
 }
 
 // -------------------------------------------------------------------------------------------------

@@ -42,4 +42,17 @@ export namespace Logging {
     export const logArrayElements = <T>(index: number, array: T[]): void => {
         log(`array[${index}] = ${array[index]}`)
     }
+
+    export const dump = (obj: any): string => {
+        let out = ''
+        if (obj && typeof obj == 'object') {
+            for (const i in obj) {
+                out += `${i}: ${obj[i]}n`
+            }
+        } else {
+            out = obj
+        }
+
+        return out
+    }
 }

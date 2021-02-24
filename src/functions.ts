@@ -4,8 +4,8 @@ import { Checkers } from './checkers'
 import { Exceptions } from './exceptions'
 
 export namespace Functions {
-    import isFunction = Checkers.isFunction
-    import exception = Exceptions.exception
+    import isFunction = Checkers.isFunction;
+    import typeException = Exceptions.typeException;
 
     export const composeAsync = async (...funcs) => async x =>
         // eslint-disable-next-line github/no-then
@@ -30,11 +30,10 @@ export namespace Functions {
     */
     export const proxy = <T>(callback: Callback, self: any, ...args: any[]): Supplier<T> => {
         if (!isFunction(callback)) {
-            throw exception('TypeError', `incorrect type value: function < ${callback} >`)
+            throw typeException(`incorrect type value: function < ${callback} >`)
         }
-        return () => {
-            return callback.apply(self, args)
-        }
+
+        return () => callback.apply(self, args)
     }
 
     export const substitute = <T>(prevValue, newValue, property: string, arr: T[]): any =>

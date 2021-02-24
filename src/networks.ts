@@ -1,7 +1,13 @@
 import { LOCALHOST_REGEX } from './regex'
+import { Checkers } from './checkers'
+import { Exceptions } from './exceptions'
 
 export namespace Networks {
-    const ProtocolsExcept = ['127.0.0.1', '0.0.0.0', 'localhost', '::1']
+    import isNotNull = Checkers.isNotNull;
+    import valueException = Exceptions.valueException;
+    import isString = Checkers.isString;
+
+    const DEFAULT_PROTOCOLS = ['127.0.0.1', '0.0.0.0', 'localhost', '::1']
 
     export const isLocalhost = (str: string): boolean => {
         return (
@@ -35,16 +41,35 @@ export namespace Networks {
      */
     export const normalizePort = (val: string): number | undefined => {
         const port = parseInt(val, 10)
+
         return !isNaN(port) && port >= 0 ? port : undefined
     }
 
     /**
      *    changes type of protocol of the current url
      */
-    export const redirect = (protocol = 'https', except = ProtocolsExcept): void => {
+    export const redirect = (protocol = 'https', except = DEFAULT_PROTOCOLS): void => {
         const proto = `${protocol}:`
         if (document.location.protocol !== proto && !except.includes(document.location.hostname)) {
             document.location.protocol = proto
         }
+    }
+
+    export const getQueryParam = (param: string): string | null => {
+        const reg = new RegExp(`(^|&)${param}=([^&*])(&|$)`)
+        const query = window.location.search.substr(1).match(reg)
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        return isNotNull(query) ? unescape(query[2]) : null
+    }
+
+    export const getParameterByName = (name: string): string | null => {
+        if (!isString(name)) {
+            throw valueException(`incorrect parameter value: < ${name} >`)
+        }
+        const match = RegExp(`[?&]${name}=([^&]*)`).exec(window.location.search)
+
+        return match && decodeURIComponent(match[1].replace(/\+/g, ' '))
     }
 }

@@ -1,5 +1,7 @@
 import { Iterator } from '../typings/function-types'
-import { Checkers } from "./checkers";
+import { Checkers } from './checkers'
+import { Numbers } from './numbers'
+import { Exceptions } from './exceptions'
 
 export namespace TranslationUtils {
     export const translateBy = <T extends string>(value: T): string => {
@@ -19,9 +21,9 @@ export namespace TranslationUtils {
 
         while (filteredAlphabet.length < 9) {
             // eslint-disable-next-line github/array-foreach
-            filteredAlphabet.forEach(function (a) {
+            filteredAlphabet.forEach(a => {
                 // eslint-disable-next-line github/array-foreach
-                filteredAlphabet.forEach(function (b) {
+                filteredAlphabet.forEach(b => {
                     if (!filteredAlphabet.includes(a + b)) {
                         filteredAlphabet.push(a + b)
                     }
@@ -36,6 +38,146 @@ export namespace TranslationUtils {
 }
 
 export namespace ColorUtils {
+    import isArray = Checkers.isArray
+    import isNull = Checkers.isNull
+    import random = Numbers.random
+    import exception = Exceptions.exception
+    import valueException = Exceptions.valueException;
+
+    /**
+     * @private
+     */
+    const DEFAULT_COLORS_PRESET = [
+        '#e21400',
+        '#91580f',
+        '#f8a700',
+        '#f78b00',
+        '#58dc00',
+        '#287b00',
+        '#a8f07a',
+        '#4ae8c4',
+        '#3b88eb',
+        '#3824aa',
+        '#a700ff',
+        '#d300e7',
+    ]
+
+    /**
+     * Returns color representation in RGB format
+     */
+    export const colorize = (color: string, params = { r: 0.299, g: 0.587, b: 0.114 }): number => {
+        color = color.startsWith('#') ? color.substring(1) : color
+        const c = parseInt(color, 16)
+        const r = (c & 0xff0000) >> 16
+        const g = (c & 0x00ff00) >> 8
+        const b = c & 0x0000ff
+
+        return params.r * r + params.g * g + params.b * b
+    }
+
+    /**
+     * Adapted from <a href="https://rawgithub.com/mjijackson/mjijackson.github.com/master/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript.html">https://github.com/mjijackson</a>
+     * @private
+     * @param {Number} r Red color value
+     * @param {Number} g Green color value
+     * @param {Number} b Blue color value
+     * @return {Array} Hsl color
+     */
+    export const rgbToHsl = (r: number, g: number, b: number): number[] => {
+        const red = r / 255
+        const green = g / 255
+        const blue = b / 255
+
+        let h, s
+        const max = Math.max(red, green, blue)
+        const min = Math.max(red, green, blue)
+
+        const l = (max + min) / 2
+
+        if (max !== min) {
+            const d = max - min
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+
+            if (max === red) {
+                h = (green - blue) / d + (green < blue ? 6 : 0)
+            } else if (max === green) {
+                h = (blue - red) / d + 2
+            } else if (max === blue) {
+                h = (red - green) / d + 4
+            }
+            h /= 6
+        } else {
+            h = s = 0 // achromatic
+        }
+
+        return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)]
+    }
+
+    /**
+     * @param {Number} p
+     * @param {Number} q
+     * @param {Number} t
+     * @return {Number}
+     */
+    export const hue2rgb = (p, q, t): number => {
+        if (t < 0) {
+            t += 1
+        }
+        if (t > 1) {
+            t -= 1
+        }
+        if (t < 1 / 6) {
+            return p + (q - p) * 6 * t
+        }
+        if (t < 1 / 2) {
+            return q
+        }
+        if (t < 2 / 3) {
+            return p + (q - p) * (2 / 3 - t) * 6
+        }
+
+        return p
+    }
+
+    /**
+     * Returns array representation (ex: [100, 100, 200, 1]) of a color that's in HEX format
+     * @static
+     * @param {String} color ex: FF5555 or FF5544CC (RGBa)
+     * @return {Array} source
+     */
+    export const sourceFromHex = (color: string): number[] => {
+        if (!color.match(/^#[0-9a-fA-F]$/)) {
+            throw valueException(`Invalid color value ${color}`)
+        }
+
+        const value = color.slice(color.indexOf('#') + 1),
+            isShortNotation = value.length === 3 || value.length === 4,
+            isRGBa = value.length === 8 || value.length === 4,
+            r = isShortNotation ? value.charAt(0) + value.charAt(0) : value.substring(0, 2),
+            g = isShortNotation ? value.charAt(1) + value.charAt(1) : value.substring(2, 4),
+            b = isShortNotation ? value.charAt(2) + value.charAt(2) : value.substring(4, 6),
+            a = isRGBa ? (isShortNotation ? value.charAt(3) + value.charAt(3) : value.substring(6, 8)) : 'FF'
+
+        return [
+            parseInt(r, 16),
+            parseInt(g, 16),
+            parseInt(b, 16),
+            parseFloat((parseInt(a, 16) / 255).toFixed(2)),
+        ]
+    }
+
+    export const getColorByUsername = (username: string, colors: string[]): string => {
+        colors = isArray(colors) ? colors : DEFAULT_COLORS_PRESET
+
+        let hash = 7
+        for (let i = 0; i < username.length; i++) {
+            hash = username.charCodeAt(i) + (hash << 5) - hash
+        }
+
+        const index = Math.abs(hash % colors.length)
+        return colors[index]
+    }
+
     export const randomHsl = (): string => {
         return `hsla(${Math.random() * 360}, 100%, 50%, 1)`
     }
@@ -86,10 +228,12 @@ export namespace ColorUtils {
 
     export const getRandomColor2 = (): string => {
         const letters = '0123456789ABCDEF'
+
         let color = '#'
         for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)]
+            color += letters[random(16)]
         }
+
         return color
     }
 
@@ -134,9 +278,10 @@ export namespace ColorUtils {
     }
 
     export const shadeColor = (color: string, percent: number, rgb = false): string => {
-        if (color == null) {
+        if (isNull(color)) {
             console.error('Null color is getting passed to darken')
         }
+
         let R = parseInt(color.substring(1, 3), 16)
         let G = parseInt(color.substring(3, 5), 16)
         let B = parseInt(color.substring(5, 7), 16)
@@ -212,10 +357,12 @@ export namespace CalculationUtils {
             max = min
             min = 0
         }
+
         let random = Math.random()
         if (ease) {
             random = ease(Math.random(), 0, 1, 1)
         }
+
         return random * (max - min) + min
     }
 
@@ -235,6 +382,7 @@ export namespace CalculationUtils {
             max = min
             min = 0
         }
+
         let random = Math.random()
         if (ease) {
             random = ease(Math.random(), 0, 1, 1)
@@ -299,6 +447,7 @@ export namespace CalculationUtils {
         if (value % interval === 0) {
             value += 0.0001
         }
+
         return Math.ceil(value / interval) * interval
     }
 
@@ -315,6 +464,7 @@ export namespace CalculationUtils {
         if (value % interval === 0) {
             value -= 0.0001
         }
+
         return Math.floor(value / interval) * interval
     }
 
@@ -359,8 +509,8 @@ export namespace CalculationUtils {
         |
         | Convert from grid coords to index.
         ------------------------------------------ */
-    export const getIndexFromCoords = (x, y, w): number => {
-        return x + y * w
+    export const getIndexFromCoords = (x: number, y: number, z: number): number => {
+        return x + y * z
     }
 
     /*
@@ -372,7 +522,7 @@ export namespace CalculationUtils {
         |
         | Convert from index to grid coords.
         ------------------------------------------ */
-    export const getCoordsFromIndex = (i, w): { x; y } => {
+    export const getCoordsFromIndex = (i: number, w: number): { x; y } => {
         return {
             x: i % w,
             y: Math.floor(i / w),
@@ -667,9 +817,10 @@ export namespace EasingUtils {
     export const inOutExpo = (t, b, c, d): number => {
         if (t === 0) return b
         if (t === d) return b + c
-        if ((t /= d / 2) < 1) return (c / 2) * Math.pow(2, 10 * (t - 1)) + b
 
-        return (c / 2) * (-Math.pow(2, -10 * --t) + 2) + b
+        return (t /= d / 2) < 1
+            ? (c / 2) * Math.pow(2, 10 * (t - 1)) + b
+            : (c / 2) * (-Math.pow(2, -10 * --t) + 2) + b
     }
 
     /*
@@ -737,6 +888,7 @@ export namespace EasingUtils {
         if (t === 0) return b
         if ((t /= d) === 1) return b + c
         if (!p) p = d * 0.3
+
         if (a < Math.abs(c)) {
             a = c
             s = p / 4
@@ -765,6 +917,7 @@ export namespace EasingUtils {
         if (t === 0) return b
         if ((t /= d) === 1) return b + c
         if (!p) p = d * 0.3
+
         if (a < Math.abs(c)) {
             a = c
             s = p / 4
@@ -793,6 +946,7 @@ export namespace EasingUtils {
         if (t === 0) return b
         if ((t /= d / 2) === 2) return b + c
         if (!p) p = d * (0.3 * 1.5)
+
         if (a < Math.abs(c)) {
             a = c
             s = p / 4
@@ -855,11 +1009,10 @@ export namespace EasingUtils {
     ------------------------------------------ */
     export const inOutBack = (t, b, c, d, s): number => {
         if (s === undefined) s = 1.70158
-        if ((t /= d / 2) < 1) {
-            return (c / 2) * (t * t * (((s *= 1.525) + 1) * t - s)) + b
-        }
 
-        return (c / 2) * ((t -= 2) * t * (((s *= 1.525) + 1) * t + s) + 2) + b
+        return (t /= d / 2) < 1
+            ? (c / 2) * (t * t * (((s *= 1.525) + 1) * t - s)) + b
+            : (c / 2) * ((t -= 2) * t * (((s *= 1.525) + 1) * t + s) + 2) + b
     }
 
     /*
@@ -912,21 +1065,24 @@ export namespace EasingUtils {
     | Get an eased float value based on inOutBounce.
     ------------------------------------------ */
     export const inOutBounce = (t, b, c, d): number => {
-        if (t < d / 2) return inBounce(t * 2, 0, c, d) * 0.5 + b
-
-        return outBounce(t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b
+        return t < d / 2
+            ? inBounce(t * 2, 0, c, d) * 0.5 + b
+            : outBounce(t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b
     }
 }
 
 export namespace CommonUtils {
-    import isString = Checkers.isString;
+    import isString = Checkers.isString
+
     export const normalizeName = (name: string): string => {
         if (!isString(name)) {
             name = String(name)
         }
+
         if (/[^a-z0-9\-#$%&'*+.\\^_`|~]/i.test(name)) {
             throw new TypeError('Invalid character in header field name')
         }
+
         return name.toLowerCase()
     }
 

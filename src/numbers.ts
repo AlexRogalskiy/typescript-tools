@@ -1,4 +1,12 @@
+import { Checkers } from './checkers'
+import { Exceptions } from './exceptions'
+
 export namespace Numbers {
+    import isNumber = Checkers.isNumber
+    import isIntNumber = Checkers.isIntNumber
+    import valueException = Exceptions.valueException
+    import typeException = Exceptions.typeException
+
     export const random = (max: number): number => {
         return Math.floor(Math.random() * max)
     }
@@ -7,7 +15,63 @@ export namespace Numbers {
         return Math.floor(Math.random() * (max - min + 1)) + min
     }
 
-    export const randomN = <T>(array: T[], n: number): T[] => {
+    export const randomBinary = (): number => {
+        return Math.round(Math.random())
+    }
+
+    export const rand = (l: number, u: number): number => {
+        if (!isNumber(l)) {
+            throw typeException(`incorrect input argument: {lower border} is not number < ${l} >`)
+        }
+
+        if (!isNumber(u)) {
+            throw typeException(`incorrect input argument: {upper border} is not number < ${u} >`)
+        }
+
+        if (l > u) {
+            l = [u, (u = l)][0]
+        }
+
+        return l + Math.random() * (u - l)
+    }
+
+    export const randInt = (l: number, u: number): number => {
+        if (!isIntNumber(l)) {
+            throw typeException(`incorrect input argument: {lower border} is not integer number < ${l} >`)
+        }
+
+        if (!isIntNumber(u)) {
+            throw typeException(`incorrect input argument: {upper border} is not integer number < ${u} >`)
+        }
+
+        if (l > u) {
+            l = [u, (u = l)][0]
+        }
+
+        return Math.floor(l + Math.random() * (u - l))
+    }
+
+    export const randUnevenInt = (l: number, u: number): number => {
+        if (!isIntNumber(l)) {
+            throw typeException(`incorrect input argument: {lower border} is not integer number < ${l} >`)
+        }
+
+        if (!isIntNumber(u)) {
+            throw typeException(`incorrect input argument: {upper border} is not integer number < ${u} >`)
+        }
+
+        if (l > u) {
+            l = [u, (u = l)][0]
+        }
+
+        return Math.round(l + Math.random() * (u - l))
+    }
+
+    export const randBigInt = (): number => {
+        return (Number.MAX_VALUE * Math.random()).integer()
+    }
+
+    export const randomNum = <T>(array: T[], n: number): T[] => {
         const limit = array.length < n ? array.length : n
         const randomIndicesSet = new Set<number>()
 
@@ -43,6 +107,7 @@ export namespace Numbers {
         if (value === 0) return ''
 
         //return (value >> 31) | ((-value) >>> 31);
+        // return flip((a >> 31) & 0x1);
         return value > 0 ? '+' : '-'
     }
 
@@ -84,5 +149,32 @@ export namespace Numbers {
 
     export const toFixed = (number: number, fractionDigits: number): number => {
         return parseFloat(Number(number).toFixed(fractionDigits))
+    }
+
+    export const dec2bin = (dec, length): string => {
+        if (!isIntNumber(dec) || !isIntNumber(length)) {
+            throw valueException(`incorrect input values: decimal < ${dec} >, output length < ${length} >`)
+        }
+
+        let out = ''
+        while (length--) {
+            out += (dec >> length) & 1
+        }
+
+        return out
+    }
+
+    export const is32Bit = (value: string): boolean => {
+        const code = value.codePointAt(0)
+
+        return code !== undefined && code > 0xffff
+    }
+
+    export const xor = (a, b): boolean => {
+        return a ? !b : b
+    }
+
+    export const compare = (a: number, b: number): number => {
+        return a < b ? -1 : a > b ? 1 : 0
     }
 }

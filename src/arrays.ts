@@ -1,7 +1,18 @@
 import { Numbers } from './numbers'
+import { Checkers } from './checkers'
+import { Exceptions } from './exceptions'
+import { Maths } from './maths'
 
 export namespace Arrays {
     import random = Numbers.random
+    import isArray = Checkers.isArray
+    import exception = Exceptions.exception
+    import randInt = Numbers.randInt
+    import getEmptyNumberVector = Maths.getEmptyNumberVector
+    import isNull = Checkers.isNull
+    import isFunction = Checkers.isFunction
+    import typeException = Exceptions.typeException
+    import valueException = Exceptions.valueException
 
     export function shuffle<T>(arr: T[]): T[] {
         if (!Array.isArray(arr)) {
@@ -113,5 +124,64 @@ export namespace Arrays {
 
     export const eliminateDuplicates = <T>(items: T[]): T[] => {
         return [...new Set(items)]
+    }
+
+    export const randWeightedArray = (numbers: number[]): number[] => {
+        if (!isArray(numbers)) {
+            throw typeException(`incorrect input argument: {numbers} is not array < ${numbers} >`)
+        }
+
+        let total = 0
+        const dist = getEmptyNumberVector()
+
+        // eslint-disable-next-line @typescript-eslint/no-for-in-array
+        for (const index in numbers) {
+            if (numbers.hasOwnProperty(index)) {
+                total += numbers[index]
+                dist[index] = total
+            }
+        }
+
+        const result: number[] = []
+        const rand = randInt(0, total)
+
+        // eslint-disable-next-line @typescript-eslint/no-for-in-array
+        for (const index in dist) {
+            if (dist.hasOwnProperty(index)) {
+                if (rand < dist[index]) {
+                    result.push(Number(index))
+                }
+            }
+        }
+
+        return result
+    }
+
+    export const copyOfArray = (array: any[]): any[] => {
+        if (!isArray(array)) {
+            throw valueException(`incorrect input value: array < ${array} >`)
+        }
+
+        const res: any[] = []
+        for (const item of array) {
+            isArray(item) ? res.push(item.slice(0)) : res.push(item)
+        }
+
+        //return array.slice(0)
+        return res
+    }
+
+    export const createAndFillArray = (start: number, end: number, func): any[] => {
+        if (isNull(start) || isNull(end) || !isFunction(func)) {
+            throw valueException(
+                `incorrect input values: start < ${start} >, end < ${end} >, function of elements < ${func} >`,
+            )
+        }
+        const res: any[] = []
+        for (let i = start; i < end; i = func(i)) {
+            res.push(i)
+        }
+
+        return res
     }
 }

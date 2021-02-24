@@ -7,6 +7,10 @@ export const MOBILE_NAVIGATOR_CODE_REGEX = /1207|6310|6590|3gso|4thp|50[1-6]i|77
 export const LOCALHOST_REGEX = new RegExp(/^127(?:\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
 
 export const ZIPCODE_REGEX = new RegExp('^[a-z]{3}(-[A-Z]{3})?$')
+export const EMAIL_REGEX = new RegExp(
+    '^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([a-z]{2,6}(?:\\.[a-z]{2})?)$',
+)
+
 /**
  * REGEX_STRING is the regex pattern to check for correct string
  * @type {RegExp}

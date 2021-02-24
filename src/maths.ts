@@ -1,17 +1,17 @@
 import { Checkers } from './checkers'
 import { Exceptions } from './exceptions'
 import { Supplier } from '../typings/function-types'
-import { NumberOrUndef, StringOrUndef, ValueOrUndef } from '../typings/standard-types'
+import { NumberOrUndef, StringOrUndef } from '../typings/standard-types'
 
 export namespace Maths {
     import isIntNumber = Checkers.isIntNumber
-    import exception = Exceptions.exception
     import isNumber = Checkers.isNumber
     import isString = Checkers.isString
     import isNull = Checkers.isNull
+    import valueException = Exceptions.valueException
 
-    type Vector2D = { x: number; y: number }
-    //type Vector3D = { x: number; y: number; z: number }
+    export type Vector2D = { x: number; y: number }
+    //export type Vector3D = { x: number; y: number; z: number }
 
     // const sqrt = Math.sqrt
     // const atan2 = Math.atan2
@@ -99,13 +99,24 @@ export namespace Maths {
         return values.reduce((previous, current) => previous + current, 0)
     }
 
-    // let myArray = vector(10, 0);
-    export const vector = <T>(dimension = 0, initial: null): ValueOrUndef<T>[] => {
+    export const getEmptyNumberVector = (): number[] => {
+        return vector<number>(0, 0)
+    }
+
+    export const getEmptyStringVector = (): string[] => {
+        return vector<string>(0, '')
+    }
+
+    export const getEmptyBooleanVector = (): boolean[] => {
+        return vector<boolean>(0, false)
+    }
+
+    export const vector = <T>(dimension: number, initial: T): T[] => {
         if (!isIntNumber(dimension) || dimension < 0) {
-            throw exception('ValueError', `incorrect input values: array dimension < ${dimension} >`)
+            throw valueException(`incorrect input values: array dimension < ${dimension} >`)
         }
 
-        const arr: ValueOrUndef<T>[] = []
+        const arr: T[] = []
         for (let i = 0; i < dimension; i++) {
             arr[i] = initial
         }
@@ -113,11 +124,13 @@ export namespace Maths {
         return arr
     }
 
-    // let myMatrix = globals.toolset.matrix(4, 4, 0);
+    export const EMPTY_NUMBER_VECTOR = vector<number>(0, 0)
+    export const EMPTY_STRING_VECTOR = vector<string>(0, '')
+    export const EMPTY_BOOLEAN_VECTOR = vector<boolean>(0, false)
+
     export const matrix = <T>(rows: number, columns: number, initial: T): T[][] => {
         if (!isIntNumber(rows) || !isIntNumber(columns) || rows < 0 || columns < 0) {
-            throw exception(
-                'ValueError',
+            throw valueException(
                 `incorrect input values: number of rows < ${rows} >, number of columns < ${columns} >`,
             )
         }
@@ -140,23 +153,23 @@ export namespace Maths {
 
         const minValue = isNumber(min) ? min : null
         if (isNull(minValue)) {
-            throw exception('ValueError', `incorrect {min} value: < ${min} >`)
+            throw valueException(`incorrect {min} value: < ${min} >`)
         }
 
         const maxValue = isNumber(max) ? max : null
         if (isNull(maxValue)) {
-            throw exception('ValueError', `incorrect {max} value: < ${max} >`)
+            throw valueException(`incorrect {max} value: < ${max} >`)
         }
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         if (minValue > maxValue) {
-            throw exception('ValueError', `incorrect range size: min < ${minValue} >, max < ${maxValue} >`)
+            throw valueException(`incorrect range size: min < ${minValue} >, max < ${maxValue} >`)
         }
 
         const deltaValue = delta == null ? 1 : isNumber(delta) && delta > 0 ? delta : null
         if (isNull(deltaValue)) {
-            throw exception('Error', `incorrect {delta} value: < ${delta} >`)
+            throw valueException(`incorrect {delta} value: < ${delta} >`)
         }
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -176,12 +189,12 @@ export namespace Maths {
     export const serialMaker = (prefix: StringOrUndef, seq: NumberOrUndef): { gensym: Supplier<string> } => {
         const prefixValue = prefix == null ? '' : isString(prefix) ? prefix : null
         if (isNull(prefixValue)) {
-            throw exception('ValueError', `incorrect prefix value: < ${prefixValue} >`)
+            throw valueException(`incorrect prefix value: < ${prefixValue} >`)
         }
 
         let seqValue = seq == null ? 0 : isNumber(seq) ? seq : null
         if (isNull(seqValue)) {
-            throw exception('ValueError', `incorrect sequence value: < ${seqValue} >`)
+            throw valueException(`incorrect sequence value: < ${seqValue} >`)
         }
 
         return {
@@ -191,5 +204,12 @@ export namespace Maths {
                 return prefixValue + seqValue++
             },
         }
+    }
+
+    export const calcVectorAngle = (ux: number, uy: number, vx: number, vy: number): number => {
+        const ta = Math.atan2(uy, ux)
+        const tb = Math.atan2(vy, vx)
+
+        return tb >= ta ? tb - ta : 2 * Math.PI - (ta - tb)
     }
 }
