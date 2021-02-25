@@ -1,11 +1,13 @@
 import { ALPHA_REGEX, EMAIL_REGEX, MOBILE_NAVIGATOR_CODE_REGEX, MOBILE_NAVIGATOR_TYPE_REGEX } from './regexes'
 import { Numbers } from './numbers'
 import { Exceptions } from './exceptions'
+import { Objects } from './objects'
 
 export namespace Checkers {
     import toUint32 = Numbers.toUint32
     import typeException = Exceptions.typeException
     import valueException = Exceptions.valueException
+    import getType = Objects.getType
 
     export const isNull = (value: any): boolean => {
         return value == null
@@ -69,9 +71,7 @@ export namespace Checkers {
 
     export const isNumber = (value: any): boolean => {
         return (
-            isNotNull(value) &&
-            (typeof value === 'number' || Object.toType(value) === 'number') &&
-            isFinite(value)
+            isNotNull(value) && (typeof value === 'number' || getType(value) === 'number') && isFinite(value)
         )
     }
 
@@ -104,7 +104,7 @@ export namespace Checkers {
     }
 
     export const isString = (value: any): boolean => {
-        return isNotNull(value) && (typeof value === 'string' || Object.toType(value) === 'string')
+        return isNotNull(value) && (typeof value === 'string' || getType(value) === 'string')
     }
 
     export const isArray = (value: any): boolean => {
@@ -133,7 +133,7 @@ export namespace Checkers {
     }
 
     export const isBoolean = (value: any): boolean => {
-        return isNotNull(value) && (typeof value === 'boolean' || Object.toType(value) === 'boolean')
+        return isNotNull(value) && (typeof value === 'boolean' || getType(value) === 'boolean')
     }
 
     export const isDomElement = (value: any): boolean => {
@@ -153,7 +153,7 @@ export namespace Checkers {
     }
 
     export const isRegExp = (value: any): boolean => {
-        return isNotNull(value) && Object.toType(value) === 'regexp'
+        return isNotNull(value) && getType(value) === 'regexp'
     }
 
     export const isSet = (value: string): boolean => {

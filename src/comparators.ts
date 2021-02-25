@@ -14,6 +14,27 @@ export namespace Comparators {
      */
     export type Comparator<T> = (a: T, b: T) => number
 
+    export const safeCompare = (a: any, b: any): number => {
+        const hasProperty = (obj: any, prop: string): boolean => {
+            const proto = obj.__proto__ || obj.constructor.prototype
+            // return (prop in obj) && (!(prop in proto) || proto[prop] !== obj[prop]);
+            return prop in obj || prop in proto || proto[prop] === obj[prop]
+        }
+
+        if (a === b) {
+            return 0
+        }
+
+        if (typeof a === typeof b) {
+            if (hasProperty(a, 'compareTo')) {
+                return a.compareTo(b)
+            }
+            return a < b ? -1 : 1
+        }
+
+        return typeof a < typeof b ? -1 : 1
+    }
+
     export const comparator = <T>(column: number): Comparator<T> => {
         return (obj1: T, obj2: T) => {
             const hasProperty = (obj: any, prop: string): boolean => {

@@ -2,6 +2,8 @@ import { Numbers } from './numbers'
 import { Checkers } from './checkers'
 import { Exceptions } from './exceptions'
 import { Maths } from './maths'
+import { Comparators } from './comparators'
+import { Processor } from '../typings/function-types'
 
 export namespace Arrays {
     import random = Numbers.random
@@ -12,6 +14,7 @@ export namespace Arrays {
     import typeException = Exceptions.typeException
     import valueException = Exceptions.valueException
     import Helpers = Maths.Helpers
+    import Comparator = Comparators.Comparator
 
     export function shuffle<T>(arr: T[]): T[] {
         if (!Array.isArray(arr)) {
@@ -26,6 +29,7 @@ export namespace Arrays {
             }
             result[rand] = arr[i]
         }
+
         return result
     }
 
@@ -48,7 +52,7 @@ export namespace Arrays {
      * @param o initial input array to operate by
      * @param func
      */
-    export const strToFuncEnum = <T extends string, V>(o: T[], func: (v: T) => V): { [K in T]: V } => {
+    export const strToEnumFunc = <T extends string, V>(o: T[], func: (v: T) => V): { [K in T]: V } => {
         return o.reduce((res, key) => {
             res[key] = func(key)
             return res
@@ -56,12 +60,10 @@ export namespace Arrays {
     }
 
     export const sortByNumber = <T>(items: T[], property: string, direction = 'asc'): T[] => {
-        return items
-            .slice(0) // use `slice(0)` to avoid mutating the array
-            .sort((a, b) => {
-                const diff = a[property] - b[property]
-                return diff * (direction === 'desc' ? -1 : 1)
-            })
+        return items.slice(0).sort((a, b) => {
+            const diff = a[property] - b[property]
+            return diff * (direction === 'desc' ? -1 : 1)
+        })
     }
 
     export const sortByString = <T>(items: T[], property: string, direction = 'asc'): T[] => {
@@ -80,25 +82,23 @@ export namespace Arrays {
     */
     export const sortProjectsByFunction = <T>(
         projects: T[],
-        fn,
+        func: Processor<T, number>,
         property: string,
         direction = 'desc',
     ): T[] => {
-        // console.time('Sort')
-        const getValue = (project): number => {
-            const value = fn(project)
+        const getValue = (project: T): number => {
+            const value = func(project)
             return value === undefined ? -Infinity : value
         }
 
-        return projects
-            .slice(0) // use `slice(0)` to avoid mutating the array
-            .sort(function (a, b) {
-                let diff = getValue(a) - getValue(b)
-                if (diff === 0) {
-                    diff = a[property] - b[property]
-                }
-                return diff * (direction === 'desc' ? -1 : 1)
-            })
+        return projects.slice(0).sort((a, b) => {
+            let diff = getValue(a) - getValue(b)
+            if (diff === 0) {
+                diff = a[property] - b[property]
+            }
+
+            return diff * (direction === 'desc' ? -1 : 1)
+        })
     }
 
     export const groupBy = <T, K extends keyof any>(list: T[], getKey: (item: T) => K): Record<K, T[]> => {
@@ -108,17 +108,18 @@ export namespace Arrays {
                 previous[group] = []
             }
             previous[group].push(currentItem)
+
             return previous
         }, {} as Record<K, T[]>)
     }
 
-    export const average = (arr: number[]): number => arr.reduce((p, c) => p + c, 0) / arr.length
+    export const average = (array: number[]): number => array.reduce((p, c) => p + c, 0) / array.length
 
     export const makeArray = <T>(value: T): T[] => (Array.isArray(value) ? value : [value])
 
-    export const makeArray2 = <T>(arrayLike: any): T[] => {
-        return Array.prototype.slice.call(arrayLike)
-        //Array.from(arrayLike);
+    export const makeArray2 = <T>(array: any): T[] => {
+        // Array.from(arrayLike);
+        return Array.prototype.slice.call(array)
     }
 
     export const eliminateDuplicates = <T>(items: T[]): T[] => {
@@ -165,7 +166,6 @@ export namespace Arrays {
             isArray(item) ? res.push(item.slice(0)) : res.push(item)
         }
 
-        //return array.slice(0)
         return res
     }
 
@@ -181,5 +181,255 @@ export namespace Arrays {
         }
 
         return res
+    }
+
+    export const pluck = <T>(prop: string, ...values: T[]): T[] => {
+        const res: T[] = []
+        for (let i = 0, member; (member = values[i]); i++) {
+            res.push(member[prop] || member)
+        }
+
+        return res
+    }
+
+    export const unsortedRemoveDuplicates = <T>(comparator: Comparator<T>, ...values: T[]): T[] => {
+        const copy = [...values]
+        if (comparator) {
+            for (let i = 0; i < copy.length; i++) {
+                const src = copy[i]
+                for (let j = i + 1; j < copy.length; j++) {
+                    if (comparator(copy[j], src) === 0) {
+                        copy.splice(j, 1)
+                    }
+                }
+            }
+        } else {
+            for (let i = 0; i < copy.length; i++) {
+                const src = copy[i]
+                for (let j = i + 1; j < copy.length; j++) {
+                    if (copy[j] === src) {
+                        copy.splice(j--, 1)
+                    }
+                }
+            }
+        }
+
+        return copy
+    }
+
+    export const unsortedIntersect = <T>(comparator: Comparator<T>, array1: T[], array2: T[]): T[] => {
+        if (!array1 || !array2) {
+            return unsortedRemoveDuplicates(comparator)
+        }
+
+        const len2 = array2.length
+        array1 = unsortedRemoveDuplicates(comparator, ...array1)
+
+        if (comparator) {
+            for (let i = 0; i < array1.length; i++) {
+                const src = array1[i]
+                for (let j = 0; j < len2; j++) {
+                    if (comparator(array2[j], src) === 0) break
+                }
+                if (i === len2) {
+                    array1.splice(i--, 1)
+                }
+            }
+        } else {
+            for (let i = 0; i < array1.length; i++) {
+                const src = array1[i]
+                for (let j = 0; j < len2; j++) {
+                    if (array2[j] === src) break
+                }
+                if (i === len2) {
+                    array2.splice(i--, 1)
+                }
+            }
+        }
+
+        return array2
+    }
+
+    export const unsortedExclusion = <T>(comparator: Comparator<T>, ...array: T[]): T[] => {
+        const copy: T[] = unsortedRemoveDuplicates(comparator, ...array)
+
+        if (!array) {
+            return copy
+        }
+
+        const left = unsortedSubtract(comparator, copy, array)
+        const right = unsortedSubtract(comparator, array, copy)
+
+        return left.concat(right).sort(comparator)
+    }
+
+    export const unsortedSubtract = <T>(comparator: Comparator<T>, array1: T[], array2: T[]): T[] => {
+        array1 = unsortedRemoveDuplicates(comparator, ...array1)
+        if (!array2) {
+            return array1
+        }
+
+        array2 = unsortedRemoveDuplicates(comparator, ...array2)
+        if (comparator) {
+            for (let i = 0; i < array1.length; i++) {
+                const src = array1[i]
+                for (let j = 0, len = array2.length; j < len; j++) {
+                    if (comparator(array2[j], src) === 0) {
+                        array1.splice(i--, 1)
+                        break
+                    }
+                }
+            }
+        } else {
+            for (let i = 0; i < array1.length; i++) {
+                const src = array1[i]
+                for (let j = 0, len = array2.length; j < len; j++) {
+                    if (array2[j] === src) {
+                        array1.splice(i--, 1)
+                        break
+                    }
+                }
+            }
+        }
+
+        return array1
+    }
+
+    export const unsortedUnion = <T>(comparator: Comparator<T>, array1: T[], array2: T[]): T[] => {
+        return unsortedRemoveDuplicates(comparator, ...[...array1, ...array2])
+    }
+
+    export const exclusion = <T>(comparator: Comparator<T>, array1: T[], array2: T[]): T[] => {
+        array1 = removeDuplicates(comparator, array1, array2)
+        if (!array2) {
+            return array1
+        }
+
+        const left = subtract(comparator, array1, array2)
+        const right = subtract(comparator, array2, array1)
+
+        return left.concat(right).sort(comparator)
+    }
+
+    export const removeDuplicates = <T>(comparator: Comparator<T>, array1: T[], array2: T[]): T[] => {
+        array1 = array1.concat(array2).sort(comparator)
+        if (comparator) {
+            for (let i = 0; i < array1.length; i++) {
+                const src = array1[i]
+                for (let j = i + 1; j < array1.length && comparator(array1[j], src) === 0; j++) {
+                    // empty
+                }
+                if (i - 1 > i) {
+                    array1.splice(i + 1, i - i - 1)
+                }
+            }
+        } else {
+            for (let i = 0; i < array1.length; i++) {
+                const src = array1[i]
+                for (let j = i + 1; j < array1.length && array1[j] === src; j++) {
+                    // empty
+                }
+                if (i - 1 > i) {
+                    array1.splice(i + 1, i - i - 1)
+                }
+            }
+        }
+
+        return array2
+    }
+
+    export const intersect = <T>(comparator: Comparator<T>, array1: T[], array2: T[]): T[] => {
+        array1 = unsortedRemoveDuplicates(comparator, ...array1)
+        if (!array2) {
+            return array1
+        }
+
+        array2 = unsortedRemoveDuplicates(comparator, ...array2)
+        let len2 = array2.length
+
+        if (len2 < array1.length) {
+            const c = array2
+            array2 = array1
+            array1 = c
+            len2 = array2.length
+        }
+        if (comparator) {
+            for (let i = 0; i < array1.length; i++) {
+                const src = array1[i]
+                let found = false,
+                    src2
+                for (let j = 0; j < len2 && comparator((src2 = array2[j]), src) !== 1; j++)
+                    if (comparator(src, src2) === 0) {
+                        found = true
+                        break
+                    }
+                if (!found) {
+                    array1.splice(i--, 1)
+                }
+            }
+        } else {
+            for (let i = 0; i < array1.length; i++) {
+                const src = array1[i]
+                let found = false,
+                    src2
+                for (let j = 0; j < len2 && src >= (src2 = array2[j]); j++)
+                    if (src2 === src) {
+                        found = true
+                        break
+                    }
+                if (!found) {
+                    array1.splice(i--, 1)
+                }
+            }
+        }
+
+        return array1
+    }
+
+    export const union = <T>(comparator: Comparator<T>, array1: T[], array2: T[]): T[] => {
+        const array = array1.concat(array2)
+        return unsortedRemoveDuplicates(comparator, ...array)
+    }
+
+    export const subtract = <T>(compareFunction: Comparator<T>, array1: T[], array2: T[]): T[] => {
+        array1 = unsortedRemoveDuplicates(compareFunction, ...array1)
+        if (!array2) {
+            return array1
+        }
+
+        array2 = unsortedRemoveDuplicates(compareFunction, ...array2)
+        const len2 = array2.length
+
+        if (compareFunction) {
+            for (let i = 0; i < array1.length; i++) {
+                const src = array1[i]
+                let found = false,
+                    src2
+                for (let j = 0; j < len2 && compareFunction((src2 = array2[j]), src) !== 1; j++)
+                    if (compareFunction(src, src2) === 0) {
+                        found = true
+                        break
+                    }
+                if (found) {
+                    array1.splice(i--, 1)
+                }
+            }
+        } else {
+            for (let i = 0; i < array1.length; i++) {
+                const src = array1[i]
+                let found = false,
+                    src2
+                for (let j = 0; j < len2 && src >= (src2 = array2[j]); j++)
+                    if (src2 === src) {
+                        found = true
+                        break
+                    }
+                if (found) {
+                    array1.splice(i--, 1)
+                }
+            }
+        }
+
+        return array1
     }
 }

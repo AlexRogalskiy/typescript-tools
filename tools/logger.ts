@@ -117,7 +117,9 @@ export class Logger {
         }, '')
     }
 
-    private constructor() {}
+    private constructor() {
+        // empty
+    }
 
     static getLogger(): Logger {
         const value = Symbol.for('instance')

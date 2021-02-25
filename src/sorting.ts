@@ -616,29 +616,29 @@ export namespace Sorting {
      * var res = globals.algorithms.heapsort([3, 4, 5, 2, 1, 4, 4, 2, 5, 1, 6, 2, 4]);
      * document.writeln('heapSort: ' + res);
      */
-    export const heapsort = <T>(array: T[], min: number, max: number, cmp: Comparator<T>): T[] => {
-        if (!isArray(array)) {
-            throw valueException(`incorrect input parameter: array < ${array} >`)
-        }
-
-        min = isIntNumber(min) && min > 0 && min < array.length ? min : 0
-        max = isIntNumber(max) && max > 0 && max < array.length ? max : array.length - 1
-
-        if (min > max) {
-            throw valueException(`incorrect min or max value: min < ${min} >, max < ${max} >`)
-        }
-
-        cmp = isFunction(cmp) ? cmp : cmpByDefault
-
-        const heap = maxHeap(array.slice(min, max + 1), cmp),
-            result = []
-        while (!heap.isEmpty()) {
-            result.push(heap.poll())
-        }
-
-        //return heap.postorderTraversal()
-        return result
-    }
+    // export const heapsort = <T>(array: T[], min: number, max: number, cmp: Comparator<T>): T[] => {
+    //     if (!isArray(array)) {
+    //         throw valueException(`incorrect input parameter: array < ${array} >`)
+    //     }
+    //
+    //     min = isIntNumber(min) && min > 0 && min < array.length ? min : 0
+    //     max = isIntNumber(max) && max > 0 && max < array.length ? max : array.length - 1
+    //
+    //     if (min > max) {
+    //         throw valueException(`incorrect min or max value: min < ${min} >, max < ${max} >`)
+    //     }
+    //
+    //     cmp = isFunction(cmp) ? cmp : cmpByDefault
+    //
+    //     const heap = maxHeap(array.slice(min, max + 1), cmp),
+    //         result = []
+    //     while (!heap.isEmpty()) {
+    //         result.push(heap.poll())
+    //     }
+    //
+    //     //return heap.postorderTraversal()
+    //     return result
+    // }
 
     /**
      * @public
@@ -718,6 +718,9 @@ export namespace Sorting {
             //}
         }
 
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const siftdown = <T>(data: T[], value: number, cmp: Comparator<T>): void => {
             for (let c, order, i = value; (c = 2 * i) <= data.length; i = c) {
                 if (c + 1 <= data.length && cmp(data[c + 1], data[c]) > 0) {
@@ -741,7 +744,7 @@ export namespace Sorting {
             for (let i = n - 1; i >= 0; i--) {
                 siftup(array, i, n, cmp)
             }
-            for (let i = n - 1; i > 0; ) {
+            for (let i = n - 1; i > 0; i) {
                 swap(array, 0, i)
                 siftup(array, 0, i--, cmp)
             }
@@ -764,23 +767,23 @@ export namespace Sorting {
      * zero, or positive value, depending on the arguments.
      * @return {Array} Current sorted array
      */
-    export const pqsort = <T>(array: T[], cmp: Comparator<T>): T[] => {
-        if (!isArray(array)) {
-            throw valueException(`incorrect input parameter: array < ${array} >`)
-        }
-
-        cmp = isFunction(cmp) ? cmp : cmpByDefault
-
-        const pq = priqueue(array, cmp)
-        //for(var i=0; i<array.length; i++) {
-        //	pq.insert(array[i]);
-        //}
-        for (let i = 0; i < array.length; i++) {
-            array[i] = pq.extractmin()
-        }
-
-        return array
-    }
+    // export const pqsort = <T>(array: T[], cmp: Comparator<T>): T[] => {
+    //     if (!isArray(array)) {
+    //         throw valueException(`incorrect input parameter: array < ${array} >`)
+    //     }
+    //
+    //     cmp = isFunction(cmp) ? cmp : cmpByDefault
+    //
+    //     const pq = priqueue(array, cmp)
+    //     //for(var i=0; i<array.length; i++) {
+    //     //	pq.insert(array[i]);
+    //     //}
+    //     for (let i = 0; i < array.length; i++) {
+    //         array[i] = pq.extractmin()
+    //     }
+    //
+    //     return array
+    // }
 
     /**
      * @public

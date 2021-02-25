@@ -1,11 +1,11 @@
-import { Consumer, Processor } from '../typings/function-types'
+import { BiConsumer, Consumer, Processor } from '../typings/function-types'
 
 export namespace Logging {
-    export const toLog = (...args: unknown[]): void => {
+    export const toLog = (message: string, ...args: unknown[]): void => {
         if (process.env.NODE_ENV && process.env.NODE_ENV !== 'development') {
             return
         }
-        console.log(...args)
+        console.log(message, ...args)
     }
 
     export const createLog = (
@@ -16,6 +16,36 @@ export namespace Logging {
             logger(`${processor(message)}`)
         }
     }
+
+    export const createLogs = (
+        logger: BiConsumer<string, any[]>,
+        processor: Processor<string, string>,
+    ): BiConsumer<string, any[]> => {
+        return (message, args) => {
+            logger(`${processor(message)}`, args)
+        }
+    }
+
+    export const logs = createLogs(
+        (m, ...args) => console.log(m, args),
+        m => m.toUpperCase(),
+    )
+    export const errors = createLogs(
+        (m, ...args) => console.error(m, args),
+        m => m.toUpperCase(),
+    )
+    export const warns = createLogs(
+        (m, ...args) => console.warn(m, args),
+        m => m.toUpperCase(),
+    )
+    export const debugs = createLogs(
+        (m, ...args) => console.debug(m, args),
+        m => m.toUpperCase(),
+    )
+    export const traces = createLogs(
+        (m, ...args) => console.trace(m, args),
+        m => m.toUpperCase(),
+    )
 
     export const log = createLog(
         m => console.log(m),

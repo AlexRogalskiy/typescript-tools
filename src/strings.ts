@@ -132,6 +132,16 @@ export namespace Strings {
         )
     }
 
+    export const capitalize = (input: string): string => {
+        const inputArray = input.split(' ')
+        const output: string[] = []
+        for (const inputArrayItem of inputArray) {
+            output.push(inputArrayItem.charAt(0).toUpperCase() + inputArrayItem.slice(1))
+        }
+
+        return output.join(' ')
+    }
+
     export const join = (symbols: string[] | string, delim = ','): string => {
         return Array.isArray(symbols) ? symbols.join(delim) : symbols
     }

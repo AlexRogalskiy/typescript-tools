@@ -20,21 +20,21 @@ export namespace Requests {
         return Promise.reject(error)
     }
 
-    export async function fetchJSON(url: string, options?): Promise<unknown> {
+    export async function fetchJSON(url: string, options: RequestInit = {}): Promise<unknown> {
         const data = await fetch(url, options)
         const response = await checkStatus(data)
 
         return await response.json()
     }
 
-    export async function fetchHTML(url: string, options?): Promise<string> {
+    export async function fetchHTML(url: string, options: RequestInit = {}): Promise<string> {
         const data = await fetch(url, options)
 
         return await data.text()
     }
 
-    export const toBase64ImageUrl = async (imgUrl: string): Promise<string> => {
-        const fetchImageUrl = await fetch(imgUrl)
+    export const toBase64ImageUrl = async (imgUrl: string, options: RequestInit = {}): Promise<string> => {
+        const fetchImageUrl = await fetch(imgUrl, options)
         const responseArrBuffer = await fetchImageUrl.arrayBuffer()
 
         return `data:${fetchImageUrl.headers.get('Content-Type') || 'image/png'};base64,${Buffer.from(
@@ -42,9 +42,9 @@ export namespace Requests {
         ).toString('base64')}`
     }
 
-    export const isValidUrl = (str: string): boolean => {
+    export const isValidUrl = (value: string): boolean => {
         try {
-            new URL(str)
+            new URL(value)
 
             return true
         } catch (e) {
@@ -52,11 +52,11 @@ export namespace Requests {
         }
     }
 
-    export const requireValidUrl = (str: string): string => {
-        if (isValidUrl(str)) {
-            return str
+    export const requireValidUrl = (value: string): string => {
+        if (isValidUrl(value)) {
+            return value
         }
-        throw new Error(`Invalid URL: ${str}`)
+        throw new Error(`Invalid URL: ${value}`)
     }
 
     export const fetchJsonUrl = async (url: RequestInfo): Promise<string> => {
@@ -75,12 +75,12 @@ export namespace Requests {
         return json
     }
 
-    export const toJsonUrl = (str: string): string => {
-        if (isBlankString(str)) throw Error('Source URL should not be blank or empty')
-        str = withHttpUrl(str)
-        str = withJsonUrl(str)
+    export const toJsonUrl = (value: string): string => {
+        if (isBlankString(value)) throw Error('Source URL should not be blank or empty')
+        value = withHttpUrl(value)
+        value = withJsonUrl(value)
 
-        return str
+        return value
     }
 
     export const withHttpUrl = (url: string): string =>
@@ -89,8 +89,8 @@ export namespace Requests {
     export const withJsonUrl = (url: string): string =>
         !!url && !/\.json$/i.test(url) ? `${url.replace(/\/$/, '')}.json` : url
 
-    export const parseQueryString = (queryString: string): any => {
-        const parameters = parse(queryString, { ignoreQueryPrefix: true })
+    export const parseQueryString = (value: string): any => {
+        const parameters = parse(value, { ignoreQueryPrefix: true })
 
         return {
             ...parameters,
@@ -98,8 +98,8 @@ export namespace Requests {
         }
     }
 
-    export const queryStringToState = (queryString: string): unknown => {
-        const parameters = parseQueryString(queryString)
+    export const queryStringToState = (value: string): unknown => {
+        const parameters = parseQueryString(value)
 
         const selectedTags = parameters.tags ? makeArray(parameters.tags) : []
 

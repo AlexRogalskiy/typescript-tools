@@ -5,8 +5,8 @@ import { Checkers } from './checkers'
 import { Exceptions } from './exceptions'
 
 export namespace Functions {
-    import isFunction = Checkers.isFunction;
-    import typeException = Exceptions.typeException;
+    import isFunction = Checkers.isFunction
+    import typeException = Exceptions.typeException
 
     export const composeAsync = async (...funcs) => async x =>
         // eslint-disable-next-line github/no-then

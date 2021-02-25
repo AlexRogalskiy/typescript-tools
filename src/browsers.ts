@@ -109,4 +109,10 @@ export namespace Browsers {
 
         return wrapper
     }
+
+    export const createDiv = (html: string): DomElement => {
+        const div = document.createElement('div')
+        div.innerHTML = html
+        return div
+    }
 }

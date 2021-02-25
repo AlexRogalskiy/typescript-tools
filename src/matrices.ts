@@ -1,10 +1,8 @@
 import { Exceptions } from './exceptions'
 import { Checkers } from './checkers'
 import { Comparators } from './comparators'
-import { Arrays } from './arrays'
 import { Numbers } from './numbers'
 import { ValueOrUndef } from '../typings/standard-types'
-import { Utils } from './utils'
 import { Maths } from './maths'
 
 export namespace Matrix {
@@ -13,14 +11,11 @@ export namespace Matrix {
     import valueException = Exceptions.valueException
     import isIntNumber = Checkers.isIntNumber
     import comparator = Comparators.comparator
-    import map = Calculation.map
     import isNumber = Checkers.isNumber
-    import isBoolean = Checkers.isBoolean
-    import copyOfArray = Arrays.copyOfArray
     import isInteger = Numbers.isInteger
     import Comparator = Comparators.Comparator
-    import Calculation = Utils.Calculation
     import Helpers = Maths.Helpers
+    import cmpByDefault = Comparators.cmpByDefault
 
     export type RowColumn = { row: number; column: number }
     export type Coordinate = {
@@ -170,88 +165,6 @@ export namespace Matrix {
 
         return res
     }
-
-    /**  @public
-     * @module matrix
-     * @param {Array} rows Input rows array.
-     * @param {Array} columns Input columns array.
-     * @return {String} multiplication order.
-     *
-     * @example
-     * let = globals.algorithms.multiplicationOrder([10, 20, 50, 1], [20, 50, 1, 100]);
-     * document.writeln(s);
-     * let ss = globals.algorithms.multiplicationOrder([3, 5], [4, 2]);
-     * document.writeln(ss);
-     * let sss = globals.algorithms.multiplicationOrder([3, 5, 4], [4, 2, 5]);
-     * document.writeln(sss);
-     */
-    export const multiplicationOrder = (() => {
-        const cache = map()
-        const subProblems = map()
-
-        const getOps = (rows: number[], columns: number[], i: number, j: number): number => {
-            if (i === j) {
-                return 0
-            }
-
-            if (cache.has([i, j])) {
-                return cache.get([i, j])
-            }
-
-            let minOps = Number.MAX_VALUE,
-                minK,
-                k
-            for (k = i; k < j; k++) {
-                const ops =
-                    getOps(rows, columns, i, k) +
-                    rows[i - 1] * columns[k - 1] * columns[j - 1] +
-                    getOps(rows, columns, k + 1, j)
-                if (ops < minOps) {
-                    minOps = ops
-                    minK = k
-                }
-            }
-
-            subProblems.put([i, j], minK)
-            cache.put([i, j], minOps)
-            return minOps
-        }
-
-        const matrixMultiplication = (i: number, j: number): string => {
-            if (!isIntNumber(i) || !isIntNumber(j) || i <= 0 || j <= 0) {
-                throw valueException(
-                    `incorrect input parameters: number of rows < ${i} >, number of columns < ${j} >`,
-                )
-            }
-            if (i === j) {
-                return i.toString()
-            } else {
-                const k = subProblems.get([i, j])
-                let s1 = matrixMultiplication(i, k)
-                if (s1.length > 1) {
-                    s1 = `( ${s1} )`
-                }
-                let s2 = matrixMultiplication(k + 1, j)
-                if (s2.length > 1) {
-                    s2 = `( ${s2} )`
-                }
-
-                return `${s1} * ${s2}`
-            }
-        }
-
-        return (rows: number[], columns: number[]): string => {
-            if (!isArray(rows) || !isArray(columns) || rows.length !== columns.length) {
-                throw valueException(`incorrect input parameters: array1 < ${rows} >, array2 < ${columns} >`)
-            }
-
-            if (getOps(rows, columns, 1, rows.length) === Number.MAX_VALUE) {
-                throw valueException(`invalid input parameter values, rows=${rows}, columns=${columns}`)
-            }
-
-            return matrixMultiplication(1, rows.length)
-        }
-    })()
 
     /** @public
      * @module matrix
@@ -428,44 +341,37 @@ export namespace Matrix {
      *                [1, 23, 1, 1, 0]];
      * document.writeln(globals.matrix.addOnColumns(distance));
      */
-    export const addOnColumns = (data: number[][], isNullDiagonal: boolean): number[][] => {
-        if (!isArray(data)) {
-            throw valueException(`incorrect vertex order matrix < ${data} >`)
-        }
-
-        // let mi1 = this.getRowsNum(), mj1 = this.getColumnsNum();
-        // if(mi1 === 0 || mj1 === 0/* || mi1 !== mj1*/) { throw {
-        //											name: 'MatrixSizeError',
-        //												message: 'incorrect matrix size: rows < ' + mi1 + ' >, columns < ' + mj1 + ' >'
-        //											};
-        //}
-
-        const rows = data.length
-        const cols = isArray(data[0]) ? data[0].length : 0
-        if (rows === 0 || cols === 0) {
-            throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
-        }
-
-        const nullDiagonal = isNullDiagonal == null ? true : isBoolean(isNullDiagonal) ? isNullDiagonal : null
-        if (nullDiagonal == null) {
-            throw valueException(`incorrect parameter: diagonal values included < ${nullDiagonal} >`)
-        }
-
-        const copy: number[][] = transpose(data)
-        for (let i = 0; i < rows; i++) {
-            const min = isNullDiagonal
-                ? arrayMin(copy[i].slice(0, i).concat(copy[i].slice(i + 1)))
-                : arrayMin(copy[i])
-            for (let j = 0; j < cols; j++) {
-                if (isNullDiagonal && i === j) {
-                    continue
-                }
-                copy[i][j] -= min
-            }
-        }
-
-        return transpose(copy)
-    }
+    // export const addOnColumns = (data: number[][], isNullDiagonal: boolean): number[][] => {
+    //     if (!isArray(data)) {
+    //         throw valueException(`incorrect vertex order matrix < ${data} >`)
+    //     }
+    //
+    //     const rows = data.length
+    //     const cols = isArray(data[0]) ? data[0].length : 0
+    //     if (rows === 0 || cols === 0) {
+    //         throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+    //     }
+    //
+    //     const nullDiagonal = isNullDiagonal == null ? true : isBoolean(isNullDiagonal) ? isNullDiagonal : null
+    //     if (nullDiagonal == null) {
+    //         throw valueException(`incorrect parameter: diagonal values included < ${nullDiagonal} >`)
+    //     }
+    //
+    //     const copy: number[][] = transpose(data)
+    //     for (let i = 0; i < rows; i++) {
+    //         const min = isNullDiagonal
+    //             ? arrayMin(copy[i].slice(0, i).concat(copy[i].slice(i + 1)))
+    //             : arrayMin(copy[i])
+    //         for (let j = 0; j < cols; j++) {
+    //             if (isNullDiagonal && i === j) {
+    //                 continue
+    //             }
+    //             copy[i][j] -= min
+    //         }
+    //     }
+    //
+    //     return transpose(copy)
+    // }
 
     /**
      * @public
@@ -482,35 +388,35 @@ export namespace Matrix {
      *                [1, 23, 1, 1, 0]];
      * document.writeln(globals.matrix.addOnRows(distance));
      */
-    export const addOnRows = (data: number[][], isNullDiagonal: boolean): number[][] => {
-        if (!isArray(data)) {
-            throw valueException(`incorrect vertex order matrix < ${data} >`)
-        }
-
-        const rows = data.length
-        const cols = isArray(data[0]) ? data[0].length : 0
-        if (rows === 0 || cols === 0) {
-            throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
-        }
-
-        const nullDiagonal = isNullDiagonal == null ? true : isBoolean(isNullDiagonal) ? isNullDiagonal : null
-        if (nullDiagonal == null) {
-            throw valueException(`incorrect parameter: diagonal values included < ${nullDiagonal} >`)
-        }
-
-        const copy = copyOfArray(data)
-        for (let i = 0; i < rows; i++) {
-            const min = isNullDiagonal
-                ? arrayMin(copy[i].slice(0, i).concat(copy[i].slice(i + 1)))
-                : arrayMin(copy[i])
-            for (let j = 0; j < cols; j++) {
-                if (isNullDiagonal && i === j) continue
-                copy[i][j] -= min
-            }
-        }
-
-        return copy
-    }
+    // export const addOnRows = (data: number[][], isNullDiagonal: boolean): number[][] => {
+    //     if (!isArray(data)) {
+    //         throw valueException(`incorrect vertex order matrix < ${data} >`)
+    //     }
+    //
+    //     const rows = data.length
+    //     const cols = isArray(data[0]) ? data[0].length : 0
+    //     if (rows === 0 || cols === 0) {
+    //         throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+    //     }
+    //
+    //     const nullDiagonal = isNullDiagonal == null ? true : isBoolean(isNullDiagonal) ? isNullDiagonal : null
+    //     if (nullDiagonal == null) {
+    //         throw valueException(`incorrect parameter: diagonal values included < ${nullDiagonal} >`)
+    //     }
+    //
+    //     const copy = copyOfArray(data)
+    //     for (let i = 0; i < rows; i++) {
+    //         const min = isNullDiagonal
+    //             ? arrayMin(copy[i].slice(0, i).concat(copy[i].slice(i + 1)))
+    //             : arrayMin(copy[i])
+    //         for (let j = 0; j < cols; j++) {
+    //             if (isNullDiagonal && i === j) continue
+    //             copy[i][j] -= min
+    //         }
+    //     }
+    //
+    //     return copy
+    // }
 
     /**
      * @public
@@ -1073,17 +979,17 @@ export namespace Matrix {
             const origin = coordinate(0, 0)
             const dest = coordinate(rows - 1, cols - 1)
 
-            return findElemement_(data, origin, dest, elem)
+            return findElemement_(data, origin, dest, elem, cmpByDefault)
         }
     })()
 
     export const setZeros = (data: number[][]): void => {
         if (!isArray(data)) {
-            throw valueException(`incorrect input parameter: array < ${matrix} >`)
+            throw valueException(`incorrect input parameter: array < ${data} >`)
         }
 
         const rows = data.length
-        const cols = isArray(Helpers.matrix[0]) ? data[0].length : 0
+        const cols = isArray(data[0]) ? data[0].length : 0
         if (rows === 0 || cols === 0) {
             throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }

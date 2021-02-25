@@ -3,10 +3,10 @@ import { Checkers } from './checkers'
 import { Exceptions } from './exceptions'
 
 export namespace Objects {
-    import random = Numbers.random
-    import isObject = Checkers.isObject
-    import randInt = Numbers.randInt
-    import typeException = Exceptions.typeException
+    import random = Numbers.random;
+    import isObject = Checkers.isObject;
+    import randInt = Numbers.randInt;
+    import typeException = Exceptions.typeException;
 
     export const randomEnum = <T>(enumType: T): T[keyof T] => {
         const enumValues = (Object.values(enumType) as unknown) as T[keyof T][]
@@ -86,5 +86,12 @@ export namespace Objects {
         }
 
         return result
+    }
+
+    export const getType = (obj: any): string => {
+        return {}.toString
+            .call(obj)
+            .match(/\s([a-z|A-Z]+)/)[1]
+            .toLowerCase()
     }
 }

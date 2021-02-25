@@ -68,7 +68,7 @@ export namespace Numbers {
     }
 
     export const randBigInt = (): number => {
-        return (Number.MAX_VALUE * Math.random()).integer()
+        return parseInt(String(Number.MAX_VALUE * Math.random()))
     }
 
     export const randomNum = <T>(array: T[], n: number): T[] => {
