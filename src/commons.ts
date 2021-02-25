@@ -1,4 +1,10 @@
 export namespace Commons {
+    const WINDOW_USER_SCRIPT_VARIABLE = '__USER__'
+
+    export const getUserScript = (value: string): string => {
+        return `${WINDOW_USER_SCRIPT_VARIABLE} = ${JSON.stringify(value)};`
+    }
+
     const discardSingle = <A>(a: A, toDiscard: string): A => {
         const result = {}
         const keys = Object.keys(a)

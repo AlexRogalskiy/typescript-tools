@@ -1,66 +1,71 @@
 import slugify from 'slugify'
+
 import { Exceptions } from './exceptions'
 import { Checkers } from './checkers'
+import { NumberOrUndef, StringOrUndef } from '../typings/standard-types'
+import { Supplier } from '../typings/function-types'
 import { Maths } from './maths'
 
 export namespace Strings {
-    import isString = Checkers.isString;
-    import isIntNumber = Checkers.isIntNumber;
-    import isArray = Checkers.isArray;
-    import vector = Maths.vector;
-    import valueException = Exceptions.valueException;
-    import typeException = Exceptions.typeException;
+    import isString = Checkers.isString
+    import isIntNumber = Checkers.isIntNumber
+    import isArray = Checkers.isArray
+    import valueException = Exceptions.valueException
+    import typeException = Exceptions.typeException
+    import isNull = Checkers.isNull
+    import isNumber = Checkers.isNumber
+    import Helpers = Maths.Helpers
 
-    export const isNonEmptyString = (str: string): boolean => {
-        return str !== undefined && str !== null && str.length > 0
+    export const isNonEmptyString = (value: string): boolean => {
+        return value !== undefined && value !== null && value.length > 0
     }
 
-    export const isBlankString = (str: string): boolean => {
-        return !str || /^\s*$/.test(str)
+    export const isBlankString = (value: string): boolean => {
+        return !value || /^\s*$/.test(value)
     }
 
-    export const notBlankOrElse = (str: string, defaultValue: string): string => {
-        return isBlankString(str) ? defaultValue : str
+    export const notBlankOrElse = (value: string, defaultValue: string): string => {
+        return isBlankString(value) ? defaultValue : value
     }
 
-    export const toString = (str: string | string[]): string => {
-        return Array.isArray(str) ? str[0] : str
+    export const toString = (value: string | string[]): string => {
+        return Array.isArray(value) ? value[0] : value
     }
 
-    export const getProjectId = (project: any): string => {
-        return slugify(project.name, { lower: true, remove: /[.'/]/g })
+    export const getProjectId = (value: any): string => {
+        return slugify(value.name, { lower: true, remove: /[.'/]/g })
     }
 
-    export const padL = (text: string, length: number): string => {
-        while (text.length < length) {
-            text = ` ${text}`
+    export const padL = (value: string, length: number): string => {
+        while (value.length < length) {
+            value = ` ${value}`
         }
 
-        return text
+        return value
     }
 
-    export const htmlEncode = (text: string): string => {
-        text = text.replace(/</g, '&lt;')
-        text = text.replace(/>/g, '&gt;')
-        text = text.replace(/ /g, '&nbsp;')
+    export const htmlEncode = (value: string): string => {
+        value = value.replace(/</g, '&lt;')
+        value = value.replace(/>/g, '&gt;')
+        value = value.replace(/ /g, '&nbsp;')
 
-        text = text.replace(/[\u2018\u2019\u201A\uFFFD]/g, "'")
-        text = text.replace(/[\u201c\u201d\u201e]/g, '"')
-        text = text.replace(/\u02C6/g, '^')
-        text = text.replace(/\u2039/g, '<')
-        text = text.replace(/\u203A/g, '>')
-        text = text.replace(/\u2013/g, '-')
-        text = text.replace(/\u2014/g, '--')
-        text = text.replace(/\u2026/g, '...')
-        text = text.replace(/\u00A9/g, '(c)')
-        text = text.replace(/\u00AE/g, '(r)')
-        text = text.replace(/\u2122/g, 'TM')
-        text = text.replace(/\u00BC/g, '1/4')
-        text = text.replace(/\u00BD/g, '1/2')
-        text = text.replace(/\u00BE/g, '3/4')
-        text = text.replace(/[\u02DC|\u00A0]/g, ' ')
+        value = value.replace(/[\u2018\u2019\u201A\uFFFD]/g, "'")
+        value = value.replace(/[\u201c\u201d\u201e]/g, '"')
+        value = value.replace(/\u02C6/g, '^')
+        value = value.replace(/\u2039/g, '<')
+        value = value.replace(/\u203A/g, '>')
+        value = value.replace(/\u2013/g, '-')
+        value = value.replace(/\u2014/g, '--')
+        value = value.replace(/\u2026/g, '...')
+        value = value.replace(/\u00A9/g, '(c)')
+        value = value.replace(/\u00AE/g, '(r)')
+        value = value.replace(/\u2122/g, 'TM')
+        value = value.replace(/\u00BC/g, '1/4')
+        value = value.replace(/\u00BD/g, '1/2')
+        value = value.replace(/\u00BE/g, '3/4')
+        value = value.replace(/[\u02DC|\u00A0]/g, ' ')
 
-        return text
+        return value
     }
 
     export const substantiveLineCount = (value: string): number =>
@@ -75,45 +80,45 @@ export namespace Strings {
         return bufView
     }
 
-    export const str2ab16 = (str: string): Uint16Array => {
-        const bufView = new Uint16Array(str.length)
-        for (let i = 0, strLen = str.length; i < strLen; i++) {
-            bufView[i] = str.charCodeAt(i)
+    export const str2ab16 = (value: string): Uint16Array => {
+        const bufView = new Uint16Array(value.length)
+        for (let i = 0, strLen = value.length; i < strLen; i++) {
+            bufView[i] = value.charCodeAt(i)
         }
 
         return bufView
     }
 
     // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
-    export const escapeRegExp = (string: string): string => {
-        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
+    export const escapeRegExp = (value: string): string => {
+        return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
     }
 
     export const separator = (num: number, delim = '='): string => {
         return Array(num).join(delim)
     }
 
-    export const toInputName = (str: string, prefix = 'INPUT_'): string => {
-        return prefix + str.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`).toUpperCase()
+    export const toInputName = (value: string, prefix = 'INPUT_'): string => {
+        return prefix + value.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`).toUpperCase()
     }
 
-    export const toParamName = (str: string): string => {
-        return str.replace(/-\w/g, match => match[1].toUpperCase())
+    export const toParamName = (value: string): string => {
+        return value.replace(/-\w/g, match => match[1].toUpperCase())
     }
 
-    export const capFirstLetter = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1)
+    export const capFirstLetter = (value: string): string => value.charAt(0).toUpperCase() + value.slice(1)
 
-    export const parseJson = (str: string, defaultValue: any = undefined): string | undefined => {
+    export const parseJson = (value: string, defaultValue: any = undefined): string | undefined => {
         try {
-            return JSON.parse(str)
+            return JSON.parse(value)
         } catch (e) {
             return defaultValue
         }
     }
 
-    export const escape = (str: string): string => {
+    export const escape = (value: string): string => {
         return (
-            str
+            value
                 .replace(/\\n/g, '\\n')
                 .replace(/\\'/g, "\\'")
                 .replace(/\\"/g, '\\"')
@@ -131,12 +136,12 @@ export namespace Strings {
         return Array.isArray(symbols) ? symbols.join(delim) : symbols
     }
 
-    export const removeLines = (str: string): string => {
-        return str.replace(/\r?\n|\r/g, '')
+    export const removeLines = (value: string): string => {
+        return value.replace(/\r?\n|\r/g, '')
     }
 
-    export const replaceBy = (regex: string | RegExp, str: string, replace = ''): string =>
-        str.replace(regex, replace)
+    export const replaceBy = (regex: string | RegExp, value: string, replace = ''): string =>
+        value.replace(regex, replace)
 
     export const pad = (num: number, size = 2, type = '0'): string => `${num}`.padStart(size, type)
 
@@ -179,13 +184,13 @@ export namespace Strings {
         }
     }
 
-    export const parseNumber = (str: string): RegExpExecArray | null => {
-        if (!isString(str)) {
-            throw valueException(`incorrect input string: < ${str} >`)
+    export const parseNumber = (value: string): RegExpExecArray | null => {
+        if (!isString(value)) {
+            throw valueException(`incorrect input string: < ${value} >`)
         }
         const regExp = /^-?\d+(?:\.\d*)?(?:e[+\\-]?\d+)?$/i
 
-        return regExp.exec(str)
+        return regExp.exec(value)
     }
 
     export const escapeSymbols = (() => {
@@ -202,16 +207,16 @@ export namespace Strings {
             return trans
         }
 
-        return (str: string): string => {
-            if (!isString(str)) {
-                throw valueException(`incorrect input string: < ${str} >`)
+        return (value: string): string => {
+            if (!isString(value)) {
+                throw valueException(`incorrect input string: < ${value} >`)
             }
 
             const ret: number[] = []
             const transTable = initTransitionTable()
 
-            for (let i = 0; i < str.length; i++) {
-                let n = str.charCodeAt(i)
+            for (let i = 0; i < value.length; i++) {
+                let n = value.charCodeAt(i)
                 if (typeof transTable[n] !== 'undefined') {
                     n = transTable[n]
                 }
@@ -224,9 +229,9 @@ export namespace Strings {
         }
     })()
 
-    export const koi2unicode = (str: string): string => {
-        if (!isString(str)) {
-            throw valueException(`incorrect input string: < ${str} >`)
+    export const koi2unicode = (value: string): string => {
+        if (!isString(value)) {
+            throw valueException(`incorrect input string: < ${value} >`)
         }
 
         const CHAR_TABLE = unescape(
@@ -242,16 +247,16 @@ export namespace Strings {
         }
 
         let res = ''
-        for (let i = 0; i < str.length; i++) {
-            res += code2char(str.charCodeAt(i))
+        for (let i = 0; i < value.length; i++) {
+            res += code2char(value.charCodeAt(i))
         }
 
         return res
     }
 
-    export const win2unicode = (str: string): string => {
-        if (!isString(str)) {
-            throw valueException(`incorrect input string: < ${str} >`)
+    export const win2unicode = (value: string): string => {
+        if (!isString(value)) {
+            throw valueException(`incorrect input string: < ${value} >`)
         }
 
         const CHAR_TABLE = unescape(
@@ -270,8 +275,8 @@ export namespace Strings {
         }
 
         let res = ''
-        for (let i = 0; i < str.length; i++) {
-            res += code2char(str.charCodeAt(i))
+        for (let i = 0; i < value.length; i++) {
+            res += code2char(value.charCodeAt(i))
         }
 
         return res
@@ -302,29 +307,29 @@ export namespace Strings {
             .toUpperCase()
     }
 
-    export const wordWrap = (str: string, width: number, brk: string, cut: boolean): string | undefined => {
+    export const wordWrap = (value: string, width: number, brk: string, cut: boolean): string | undefined => {
         brk = brk || 'n'
         width = width || 75
         cut = cut || false
 
-        if (!str) {
-            return str
+        if (!value) {
+            return value
         }
         const regex = `.{1,${width}}(\\s|$)${cut ? `|.{${width}}|.+` : '|S+?(s|$)'}`
 
-        return str.match(RegExp(regex, 'g'))?.join(brk)
+        return value.match(RegExp(regex, 'g'))?.join(brk)
     }
 
-    export const randomString = (strLength = 8): string => {
+    export const randomString = (len = 8): string => {
         const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
         let result = ''
 
-        const len = isIntNumber(strLength) && strLength > 0 ? strLength : null
-        if (len == null) {
+        const length = isIntNumber(len) && len > 0 ? len : null
+        if (length == null) {
             throw valueException(`incorrect string length: < ${length} >`)
         }
 
-        for (let i = 0; i < len; i++) {
+        for (let i = 0; i < length; i++) {
             const rnum = Math.floor(Math.random() * chars.length)
             result += chars.substring(rnum, rnum + 1)
         }
@@ -338,7 +343,7 @@ export namespace Strings {
         }
 
         const len = array.length - 1
-        const res = vector(len, 0)
+        const res = Helpers.vector(len, 0)
         for (let i = 0, temp = 0; i < len; i++) {
             temp += array[i]
             res[i] = Math.floor(temp / (i + 1))
@@ -347,7 +352,7 @@ export namespace Strings {
         return res
     }
 
-    export const tabExpand = (str: string): string => {
+    export const tabExpand = (value: string): string => {
         const tab = 8
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -356,37 +361,37 @@ export namespace Strings {
             return p1 + ' '.repeat(p2.length * tab - (p1.length % tab))
         }
 
-        if (!isString(str)) {
-            throw typeException(`incorrect parameter argument: not a string < ${str} >`)
+        if (!isString(value)) {
+            throw typeException(`incorrect parameter argument: not a string < ${value} >`)
         }
 
-        while (str.includes('\t')) {
-            str = str.replace('/^([^\t\n]*)(\t+)/m', tabExpand_)
+        while (value.includes('\t')) {
+            value = value.replace('/^([^\t\n]*)(\t+)/m', tabExpand_)
         }
 
-        return str
+        return value
     }
 
-    export const tabUnexpand = (str: string): string => {
+    export const tabUnexpand = (value: string): string => {
         const tab = 8
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        const tabExpand_ = (str, p1, p2): string => {
+        const tabExpand_ = (value, p1, p2): string => {
             return p1 + ' '.repeat(p2.length * tab - (p1.length % tab))
         }
 
-        const chunkString = (str: string, length: number): RegExpMatchArray | null => {
+        const chunkString = (value: string, length: number): RegExpMatchArray | null => {
             // str.match(/.{1,n}/g);
             // str.match(/(.|[\r\n]){1,n}/g);
-            return str.match(new RegExp(`.{1,${length}}`, 'g'))
+            return value.match(new RegExp(`.{1,${length}}`, 'g'))
         }
 
-        if (!isString(str)) {
-            throw typeException(`incorrect parameter argument: not a string < ${str} >`)
+        if (!isString(value)) {
+            throw typeException(`incorrect parameter argument: not a string < ${value} >`)
         }
 
-        const lines = str.split('\n')
+        const lines = value.split('\n')
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i].replace('/\\s*/', tabExpand_)
             const chunks = chunkString(line, tab)
@@ -396,7 +401,7 @@ export namespace Strings {
             }
 
             for (let j = 0; j < chunks.length - 1; j++) {
-                chunks[j] = str.replace('/ {2,}$/', '\t')
+                chunks[j] = value.replace('/ {2,}$/', '\t')
             }
 
             if (chunks[chunks.length - 1] === ' '.repeat(tab)) {
@@ -410,10 +415,33 @@ export namespace Strings {
 
     /**
      * Returns string representation of function body
-     * @param {Function} fn Function to get body of
+     * @param {Function} func Function to get body of
      * @return {String} Function body
      */
-    export const getFunctionBody = (fn): string => {
-        return (String(fn).match(/function[^{]*{([\s\S]*)\}/) || {})[1]
+    export const getFunctionBody = (func: any): string => {
+        return (String(func).match(/function[^{]*{([\s\S]*)}/) || {})[1]
+    }
+
+    // let seqer = serialMaker();
+    // let unique = seqer.gensym();
+    // document.writeln(unique);
+    export const serialMaker = (prefix: StringOrUndef, seq: NumberOrUndef): { gensym: Supplier<string> } => {
+        const prefixValue = prefix == null ? '' : isString(prefix) ? prefix : null
+        if (isNull(prefixValue)) {
+            throw valueException(`incorrect prefix value: < ${prefixValue} >`)
+        }
+
+        let seqValue = seq == null ? 0 : isNumber(seq) ? seq : null
+        if (isNull(seqValue)) {
+            throw valueException(`incorrect sequence value: < ${seqValue} >`)
+        }
+
+        return {
+            gensym: () => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                return prefixValue + seqValue++
+            },
+        }
     }
 }

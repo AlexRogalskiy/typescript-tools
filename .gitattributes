@@ -95,6 +95,11 @@ TODO            text
 .gitignore      text
 .htaccess       text
 *.npmignore     text
+## NPM
+# Checkout npm package files with forced LF lineendings
+# to prevent git conflicts when running npm commands
+package.json text eol=lf
+package-lock.json text eol=lf
 ## HEROKU
 Procfile        text
 .slugignore     text

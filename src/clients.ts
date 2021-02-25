@@ -1,11 +1,12 @@
 import * as rm from 'typed-rest-client/RestClient'
 import WebSocket from 'ws'
+import axios from 'axios'
 
 import { Networks } from './networks'
 import { Callback } from '../typings/function-types'
 
 export namespace RestClients {
-    import getQueryParams = Networks.getQueryParams
+    import getQueryParams = Networks.getQueryParams;
 
     export interface RestClientSettings {
         url: string
@@ -28,6 +29,146 @@ export namespace RestClients {
 
     const defaultRestClientSettings: RestClientSettings = {
         url: 'https://api.1forge.com/',
+    }
+
+    export class AxiosRestClients {
+        constructor(private readonly baseUrl: string) {
+            this.baseUrl = baseUrl
+        }
+
+        async getUser<R>(userId: string, headers?: string[]): Promise<R> {
+            return await axios.get(`${this.baseUrl}/api/users/profile/${userId}`, {
+                headers: { ...headers },
+            })
+        }
+
+        async followUser<R>(followId: string, headers?: string[]): Promise<R> {
+            const { data } = await axios.put(
+                `${this.baseUrl}/api/users/follow`,
+                { followId },
+                {
+                    headers: { ...headers },
+                },
+            )
+            return data
+        }
+
+        async unfollowUser<R>(followId: string, headers?: string[]): Promise<R> {
+            const { data } = await axios.put(
+                `${this.baseUrl}/api/users/unfollow`,
+                { followId },
+                {
+                    headers: { ...headers },
+                },
+            )
+            return data
+        }
+
+        async deleteUser<R>(authUserId: string, headers?: string[]): Promise<R> {
+            const { data } = await axios.delete(`${this.baseUrl}/api/users/${authUserId}`, {
+                headers: { ...headers },
+            })
+            return data
+        }
+
+        async getAuthUser<R>(authUserId: string, headers?: string[]): Promise<R> {
+            const { data } = await axios.get(`${this.baseUrl}/api/users/${authUserId}`, {
+                headers: { ...headers },
+            })
+            return data
+        }
+
+        async updateUser<R>(authUserId: string, userData: string, headers?: string[]): Promise<R> {
+            const { data } = await axios.put(`${this.baseUrl}/api/users/${authUserId}`, userData, {
+                headers: { ...headers },
+            })
+            return data
+        }
+
+        async getUserFeed<R>(authUserId: string, headers?: string[]): Promise<R> {
+            const { data } = await axios.get(`${this.baseUrl}/api/users/feed/${authUserId}`, {
+                headers: { ...headers },
+            })
+            return data
+        }
+
+        async addPost<R>(authUserId: string, post: string, headers?: string[]): Promise<R> {
+            const { data } = await axios.post(`${this.baseUrl}/api/posts/new/${authUserId}`, post, {
+                headers: { ...headers },
+            })
+            return data
+        }
+
+        async getPostFeed<R>(authUserId: string, headers?: string[]): Promise<R> {
+            const { data } = await axios.get(`${this.baseUrl}/api/posts/feed/${authUserId}`, {
+                headers: { ...headers },
+            })
+            return data
+        }
+
+        async deletePost<R>(postId: string, headers?: string[]): Promise<R> {
+            const { data } = await axios.delete(`${this.baseUrl}/api/posts/${postId}`, {
+                headers: { ...headers },
+            })
+            return data
+        }
+
+        async likePost<R>(postId: string, headers?: string[]): Promise<R> {
+            const { data } = await axios.put(
+                `${this.baseUrl}/api/posts/like`,
+                { postId },
+                {
+                    headers: { ...headers },
+                },
+            )
+            return data
+        }
+
+        async unlikePost<R>(postId: string, headers?: string[]): Promise<R> {
+            const { data } = await axios.put(
+                `${this.baseUrl}/api/posts/unlike`,
+                { postId },
+                {
+                    headers: { ...headers },
+                },
+            )
+            return data
+        }
+
+        async addComment<R>(postId: string, comment: string, headers?: string[]): Promise<R> {
+            const { data } = await axios.put(
+                `${this.baseUrl}/api/posts/comment`,
+                {
+                    postId,
+                    comment,
+                },
+                {
+                    headers: { ...headers },
+                },
+            )
+            return data
+        }
+
+        async deleteComment<R>(postId: string, comment: string, headers?: string[]): Promise<R> {
+            const { data } = await axios.put(
+                `${this.baseUrl}/api/posts/uncomment`,
+                {
+                    postId,
+                    comment,
+                },
+                {
+                    headers: { ...headers },
+                },
+            )
+            return data
+        }
+
+        async getPostsByUser<R>(userId: string, headers?: string[]): Promise<R> {
+            const { data } = await axios.get(`${this.baseUrl}/api/posts/by/${userId}`, {
+                headers: { ...headers },
+            })
+            return data
+        }
     }
 
     export class RestClient {
