@@ -1307,7 +1307,7 @@ export namespace Utils {
         }
     }
 
-    export namespace Common {
+    export namespace Commons {
         import isString = Checkers.isString
 
         export const normalizeBy = (name: string): string => {

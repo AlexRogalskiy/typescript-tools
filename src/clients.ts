@@ -6,7 +6,7 @@ import { Networks } from './networks'
 import { Callback } from '../typings/function-types'
 
 export namespace RestClients {
-    import getQueryParams = Networks.getQueryParams;
+    import getQueryParams = Networks.getQueryParams
 
     export interface RestClientSettings {
         url: string

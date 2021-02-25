@@ -6,13 +6,12 @@ import { Maths } from './maths'
 export namespace Arrays {
     import random = Numbers.random
     import isArray = Checkers.isArray
-    import exception = Exceptions.exception
     import randInt = Numbers.randInt
-    import getEmptyNumberVector = Maths.getEmptyNumberVector
     import isNull = Checkers.isNull
     import isFunction = Checkers.isFunction
     import typeException = Exceptions.typeException
     import valueException = Exceptions.valueException
+    import Helpers = Maths.Helpers
 
     export function shuffle<T>(arr: T[]): T[] {
         if (!Array.isArray(arr)) {
@@ -132,7 +131,7 @@ export namespace Arrays {
         }
 
         let total = 0
-        const dist = getEmptyNumberVector()
+        const dist = Helpers.getEmptyNumberVector()
 
         // eslint-disable-next-line @typescript-eslint/no-for-in-array
         for (const index in numbers) {
@@ -145,8 +144,7 @@ export namespace Arrays {
         const result: number[] = []
         const rand = randInt(0, total)
 
-        // eslint-disable-next-line @typescript-eslint/no-for-in-array
-        for (const index in dist) {
+        for (const index of dist) {
             if (dist.hasOwnProperty(index)) {
                 if (rand < dist[index]) {
                     result.push(Number(index))

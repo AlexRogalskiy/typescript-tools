@@ -1,20 +1,20 @@
 export namespace Validators {
     export interface StringValidator {
-        isAcceptable(s: string): boolean
+        isAcceptable(value: string): boolean
     }
 
     const lettersRegexp = /^[A-Za-z]+$/
     const numberRegexp = /^[0-9]+$/
 
     export class LettersOnlyValidator implements StringValidator {
-        isAcceptable(s: string): boolean {
-            return lettersRegexp.test(s)
+        isAcceptable(value: string): boolean {
+            return lettersRegexp.test(value)
         }
     }
 
     export class ZipCodeValidator implements StringValidator {
-        isAcceptable(s: string): boolean {
-            return s.length === 5 && numberRegexp.test(s)
+        isAcceptable(value: string): boolean {
+            return value.length === 5 && numberRegexp.test(value)
         }
     }
 }

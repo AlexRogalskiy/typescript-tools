@@ -57,6 +57,7 @@
     ],
     "include": [
         "./src",
+        "./tools",
         "./typings",
         "./jest.config.js"
     ]

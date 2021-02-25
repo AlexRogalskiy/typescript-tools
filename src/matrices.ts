@@ -1,11 +1,11 @@
 import { Exceptions } from './exceptions'
 import { Checkers } from './checkers'
 import { Comparators } from './comparators'
-import { Maths } from './maths'
-import { CalculationUtils } from './utils'
 import { Arrays } from './arrays'
 import { Numbers } from './numbers'
 import { ValueOrUndef } from '../typings/standard-types'
+import { Utils } from './utils'
+import { Maths } from './maths'
 
 export namespace Matrix {
     import typeException = Exceptions.typeException
@@ -13,14 +13,14 @@ export namespace Matrix {
     import valueException = Exceptions.valueException
     import isIntNumber = Checkers.isIntNumber
     import comparator = Comparators.comparator
-    import vector = Maths.vector
-    import map = CalculationUtils.map
-    import matrix = Maths.matrix
+    import map = Calculation.map
     import isNumber = Checkers.isNumber
     import isBoolean = Checkers.isBoolean
     import copyOfArray = Arrays.copyOfArray
     import isInteger = Numbers.isInteger
     import Comparator = Comparators.Comparator
+    import Calculation = Utils.Calculation
+    import Helpers = Maths.Helpers
 
     export type RowColumn = { row: number; column: number }
     export type Coordinate = {
@@ -144,12 +144,12 @@ export namespace Matrix {
         }
 
         let temp, min, max
-        const rows: number[][] = vector(data.length, [])
+        const rows: number[][] = Helpers.vector(data.length, [])
         const res: RowColumn[] = []
 
         for (let i = 0; i < data.length; i++) {
             min = Math.min(...data[i])
-            temp = vector(0, 0)
+            temp = Helpers.vector(0, 0)
             let ind = -1
             while ((ind = data[i].indexOf(min, ind + 1)) !== -1) {
                 temp.push(ind)
@@ -318,7 +318,7 @@ export namespace Matrix {
 
         const rows1 = data1.length
         const cols2 = isArray(data2[0]) ? data2[0].length : 0
-        const result = matrix(rows1, cols2, 0)
+        const result = Helpers.matrix(rows1, cols2, 0)
         for (let i = 0; i < rows1; i++) {
             for (let j = 0; j < cols2; j++) {
                 for (let k = 0; k < rows2; k++) {
@@ -350,7 +350,7 @@ export namespace Matrix {
             throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
-        const res = matrix(rows, cols, 0)
+        const res = Helpers.matrix(rows, cols, 0)
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
                 res[i][j] = data[i][j] * num
@@ -380,7 +380,7 @@ export namespace Matrix {
             throw valueException(`incorrect matrix size: rows < ${rows1} >, columns < ${cols1} >`)
         }
 
-        const res = matrix(rows1, cols1, 0)
+        const res = Helpers.matrix(rows1, cols1, 0)
         for (let i = 0; i < rows1; i++) {
             for (let j = 0; j < cols1; j++) {
                 res[i][j] = data1[i][j] + data2[i][j]
@@ -526,7 +526,7 @@ export namespace Matrix {
             throw valueException(`incorrect input value: matrix size is not positive integer < ${num} >`)
         }
 
-        const mat = matrix(num, num, 0)
+        const mat = Helpers.matrix(num, num, 0)
         for (let i = 0; i < num; i++) {
             mat[i][i] = 1
         }
@@ -661,7 +661,7 @@ export namespace Matrix {
         }
 
         const processSquare = (data: number[][]): { zerosRight; zerosBelow }[][] => {
-            const processed = matrix(data.length, data.length, squareCell())
+            const processed = Helpers.matrix(data.length, data.length, squareCell())
             let previous: { zerosRight; zerosBelow } | null = null
 
             for (let r = data.length - 1; r >= 0; r--) {
@@ -724,7 +724,7 @@ export namespace Matrix {
      */
     export const getMaxSubMatrix = (() => {
         const precomputeMatrix = (data: number[][]): number[][] => {
-            const sumMatrix = matrix(data.length, data[0].length, 0)
+            const sumMatrix = Helpers.matrix(data.length, data[0].length, 0)
             for (let i = 0; i < data.length; i++) {
                 for (let j = 0; j < data[0].length; j++) {
                     if (i === 0 && j === 0) {
@@ -834,7 +834,7 @@ export namespace Matrix {
                 throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
             }
 
-            const partialSum = vector(cols, 0)
+            const partialSum = Helpers.vector(cols, 0)
             let maxSum = 0,
                 tempMaxSum
 
@@ -1083,13 +1083,13 @@ export namespace Matrix {
         }
 
         const rows = data.length
-        const cols = isArray(matrix[0]) ? data[0].length : 0
+        const cols = isArray(Helpers.matrix[0]) ? data[0].length : 0
         if (rows === 0 || cols === 0) {
             throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
-        const row = vector(rows, false)
-        const column = vector(cols, false)
+        const row = Helpers.vector(rows, false)
+        const column = Helpers.vector(cols, false)
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
                 if (data[i][j] === 0) {
@@ -1145,7 +1145,7 @@ export namespace Matrix {
         if (rang <= 0 || rang >= vec.length) {
             throw valueException(`incorrect input argument: {rang} is out of bounds {1, ${vec.length}}`)
         }
-        const mat: ValueOrUndef<T>[][] = matrix(rang, rang, null)
+        const mat: ValueOrUndef<T>[][] = Helpers.matrix(rang, rang, null)
         for (let k = 0, i, j; k < vec.length; k++) {
             i = Math.floor(k / rang)
             j = k - Math.floor(k / rang) * rang
@@ -1166,7 +1166,7 @@ export namespace Matrix {
             throw valueException(`incorrect matrix size: rows < ${n} >, columns < ${nn} >`)
         }
 
-        const vec: ValueOrUndef<T>[] = vector(n * nn, null)
+        const vec: ValueOrUndef<T>[] = Helpers.vector(n * nn, null)
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < nn; j++) {
                 vec[i * nn + j] = mat[i][j]
@@ -1189,7 +1189,7 @@ export namespace Matrix {
         }
 
         let k = 0
-        const vec: ValueOrUndef<T>[] = vector((n * (n + 1)) / 2, null)
+        const vec: ValueOrUndef<T>[] = Helpers.vector((n * (n + 1)) / 2, null)
         for (let i = 0; i < n; i++) {
             for (let j = 0; j <= i; j++) {
                 vec[k++] = mat[i][j]
@@ -1235,7 +1235,7 @@ export namespace Matrix {
             throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
-        const res: ValueOrUndef<T>[] = vector(0, null)
+        const res: ValueOrUndef<T>[] = Helpers.vector(0, null)
         for (let sh = rows; sh > 1; sh--) {
             let j, i
             for (j = rows - sh; j < sh; j++) {
@@ -1302,7 +1302,7 @@ export namespace Matrix {
             throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
-        const matrix2: number[][] = matrix(rows, cols, 0)
+        const matrix2: number[][] = Helpers.matrix(rows, cols, 0)
         let exchanges = 0,
             denom = 1
         for (let i = 0; i < rows; i++) {
@@ -1355,7 +1355,7 @@ export namespace Matrix {
             throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
-        const res: number[][] = matrix(rows, cols, 0)
+        const res: number[][] = Helpers.matrix(rows, cols, 0)
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
                 const temp: number[][] = []
@@ -1429,7 +1429,7 @@ export namespace Matrix {
         let r = 1
         let rank = 0
         while (r <= k) {
-            const temp: number[][] = matrix(r, r, 0)
+            const temp: number[][] = Helpers.matrix(r, r, 0)
             for (let a = 0; a < rows - r + 1; a++) {
                 for (let b = 0; b < cols - r + 1; b++) {
                     for (let c = 0; c < r; c++) {
@@ -1535,7 +1535,7 @@ export namespace Matrix {
             throw valueException(`incorrect matrix argument: n is not odd number < ${n} >`)
         }
 
-        const res = matrix(n, n, 0)
+        const res = Helpers.matrix(n, n, 0)
         for (let i = 0, nn = 1, ss = (n - 1) / 2; i < n; i++) {
             for (let j = 0; j < n; j++) {
                 const x = (-ss + i + j + n) % n
@@ -1552,7 +1552,7 @@ export namespace Matrix {
             throw typeException(`incorrect input argument: dimension {n} is not odd number < ${n} >`)
         }
 
-        const res: ValueOrUndef<number>[][] = matrix(n, n, null)
+        const res: ValueOrUndef<number>[][] = Helpers.matrix(n, n, null)
 
         let num = 1
         let glob_i = Math.round(n / 2)
@@ -1651,10 +1651,10 @@ export namespace Matrix {
             throw valueException(`incorrect matrix size: {rows} < ${rows} >, {cols} < ${cols} >`)
         }
 
-        const res = vector(rows, [])
+        const res: number[][] = Helpers.vector(rows, [])
         for (let i = 0; i < data.length; i++) {
             //L - треугольная матрица, поэтому в i-ой строке i+1 элементов
-            res[i] = vector(i + 1, 0)
+            res[i] = Helpers.vector(i + 1, 0)
 
             // Сначала вычисляем значения элементов слева от диагонального элемента,
             // так как эти значения используются при вычислении диагонального элемента.

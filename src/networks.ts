@@ -3,19 +3,19 @@ import { Checkers } from './checkers'
 import { Exceptions } from './exceptions'
 
 export namespace Networks {
-    import isNotNull = Checkers.isNotNull;
-    import valueException = Exceptions.valueException;
-    import isString = Checkers.isString;
+    import isNotNull = Checkers.isNotNull
+    import valueException = Exceptions.valueException
+    import isString = Checkers.isString
 
     const DEFAULT_PROTOCOLS = ['127.0.0.1', '0.0.0.0', 'localhost', '::1']
 
-    export const isLocalhost = (str: string): boolean => {
+    export const isLocalhost = (value: string): boolean => {
         return (
-            str === 'localhost' ||
+            value === 'localhost' ||
             // [::1] is the IPv6 localhost address.
-            str === '[::1]' ||
+            value === '[::1]' ||
             // 127.0.0.1/8 is considered localhost for IPv4.
-            LOCALHOST_REGEX.test(str)
+            LOCALHOST_REGEX.test(value)
         )
     }
 
@@ -39,8 +39,8 @@ export namespace Networks {
     /**
      * Normalize a port into a number, string, or false.
      */
-    export const normalizePort = (val: string): number | undefined => {
-        const port = parseInt(val, 10)
+    export const normalizePort = (value: string): number | undefined => {
+        const port = parseInt(value, 10)
 
         return !isNaN(port) && port >= 0 ? port : undefined
     }
@@ -55,8 +55,8 @@ export namespace Networks {
         }
     }
 
-    export const getQueryParam = (param: string): string | null => {
-        const reg = new RegExp(`(^|&)${param}=([^&*])(&|$)`)
+    export const getQueryParam = (value: string): string | null => {
+        const reg = new RegExp(`(^|&)${value}=([^&*])(&|$)`)
         const query = window.location.search.substr(1).match(reg)
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -64,11 +64,11 @@ export namespace Networks {
         return isNotNull(query) ? unescape(query[2]) : null
     }
 
-    export const getParameterByName = (name: string): string | null => {
-        if (!isString(name)) {
-            throw valueException(`incorrect parameter value: < ${name} >`)
+    export const getParameterByName = (value: string): string | null => {
+        if (!isString(value)) {
+            throw valueException(`incorrect parameter value: < ${value} >`)
         }
-        const match = RegExp(`[?&]${name}=([^&]*)`).exec(window.location.search)
+        const match = RegExp(`[?&]${value}=([^&]*)`).exec(window.location.search)
 
         return match && decodeURIComponent(match[1].replace(/\+/g, ' '))
     }

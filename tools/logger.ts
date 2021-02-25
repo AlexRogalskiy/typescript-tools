@@ -2,9 +2,9 @@ import dateFormat from 'dateformat'
 
 import { Checkers } from '../src'
 import { Converter } from './converter'
-import isNumber = Checkers.isNumber;
-import isObject = Checkers.isObject;
-import isString = Checkers.isString;
+import isNumber = Checkers.isNumber
+import isObject = Checkers.isObject
+import isString = Checkers.isString
 
 /**
  * Custom logger class to generate formatted log entries
@@ -14,7 +14,7 @@ export class Logger {
      * Custom {@link Logger} instance
      * @private
      */
-    private static readonly INSTANCE: Logger = {}
+    private static readonly INSTANCE: Logger
 
     private static DATETIME_FORMAT = 'dddd, mmmm dS, yyyy, hh:MM:ss TT'
     private static COLORS_PRESET = {
@@ -32,25 +32,25 @@ export class Logger {
     }
 
     private static getOutputStyle(type: string): string {
-        return 'color: ' + (Logger.COLORS_PRESET[type]
-            ? Logger.COLORS_PRESET[type]
-            : Logger.COLORS_PRESET['black'])
+        return `color: ${
+            Logger.COLORS_PRESET[type] ? Logger.COLORS_PRESET[type] : Logger.COLORS_PRESET['black']
+        }`
     }
 
-    private static getTime(format: string = '', utc = false): string {
+    private static getTime(format = '', utc = false): string {
         format = isString(format) ? format : Logger.DATETIME_FORMAT
 
         return dateFormat(Date.now(), format, utc)
     }
 
-    private static getLocalTime(format: string = '', offset = 0, utc = false): string {
+    private static getLocalTime(format = '', offset = 0, utc = false): string {
         format = isString(format) ? format : Logger.DATETIME_FORMAT
-        let currentDate = new Date()
-        let currentTime = currentDate.getTime() + (currentDate.getTimezoneOffset() * 60000)
-        let localCurrentTime = new Date(currentTime + (offset * 3600000))
+        const currentDate = new Date()
+        const currentTime = currentDate.getTime() + currentDate.getTimezoneOffset() * 60 * 1000
+        const localCurrentTime = new Date(currentTime + offset * 60 * 60 * 1000)
 
         return dateFormat(localCurrentTime, format, utc)
-    };
+    }
 
     static getMessage(messages: string[], ...args: any[]): string {
         let result = ''
@@ -61,15 +61,21 @@ export class Logger {
         result += messages[messages.length - 1]
 
         return result
-    };
+    }
 
     static getMessage2(messages: string[], ...args: any[]): string {
         return messages.reduce((s, v, idx) => {
-            return s + (idx > 0 ? (isObject(args[idx - 1])
-                ? Converter.serialize(args[idx - 1])
-                : args[idx - 1]) : '') + v
-        }, '');
-    };
+            return (
+                s +
+                (idx > 0
+                    ? isObject(args[idx - 1])
+                        ? Converter.serialize(args[idx - 1])
+                        : args[idx - 1]
+                    : '') +
+                v
+            )
+        }, '')
+    }
 
     static getRawMessage(messages: string[], ...args: any[]): string {
         let result = ''
@@ -83,11 +89,18 @@ export class Logger {
     }
 
     static getRawMessage2(messages: string[], ...args: any[]): string {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         return messages.reduce((s, v, idx) => {
-            return String.raw`s` + (idx > 0
-                ? (isObject(args[idx - 1]) ? Converter.serialize(args[idx - 1]) : args[idx - 1])
-                : '') + String.raw`v`
+            return (
+                String.raw`s` +
+                (idx > 0
+                    ? isObject(args[idx - 1])
+                        ? Converter.serialize(args[idx - 1])
+                        : args[idx - 1]
+                    : '') +
+                String.raw`v`
+            )
         }, '')
     }
 
@@ -104,56 +117,37 @@ export class Logger {
         }, '')
     }
 
-    private constructor() {
-    }
+    private constructor() {}
 
     static getLogger(): Logger {
         const value = Symbol.for('instance')
 
-        if (Logger.INSTANCE[value]) {
-            return Logger.INSTANCE[value]
+        if (!Logger.INSTANCE[value]) {
+            Logger.INSTANCE[value] = new Logger()
         }
 
-        const debug = (message: string, ...args: any[]): void => {
-            console.log(
-                '%c' + Logger.output(Logger.getTime(), message, args),
-                Logger.getOutputStyle('green')
-            )
-        }
+        return Logger.INSTANCE[value]
+    }
 
-        const error = (message: string, ...args: any[]): void => {
-            console.error(
-                '%c' + Logger.output(Logger.getTime(), message, args),
-                Logger.getOutputStyle('red')
-            )
-        }
+    debug(message: string, ...args: any[]): void {
+        console.log(`%c${Logger.output(Logger.getTime(), message, args)}`, Logger.getOutputStyle('green'))
+    }
 
-        const warn = (message: string, ...args: any[]): void => {
-            console.warn(
-                '%c' + Logger.output(Logger.getTime(), message, args),
-                Logger.getOutputStyle('blue')
-            )
-        }
+    error(message: string, ...args: any[]): void {
+        console.error(`%c${Logger.output(Logger.getTime(), message, args)}`, Logger.getOutputStyle('red'))
+    }
 
-        const info = (message: string, ...args: any[]): void => {
-            console.info(
-                '%c' + Logger.output(Logger.getTime(), message, args),
-                Logger.getOutputStyle('pink')
-            )
-        }
+    warn(message: string, ...args: any[]): void {
+        console.warn(`%c${Logger.output(Logger.getTime(), message, args)}`, Logger.getOutputStyle('blue'))
+    }
 
-        const group = (message: string, ...args: any[]): void => {
-            console.group(Logger.output(Logger.getLocalTime(), message))
-            console.log(args)
-            console.groupEnd()
-        }
+    info(message: string, ...args: any[]): void {
+        console.info(`%c${Logger.output(Logger.getTime(), message, args)}`, Logger.getOutputStyle('pink'))
+    }
 
-        return Logger.INSTANCE[value] = {
-            debug,
-            error,
-            warn,
-            info,
-            group
-        }
+    group(message: string, ...args: any[]): void {
+        console.group(Logger.output(Logger.getLocalTime(), message))
+        console.log(args)
+        console.groupEnd()
     }
 }

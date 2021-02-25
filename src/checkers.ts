@@ -173,4 +173,15 @@ export namespace Checkers {
 
         return code >= charCode('0') && code <= charCode('9')
     }
+
+    // let hasRegExpY = hasRegExp("y");
+    // let hasRegExpU = hasRegExp("u");
+    export const hasRegExp = (value: any): boolean => {
+        try {
+            new RegExp('.', value)
+            return true
+        } catch (ex) {
+            return false
+        }
+    }
 }

@@ -7,19 +7,18 @@ export namespace Sorting {
     import isFunction = Checkers.isFunction
     import valueException = Exceptions.valueException
     import isArray = Checkers.isArray
-    import matrix = Maths.matrix
     import isIntNumber = Checkers.isIntNumber
-    import vector = Maths.vector
     import typeException = Exceptions.typeException
     import Comparator = Comparators.Comparator
     import cmpByDefault = Comparators.cmpByDefault
+    import Helpers = Maths.Helpers
 
     /**
      * @private
      * @module sorting
-     * @param {Array} data Input array.
-     * @param {Integer} index1 index.
-     * @param {Integer} index2 index to swap_ with.
+     * @param data Input {Array}.
+     * @param index1 index {Integer}.
+     * @param index2 index {Integer} to swap_ with.
      */
     export const swap = <T>(data: T[], index1: number, index2: number): void => {
         if (index1 !== index2) {
@@ -103,7 +102,7 @@ export namespace Sorting {
         // Т.е. для каждого элемента массива выделяется "карман" List<int>.
         // При заполнении данных "карманов" элементы исходного не отсортированного массива
         // будут размещаться в порядке возрастания собственных значений "слева направо".
-        const bucket: number[][] = matrix(maxVal - minVal + 1, 0, 0)
+        const bucket: number[][] = Helpers.matrix(maxVal - minVal + 1, 0, 0)
         for (const item of array) {
             // Занесение значений в пакеты
             bucket[item - minVal].push(item)
@@ -925,7 +924,7 @@ export namespace Sorting {
         cmp = isFunction(cmp) ? cmp : cmpByDefault
 
         const n = array.length
-        const count = vector(n, 0)
+        const count = Helpers.vector(n, 0)
         const res: T[] = []
 
         for (let i = 0; i < n - 1; i++) {

@@ -3,13 +3,13 @@ import { Checkers } from './checkers'
 import { Exceptions } from './exceptions'
 
 export namespace Objects {
-    import random = Numbers.random;
-    import isObject = Checkers.isObject;
-    import randInt = Numbers.randInt;
-    import typeException = Exceptions.typeException;
+    import random = Numbers.random
+    import isObject = Checkers.isObject
+    import randInt = Numbers.randInt
+    import typeException = Exceptions.typeException
 
-    export const randomEnum = <T>(anEnum: T): T[keyof T] => {
-        const enumValues = (Object.values(anEnum) as unknown) as T[keyof T][]
+    export const randomEnum = <T>(enumType: T): T[keyof T] => {
+        const enumValues = (Object.values(enumType) as unknown) as T[keyof T][]
         const randomIndex = random(enumValues.length)
 
         return enumValues[randomIndex]
@@ -36,7 +36,7 @@ export namespace Objects {
         return Object.assign({}, a, b)
     }
 
-    export const shallowEquals = (a, b): boolean => {
+    export const shallowEquals = (a: any, b: any): boolean => {
         if (Object.is(a, b)) {
             return true
         }

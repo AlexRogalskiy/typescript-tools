@@ -1,4 +1,5 @@
 import _ from 'lodash'
+
 import { Callback, Executor, Supplier } from '../typings/function-types'
 import { Checkers } from './checkers'
 import { Exceptions } from './exceptions'

@@ -19,52 +19,52 @@ export namespace Numbers {
         return Math.round(Math.random())
     }
 
-    export const rand = (l: number, u: number): number => {
-        if (!isNumber(l)) {
-            throw typeException(`incorrect input argument: {lower border} is not number < ${l} >`)
+    export const rand = (min: number, max: number): number => {
+        if (!isNumber(min)) {
+            throw typeException(`incorrect input argument: {lower border} is not number < ${min} >`)
         }
 
-        if (!isNumber(u)) {
-            throw typeException(`incorrect input argument: {upper border} is not number < ${u} >`)
+        if (!isNumber(max)) {
+            throw typeException(`incorrect input argument: {upper border} is not number < ${max} >`)
         }
 
-        if (l > u) {
-            l = [u, (u = l)][0]
+        if (min > max) {
+            min = [max, (max = min)][0]
         }
 
-        return l + Math.random() * (u - l)
+        return min + Math.random() * (max - min)
     }
 
-    export const randInt = (l: number, u: number): number => {
-        if (!isIntNumber(l)) {
-            throw typeException(`incorrect input argument: {lower border} is not integer number < ${l} >`)
+    export const randInt = (min: number, max: number): number => {
+        if (!isIntNumber(min)) {
+            throw typeException(`incorrect input argument: {lower border} is not integer number < ${min} >`)
         }
 
-        if (!isIntNumber(u)) {
-            throw typeException(`incorrect input argument: {upper border} is not integer number < ${u} >`)
+        if (!isIntNumber(max)) {
+            throw typeException(`incorrect input argument: {upper border} is not integer number < ${max} >`)
         }
 
-        if (l > u) {
-            l = [u, (u = l)][0]
+        if (min > max) {
+            min = [max, (max = min)][0]
         }
 
-        return Math.floor(l + Math.random() * (u - l))
+        return Math.floor(min + Math.random() * (max - min))
     }
 
-    export const randUnevenInt = (l: number, u: number): number => {
-        if (!isIntNumber(l)) {
-            throw typeException(`incorrect input argument: {lower border} is not integer number < ${l} >`)
+    export const randUnevenInt = (min: number, max: number): number => {
+        if (!isIntNumber(min)) {
+            throw typeException(`incorrect input argument: {lower border} is not integer number < ${min} >`)
         }
 
-        if (!isIntNumber(u)) {
-            throw typeException(`incorrect input argument: {upper border} is not integer number < ${u} >`)
+        if (!isIntNumber(max)) {
+            throw typeException(`incorrect input argument: {upper border} is not integer number < ${max} >`)
         }
 
-        if (l > u) {
-            l = [u, (u = l)][0]
+        if (min > max) {
+            min = [max, (max = min)][0]
         }
 
-        return Math.round(l + Math.random() * (u - l))
+        return Math.round(min + Math.random() * (max - min))
     }
 
     export const randBigInt = (): number => {
@@ -88,7 +88,9 @@ export namespace Numbers {
     }
 
     export const average = (delta: number, numberOfDays: number): number | undefined => {
-        if (delta === undefined) return undefined
+        if (delta === undefined) {
+            return undefined
+        }
 
         return round(delta / numberOfDays)
     }
@@ -99,8 +101,8 @@ export namespace Numbers {
         return Math.round(number * i) / i
     }
 
-    export const orderBy = <T>(items: T[], fn): T[] => {
-        return items.sort((a, b) => fn(b) - fn(a))
+    export const orderBy = <T>(items: T[], func: (value) => number): T[] => {
+        return items.sort((a, b) => func(b) - func(a))
     }
 
     export const getSign = (value: number): string => {
@@ -115,31 +117,31 @@ export namespace Numbers {
         return !((x ^ y) < 0)
     }
 
-    export const f1 = (x, y, z): number => {
+    export const f1 = (x: number, y: number, z: number): number => {
         return x ^ y ^ z
     }
 
-    export const f2 = (x, y, z): number => {
+    export const f2 = (x: number, y: number, z: number): number => {
         return (x & y) | (~x & z)
     }
 
-    export const f3 = (x, y, z): number => {
+    export const f3 = (x: number, y: number, z: number): number => {
         return (x | ~y) ^ z
     }
 
-    export const f4 = (x, y, z): number => {
+    export const f4 = (x: number, y: number, z: number): number => {
         return (x & z) | (y & ~z)
     }
 
-    export const rotl = (x, n): number => {
+    export const rotl = (x: number, n: number): number => {
         return (x << n) | (x >>> (32 - n))
     }
 
-    export const isFloat = (n): boolean => {
+    export const isFloat = (n: any): boolean => {
         return typeof n === 'number' && n % 1 !== 0
     }
 
-    export const isInteger = (n): boolean => {
+    export const isInteger = (n: number): boolean => {
         return n === (n | 0)
     }
 
@@ -151,7 +153,7 @@ export namespace Numbers {
         return parseFloat(Number(number).toFixed(fractionDigits))
     }
 
-    export const dec2bin = (dec, length): string => {
+    export const dec2bin = (dec: number, length: number): string => {
         if (!isIntNumber(dec) || !isIntNumber(length)) {
             throw valueException(`incorrect input values: decimal < ${dec} >, output length < ${length} >`)
         }
@@ -170,7 +172,7 @@ export namespace Numbers {
         return code !== undefined && code > 0xffff
     }
 
-    export const xor = (a, b): boolean => {
+    export const xor = (a: boolean, b: boolean): boolean => {
         return a ? !b : b
     }
 
