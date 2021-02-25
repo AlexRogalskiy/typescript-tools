@@ -1,4 +1,6 @@
+import * as fs from 'fs'
 import { existsSync, mkdirSync, promises } from 'fs'
+import * as path from 'path'
 import { join } from 'path'
 
 export namespace Files {
@@ -31,5 +33,17 @@ export namespace Files {
         return fileList.every(async (file: string) => {
             return await checkFileExist(file)
         })
+    }
+
+    export const rmdirRecursive = (baseDir: string): void => {
+        for (let entry of fs.readdirSync(baseDir)) {
+            entry = path.join(baseDir, entry)
+            if (fs.statSync(entry).isDirectory()) {
+                rmdirRecursive(entry)
+            } else {
+                fs.unlinkSync(entry)
+            }
+        }
+        fs.rmdirSync(baseDir)
     }
 }
