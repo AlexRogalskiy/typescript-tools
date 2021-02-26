@@ -118,7 +118,7 @@ export class Logger {
     }
 
     private constructor() {
-        // empty
+        // empty private constructor
     }
 
     static getLogger(): Logger {

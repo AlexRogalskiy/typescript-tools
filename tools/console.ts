@@ -1,6 +1,8 @@
-export default ((global, property) => {
+export default ((globals, property) => {
     const properties = ['memory']
-    const dummy = () => {}
+    const dummy = (): void => {
+        // empty
+    }
     const methods = (
         'assert,clear,count,debug,dir,dirxml,error,exception,group,' +
         'groupCollapsed,groupEnd,info,log,markTimeline,profile,profiles,profileEnd,' +
@@ -8,7 +10,7 @@ export default ((global, property) => {
     ).split(',')
 
     let prop, method
-    const con = global[property]
+    const con = globals[property]
 
     while ((prop = properties.pop())) {
         if (!con[prop]) {

@@ -74,11 +74,11 @@ export class DateFormat {
     private static timezoneClip = /[^-+\dA-Z]/g
 
     // Regexes and supporting functions are cached through closure
-    parse(date, mask, utc) {
+    parse(date, mask, utc): void {
         // You can't provide utc if you skip other args (use the "UTC:" mask prefix)
         if (
-            arguments.length == 1 &&
-            Object.prototype.toString.call(date) == '[object String]' &&
+            arguments.length === 1 &&
+            Object.prototype.toString.call(date) === '[object String]' &&
             !/\d/.test(date)
         ) {
             mask = date
@@ -94,7 +94,7 @@ export class DateFormat {
         mask = String(DateFormat.masks[mask] || mask || DateFormat.masks['default'])
 
         // Allow setting the utc argument via the mask
-        if (mask.slice(0, 4) == 'UTC:') {
+        if (mask.slice(0, 4) === 'UTC:') {
             mask = mask.slice(4)
             utc = true
         }
@@ -110,6 +110,9 @@ export class DateFormat {
             L = date[`${_}Milliseconds`](),
             o = utc ? 0 : date.getTimezoneOffset()
 
+        const time = (String(date).match(DateFormat.timezone) || [''])
+            .pop()
+            ?.replace(DateFormat.timezoneClip, '')
         const flags = {
             d,
             dd: pad(d),
@@ -135,13 +138,9 @@ export class DateFormat {
             tt: H < 12 ? 'am' : 'pm',
             T: H < 12 ? 'A' : 'P',
             TT: H < 12 ? 'AM' : 'PM',
-            Z: utc
-                ? 'UTC'
-                : (String(date).match(DateFormat.timezone) || [''])
-                      .pop()
-                      ?.replace(DateFormat.timezoneClip, ''),
+            Z: utc ? 'UTC' : time,
             o: (o > 0 ? '-' : '+') + pad(Math.floor(Math.abs(o) / 60) * 100 + (Math.abs(o) % 60), 4),
-            S: ['th', 'st', 'nd', 'rd'][d % 10 > 3 ? 0 : (Number((d % 100) - (d % 10) != 10) * d) % 10],
+            S: ['th', 'st', 'nd', 'rd'][d % 10 > 3 ? 0 : (Number((d % 100) - (d % 10) !== 10) * d) % 10],
         }
 
         return mask.replace(DateFormat.token, value => {
