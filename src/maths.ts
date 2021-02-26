@@ -251,6 +251,21 @@ export namespace Maths {
         import toRadians = Helpers.toRadians
 
         export namespace Areas {
+            export const squared = Object.defineProperties(
+                {},
+                {
+                    x: { value: 1, writable: true, enumerable: true, configurable: true },
+                    y: { value: 1, writable: true, enumerable: true, configurable: true },
+                    r: {
+                        get() {
+                            return Math.sqrt(this.x * this.x + this.y * this.y)
+                        },
+                        enumerable: true,
+                        configurable: true,
+                    },
+                },
+            )
+
             export const circleArea = (radius: number): string => {
                 if (!isNumber(radius) || radius < 0) {
                     throw valueException(`incorrect radius value: radius < ${radius} >`)
@@ -290,6 +305,25 @@ export namespace Maths {
                 }
 
                 return (((a + b) * h) / 2).toFixed(2)
+            }
+
+            export const square = (): { r: number; readonly theta: number } => {
+                let $x = 1
+                let $y = 1
+                return {
+                    get r() {
+                        return Math.sqrt($x * $x + $y * $y)
+                    },
+                    set r(value) {
+                        const prevValue = Math.sqrt($x * $x + $y * $y)
+                        const ratio = value / prevValue
+                        $x *= ratio
+                        $y *= ratio
+                    },
+                    get theta() {
+                        return Math.atan2($y, $x)
+                    },
+                }
             }
         }
 
@@ -594,682 +628,706 @@ export namespace Maths {
             }
         }
 
-        export const calcVectorAngle = (ux: number, uy: number, vx: number, vy: number): number => {
-            const ta = Math.atan2(uy, ux)
-            const tb = Math.atan2(vy, vx)
+        export namespace Geometry {
+            export const randomPointOnCircle = (radius: number): { x; y } => {
+                const angle = Math.random() * 2 * Math.PI
 
-            return tb >= ta ? tb - ta : 2 * Math.PI - (ta - tb)
-        }
-
-        // let res = permutation([1, 2, 3, 4]);
-        // document.writeln("permutation: " + res);
-        export const permutation = (str: string[]): string[][] => {
-            const permArr: string[][] = []
-            const usedChars: string[] = []
-
-            const permute = (input: string[]): void => {
-                for (let i = 0; i < input.length; i++) {
-                    const ch: string = input.splice(i, 1)[0]
-                    usedChars.push(ch)
-                    if (input.length === 0) {
-                        permArr.push(usedChars.slice())
-                    }
-                    permute(input)
-                    input.splice(i, 0, ch)
-                    usedChars.pop()
-                }
-            }
-            if (!isArray(str)) {
-                throw valueException(`incorrect input parameter: array < ${str} >`)
-            }
-            permute(str)
-
-            return permArr
-        }
-
-        export const exp = (value: number, n: number): number => {
-            if (!isNumber(value)) {
-                throw valueException(
-                    `incorrect input values:  value< ${value} >, number of iterations < ${n} >`,
-                )
+                return { x: radius * Math.cos(angle), y: radius * Math.sin(angle) }
             }
 
-            const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
-            if (num == null) {
-                throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
-            }
-
-            let s = 1,
-                q = value,
-                i
-            for (i = 1; i <= num; i++) {
-                s += q
-                q = (q * value) / (i + 1)
-            }
-
-            return s
-        }
-
-        // let res = polinom([1, -10, 27, -18], 0, 10);
-        // document.writeln("<p>" + res + "</p>");
-        // Метод Ньютона-Рафсона
-        export const polinom = (array: number[], init: number, n: number): number => {
-            if (!isArray(array) || !isNumber(init)) {
-                throw valueException(`incorrect input values:  array < ${array} >, initial value < ${init} >`)
-            }
-
-            const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
-            if (num == null) {
-                throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
-            }
-
-            const b: number[] = []
-            let f, df
-            for (let i = 0; i < array.length; i++) {
-                b.push((array.length - 1 - i) * array[i])
-            }
-
-            for (let k = 0; k < num; k++) {
-                f = array[array.length - 1]
-                df = 0
-                for (let i = 1; i < array.length; i++) {
-                    f += array[array.length - 1 - i] * Math.pow(init, i)
-                    df += b[array.length - 1 - i] * Math.pow(init, i - 1)
-                }
-                init -= f / df
-            }
-
-            return init
-        }
-
-        // let res = polinom2(f, 12, 20);
-        // document.writeln("polinom2: " + res);
-        // const f = function(x) {
-        //	return x * x - 9 * x + 14;
-        // };
-        export const polinom2 = (func: Processor<number, number>, init: number, n: number): number => {
-            if (!isNumber(init) || !isFunction(func)) {
-                throw valueException(
-                    `incorrect input values:  initial value < ${init} >, function < ${func} >`,
-                )
-            }
-
-            const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
-            if (num == null) {
-                throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
-            }
-
-            let res = init
-            const h = 0.00001
-            const df = (func(res + h) - func(res)) / h
-            for (let i = 0; i < num; i++) {
-                res = res - func(res) / df //((func(x + h) - func(x)) / h)
-            }
-
-            return res
-        }
-
-        // document.writeln("monteCarlo: " + monteCarlo(2, 5));
-        export const monteCarlo = (r: number, h: number, N: number): number => {
-            if (!isNumber(r) || !isNumber(h)) {
-                throw valueException(`incorrect input values:  r < ${r} >, h < ${h} >`)
-            }
-
-            const num = N == null ? 150 : isIntNumber(N) && N > 0 ? N : null
-            if (num == null) {
-                throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
-            }
-
-            let n = 0
-            let x, y, z
-            const v0 = 4 * r * r * (h + r)
-            for (let i = 0; i <= num; i++) {
-                x = (2 * i * r) / num - r
-                for (let j = 0; j <= num; j++) {
-                    y = (2 * j * r) / num - r
-                    for (let k = 0; k <= num; k++) {
-                        z = (k * (h + r)) / num
-                        if (
-                            (Math.sqrt(x * x + y * y) / r <= z / h && z <= h) ||
-                            (x * x + y * y + (z - h) * (z - h) <= r * r && z > h)
-                        ) {
-                            n++
-                        }
-                    }
-                }
-            }
-
-            return (v0 * n) / Math.pow(N + 1, 3)
-        }
-
-        // polygon = {arrayX: [-73,-33,7,-33], arrayY: [-85,-126,-85,-45]};
-        // point = {x: -40, y: -60};
-        export const inPolygon = (
-            polygon: { arrayX: number[]; arrayY: number[] },
-            point: { x: number; y: number },
-        ): boolean => {
-            if (!isObject(polygon)) {
-                throw valueException(`incorrect input value: {polygon} not an object < ${polygon} >`)
-            }
-
-            if (
-                !Object.prototype.hasOwnProperty.call(polygon, 'arrayX') ||
-                !Object.prototype.hasOwnProperty.call(polygon, 'arrayY') ||
-                !isArray(polygon['arrayX']) ||
-                !isArray(polygon['arrayY'])
-            ) {
-                throw valueException(
-                    `incorrect input value: {polygon} is invalid {'arrayX': array, 'arrayY': array} < ${polygon} >`,
-                )
-            }
-
-            if (polygon['arrayX'].length !== polygon['arrayY'].length) {
-                throw valueException(
-                    `incorrect input value: {polygon} length of {arrayX} is not equal to {arrayY} in < ${polygon} >`,
-                )
-            }
-
-            if (!isObject(point)) {
-                throw valueException(`incorrect input values: {point} is not object < ${point} >`)
-            }
-
-            if (
-                !Object.prototype.hasOwnProperty.call(point, 'x') ||
-                !Object.prototype.hasOwnProperty.call(point, 'y') ||
-                !isNumber(point['x']) ||
-                !isNumber(point['arrayY'])
-            ) {
-                throw valueException(
-                    `incorrect input value: {point} is invalid {'x': number, 'y': number} < ${point} >`,
-                )
-            }
-
-            let c = false
-            for (let i = 0, len = polygon['arrayX'].length, j = len - 1; i < len; i++) {
-                const inArray =
-                    (polygon['arrayY'][i] <= point['y'] && point['y'] < polygon['arrayY'][j]) ||
-                    (polygon['arrayY'][j] <= point['y'] && point['y'] < polygon['arrayY'][i])
-
-                const f1 = (polygon['arrayX'][j] - polygon['arrayX'][i]) * (point['y'] - polygon['arrayY'][i])
-                const f2 = polygon['arrayY'][j] - polygon['arrayY'][i] + polygon['arrayX'][i]
-                const inArray2 = point['x'] > f1 / f2
-
-                if (inArray && inArray2) {
-                    c = !c
-                }
-                j = i
-            }
-
-            return c
-        }
-
-        /* Сферический закон косинуса */
-        export const getSphericalDistance = (
-            startCoords: { longitude: number; latitude: number },
-            destCoords: { longitude: number; latitude: number },
-        ): number => {
-            if (!isObject(startCoords) || !isObject(destCoords)) {
-                throw valueException('incorrect initialization value: [not an object]')
-            }
-            if (
-                !Object.prototype.hasOwnProperty.call(startCoords, 'latitude') ||
-                !Object.prototype.hasOwnProperty.call(startCoords, 'longitude')
-            ) {
-                throw valueException(
-                    "incorrect initialization value 'start coordinates': {'latitude': [number], 'longitude': [number]}",
-                )
-            }
-
-            if (
-                !Object.prototype.hasOwnProperty.call(destCoords, 'latitude') ||
-                !Object.prototype.hasOwnProperty.call(destCoords, 'longitude')
-            ) {
-                throw valueException(
-                    "incorrect initialization value 'destination coordinates': {'latitude': [number], 'longitude': [number]}",
-                )
-            }
-
-            const startLatRads = toRadians(startCoords.latitude),
-                startLongRads = toRadians(startCoords.longitude)
-            const destLatRads = toRadians(destCoords.latitude),
-                destLongRads = toRadians(destCoords.longitude)
-
-            const f1 = Math.sin(startLatRads) * Math.sin(destLatRads)
-            const f2 = Math.cos(startLatRads) * Math.cos(destLatRads) * Math.cos(startLongRads - destLongRads)
-
-            return Math.acos(f1 + f2)
-        }
-
-        /* Найти ближайшую к заданной точке (широта, долгота) локацию */
-        export const findClosestLocation = (
-            coords: { longitude; latitude },
-            arrayOfCoords: { longitude; latitude }[],
-        ): void => {
-            if (!isArray(arrayOfCoords)) {
-                throw valueException(`incorrect array value: < ${arrayOfCoords} >`)
-            }
-
-            let closestCoords
-            let minDist = Number.MAX_VALUE
-            for (const item of arrayOfCoords) {
-                const dist = getSphericalDistance(coords, item)
-                if (dist < minDist) {
-                    closestCoords = item
-                    minDist = dist
-                }
-            }
-
-            return closestCoords
-        }
-
-        export const tabulate = (
-            low: number,
-            high: number,
-            num: number,
-            func: Processor<number, number>,
-        ): { x; y }[] => {
-            const point = (x: number, y: number): { x; y } => {
-                return { x, y }
-            }
-
-            if (!isIntNumber(high) || num < 1) {
-                throw typeException(
-                    `incorrect input argument: {number of points} is not positive integer number < ${num} >`,
-                )
-            }
-
-            if (!isFunction(func)) {
-                throw typeException(`incorrect input argument: not a function < ${func} >`)
-            }
-
-            if (!isNumber(low)) {
-                throw typeException(`incorrect input argument: {low} is not number < ${low} >`)
-            }
-
-            if (!isNumber(high)) {
-                throw typeException(`incorrect input argument: {high} is not number < ${high} >`)
-            }
-
-            if (low > high) {
-                low = [high, (high = low)][0]
-            }
-
-            const h = Math.floor((high - low) / (num - 1))
-            const res: { x; y }[] = []
-            for (let i = 1; i <= num; i++) {
-                const x = low + (i - 1) * h
-                const y = func(x)
-                res.push(point(x, y))
-            }
-
-            return res
-        }
-
-        // Перевод географических координат (широты и долготы) точки в прямоугольные координаты
-        // проекции Гаусса-Крюгера
-        // Географические координаты точки (в градусах)
-        /** point = {
-         *			lon: 37.618, Долгота (положительная для восточного полушария)
-         *			lat: 55.752  Широта (положительная для северного полушария)
-         *		}
-         */
-        export const toCartesianCoords = (() => {
-            // Параметры эллипсоида Красовского
-            const a = 6378245.0 // Большая (экваториальная) полуось
-            const b = 6356863.019 // Малая (полярная) полуось
-            const e2 = (Math.pow(a, 2) - Math.pow(b, 2)) / Math.pow(a, 2) // Эксцентриситет
-            const n = (a - b) / (a + b) // Приплюснутость
-
-            return (point): { north: number; east: number } => {
-                if (!isObject(point)) {
-                    throw valueException(`incorrect input value: <point> not an object < ${point} >`)
+            // polygon = {arrayX: [-73,-33,7,-33], arrayY: [-85,-126,-85,-45]};
+            // point = {x: -40, y: -60};
+            export const inPolygon = (
+                polygon: { arrayX: number[]; arrayY: number[] },
+                point: { x: number; y: number },
+            ): boolean => {
+                if (!isObject(polygon)) {
+                    throw valueException(`incorrect input value: {polygon} not an object < ${polygon} >`)
                 }
 
                 if (
-                    !Object.prototype.hasOwnProperty.call(point, 'lon') ||
-                    !Object.prototype.hasOwnProperty.call(point, 'lat')
+                    !Object.prototype.hasOwnProperty.call(polygon, 'arrayX') ||
+                    !Object.prototype.hasOwnProperty.call(polygon, 'arrayY') ||
+                    !isArray(polygon['arrayX']) ||
+                    !isArray(polygon['arrayY'])
                 ) {
                     throw valueException(
-                        `incorrect input value: {point} is invalid {'lon': number, 'lat': number} < ${point} >`,
+                        `incorrect input value: {polygon} is invalid {'arrayX': array, 'arrayY': array} < ${polygon} >`,
                     )
                 }
 
-                if (!isNumber(point['lon']) || !isArray(point['lat'])) {
+                if (polygon['arrayX'].length !== polygon['arrayY'].length) {
                     throw valueException(
-                        `incorrect type value: not a number {'lon': ${point['lon']}, 'lat': ${point['lat']}}`,
+                        `incorrect input value: {polygon} length of {arrayX} is not equal to {arrayY} in < ${polygon} >`,
                     )
                 }
 
-                // Номер зоны Гаусса-Крюгера (если точка рассматривается в системе
-                // координат соседней зоны, то номер зоны следует присвоить вручную)
-                const zone = parseInt(String(point['lon'] / 6 + 1))
-
-                //Параметры зоны Гаусса-Крюгера
-                const F = 1.0 // Масштабный коэффициент
-                const Lat0 = 0.0 // Начальная параллель (в радианах)
-                const Lon0 = ((zone * 6 - 3) * Math.PI) / 180 // Центральный меридиан (в радианах)
-                const N0 = 0.0 // Условное северное смещение для начальной параллели
-                const E0 = zone * 1e6 + 500000.0 // Условное восточное смещение для центрального меридиана
-
-                // Перевод широты и долготы в радианы
-                const Lat = toRadians(point['lat'])
-                const Lon = toRadians(point['lon'])
-
-                // Вычисление переменных для преобразования
-                const v = a * F * Math.pow(1 - e2 * Math.pow(Math.sin(Lat), 2), -0.5)
-                const p = a * F * (1 - e2) * Math.pow(1 - e2 * Math.pow(Math.sin(Lat), 2), -1.5)
-                const n2 = v / p - 1
-                const M1 = (1 + n + (5 / 4) * Math.pow(n, 2) + (5 / 4) * Math.pow(n, 3)) * (Lat - Lat0)
-                const M2 =
-                    (3 * n + 3 * Math.pow(n, 2) + (21 / 8) * Math.pow(n, 3)) *
-                    Math.sin(Lat - Lat0) *
-                    Math.cos(Lat + Lat0)
-                const M3 =
-                    ((15 / 8) * Math.pow(n, 2) + (15 / 8) * Math.pow(n, 3)) *
-                    Math.sin(2 * (Lat - Lat0)) *
-                    Math.cos(2 * (Lat + Lat0))
-                const M4 =
-                    (35 / 24) * Math.pow(n, 3) * Math.sin(3 * (Lat - Lat0)) * Math.cos(3 * (Lat + Lat0))
-                const M = b * F * (M1 - M2 + M3 - M4)
-                const I = M + N0
-                const II = (v / 2) * Math.sin(Lat) * Math.cos(Lat)
-                const III =
-                    (v / 24) *
-                    Math.sin(Lat) *
-                    Math.pow(Math.cos(Lat), 3) *
-                    (5 - Math.pow(Math.tan(Lat), 2) + 9 * n2)
-                const IIIA =
-                    (v / 720) *
-                    Math.sin(Lat) *
-                    Math.pow(Math.cos(Lat), 5) *
-                    (61 - 58 * Math.pow(Math.tan(Lat), 2) + Math.pow(Math.tan(Lat), 4))
-                const IV = v * Math.cos(Lat)
-                const V = (v / 6) * Math.pow(Math.cos(Lat), 3) * (v / p - Math.pow(Math.tan(Lat), 2))
-                const VI =
-                    (v / 120) *
-                    Math.pow(Math.cos(Lat), 5) *
-                    (5 -
-                        18 * Math.pow(Math.tan(Lat), 2) +
-                        Math.pow(Math.tan(Lat), 4) +
-                        14 * n2 -
-                        58 * Math.pow(Math.tan(Lat), 2) * n2)
-
-                // Вычисление северного и восточного смещения (в метрах)
-                const N =
-                    I +
-                    II * Math.pow(Lon - Lon0, 2) +
-                    III * Math.pow(Lon - Lon0, 4) +
-                    IIIA * Math.pow(Lon - Lon0, 6)
-                const E = E0 + IV * (Lon - Lon0) + V * Math.pow(Lon - Lon0, 3) + VI * Math.pow(Lon - Lon0, 5)
-
-                return { north: N, east: E }
-            }
-        })()
-
-        export const sinus = (a: number, b: number, h: number, eps: number): number[] => {
-            if (!isNumber(a) || !isNumber(b) || !isNumber(h) || !isNumber(eps)) {
-                throw valueException(
-                    `incorrect input values: lower border < ${a} >, upper border < ${b} >, step < ${h} >, precision < ${eps} >`,
-                )
-            }
-
-            const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
-            if (precision == null) {
-                throw valueException(`incorrect 'precision' value: < ${precision} >`)
-            }
-
-            const result: number[] = []
-
-            const sinx = (x: number, eps: number): number => {
-                let n = 1
-                const x2 = -x * x
-                let snx = x,
-                    xn = x
-                while (Math.abs(xn) > eps) {
-                    n += 2.0
-                    xn *= x2 / n / (n - 1)
-                    snx += xn
+                if (!isObject(point)) {
+                    throw valueException(`incorrect input values: {point} is not object < ${point} >`)
                 }
-                return snx
-            }
 
-            for (let x = a; x <= b; x += h) {
-                result.push(sinx(x, precision))
-            }
-
-            return result
-        }
-
-        export const sin2 = (x: number, n: number): number => {
-            if (!isNumber(x)) {
-                throw valueException(`incorrect input values: x < ${x} >`)
-            }
-
-            const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
-            if (num == null) {
-                throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
-            }
-
-            let q = x,
-                s = 0
-            for (let i = 0; i < num; i++) {
-                s += q
-                q *= (-1 * x * x) / (2 * i) / (2 * i + 1)
-            }
-
-            return s
-        }
-
-        export const sin3 = (x: number, e: number, n: number, eps: number): number | null => {
-            if (!isNumber(x) || !isRealNumber(e) || e <= 0 || e >= 1) {
-                throw valueException(`incorrect input values: x < ${x} >, precision < ${e} >`)
-            }
-
-            const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
-            if (num === null) {
-                throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
-            }
-
-            const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
-            if (precision === null) {
-                throw valueException(`incorrect 'precision' value: < ${precision} >`)
-            }
-
-            let r = x,
-                s = x
-            let i = 1
-            while (Math.abs(r) > precision && i <= num) {
-                r *= (-1 * x * x) / (2 * i) / (2 * i + 1)
-                s += r
-                i++
-            }
-
-            return i <= n ? s : null
-        }
-
-        /**
-         * Calculate the sin of an angle, avoiding returning floats for known results
-         * @static
-         * @param {Number} angle the angle in radians or in degree
-         * @return {Number}
-         */
-        export const sin = (angle: number): number => {
-            if (angle === 0) {
-                return 0
-            }
-            const angleSlice = angle / PiBy2
-            let sign = 1
-            if (angle < 0) {
-                // sin(-a) = -sin(a)
-                sign = -1
-            }
-            if (angleSlice === 1) {
-                return sign
-            } else if (angleSlice === 2) {
-                return 0
-            } else if (angleSlice === 3) {
-                return -sign
-            }
-
-            return Math.sin(angle)
-        }
-
-        /**
-         * Calculate the cos of an angle, avoiding returning floats for known results
-         * @param {Number} angle the angle in radians or in degree
-         * @return {Number}
-         */
-        export const cos = (angle: number): number => {
-            if (angle === 0) {
-                return 1
-            }
-            if (angle < 0) {
-                // cos(a) = cos(-a)
-                angle = -angle
-            }
-            const angleSlice = angle / PiBy2
-            if (angleSlice === 1 || angleSlice === 3) {
-                return 0
-            } else if (angleSlice === 2) {
-                return -1
-            }
-
-            return Math.cos(angle)
-        }
-
-        export const cos2 = (x: number, e: number, n: number, eps: number): number | null => {
-            if (!isNumber(x) || !isRealNumber(e) || e <= 0 || e >= 1) {
-                throw valueException(`incorrect input values: x < ${x} >, precision < ${e} >`)
-            }
-
-            const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
-            if (num == null) {
-                throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
-            }
-
-            const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
-            if (precision == null) {
-                throw valueException(`incorrect 'precision' value: < ${precision} >`)
-            }
-
-            let r = 1
-            let s = 1
-            let i = 1
-            while (Math.abs(r) > precision && i <= num) {
-                r *= (-1 * x * x) / (2 * i * (2 * i - 1))
-                s += r
-                i++
-            }
-
-            return i <= num ? s : null
-        }
-
-        export const quarterPI = (n: number): number => {
-            const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
-            if (num == null) {
-                throw valueException(`incorrect 'number of iterations' value: < ${n} >`)
-            }
-
-            let sum = 0,
-                x
-            for (let i = n; i > 0; i--) {
-                x = 1 / (2 * i - 1)
-                if (i % 2 === 0) x = -x
-                sum += x
-            }
-
-            return sum
-        }
-
-        export const geron = (a: number, eps: number): number => {
-            if (!isNumber(a) || a < 0) {
-                throw valueException(`incorrect input value: expression < ${a} >`)
-            }
-
-            const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
-            if (precision == null) {
-                throw valueException(`incorrect 'precision' value: < ${precision} >`)
-            }
-
-            let rad = 1.0,
-                z
-            do {
-                z = rad
-                rad = (rad + a / rad) / 2 //rad = (rad + a / rad) >> 1;
-            } while (Math.abs(z - rad) >= precision)
-
-            return rad
-        }
-
-        export const sqrt32 = (a: number): number => {
-            if (!isNumber(a) || a < 0) {
-                throw valueException(`incorrect input value: expression < ${a} >`)
-            }
-            let c = 0x8000,
-                g = 0x8000
-            // eslint-disable-next-line no-constant-condition
-            while (true) {
-                if (g * g > a) {
-                    g ^= c
+                if (
+                    !Object.prototype.hasOwnProperty.call(point, 'x') ||
+                    !Object.prototype.hasOwnProperty.call(point, 'y') ||
+                    !isNumber(point['x']) ||
+                    !isNumber(point['arrayY'])
+                ) {
+                    throw valueException(
+                        `incorrect input value: {point} is invalid {'x': number, 'y': number} < ${point} >`,
+                    )
                 }
-                c >>= 1
-                if (c === 0) {
-                    return g
+
+                let c = false
+                for (let i = 0, len = polygon['arrayX'].length, j = len - 1; i < len; i++) {
+                    const inArray =
+                        (polygon['arrayY'][i] <= point['y'] && point['y'] < polygon['arrayY'][j]) ||
+                        (polygon['arrayY'][j] <= point['y'] && point['y'] < polygon['arrayY'][i])
+
+                    const f1 =
+                        (polygon['arrayX'][j] - polygon['arrayX'][i]) * (point['y'] - polygon['arrayY'][i])
+                    const f2 = polygon['arrayY'][j] - polygon['arrayY'][i] + polygon['arrayX'][i]
+                    const inArray2 = point['x'] > f1 / f2
+
+                    if (inArray && inArray2) {
+                        c = !c
+                    }
+                    j = i
                 }
-                g |= c
+
+                return c
+            }
+
+            /* Сферический закон косинуса */
+            export const getSphericalDistance = (
+                startCoords: { longitude: number; latitude: number },
+                destCoords: { longitude: number; latitude: number },
+            ): number => {
+                if (!isObject(startCoords) || !isObject(destCoords)) {
+                    throw valueException('incorrect initialization value: [not an object]')
+                }
+                if (
+                    !Object.prototype.hasOwnProperty.call(startCoords, 'latitude') ||
+                    !Object.prototype.hasOwnProperty.call(startCoords, 'longitude')
+                ) {
+                    throw valueException(
+                        "incorrect initialization value 'start coordinates': {'latitude': [number], 'longitude': [number]}",
+                    )
+                }
+
+                if (
+                    !Object.prototype.hasOwnProperty.call(destCoords, 'latitude') ||
+                    !Object.prototype.hasOwnProperty.call(destCoords, 'longitude')
+                ) {
+                    throw valueException(
+                        "incorrect initialization value 'destination coordinates': {'latitude': [number], 'longitude': [number]}",
+                    )
+                }
+
+                const startLatRads = toRadians(startCoords.latitude),
+                    startLongRads = toRadians(startCoords.longitude)
+                const destLatRads = toRadians(destCoords.latitude),
+                    destLongRads = toRadians(destCoords.longitude)
+
+                const f1 = Math.sin(startLatRads) * Math.sin(destLatRads)
+                const f2 =
+                    Math.cos(startLatRads) * Math.cos(destLatRads) * Math.cos(startLongRads - destLongRads)
+
+                return Math.acos(f1 + f2)
+            }
+
+            /* Найти ближайшую к заданной точке (широта, долгота) локацию */
+            export const findClosestLocation = (
+                coords: { longitude; latitude },
+                arrayOfCoords: { longitude; latitude }[],
+            ): void => {
+                if (!isArray(arrayOfCoords)) {
+                    throw valueException(`incorrect array value: < ${arrayOfCoords} >`)
+                }
+
+                let closestCoords
+                let minDist = Number.MAX_VALUE
+                for (const item of arrayOfCoords) {
+                    const dist = getSphericalDistance(coords, item)
+                    if (dist < minDist) {
+                        closestCoords = item
+                        minDist = dist
+                    }
+                }
+
+                return closestCoords
+            }
+
+            // Перевод географических координат (широты и долготы) точки в прямоугольные координаты
+            // проекции Гаусса-Крюгера
+            // Географические координаты точки (в градусах)
+            /** point = {
+             *			lon: 37.618, Долгота (положительная для восточного полушария)
+             *			lat: 55.752  Широта (положительная для северного полушария)
+             *		}
+             */
+            export const toCartesianCoords = (() => {
+                // Параметры эллипсоида Красовского
+                const a = 6378245.0 // Большая (экваториальная) полуось
+                const b = 6356863.019 // Малая (полярная) полуось
+                const e2 = (Math.pow(a, 2) - Math.pow(b, 2)) / Math.pow(a, 2) // Эксцентриситет
+                const n = (a - b) / (a + b) // Приплюснутость
+
+                return (point): { north: number; east: number } => {
+                    if (!isObject(point)) {
+                        throw valueException(`incorrect input value: <point> not an object < ${point} >`)
+                    }
+
+                    if (
+                        !Object.prototype.hasOwnProperty.call(point, 'lon') ||
+                        !Object.prototype.hasOwnProperty.call(point, 'lat')
+                    ) {
+                        throw valueException(
+                            `incorrect input value: {point} is invalid {'lon': number, 'lat': number} < ${point} >`,
+                        )
+                    }
+
+                    if (!isNumber(point['lon']) || !isArray(point['lat'])) {
+                        throw valueException(
+                            `incorrect type value: not a number {'lon': ${point['lon']}, 'lat': ${point['lat']}}`,
+                        )
+                    }
+
+                    // Номер зоны Гаусса-Крюгера (если точка рассматривается в системе
+                    // координат соседней зоны, то номер зоны следует присвоить вручную)
+                    const zone = parseInt(String(point['lon'] / 6 + 1))
+
+                    //Параметры зоны Гаусса-Крюгера
+                    const F = 1.0 // Масштабный коэффициент
+                    const Lat0 = 0.0 // Начальная параллель (в радианах)
+                    const Lon0 = ((zone * 6 - 3) * Math.PI) / 180 // Центральный меридиан (в радианах)
+                    const N0 = 0.0 // Условное северное смещение для начальной параллели
+                    const E0 = zone * 1e6 + 500000.0 // Условное восточное смещение для центрального меридиана
+
+                    // Перевод широты и долготы в радианы
+                    const Lat = toRadians(point['lat'])
+                    const Lon = toRadians(point['lon'])
+
+                    // Вычисление переменных для преобразования
+                    const v = a * F * Math.pow(1 - e2 * Math.pow(Math.sin(Lat), 2), -0.5)
+                    const p = a * F * (1 - e2) * Math.pow(1 - e2 * Math.pow(Math.sin(Lat), 2), -1.5)
+                    const n2 = v / p - 1
+                    const M1 = (1 + n + (5 / 4) * Math.pow(n, 2) + (5 / 4) * Math.pow(n, 3)) * (Lat - Lat0)
+                    const M2 =
+                        (3 * n + 3 * Math.pow(n, 2) + (21 / 8) * Math.pow(n, 3)) *
+                        Math.sin(Lat - Lat0) *
+                        Math.cos(Lat + Lat0)
+                    const M3 =
+                        ((15 / 8) * Math.pow(n, 2) + (15 / 8) * Math.pow(n, 3)) *
+                        Math.sin(2 * (Lat - Lat0)) *
+                        Math.cos(2 * (Lat + Lat0))
+                    const M4 =
+                        (35 / 24) * Math.pow(n, 3) * Math.sin(3 * (Lat - Lat0)) * Math.cos(3 * (Lat + Lat0))
+                    const M = b * F * (M1 - M2 + M3 - M4)
+                    const I = M + N0
+                    const II = (v / 2) * Math.sin(Lat) * Math.cos(Lat)
+                    const III =
+                        (v / 24) *
+                        Math.sin(Lat) *
+                        Math.pow(Math.cos(Lat), 3) *
+                        (5 - Math.pow(Math.tan(Lat), 2) + 9 * n2)
+                    const IIIA =
+                        (v / 720) *
+                        Math.sin(Lat) *
+                        Math.pow(Math.cos(Lat), 5) *
+                        (61 - 58 * Math.pow(Math.tan(Lat), 2) + Math.pow(Math.tan(Lat), 4))
+                    const IV = v * Math.cos(Lat)
+                    const V = (v / 6) * Math.pow(Math.cos(Lat), 3) * (v / p - Math.pow(Math.tan(Lat), 2))
+                    const VI =
+                        (v / 120) *
+                        Math.pow(Math.cos(Lat), 5) *
+                        (5 -
+                            18 * Math.pow(Math.tan(Lat), 2) +
+                            Math.pow(Math.tan(Lat), 4) +
+                            14 * n2 -
+                            58 * Math.pow(Math.tan(Lat), 2) * n2)
+
+                    // Вычисление северного и восточного смещения (в метрах)
+                    const N =
+                        I +
+                        II * Math.pow(Lon - Lon0, 2) +
+                        III * Math.pow(Lon - Lon0, 4) +
+                        IIIA * Math.pow(Lon - Lon0, 6)
+                    const E =
+                        E0 + IV * (Lon - Lon0) + V * Math.pow(Lon - Lon0, 3) + VI * Math.pow(Lon - Lon0, 5)
+
+                    return { north: N, east: E }
+                }
+            })()
+
+            export const calcVectorAngle = (ux: number, uy: number, vx: number, vy: number): number => {
+                const ta = Math.atan2(uy, ux)
+                const tb = Math.atan2(vy, vx)
+
+                return tb >= ta ? tb - ta : 2 * Math.PI - (ta - tb)
             }
         }
 
-        // http://en.wikipedia.org/wiki/Hyperbolic_function
-        export const sinh = (z: number, n: number): number => {
-            if (!isNumber(z)) {
-                throw valueException(`incorrect input value: z < ${z} >`)
+        export namespace Algebra {
+            // let res = permutation([1, 2, 3, 4]);
+            // document.writeln("permutation: " + res);
+            export const permutation = (str: string[]): string[][] => {
+                const permArr: string[][] = []
+                const usedChars: string[] = []
+
+                const permute = (input: string[]): void => {
+                    for (let i = 0; i < input.length; i++) {
+                        const ch: string = input.splice(i, 1)[0]
+                        usedChars.push(ch)
+                        if (input.length === 0) {
+                            permArr.push(usedChars.slice())
+                        }
+                        permute(input)
+                        input.splice(i, 0, ch)
+                        usedChars.pop()
+                    }
+                }
+                if (!isArray(str)) {
+                    throw valueException(`incorrect input parameter: array < ${str} >`)
+                }
+                permute(str)
+
+                return permArr
             }
 
-            let s = z,
-                g = z
+            export const exp = (value: number, n: number): number => {
+                if (!isNumber(value)) {
+                    throw valueException(
+                        `incorrect input values:  value< ${value} >, number of iterations < ${n} >`,
+                    )
+                }
 
-            const num = n == null ? 100 : isIntNumber(n) && n >= 1 ? n : null
-            if (num == null) {
-                throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
+                if (num == null) {
+                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                }
+
+                let s = 1,
+                    q = value,
+                    i
+                for (i = 1; i <= num; i++) {
+                    s += q
+                    q = (q * value) / (i + 1)
+                }
+
+                return s
             }
 
-            for (let i = 1; i <= num; i++) {
-                g *= (z * z) / (2 * i) / (2 * i + 1)
-                s += g
+            export const power = (base: number, exponent: number): number => {
+                let result = 1
+                for (let count = 0; count < exponent; count++) {
+                    result *= base
+                }
+
+                return result
             }
 
-            return s
-        }
+            // let res = polinom([1, -10, 27, -18], 0, 10);
+            // document.writeln("<p>" + res + "</p>");
+            // Метод Ньютона-Рафсона
+            export const polinom = (array: number[], init: number, n: number): number => {
+                if (!isArray(array) || !isNumber(init)) {
+                    throw valueException(
+                        `incorrect input values:  array < ${array} >, initial value < ${init} >`,
+                    )
+                }
 
-        // http://en.wikipedia.org/wiki/Hyperbolic_function
-        export const cosh = (z: number, n: number): number => {
-            if (!isNumber(z)) {
-                throw valueException(`incorrect input value: z < ${z} >`)
+                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
+                if (num == null) {
+                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                }
+
+                const b: number[] = []
+                let f, df
+                for (let i = 0; i < array.length; i++) {
+                    b.push((array.length - 1 - i) * array[i])
+                }
+
+                for (let k = 0; k < num; k++) {
+                    f = array[array.length - 1]
+                    df = 0
+                    for (let i = 1; i < array.length; i++) {
+                        f += array[array.length - 1 - i] * Math.pow(init, i)
+                        df += b[array.length - 1 - i] * Math.pow(init, i - 1)
+                    }
+                    init -= f / df
+                }
+
+                return init
             }
 
-            let s = 1,
-                g = 1
+            // let res = polinom2(f, 12, 20);
+            // document.writeln("polinom2: " + res);
+            // const f = function(x) {
+            //	return x * x - 9 * x + 14;
+            // };
+            export const polinom2 = (func: Processor<number, number>, init: number, n: number): number => {
+                if (!isNumber(init) || !isFunction(func)) {
+                    throw valueException(
+                        `incorrect input values:  initial value < ${init} >, function < ${func} >`,
+                    )
+                }
 
-            const num = n == null ? 100 : isIntNumber(n) && n >= 1 ? n : null
-            if (num == null) {
-                throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
+                if (num == null) {
+                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                }
+
+                let res = init
+                const h = 0.00001
+                const df = (func(res + h) - func(res)) / h
+                for (let i = 0; i < num; i++) {
+                    res = res - func(res) / df //((func(x + h) - func(x)) / h)
+                }
+
+                return res
             }
 
-            for (let i = 1; i <= num; i++) {
-                g *= (z * z) / (2 * i - 1) / (2 * i)
-                s += g
+            // document.writeln("monteCarlo: " + monteCarlo(2, 5));
+            export const monteCarlo = (r: number, h: number, N: number): number => {
+                if (!isNumber(r) || !isNumber(h)) {
+                    throw valueException(`incorrect input values:  r < ${r} >, h < ${h} >`)
+                }
+
+                const num = N == null ? 150 : isIntNumber(N) && N > 0 ? N : null
+                if (num == null) {
+                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                }
+
+                let n = 0
+                let x, y, z
+                const v0 = 4 * r * r * (h + r)
+                for (let i = 0; i <= num; i++) {
+                    x = (2 * i * r) / num - r
+                    for (let j = 0; j <= num; j++) {
+                        y = (2 * j * r) / num - r
+                        for (let k = 0; k <= num; k++) {
+                            z = (k * (h + r)) / num
+                            if (
+                                (Math.sqrt(x * x + y * y) / r <= z / h && z <= h) ||
+                                (x * x + y * y + (z - h) * (z - h) <= r * r && z > h)
+                            ) {
+                                n++
+                            }
+                        }
+                    }
+                }
+
+                return (v0 * n) / Math.pow(N + 1, 3)
             }
 
-            return s
-        }
+            export const tabulate = (
+                low: number,
+                high: number,
+                num: number,
+                func: Processor<number, number>,
+            ): { x; y }[] => {
+                const point = (x: number, y: number): { x; y } => {
+                    return { x, y }
+                }
 
-        export const tabX = (low: number, i: number, h: number): number => {
-            return low + i * h
-        }
+                if (!isIntNumber(high) || num < 1) {
+                    throw typeException(
+                        `incorrect input argument: {number of points} is not positive integer number < ${num} >`,
+                    )
+                }
 
-        export const tabUnevenX = (low: number, high: number, i: number, n: number): number => {
-            return (low + high + (high - low) * Math.cos(((2 * i + 1) * Math.PI) / (2 * n))) / 2
+                if (!isFunction(func)) {
+                    throw typeException(`incorrect input argument: not a function < ${func} >`)
+                }
+
+                if (!isNumber(low)) {
+                    throw typeException(`incorrect input argument: {low} is not number < ${low} >`)
+                }
+
+                if (!isNumber(high)) {
+                    throw typeException(`incorrect input argument: {high} is not number < ${high} >`)
+                }
+
+                if (low > high) {
+                    low = [high, (high = low)][0]
+                }
+
+                const h = Math.floor((high - low) / (num - 1))
+                const res: { x; y }[] = []
+                for (let i = 1; i <= num; i++) {
+                    const x = low + (i - 1) * h
+                    const y = func(x)
+                    res.push(point(x, y))
+                }
+
+                return res
+            }
+
+            export const sinus = (a: number, b: number, h: number, eps: number): number[] => {
+                if (!isNumber(a) || !isNumber(b) || !isNumber(h) || !isNumber(eps)) {
+                    throw valueException(
+                        `incorrect input values: lower border < ${a} >, upper border < ${b} >, step < ${h} >, precision < ${eps} >`,
+                    )
+                }
+
+                const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
+                if (precision == null) {
+                    throw valueException(`incorrect 'precision' value: < ${precision} >`)
+                }
+
+                const result: number[] = []
+
+                const sinx = (x: number, eps: number): number => {
+                    let n = 1
+                    const x2 = -x * x
+                    let snx = x,
+                        xn = x
+                    while (Math.abs(xn) > eps) {
+                        n += 2.0
+                        xn *= x2 / n / (n - 1)
+                        snx += xn
+                    }
+                    return snx
+                }
+
+                for (let x = a; x <= b; x += h) {
+                    result.push(sinx(x, precision))
+                }
+
+                return result
+            }
+
+            export const sin2 = (x: number, n: number): number => {
+                if (!isNumber(x)) {
+                    throw valueException(`incorrect input values: x < ${x} >`)
+                }
+
+                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
+                if (num == null) {
+                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                }
+
+                let q = x,
+                    s = 0
+                for (let i = 0; i < num; i++) {
+                    s += q
+                    q *= (-1 * x * x) / (2 * i) / (2 * i + 1)
+                }
+
+                return s
+            }
+
+            export const sin3 = (x: number, e: number, n: number, eps: number): number | null => {
+                if (!isNumber(x) || !isRealNumber(e) || e <= 0 || e >= 1) {
+                    throw valueException(`incorrect input values: x < ${x} >, precision < ${e} >`)
+                }
+
+                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
+                if (num === null) {
+                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                }
+
+                const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
+                if (precision === null) {
+                    throw valueException(`incorrect 'precision' value: < ${precision} >`)
+                }
+
+                let r = x,
+                    s = x
+                let i = 1
+                while (Math.abs(r) > precision && i <= num) {
+                    r *= (-1 * x * x) / (2 * i) / (2 * i + 1)
+                    s += r
+                    i++
+                }
+
+                return i <= n ? s : null
+            }
+
+            /**
+             * Calculate the sin of an angle, avoiding returning floats for known results
+             * @static
+             * @param {Number} angle the angle in radians or in degree
+             * @return {Number}
+             */
+            export const sin = (angle: number): number => {
+                if (angle === 0) {
+                    return 0
+                }
+                const angleSlice = angle / PiBy2
+                let sign = 1
+                if (angle < 0) {
+                    // sin(-a) = -sin(a)
+                    sign = -1
+                }
+                if (angleSlice === 1) {
+                    return sign
+                } else if (angleSlice === 2) {
+                    return 0
+                } else if (angleSlice === 3) {
+                    return -sign
+                }
+
+                return Math.sin(angle)
+            }
+
+            /**
+             * Calculate the cos of an angle, avoiding returning floats for known results
+             * @param {Number} angle the angle in radians or in degree
+             * @return {Number}
+             */
+            export const cos = (angle: number): number => {
+                if (angle === 0) {
+                    return 1
+                }
+                if (angle < 0) {
+                    // cos(a) = cos(-a)
+                    angle = -angle
+                }
+                const angleSlice = angle / PiBy2
+                if (angleSlice === 1 || angleSlice === 3) {
+                    return 0
+                } else if (angleSlice === 2) {
+                    return -1
+                }
+
+                return Math.cos(angle)
+            }
+
+            export const cos2 = (x: number, e: number, n: number, eps: number): number | null => {
+                if (!isNumber(x) || !isRealNumber(e) || e <= 0 || e >= 1) {
+                    throw valueException(`incorrect input values: x < ${x} >, precision < ${e} >`)
+                }
+
+                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
+                if (num == null) {
+                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                }
+
+                const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
+                if (precision == null) {
+                    throw valueException(`incorrect 'precision' value: < ${precision} >`)
+                }
+
+                let r = 1
+                let s = 1
+                let i = 1
+                while (Math.abs(r) > precision && i <= num) {
+                    r *= (-1 * x * x) / (2 * i * (2 * i - 1))
+                    s += r
+                    i++
+                }
+
+                return i <= num ? s : null
+            }
+
+            export const quarterPI = (n: number): number => {
+                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
+                if (num == null) {
+                    throw valueException(`incorrect 'number of iterations' value: < ${n} >`)
+                }
+
+                let sum = 0,
+                    x
+                for (let i = n; i > 0; i--) {
+                    x = 1 / (2 * i - 1)
+                    if (i % 2 === 0) x = -x
+                    sum += x
+                }
+
+                return sum
+            }
+
+            export const geron = (a: number, eps: number): number => {
+                if (!isNumber(a) || a < 0) {
+                    throw valueException(`incorrect input value: expression < ${a} >`)
+                }
+
+                const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
+                if (precision == null) {
+                    throw valueException(`incorrect 'precision' value: < ${precision} >`)
+                }
+
+                let rad = 1.0,
+                    z
+                do {
+                    z = rad
+                    rad = (rad + a / rad) / 2 //rad = (rad + a / rad) >> 1;
+                } while (Math.abs(z - rad) >= precision)
+
+                return rad
+            }
+
+            export const sqrt32 = (a: number): number => {
+                if (!isNumber(a) || a < 0) {
+                    throw valueException(`incorrect input value: expression < ${a} >`)
+                }
+                let c = 0x8000,
+                    g = 0x8000
+                // eslint-disable-next-line no-constant-condition
+                while (true) {
+                    if (g * g > a) {
+                        g ^= c
+                    }
+                    c >>= 1
+                    if (c === 0) {
+                        return g
+                    }
+                    g |= c
+                }
+            }
+
+            // http://en.wikipedia.org/wiki/Hyperbolic_function
+            export const sinh = (z: number, n: number): number => {
+                if (!isNumber(z)) {
+                    throw valueException(`incorrect input value: z < ${z} >`)
+                }
+
+                let s = z,
+                    g = z
+
+                const num = n == null ? 100 : isIntNumber(n) && n >= 1 ? n : null
+                if (num == null) {
+                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                }
+
+                for (let i = 1; i <= num; i++) {
+                    g *= (z * z) / (2 * i) / (2 * i + 1)
+                    s += g
+                }
+
+                return s
+            }
+
+            // http://en.wikipedia.org/wiki/Hyperbolic_function
+            export const cosh = (z: number, n: number): number => {
+                if (!isNumber(z)) {
+                    throw valueException(`incorrect input value: z < ${z} >`)
+                }
+
+                let s = 1,
+                    g = 1
+
+                const num = n == null ? 100 : isIntNumber(n) && n >= 1 ? n : null
+                if (num == null) {
+                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                }
+
+                for (let i = 1; i <= num; i++) {
+                    g *= (z * z) / (2 * i - 1) / (2 * i)
+                    s += g
+                }
+
+                return s
+            }
+
+            export const tabX = (low: number, i: number, h: number): number => {
+                return low + i * h
+            }
+
+            export const tabUnevenX = (low: number, high: number, i: number, n: number): number => {
+                return (low + high + (high - low) * Math.cos(((2 * i + 1) * Math.PI) / (2 * n))) / 2
+            }
         }
     }
 
@@ -1348,8 +1406,7 @@ export namespace Maths {
     }
 
     export namespace Vectors {
-        import sin = Calculations.sin
-        import cos = Calculations.cos
+        import Algebra = Calculations.Algebra
 
         export type Vector2D = { x: number; y: number }
         export type Vector3D = { x: number; y: number; z: number }
@@ -1544,8 +1601,8 @@ export namespace Maths {
          * @return {Object} The new rotated point
          */
         export const rotateVector = (vector: Vector2D, radians: number): Vector2D => {
-            const sinValue = sin(radians)
-            const cosValue = cos(radians)
+            const sinValue = Algebra.sin(radians)
+            const cosValue = Algebra.cos(radians)
 
             const x = vector.x * cosValue - vector.y * sinValue
             const y = vector.x * sinValue + vector.y * cosValue
@@ -1611,6 +1668,24 @@ export namespace Maths {
             }
 
             return recur
+        }
+
+        export const serial = (): { next: number } => {
+            let $n = 0
+            return {
+                // Увеличение и возврат значения
+                get next() {
+                    return $n++
+                },
+                // Установка нового значения, 11 если оно больше текущего
+                set next(n) {
+                    if (n >= $n) {
+                        $n = n
+                    } else {
+                        throw valueException(`invalid serial number: ${n}`)
+                    }
+                },
+            }
         }
 
         export const toRadians = (value: number): number => {

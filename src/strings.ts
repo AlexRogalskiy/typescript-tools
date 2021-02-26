@@ -432,6 +432,14 @@ export namespace Strings {
         return (String(func).match(/function[^{]*{([\s\S]*)}/) || {})[1]
     }
 
+    export const joinBy = (value: string, delim = ' '): string => {
+        return Array.prototype.join.call(value, delim)
+    }
+
+    export const filterBy = (value: string, regex = /[-aeiou]/): string => {
+        return Array.prototype.filter.call(value, x => x.match(regex)).join('')
+    }
+
     // let seqer = serialMaker();
     // let unique = seqer.gensym();
     // document.writeln(unique);

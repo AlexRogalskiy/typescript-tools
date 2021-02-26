@@ -1,7 +1,7 @@
 import { Strings } from '../src'
 import pad = Strings.pad
 
-export class DateFormat {
+export class Dateformat {
     /**
      * Date format pattern masks
      * @private
@@ -91,7 +91,7 @@ export class DateFormat {
             throw SyntaxError('invalid date')
         }
 
-        mask = String(DateFormat.masks[mask] || mask || DateFormat.masks['default'])
+        mask = String(Dateformat.masks[mask] || mask || Dateformat.masks['default'])
 
         // Allow setting the utc argument via the mask
         if (mask.slice(0, 4) === 'UTC:') {
@@ -110,18 +110,18 @@ export class DateFormat {
             L = date[`${_}Milliseconds`](),
             o = utc ? 0 : date.getTimezoneOffset()
 
-        const time = (String(date).match(DateFormat.timezone) || [''])
+        const time = (String(date).match(Dateformat.timezone) || [''])
             .pop()
-            ?.replace(DateFormat.timezoneClip, '')
+            ?.replace(Dateformat.timezoneClip, '')
         const flags = {
             d,
             dd: pad(d),
-            ddd: DateFormat.i18n.dayNames[D],
-            dddd: DateFormat.i18n.dayNames[D + 7],
+            ddd: Dateformat.i18n.dayNames[D],
+            dddd: Dateformat.i18n.dayNames[D + 7],
             m: m + 1,
             mm: pad(m + 1),
-            mmm: DateFormat.i18n.monthNames[m],
-            mmmm: DateFormat.i18n.monthNames[m + 12],
+            mmm: Dateformat.i18n.monthNames[m],
+            mmmm: Dateformat.i18n.monthNames[m + 12],
             yy: String(y).slice(2),
             yyyy: y,
             h: H % 12 || 12,
@@ -143,7 +143,7 @@ export class DateFormat {
             S: ['th', 'st', 'nd', 'rd'][d % 10 > 3 ? 0 : (Number((d % 100) - (d % 10) !== 10) * d) % 10],
         }
 
-        return mask.replace(DateFormat.token, value => {
+        return mask.replace(Dateformat.token, value => {
             return value in flags ? flags[value] : value.slice(1, value.length - 1)
         })
     }

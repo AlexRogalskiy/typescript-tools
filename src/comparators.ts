@@ -10,55 +10,18 @@ export namespace Comparators {
     import valueException = Exceptions.valueException
 
     /**
-     * Default comparator type
+     * Comparator type
      */
     export type Comparator<T> = (a: T, b: T) => number
 
-    export const safeCompare = (a: any, b: any): number => {
-        const hasProperty = (obj: any, prop: string): boolean => {
-            const proto = obj.__proto__ || obj.constructor.prototype
-            // return (prop in obj) && (!(prop in proto) || proto[prop] !== obj[prop]);
-            return prop in obj || prop in proto || proto[prop] === obj[prop]
-        }
-
-        if (a === b) {
-            return 0
-        }
-
-        if (typeof a === typeof b) {
-            if (hasProperty(a, 'compareTo')) {
-                return a.compareTo(b)
-            }
-            return a < b ? -1 : 1
-        }
-
-        return typeof a < typeof b ? -1 : 1
-    }
-
-    export const comparator = <T>(column: number): Comparator<T> => {
-        return (obj1: T, obj2: T) => {
-            const hasProperty = (obj: any, prop: string): boolean => {
-                const proto = obj.__proto__ || obj.constructor.prototype
-                return prop in obj || prop in proto || proto[prop] === obj[prop]
-                //return (prop in obj) && (!(prop in proto) || proto[prop] !== obj[prop])
-            }
-
-            const a = obj1[column]
-            const b = obj2[column]
-
-            if (a === b) {
-                return 0
-            }
-
-            if (typeof a === typeof b) {
-                if (hasProperty(a, 'compareTo')) {
-                    return a.compareTo(b)
-                }
-                // return a.localCompare(b)
-                return a < b ? -1 : 1
-            }
-            return typeof a < typeof b ? -1 : 1
-        }
+    /**
+     * @private
+     * @module sorting
+     * @param column initial input {@link String} or {@link Number} column name
+     * @return {@link Number} -1 - lower, 0 - equals, 1 - greater
+     */
+    export const comparator = <T>(column: string | number): Comparator<T> => {
+        return (a: T, b: T) => cmpByDefault(a[column], b[column])
     }
 
     /**
@@ -66,7 +29,7 @@ export namespace Comparators {
      * @module sorting
      * @param {String} a Input value.
      * @param {String} b Input value to compare with.
-     * @return {Integer} -1 - lower, 0 - equals, 1 - greater
+     * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
     export const cmpByDefault = (a: any, b: any): number => {
         const hasProperty = (obj, prop): boolean => {
@@ -97,9 +60,9 @@ export namespace Comparators {
      * @module sorting
      * @param {String} a Input string.
      * @param {String} b Input string to compare with.
-     * @return {Integer} -1 - lower, 0 - equals, 1 - greater
+     * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
-    export const cmp = (a: any, b: any): number => {
+    export const cmp = <T>(a: T, b: T): number => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         return (a === null) - (b === null) || +(a > b) || -(a < b)
@@ -110,13 +73,22 @@ export namespace Comparators {
      * @module sorting
      * @param {String} a Input string.
      * @param {String} b Input string to compare with.
-     * @return {Integer} -1 - lower, 0 - equals, 1 - greater
+     * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
-    export const cmpByLocale = (a: any, b: any): number => {
-        a = a === null ? '' : `${a}`
-        b = b === null ? '' : `${b}`
+    export const cmpByLocale = <T extends string>(a: T, b: T): number => {
+        const a_ = a === null ? '' : `${a}`
+        const b_ = b === null ? '' : `${b}`
 
-        return a.localeCompare(b)
+        return a_.localeCompare(b_)
+    }
+
+    export const cmpByIgnoreCase = <T extends string>(a: T, b: T): number => {
+        const a_ = a.toLowerCase()
+        const b_ = b.toLowerCase()
+
+        if (a_ < b_) return -1
+        if (a_ > b_) return 1
+        return 0
     }
 
     /**
@@ -124,13 +96,13 @@ export namespace Comparators {
      * @module sorting
      * @param {String} a Input string.
      * @param {String} b Input string to compare with.
-     * @return {Integer} -1 - lower, 0 - equals, 1 - greater
+     * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
-    export const cmpByLocaleIgnoreCase = (a: any, b: any): number => {
-        a = a === null ? '' : `${a}`
-        b = b === null ? '' : `${b}`
+    export const cmpByLocaleIgnoreCase = <T extends string>(a: T, b: T): number => {
+        const a_ = a === null ? '' : `${a}`
+        const b_ = b === null ? '' : `${b}`
 
-        return a.toLowerCase().localeCompare(b.toLowerCase())
+        return a_.toLowerCase().localeCompare(b_.toLowerCase())
     }
 
     /**
@@ -138,13 +110,13 @@ export namespace Comparators {
      * @module sorting
      * @param {String} a Input string.
      * @param {String} b Input string to compare with.
-     * @return {Integer} -1 - lower, 0 - equals, 1 - greater
+     * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
-    export const cmpByLength = (a: any, b: any): number => {
-        a = a === null ? '' : `${a}`
-        b = b === null ? '' : `${b}`
+    export const cmpByLength = <T extends string>(a: T, b: T): number => {
+        const a_ = a === null ? '' : `${a}`
+        const b_ = b === null ? '' : `${b}`
 
-        return a.length < b.length ? -1 : a.length > b.length ? 1 : 0
+        return a_.length < b_.length ? -1 : a_.length > b_.length ? 1 : 0
     }
 
     /**
@@ -154,7 +126,7 @@ export namespace Comparators {
      * @param {String} b Input string to compare with.
      * @param {String} locale Language locale.
      * @param {Object} options Optional. Additional properties of comparison.
-     * @return {Integer} -1 - lower, 0 - equals, 1 - greater
+     * @return {number} -1 - lower, 0 - equals, 1 - greater
      *
      * @example
      * options = { sensitivity: 'base' }
@@ -164,16 +136,16 @@ export namespace Comparators {
         const options_ = { sensitivity: 'base' }
         const locale_ = 'i'
 
-        return function (a: any, b: any, locale: string, options: any) {
-            a = a === null ? '' : `${a}`
-            b = b === null ? '' : `${b}`
+        return <T extends string>(a: T, b: T, locale: string, options: any) => {
+            const a_ = a === null ? '' : `${a}`
+            const b_ = b === null ? '' : `${b}`
 
             locale = isString(locale) ? locale : locale_
             options = isObject(options) ? options : options_
 
             const localeCompareSupportsCollator = (): number | null => {
                 try {
-                    return new Intl.Collator(locale, options).compare(a, b)
+                    return new Intl.Collator(locale, options).compare(a_, b_)
                 } catch (e) {
                     console.log(`ERROR: localeCompareSupportsCollator < ${e.name} >`)
                     return null
@@ -182,7 +154,7 @@ export namespace Comparators {
 
             const localeCompareSupportsLocales = (): number | null => {
                 try {
-                    return new Intl.Collator(locale, options).compare(a, b)
+                    return new Intl.Collator(locale, options).compare(a_, b_)
                 } catch (e) {
                     console.log(`ERROR: localeCompareSupportsLocales < ${e.name} >`)
                     return null
@@ -193,7 +165,7 @@ export namespace Comparators {
             if (isNull(result)) {
                 result = localeCompareSupportsLocales()
                 if (isNull(result)) {
-                    result = cmpByLocale(a, b)
+                    result = cmpByLocale(a_, b_)
                 }
             }
 
@@ -207,9 +179,9 @@ export namespace Comparators {
      * @param {String} a Input string.
      * @param {String} b Input string to compare with.
      * @param {String} value Property name.
-     * @return {Integer} -1 - lower, 0 - equals, 1 - greater
+     * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
-    export const cmpByProperty = <T>(a: T, b: T, value: string): number => {
+    export const cmpByProperty = <T>(a: T, b: T, value: string | number): number => {
         return +(a[value] > b[value]) || +(a[value] === b[value]) - 1
     }
 
@@ -219,12 +191,10 @@ export namespace Comparators {
      * @param {String} a Input string.
      * @param {String} b Input string to compare with.
      * @param {String} value Property name.
-     * @return {Integer} -1 - lower, 0 - equals, 1 - greater
+     * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
-    export const cmpByNormalize = (() => {
-        const list = ['NFC', 'NFD', 'NFKC', 'NFKD']
-
-        return (a, b, value): number => {
+    export const cmpByNormalize = ((list: string[]): ((a: any, b: any, value: string) => number) => {
+        return (a: any, b: any, value: string): number => {
             if (a === null || b === null) {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
@@ -237,49 +207,41 @@ export namespace Comparators {
 
             return +(first > second) || -(first < second) || 1
         }
-    })()
+    })(['NFC', 'NFD', 'NFKC', 'NFKD'])
 
     /**
      * @private
      * @module sorting
-     * @param {String} prop Input string.
-     * @param {String} cmp Input string to compare with.
+     * @param {String} property Input string.
+     * @param {String} comparator Input string to compare with.
      * @return {Function} -1 - lower, 0 - equals, 1 - greater
      *
      * @example
      * s.sort(cmpBy_('last', cmpBy_('first')));
      */
-    export const cmpBy = <T>(prop: string, cmp): Comparator<T> => {
-        return (o, p) => {
-            if (isObject(o) && isObject(p)) {
-                const a = o[prop]
-                const b = p[prop]
+    export const cmpBy = <T>(property: string, comparator: Comparator<T>): Comparator<T> => {
+        return (a, p) => {
+            if (isObject(a) && isObject(p)) {
+                const a_ = a[property]
+                const b_ = p[property]
 
-                cmp = isFunction(cmp) ? cmp : null
+                const cmp_ = isFunction(comparator) ? comparator : null
 
-                if (cmp) {
-                    return cmp(o, p)
+                if (cmp_) {
+                    return cmp_(a, p)
                 }
 
-                if (typeof a === typeof b) {
-                    if (isObject(a) || isArray(a)) {
-                        return a.equals(b)
+                if (typeof a_ === typeof b_) {
+                    if (isObject(a_) || isArray(a_)) {
+                        return a_.equals(b_)
                     }
-                    return cmpByLocaleLang(a, b, 'en', {})
+                    return cmpByLocaleLang(a_, b_, 'en', {})
                 }
 
-                return typeof a < typeof b ? -1 : 1
-
-                /*if(a === b) {
-                    return (globals.toolset.isFunction(cmp) ? cmp(o, p) : 0);
-                }
-                if(typeof a === typeof b) {
-                    return a < b ? -1 : 1;
-                }
-                return typeof a < typeof b ? -1 : 1;*/
+                return typeof a_ < typeof b_ ? -1 : 1
             }
 
-            throw valueException(`Expected an object when sorting by < ${prop} >`)
+            throw valueException(`Expected an object when sorting by < ${property} >`)
         }
     }
 }

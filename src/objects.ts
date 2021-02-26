@@ -15,12 +15,12 @@ export namespace Objects {
         return enumValues[randomIndex]
     }
 
-    export const pluckBy = <T, K extends keyof T>(o: T, propertyNames: K[]): T[K][] => {
-        return propertyNames.map(n => o[n])
+    export const pluckBy = <T, K extends keyof T>(obj: T, propertyNames: K[]): T[K][] => {
+        return propertyNames.map(n => obj[n])
     }
 
-    export const updateBy = <T>(todo: T, fieldsToUpdate: Partial<T>): T => {
-        return { ...todo, ...fieldsToUpdate }
+    export const updateBy = <T>(obj: T, fieldsToUpdate: Partial<T>): T => {
+        return { ...obj, ...fieldsToUpdate }
     }
 
     export const omitNull = <T>(obj: T): T => {
@@ -61,16 +61,16 @@ export namespace Objects {
         return true
     }
 
-    export const randWeightedObject = (numbers: any): number[] => {
-        if (!isObject(numbers)) {
-            throw typeException(`incorrect input argument: {numbers} is not object < ${numbers} >`)
+    export const randWeightedObject = (nums: any): number[] => {
+        if (!isObject(nums)) {
+            throw typeException(`incorrect input argument: {numbers} is not object < ${nums} >`)
         }
 
         let total = 0
         const dist = {}
-        for (const index of numbers) {
-            if (numbers.hasOwnProperty(index)) {
-                total += numbers[index]
+        for (const index of nums) {
+            if (nums.hasOwnProperty(index)) {
+                total += nums[index]
                 dist[index] = total
             }
         }
@@ -93,5 +93,15 @@ export namespace Objects {
             .call(obj)
             .match(/\s([a-z|A-Z]+)/)[1]
             .toLowerCase()
+    }
+
+    export const classof = (obj: any): string => {
+        if (obj === null) {
+            return 'Null'
+        }
+        if (obj === undefined) {
+            return 'Undefined'
+        }
+        return Object.prototype.toString.call(obj).slice(8, -1)
     }
 }

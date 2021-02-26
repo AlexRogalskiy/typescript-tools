@@ -112,6 +112,13 @@ export namespace Checkers {
         return isNotNull(value) && Object.prototype.toString.apply(value) === '[object Array]'
     }
 
+    export const isArray2 =
+        Array.isArray ||
+        ((value: any): boolean => {
+            const ts = Object.prototype.toString
+            return typeof value === 'object' && ts.call(value) === '[object Array]'
+        })
+
     export const isJSON = (value: any): boolean => {
         return isNotNull(value) && Object.prototype.toString.apply(value) === '[object JSON]'
     }

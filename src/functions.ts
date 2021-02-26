@@ -9,15 +9,15 @@ export namespace Functions {
     import typeException = Exceptions.typeException
     import valueException = Exceptions.valueException
 
-    export const composeAsync = async (...funcs) => async x =>
+    export const composeAsync = async (...funcArgs) => async x =>
         // eslint-disable-next-line github/no-then
-        await funcs.reduce((acc, val) => acc.then(val), Promise.resolve(x))
+        await funcArgs.reduce((acc, val) => acc.then(val), Promise.resolve(x))
 
-    export const mergeProps = <T>(...obj: unknown[]): T => {
+    export const mergeProps = <T>(...obj: any[]): T => {
         return _.mergeWith({}, ...obj, (o, s) => (_.isNull(s) ? o : s))
     }
 
-    export const wait = async (ms: number, ...args: unknown[]): Promise<void> => {
+    export const wait = async (ms: number, ...args: any[]): Promise<void> => {
         return new Promise(resolve => setTimeout(resolve, ms, args))
     }
 
@@ -38,8 +38,8 @@ export namespace Functions {
         return () => callback.apply(self, args)
     }
 
-    export const substitute = <T>(prevValue, newValue, property: string, arr: T[]): any =>
-        arr.map(item => {
+    export const substitute = <T>(prevValue: any, newValue: any, property: string, array: T[]): any =>
+        array.map(item => {
             if (item[property] === prevValue) {
                 const result = { ...item }
                 result[property] = newValue
@@ -49,14 +49,14 @@ export namespace Functions {
         })
 
     // let testDebounce = debounce(() => console.log(new Date().toString()), 1000);
-    export const debounce = (func, ms: number): Executor => {
+    export const debounce = (func: any, timeout: number): Executor => {
         let timerId
         return () => {
             if (timerId) {
                 clearTimeout(timerId)
-                timerId = setTimeout(func, ms)
+                timerId = setTimeout(func, timeout)
             } else {
-                timerId = setTimeout(func, ms)
+                timerId = setTimeout(func, timeout)
             }
         }
     }
@@ -103,4 +103,15 @@ export namespace Functions {
             flush,
         }
     })()
+
+    export const trace = (obj: any, method: string): void => {
+        const original = obj[method]
+        obj[method] = (...args: any[]) => {
+            console.log(new Date(), '>>> Enteriпg method: ', method)
+            const result = original.apply(obj, args)
+
+            console.log(new Date(), '>>> Exitiпg method: ', method)
+            return result
+        }
+    }
 }
