@@ -1,6 +1,6 @@
 import { Numbers } from './numbers'
 import { Checkers } from './checkers'
-import { Exceptions } from './exceptions'
+import { Errors } from './errors'
 import { Maths } from './maths'
 import { Comparators } from './comparators'
 import { Processor } from '../typings/function-types'
@@ -11,8 +11,8 @@ export namespace Arrays {
     import randInt = Numbers.randInt
     import isNull = Checkers.isNull
     import isFunction = Checkers.isFunction
-    import typeException = Exceptions.typeException
-    import valueException = Exceptions.valueException
+    import typeError = Errors.typeError
+    import valueError = Errors.valueError
     import Helpers = Maths.Helpers
     import Comparator = Comparators.Comparator
 
@@ -128,7 +128,7 @@ export namespace Arrays {
 
     export const randWeightedArray = (numbers: number[]): number[] => {
         if (!isArray(numbers)) {
-            throw typeException(`incorrect input argument: {numbers} is not array < ${numbers} >`)
+            throw typeError(`incorrect input argument: {numbers} is not array < ${numbers} >`)
         }
 
         let total = 0
@@ -158,7 +158,7 @@ export namespace Arrays {
 
     export const copyOfArray = (array: any[]): any[] => {
         if (!isArray(array)) {
-            throw valueException(`incorrect input value: array < ${array} >`)
+            throw valueError(`incorrect input value: array < ${array} >`)
         }
 
         const res: any[] = []
@@ -171,7 +171,7 @@ export namespace Arrays {
 
     export const createAndFillArray = (start: number, end: number, func): any[] => {
         if (isNull(start) || isNull(end) || !isFunction(func)) {
-            throw valueException(
+            throw valueError(
                 `incorrect input values: start < ${start} >, end < ${end} >, function of elements < ${func} >`,
             )
         }

@@ -1,20 +1,65 @@
 import slugify from 'slugify'
 
-import { Exceptions } from './exceptions'
+import { Errors } from './errors'
 import { Checkers } from './checkers'
 import { NumberOrUndef, StringOrUndef } from '../typings/standard-types'
 import { Supplier } from '../typings/function-types'
 import { Maths } from './maths'
+import { Numbers } from './numbers'
 
 export namespace Strings {
     import isString = Checkers.isString
     import isIntNumber = Checkers.isIntNumber
     import isArray = Checkers.isArray
-    import valueException = Exceptions.valueException
-    import typeException = Exceptions.typeException
+    import valueError = Errors.valueError
+    import typeError = Errors.typeError
     import isNull = Checkers.isNull
     import isNumber = Checkers.isNumber
     import Helpers = Maths.Helpers
+    import random = Numbers.random
+
+    export const twoChar = (num: number): string => {
+        return String(num).length === 1 ? `0${num}` : `${num}`
+    }
+
+    // UK Postcode validation - John Gardner - http://www.braemoor.co.uk/software/postcodes.shtml
+    export const getPostCode = (value: string): string | null => {
+        const alpha1 = '[abcdefghijklmnoprstuwyz]',
+            alpha2 = '[abcdefghklmnopqrstuvwxy]',
+            alpha3 = '[abcdefghjkpmnrstuvwxy]',
+            alpha4 = '[abehmnprvwxy]',
+            alpha5 = '[abdefghjlnpqrstuwxyz]',
+            regexes: RegExp[] = []
+
+        let postCode = value,
+            valid = false
+
+        regexes.push(new RegExp(`^(${alpha1}{1}${alpha2}?[0-9]{1,2})(\\s*)([0-9]{1}${alpha5}{2})$`, 'i'))
+        regexes.push(new RegExp(`^(${alpha1}{1}[0-9]{1}${alpha3}{1})(\\s*)([0-9]{1}${alpha5}{2})$`, 'i'))
+        regexes.push(
+            new RegExp(`^(${alpha1}{1}${alpha2}{1}?[0-9]{1}${alpha4}{1})(\\s*)([0-9]{1}${alpha5}{2})$`, 'i'),
+        )
+        regexes.push(/^(GIR)(\s*)(0AA)$/i)
+        regexes.push(/^(bfpo)(\s*)([0-9]{1,4})$/i)
+        regexes.push(/^(bfpo)(\s*)(c\/o\s*[0-9]{1,3})$/i)
+        regexes.push(/^([A-Z]{4})(\s*)(1ZZ)$/i)
+        regexes.push(/^(ai-2640)$/i)
+
+        for (const item of regexes) {
+            if (item.test(postCode)) {
+                item.exec(postCode)
+                postCode = `${RegExp.$1.toUpperCase()} ${RegExp.$3.toUpperCase()}`
+                postCode = postCode.replace(/C\/O\s*/, 'c/o ')
+                if (value.toUpperCase() === 'AI-2640') {
+                    postCode = 'AI-2640'
+                }
+                valid = true
+                break
+            }
+        }
+
+        return valid ? postCode : null
+    }
 
     export const xor = (input: string, pass: string): string => {
         let output = ''
@@ -206,7 +251,7 @@ export namespace Strings {
 
     export const parseNumber = (value: string): RegExpExecArray | null => {
         if (!isString(value)) {
-            throw valueException(`incorrect input string: < ${value} >`)
+            throw valueError(`incorrect input string: < ${value} >`)
         }
         const regExp = /^-?\d+(?:\.\d*)?(?:e[+\\-]?\d+)?$/i
 
@@ -229,7 +274,7 @@ export namespace Strings {
 
         return (value: string): string => {
             if (!isString(value)) {
-                throw valueException(`incorrect input string: < ${value} >`)
+                throw valueError(`incorrect input string: < ${value} >`)
             }
 
             const ret: number[] = []
@@ -251,7 +296,7 @@ export namespace Strings {
 
     export const koi2unicode = (value: string): string => {
         if (!isString(value)) {
-            throw valueException(`incorrect input string: < ${value} >`)
+            throw valueError(`incorrect input string: < ${value} >`)
         }
 
         const CHAR_TABLE = unescape(
@@ -276,7 +321,7 @@ export namespace Strings {
 
     export const win2unicode = (value: string): string => {
         if (!isString(value)) {
-            throw valueException(`incorrect input string: < ${value} >`)
+            throw valueError(`incorrect input string: < ${value} >`)
         }
 
         const CHAR_TABLE = unescape(
@@ -346,7 +391,7 @@ export namespace Strings {
 
         const length = isIntNumber(len) && len > 0 ? len : null
         if (length == null) {
-            throw valueException(`incorrect string length: < ${length} >`)
+            throw valueError(`incorrect string length: < ${length} >`)
         }
 
         for (let i = 0; i < length; i++) {
@@ -357,9 +402,67 @@ export namespace Strings {
         return result
     }
 
+    export const randomString2 = (func = () => Math.random() > 0.8): string => {
+        return 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').filter(func).join('')
+    }
+
+    export const randomizer = (options: string, prop: string): string[] => {
+        const randomNumeric = (length: number): string => {
+            return generateRandomString(length, '0123456789'.split(''))
+        }
+
+        const randomAlpha = (length: number): string => {
+            const alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+            return generateRandomString(length, alpha)
+        }
+
+        const randomAlphaNumeric = (length: number): string => {
+            const alphanumeric = '01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+            return generateRandomString(length, alphanumeric)
+        }
+
+        const generateRandomString = (length: number, chars: string[]): string => {
+            let string = ''
+
+            for (let i = 0; i < length; i++) {
+                string += chars[random(chars.length)]
+            }
+
+            return string
+        }
+
+        let length = 8,
+            type = 'alphanumeric'
+
+        const storedVars: string[] = []
+        const values = options.split('|')
+
+        for (let i = 0; i < 2; i++) {
+            if (values[i] && values[i].match(/^\d+$/)) {
+                length = parseInt(values[i])
+            }
+
+            if (values[i] && values[i].match(/^(?:alpha)?(?:numeric)?$/)) {
+                type = values[i]
+            }
+        }
+
+        if (type === 'alpha') {
+            storedVars[prop] = randomAlpha(length)
+        } else if (type === 'numeric') {
+            storedVars[prop] = randomNumeric(length)
+        } else if (type === 'alphanumeric') {
+            storedVars[prop] = randomAlphaNumeric(length)
+        } else {
+            storedVars[prop] = randomAlphaNumeric(length)
+        }
+
+        return storedVars
+    }
+
     export const prefixAverages = (array: number[]): number[] => {
         if (!isArray(array)) {
-            throw typeException(`incorrect input argument: not array < ${array} >`)
+            throw typeError(`incorrect input argument: not array < ${array} >`)
         }
 
         const len = array.length - 1
@@ -382,7 +485,7 @@ export namespace Strings {
         }
 
         if (!isString(value)) {
-            throw typeException(`incorrect parameter argument: not a string < ${value} >`)
+            throw typeError(`incorrect parameter argument: not a string < ${value} >`)
         }
 
         while (value.includes('\t')) {
@@ -408,7 +511,7 @@ export namespace Strings {
         }
 
         if (!isString(value)) {
-            throw typeException(`incorrect parameter argument: not a string < ${value} >`)
+            throw typeError(`incorrect parameter argument: not a string < ${value} >`)
         }
 
         const lines = value.split('\n')
@@ -417,7 +520,7 @@ export namespace Strings {
             const chunks = chunkString(line, tab)
 
             if (chunks === null) {
-                throw valueException(`Invalid chunk string ${chunks}`)
+                throw valueError(`Invalid chunk string ${chunks}`)
             }
 
             for (let j = 0; j < chunks.length - 1; j++) {
@@ -456,12 +559,12 @@ export namespace Strings {
     export const serialMaker = (prefix: StringOrUndef, seq: NumberOrUndef): { gensym: Supplier<string> } => {
         const prefixValue = prefix == null ? '' : isString(prefix) ? prefix : null
         if (isNull(prefixValue)) {
-            throw valueException(`incorrect prefix value: < ${prefixValue} >`)
+            throw valueError(`incorrect prefix value: < ${prefixValue} >`)
         }
 
         let seqValue = seq == null ? 0 : isNumber(seq) ? seq : null
         if (isNull(seqValue)) {
-            throw valueException(`incorrect sequence value: < ${seqValue} >`)
+            throw valueError(`incorrect sequence value: < ${seqValue} >`)
         }
 
         return {

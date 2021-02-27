@@ -1,10 +1,10 @@
 import { LOCALHOST_REGEX } from './regexes'
 import { Checkers } from './checkers'
-import { Exceptions } from './exceptions'
+import { Errors } from './errors'
 
 export namespace Networks {
     import isNotNull = Checkers.isNotNull
-    import valueException = Exceptions.valueException
+    import valueError = Errors.valueError
     import isString = Checkers.isString
 
     const DEFAULT_PROTOCOLS = ['127.0.0.1', '0.0.0.0', 'localhost', '::1']
@@ -55,6 +55,19 @@ export namespace Networks {
         }
     }
 
+    export const ipToInt = (address: string): number => {
+        const addresses = address.split('\\.')
+
+        let num = 0,
+            pow
+        for (let i = 0; i < addresses.length; i++) {
+            pow = 3 - i
+            num += Math.floor(parseInt(addresses[i]) % 256) * Math.pow(256, pow)
+        }
+
+        return num
+    }
+
     export const getQueryParam = (value: string): string | null => {
         const reg = new RegExp(`(^|&)${value}=([^&*])(&|$)`)
         const query = window.location.search.substr(1).match(reg)
@@ -66,7 +79,7 @@ export namespace Networks {
 
     export const getParameterByName = (value: string): string | null => {
         if (!isString(value)) {
-            throw valueException(`incorrect parameter value: < ${value} >`)
+            throw valueError(`incorrect parameter value: < ${value} >`)
         }
         const match = RegExp(`[?&]${value}=([^&]*)`).exec(window.location.search)
 

@@ -1,4 +1,4 @@
-import { Exceptions } from './exceptions'
+import { Errors } from './errors'
 import { Checkers } from './checkers'
 import { Comparators } from './comparators'
 import { Numbers } from './numbers'
@@ -6,9 +6,9 @@ import { ValueOrUndef } from '../typings/standard-types'
 import { Maths } from './maths'
 
 export namespace Matrix {
-    import typeException = Exceptions.typeException
+    import typeError = Errors.typeError
     import isArray = Checkers.isArray
-    import valueException = Exceptions.valueException
+    import valueError = Errors.valueError
     import isIntNumber = Checkers.isIntNumber
     import comparator = Comparators.comparator
     import isNumber = Checkers.isNumber
@@ -36,23 +36,23 @@ export namespace Matrix {
      */
     export const swapCols = <T>(data: T[][], col1: number, col2: number): void => {
         if (!isArray(data)) {
-            throw typeException(`incorrect input argument: not array < ${data} >`)
+            throw typeError(`incorrect input argument: not array < ${data} >`)
         }
 
         const rows = data.length
         const cols = isArray(data[0]) ? data[0].length : 0
         if (rows === 0 || cols === 0) {
-            throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+            throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
         const col1_ = isIntNumber(col1) && col1 >= 0 && col1 < cols ? col1 : null
         if (col1_ == null) {
-            throw valueException(`incorrect {column1} value: < ${col1} >`)
+            throw valueError(`incorrect {column1} value: < ${col1} >`)
         }
 
         const col2_ = isIntNumber(col2) && col2 >= 0 && col2 < cols ? col2 : null
         if (col2_ == null) {
-            throw valueException(`incorrect {column2} value: < ${col2} >`)
+            throw valueError(`incorrect {column2} value: < ${col2} >`)
         }
 
         for (let i = 0; i < rows; i++) {
@@ -68,23 +68,23 @@ export namespace Matrix {
      */
     export const swapRows = <T>(data: T[][], row1: number, row2: number): void => {
         if (!isArray(data)) {
-            throw typeException(`incorrect input argument: not array < ${data} >`)
+            throw typeError(`incorrect input argument: not array < ${data} >`)
         }
 
         const rows = data.length
         const cols = isArray(data[0]) ? data[0].length : 0
         if (rows === 0 || cols === 0) {
-            throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+            throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
         const row_1 = isIntNumber(row1) && row1 >= 0 && row1 < rows ? row1 : null
         if (row_1 == null) {
-            throw valueException(`incorrect {row1} value: < ${row_1} >`)
+            throw valueError(`incorrect {row1} value: < ${row_1} >`)
         }
 
         const row_2 = isIntNumber(row2) && row2 >= 0 && row2 < rows ? row2 : null
         if (row_2 == null) {
-            throw valueException(`incorrect {row2} value: < ${row_2} >`)
+            throw valueError(`incorrect {row2} value: < ${row_2} >`)
         }
 
         // matrix[row_2] = [matrix[row_1], matrix[row_1] = matrix[row_2]][0];
@@ -100,18 +100,18 @@ export namespace Matrix {
      */
     export const sortByCol = <T>(data: T[][], col: number): T[][] => {
         if (!isArray(data)) {
-            throw typeException(`incorrect input argument: not array < ${data} >`)
+            throw typeError(`incorrect input argument: not array < ${data} >`)
         }
 
         const rows = data.length
         const cols = isArray(data[0]) ? data[0].length : 0
         if (rows === 0 || cols === 0) {
-            throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+            throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
         const sortCol = isIntNumber(col) && col >= 0 && col < cols ? col : null
         if (sortCol == null) {
-            throw valueException(`incorrect {colIndex} value: < ${sortCol} >`)
+            throw valueError(`incorrect {colIndex} value: < ${sortCol} >`)
         }
 
         data.sort(comparator(sortCol))
@@ -135,7 +135,7 @@ export namespace Matrix {
      */
     export const getMinMax = (data: number[][]): RowColumn[] => {
         if (!isArray(data)) {
-            throw valueException(`incorrect input parameter: array < ${data} >`)
+            throw valueError(`incorrect input parameter: array < ${data} >`)
         }
 
         let temp, min, max
@@ -173,7 +173,7 @@ export namespace Matrix {
      */
     export const sort = <T>(data: T[][]): T[][] => {
         if (!isArray(data)) {
-            throw valueException(`incorrect matrix value: matrix < ${data} >`)
+            throw valueError(`incorrect matrix value: matrix < ${data} >`)
         }
 
         const rows = data.length ? data.length : 0
@@ -202,7 +202,7 @@ export namespace Matrix {
      */
     export const transpose = <T>(data: T[][]): T[][] => {
         if (!isArray(data)) {
-            throw valueException(`incorrect matrix value: matrix < ${data} >`)
+            throw valueError(`incorrect matrix value: matrix < ${data} >`)
         }
 
         return data[0].map((_, i) => {
@@ -220,13 +220,13 @@ export namespace Matrix {
      */
     export const multMatrix = (data1: number[][], data2: number[][]): number[][] => {
         if (!isArray(data1) || !isArray(data2)) {
-            throw typeException(`incorrect input arguments: matrix1 < ${data1} >, matrix2 < ${data2} >`)
+            throw typeError(`incorrect input arguments: matrix1 < ${data1} >, matrix2 < ${data2} >`)
         }
 
         const rows2 = data2.length
         const cols1 = isArray(data1[0]) ? data1[0].length : 0
         if (rows2 !== cols1) {
-            throw valueException(`incorrect input arguments: rows < ${rows2} >, cols < ${cols1} >`)
+            throw valueError(`incorrect input arguments: rows < ${rows2} >, cols < ${cols1} >`)
         }
 
         const rows1 = data1.length
@@ -251,16 +251,16 @@ export namespace Matrix {
      */
     export const multNumber = (data: number[][], num: number): number[][] => {
         if (!isArray(data)) {
-            throw typeException(`incorrect input argument: {matrix} is not valid array < ${data} >`)
+            throw typeError(`incorrect input argument: {matrix} is not valid array < ${data} >`)
         }
         if (!isNumber(num)) {
-            throw typeException(`incorrect input argument: {num} is not number < ${num} >`)
+            throw typeError(`incorrect input argument: {num} is not number < ${num} >`)
         }
 
         const rows = data.length
         const cols = isArray(data[0]) ? data[0].length : 0
         if (rows === 0 || cols === 0) {
-            throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+            throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
         const res = Helpers.matrix(rows, cols, 0)
@@ -281,7 +281,7 @@ export namespace Matrix {
      */
     export const sumMatrix = (data1: number[][], data2: number[][]): number[][] => {
         if (!isArray(data1) || !isArray(data2)) {
-            throw valueException(`incorrect input arguments: matrix1 < ${data1} >, matrix2 < ${data2} >`)
+            throw valueError(`incorrect input arguments: matrix1 < ${data1} >, matrix2 < ${data2} >`)
         }
 
         const rows1 = data1.length
@@ -290,7 +290,7 @@ export namespace Matrix {
             cols2 = isArray(data2[0]) ? data2[0].length : 0
 
         if (rows1 === 0 || cols1 === 0 || rows1 !== rows2 || cols1 !== cols2) {
-            throw valueException(`incorrect matrix size: rows < ${rows1} >, columns < ${cols1} >`)
+            throw valueError(`incorrect matrix size: rows < ${rows1} >, columns < ${cols1} >`)
         }
 
         const res = Helpers.matrix(rows1, cols1, 0)
@@ -311,16 +311,16 @@ export namespace Matrix {
      */
     export const matrixPow = (data: number[][], num: number): number[][] => {
         if (!isArray(data)) {
-            throw typeException(`incorrect input argument: {matrix} is not array < ${data} >`)
+            throw typeError(`incorrect input argument: {matrix} is not array < ${data} >`)
         }
         if (!isIntNumber(num) || num < 1) {
-            throw typeException(`incorrect input argument: {num} is not positive integer number < ${num} >`)
+            throw typeError(`incorrect input argument: {num} is not positive integer number < ${num} >`)
         }
 
         const rows = data.length
         const cols = isArray(data[0]) ? data[0].length : 0
         if (rows === 0 || cols === 0 || rows !== cols) {
-            throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+            throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
         return num === 1 ? data : multMatrix(data, matrixPow(data, num - 1))
@@ -343,18 +343,18 @@ export namespace Matrix {
      */
     // export const addOnColumns = (data: number[][], isNullDiagonal: boolean): number[][] => {
     //     if (!isArray(data)) {
-    //         throw valueException(`incorrect vertex order matrix < ${data} >`)
+    //         throw valueError(`incorrect vertex order matrix < ${data} >`)
     //     }
     //
     //     const rows = data.length
     //     const cols = isArray(data[0]) ? data[0].length : 0
     //     if (rows === 0 || cols === 0) {
-    //         throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+    //         throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
     //     }
     //
     //     const nullDiagonal = isNullDiagonal == null ? true : isBoolean(isNullDiagonal) ? isNullDiagonal : null
     //     if (nullDiagonal == null) {
-    //         throw valueException(`incorrect parameter: diagonal values included < ${nullDiagonal} >`)
+    //         throw valueError(`incorrect parameter: diagonal values included < ${nullDiagonal} >`)
     //     }
     //
     //     const copy: number[][] = transpose(data)
@@ -390,18 +390,18 @@ export namespace Matrix {
      */
     // export const addOnRows = (data: number[][], isNullDiagonal: boolean): number[][] => {
     //     if (!isArray(data)) {
-    //         throw valueException(`incorrect vertex order matrix < ${data} >`)
+    //         throw valueError(`incorrect vertex order matrix < ${data} >`)
     //     }
     //
     //     const rows = data.length
     //     const cols = isArray(data[0]) ? data[0].length : 0
     //     if (rows === 0 || cols === 0) {
-    //         throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+    //         throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
     //     }
     //
     //     const nullDiagonal = isNullDiagonal == null ? true : isBoolean(isNullDiagonal) ? isNullDiagonal : null
     //     if (nullDiagonal == null) {
-    //         throw valueException(`incorrect parameter: diagonal values included < ${nullDiagonal} >`)
+    //         throw valueError(`incorrect parameter: diagonal values included < ${nullDiagonal} >`)
     //     }
     //
     //     const copy = copyOfArray(data)
@@ -429,7 +429,7 @@ export namespace Matrix {
      */
     export const identity = (num: number): number[][] => {
         if (!isInteger(num) || num < 0) {
-            throw valueException(`incorrect input value: matrix size is not positive integer < ${num} >`)
+            throw valueError(`incorrect input value: matrix size is not positive integer < ${num} >`)
         }
 
         const mat = Helpers.matrix(num, num, 0)
@@ -488,13 +488,13 @@ export namespace Matrix {
 
         return (matrix: number[][]): { row; col; squareSize } | null => {
             if (!isArray(matrix)) {
-                throw valueException(`incorrect vertex order matrix < ${matrix} >`)
+                throw valueError(`incorrect vertex order matrix < ${matrix} >`)
             }
 
             const rows = matrix.length
             const cols = isArray(matrix[0]) ? matrix[0].length : 0
             if (rows === 0 || cols === 0 || rows !== cols) {
-                throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+                throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
             }
 
             for (let i = matrix.length; i >= 1; i--) {
@@ -596,14 +596,14 @@ export namespace Matrix {
 
         return (matrix: number[][]): { row; col; squareSize } | null => {
             if (!isArray(matrix)) {
-                throw valueException(`incorrect vertex order matrix < ${matrix} >`)
+                throw valueError(`incorrect vertex order matrix < ${matrix} >`)
             }
 
             const rows = matrix.length
             const cols = isArray(matrix[0]) ? matrix[0].length : 0
 
             if (rows === 0 || cols === 0 || rows !== cols) {
-                throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+                throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
             }
 
             const processed = processSquare(matrix)
@@ -671,13 +671,13 @@ export namespace Matrix {
 
         return (matrix: number[][]): number => {
             if (!isArray(matrix)) {
-                throw valueException(`incorrect vertex order matrix < ${matrix} >`)
+                throw valueError(`incorrect vertex order matrix < ${matrix} >`)
             }
 
             const rows = matrix.length
             const cols = isArray(matrix[0]) ? matrix[0].length : 0
             if (rows === 0 || cols === 0 || rows !== cols) {
-                throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+                throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
             }
 
             let maxArea = Number.MIN_VALUE
@@ -730,14 +730,14 @@ export namespace Matrix {
 
         return (matrix: number[][]): number => {
             if (!isArray(matrix)) {
-                throw valueException(`incorrect vertex order matrix < ${matrix} >`)
+                throw valueError(`incorrect vertex order matrix < ${matrix} >`)
             }
 
             const rows = matrix.length
             const cols = isArray(matrix[0]) ? matrix[0].length : 0
 
             if (rows === 0 || cols === 0 || rows !== cols) {
-                throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+                throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
             }
 
             const partialSum = Helpers.vector(cols, 0)
@@ -765,14 +765,14 @@ export namespace Matrix {
 
         return (matrix: number[][]): number => {
             if (!isArray(matrix)) {
-                throw valueException(`incorrect matrix < ${matrix} >`)
+                throw valueError(`incorrect matrix < ${matrix} >`)
             }
 
             const rows = matrix.length
             const cols = isArray(matrix[0]) ? matrix[0].length : 0
 
             if (cols === 0 || cols === 0 || cols !== cols) {
-                throw valueException(`incorrect matrix size: rows < ${cols} >, columns < ${cols} >`)
+                throw valueError(`incorrect matrix size: rows < ${cols} >, columns < ${cols} >`)
             }
 
             let row: number,
@@ -822,16 +822,16 @@ export namespace Matrix {
 
     export const findElement = (matrix: number[][], elem: number): boolean => {
         if (!isNumber(elem)) {
-            throw valueException(`incorrect input parameter: elem < ${elem} >`)
+            throw valueError(`incorrect input parameter: elem < ${elem} >`)
         }
         if (!isArray(matrix)) {
-            throw valueException(`incorrect vertex order matrix < ${matrix} >`)
+            throw valueError(`incorrect vertex order matrix < ${matrix} >`)
         }
 
         const rows = matrix.length
         const cols = isArray(matrix[0]) ? matrix[0].length : 0
         if (rows === 0 || cols === 0 || rows !== cols) {
-            throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+            throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
         let row = 0,
@@ -860,9 +860,7 @@ export namespace Matrix {
 
             const init = (): void => {
                 if (!isIntNumber(row) || !isIntNumber(column)) {
-                    throw valueException(
-                        `incorrect initialization values: row < ${row} >, column < ${column} >`,
-                    )
+                    throw valueError(`incorrect initialization values: row < ${row} >, column < ${column} >`)
                 }
 
                 that.row = row
@@ -871,7 +869,7 @@ export namespace Matrix {
 
             that.inbounds = (data: number[][]): boolean => {
                 if (!isArray(data)) {
-                    throw valueException(`incorrect vertex order matrix < ${data} >`)
+                    throw valueError(`incorrect vertex order matrix < ${data} >`)
                 }
 
                 const rows = data.length
@@ -882,7 +880,7 @@ export namespace Matrix {
 
             that.isBefore = (coordinate: Coordinate): boolean => {
                 if (!isCoordinate(coordinate)) {
-                    throw valueException(`incorrect coordinate object < ${coordinate} >`)
+                    throw valueError(`incorrect coordinate object < ${coordinate} >`)
                 }
 
                 return row <= coordinate.row && column <= coordinate.column
@@ -894,7 +892,7 @@ export namespace Matrix {
 
             that.setToAverage = (min: Coordinate, max: Coordinate): void => {
                 if (!isCoordinate(min) || !isCoordinate(max)) {
-                    throw valueException(`incorrect coordinate objects: min < ${min} >, max < ${max} >`)
+                    throw valueError(`incorrect coordinate objects: min < ${min} >, max < ${max} >`)
                 }
                 row = Math.floor((min.row + max.row) / 2)
                 column = Math.floor((min.column + max.column) / 2)
@@ -963,17 +961,17 @@ export namespace Matrix {
 
         return <T>(data: ValueOrUndef<T>[][], elem: T): Coordinate | null => {
             if (!isNumber(elem)) {
-                throw valueException(`incorrect input parameter: elem < ${elem} >`)
+                throw valueError(`incorrect input parameter: elem < ${elem} >`)
             }
 
             if (!isArray(data)) {
-                throw valueException(`incorrect vertex order matrix < ${data} >`)
+                throw valueError(`incorrect vertex order matrix < ${data} >`)
             }
 
             const rows = data.length
             const cols = isArray(data[0]) ? data[0].length : 0
             if (rows === 0 || cols === 0 || rows !== cols) {
-                throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+                throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
             }
 
             const origin = coordinate(0, 0)
@@ -985,13 +983,13 @@ export namespace Matrix {
 
     export const setZeros = (data: number[][]): void => {
         if (!isArray(data)) {
-            throw valueException(`incorrect input parameter: array < ${data} >`)
+            throw valueError(`incorrect input parameter: array < ${data} >`)
         }
 
         const rows = data.length
         const cols = isArray(data[0]) ? data[0].length : 0
         if (rows === 0 || cols === 0) {
-            throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+            throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
         const row = Helpers.vector(rows, false)
@@ -1016,13 +1014,13 @@ export namespace Matrix {
 
     export const rotate = <T>(matrix: ValueOrUndef<T>[][], n: number): void => {
         if (!isArray(matrix)) {
-            throw valueException(`incorrect input parameter: array < ${matrix} >`)
+            throw valueError(`incorrect input parameter: array < ${matrix} >`)
         }
 
         const rows = matrix.length
         const cols = isArray(matrix[0]) ? matrix[0].length : 0
         if (rows === 0 || cols === 0) {
-            throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+            throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
         const num = Math.floor(n / 2)
@@ -1042,14 +1040,14 @@ export namespace Matrix {
 
     export const vectorToMatrix = <T>(vec: ValueOrUndef<T>[], rang: number): ValueOrUndef<T>[][] => {
         if (!isArray(vec)) {
-            throw typeException(`incorrect input argument: {array} not an array < ${vec} >`)
+            throw typeError(`incorrect input argument: {array} not an array < ${vec} >`)
         }
         if (!isIntNumber(rang)) {
-            throw typeException(`incorrect input argument: {rang} not an integer number < ${rang} >`)
+            throw typeError(`incorrect input argument: {rang} not an integer number < ${rang} >`)
         }
 
         if (rang <= 0 || rang >= vec.length) {
-            throw valueException(`incorrect input argument: {rang} is out of bounds {1, ${vec.length}}`)
+            throw valueError(`incorrect input argument: {rang} is out of bounds {1, ${vec.length}}`)
         }
         const mat: ValueOrUndef<T>[][] = Helpers.matrix(rang, rang, null)
         for (let k = 0, i, j; k < vec.length; k++) {
@@ -1063,13 +1061,13 @@ export namespace Matrix {
 
     export const matrixToVector = <T>(mat: ValueOrUndef<T>[][]): ValueOrUndef<T>[] => {
         if (!isArray(mat)) {
-            throw typeException(`incorrect input argument: {mat} not a matrix < ${mat} >`)
+            throw typeError(`incorrect input argument: {mat} not a matrix < ${mat} >`)
         }
         const n = mat.length
         const nn = isArray(mat[0]) ? mat[0].length : 0
 
         if (n === 0 || nn === 0) {
-            throw valueException(`incorrect matrix size: rows < ${n} >, columns < ${nn} >`)
+            throw valueError(`incorrect matrix size: rows < ${n} >, columns < ${nn} >`)
         }
 
         const vec: ValueOrUndef<T>[] = Helpers.vector(n * nn, null)
@@ -1084,14 +1082,14 @@ export namespace Matrix {
 
     export const matrixToVector2 = <T>(mat: ValueOrUndef<T>[][]): ValueOrUndef<T>[] => {
         if (!isArray(mat)) {
-            throw typeException(`incorrect input argument: {mat} not a matrix < ${mat} >`)
+            throw typeError(`incorrect input argument: {mat} not a matrix < ${mat} >`)
         }
 
         const n = mat.length
         const nn = isArray(mat[0]) ? mat[0].length : 0
 
         if (n === 0 || nn === 0 || n !== nn) {
-            throw valueException(`incorrect matrix size: rows < ${n} >, columns < ${nn} >`)
+            throw valueError(`incorrect matrix size: rows < ${n} >, columns < ${nn} >`)
         }
 
         let k = 0
@@ -1107,14 +1105,14 @@ export namespace Matrix {
 
     export const norm = (matrix: number[][]): number => {
         if (!isArray(matrix)) {
-            throw valueException(`incorrect input parameter: array < ${matrix} >`)
+            throw valueError(`incorrect input parameter: array < ${matrix} >`)
         }
 
         const rows = matrix.length
         const cols = isArray(matrix[0]) ? matrix[0].length : 0
 
         if (rows === 0 || cols === 0) {
-            throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+            throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
         let s = 0,
@@ -1132,13 +1130,13 @@ export namespace Matrix {
 
     export const spiral = <T>(matrix: T[][]): ValueOrUndef<T>[] => {
         if (!isArray(matrix)) {
-            throw typeException(`incorrect input argument: not array < ${matrix} >`)
+            throw typeError(`incorrect input argument: not array < ${matrix} >`)
         }
 
         const rows = matrix.length
         const cols = isArray(matrix[0]) ? matrix[0].length : 0
         if (rows === 0 || cols === 0 || rows !== cols) {
-            throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+            throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
         const res: ValueOrUndef<T>[] = Helpers.vector(0, null)
@@ -1166,14 +1164,14 @@ export namespace Matrix {
 
     export const sortByMaxColumn = (data: number[][]): void => {
         if (!isArray(data)) {
-            throw typeException(`incorrect input argument: not array < ${data} >`)
+            throw typeError(`incorrect input argument: not array < ${data} >`)
         }
 
         const n = data.length
         const nn = isArray(data[0]) ? data[0].length : 0
 
         if (n === 0 || nn === 0) {
-            throw valueException(`incorrect matrix size: rows < ${n} >, columns < ${nn} >`)
+            throw valueError(`incorrect matrix size: rows < ${n} >, columns < ${nn} >`)
         }
 
         let maxSum, sum
@@ -1199,13 +1197,13 @@ export namespace Matrix {
     // Используется алгоритм Барейса, сложность O(n^3)
     export const determinant = (data: number[][]): number => {
         if (!isArray(data)) {
-            throw typeException(`incorrect input argument: not array < ${data} >`)
+            throw typeError(`incorrect input argument: not array < ${data} >`)
         }
 
         const rows = data.length
         const cols = isArray(data[0]) ? data[0].length : 0
         if (rows === 0 || cols === 0) {
-            throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+            throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
         const matrix2: number[][] = Helpers.matrix(rows, cols, 0)
@@ -1252,13 +1250,13 @@ export namespace Matrix {
 
     export const adjugateMatrix = (data: number[][]): number[][] => {
         if (!isArray(data)) {
-            throw typeException(`incorrect input argument: not array < ${data} >`)
+            throw typeError(`incorrect input argument: not array < ${data} >`)
         }
 
         const rows = data.length
         const cols = isArray(data[0]) ? data[0].length : 0
         if (rows === 0 || cols === 0) {
-            throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+            throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
         const res: number[][] = Helpers.matrix(rows, cols, 0)
@@ -1293,19 +1291,19 @@ export namespace Matrix {
 
     export const inverseMatrix = (matrix: number[][]): number[][] => {
         if (!isArray(matrix)) {
-            throw typeException(`incorrect input argument: not array < ${matrix} >`)
+            throw typeError(`incorrect input argument: not array < ${matrix} >`)
         }
 
         const n = matrix.length
         const nn = isArray(matrix[0]) ? matrix[0].length : 0
 
         if (n === 0 || nn === 0) {
-            throw valueException(`incorrect matrix size: rows < ${n} >, columns < ${nn} >`)
+            throw valueError(`incorrect matrix size: rows < ${n} >, columns < ${nn} >`)
         }
 
         const det = determinant(matrix)
         if (det === 0) {
-            throw valueException(`Invalid determinant ${det}`)
+            throw valueError(`Invalid determinant ${det}`)
         }
 
         const res = adjugateMatrix(matrix)
@@ -1320,14 +1318,14 @@ export namespace Matrix {
 
     export const matrixRank = (data: number[][]): number => {
         if (!isArray(data)) {
-            throw typeException(`incorrect input argument: not array < ${data} >`)
+            throw typeError(`incorrect input argument: not array < ${data} >`)
         }
 
         const rows = data.length
         const cols = isArray(data[0]) ? data[0].length : 0
 
         if (rows === 0 || cols === 0) {
-            throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+            throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
         const k = rows < cols ? rows : cols
@@ -1356,13 +1354,13 @@ export namespace Matrix {
 
     export const maxInRows = (data: number[][]): number[] => {
         if (!isArray(data)) {
-            throw typeException(`incorrect matrix size: data < ${data} >`)
+            throw typeError(`incorrect matrix size: data < ${data} >`)
         }
 
         const rows = data.length
         const cols = isArray(rows[0]) ? rows[0].length : 0
         if (rows === 0 || cols === 0) {
-            throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+            throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
         return data.map(row => {
@@ -1374,13 +1372,13 @@ export namespace Matrix {
 
     export const maxInCols = (data: number[][]): number[] => {
         if (!isArray(data)) {
-            throw typeException(`incorrect matrix size: data < ${data} >`)
+            throw typeError(`incorrect matrix size: data < ${data} >`)
         }
 
         const rows = data.length
         const cols = isArray(data[0]) ? data[0].length : 0
         if (rows === 0 || cols === 0) {
-            throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+            throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
         return data[0].map((_, i) => {
@@ -1401,13 +1399,13 @@ export namespace Matrix {
      */
     export const isMagicSquare = (matrix: number[][]): number => {
         if (!isArray(matrix)) {
-            throw typeException(`incorrect input argument: <matrix> is not array < ${matrix} >`)
+            throw typeError(`incorrect input argument: <matrix> is not array < ${matrix} >`)
         }
 
         const rows = matrix.length
         const cols = isArray(matrix[0]) ? matrix[0].length : 0
         if (rows === 0 || cols === 0 || rows !== cols) {
-            throw valueException(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
+            throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
         const m = (rows * (rows * rows + 1)) / 2
@@ -1438,7 +1436,7 @@ export namespace Matrix {
 
     export const createMagicSquare = (n: number): number[][] => {
         if (!isInteger(n) || n < 0 || n % 2 === 0) {
-            throw valueException(`incorrect matrix argument: n is not odd number < ${n} >`)
+            throw valueError(`incorrect matrix argument: n is not odd number < ${n} >`)
         }
 
         const res = Helpers.matrix(n, n, 0)
@@ -1455,7 +1453,7 @@ export namespace Matrix {
 
     export const createMagicSquareTerraces = (n: number): ValueOrUndef<number>[][] => {
         if (!isInteger(n) || n < 0 || n % 2 === 0) {
-            throw typeException(`incorrect input argument: dimension {n} is not odd number < ${n} >`)
+            throw typeError(`incorrect input argument: dimension {n} is not odd number < ${n} >`)
         }
 
         const res: ValueOrUndef<number>[][] = Helpers.matrix(n, n, null)
@@ -1548,13 +1546,13 @@ export namespace Matrix {
 
     export const choleskyDecomposition = (data: number[][]): number[][] => {
         if (!isArray(data)) {
-            throw typeException(`incorrect input argument: {matrix} is not array < ${data} >`)
+            throw typeError(`incorrect input argument: {matrix} is not array < ${data} >`)
         }
 
         const rows = data.length
         const cols = isArray(data[0]) ? data[0].length : 0
         if (rows === 0 || cols === 0 || rows !== cols) {
-            throw valueException(`incorrect matrix size: {rows} < ${rows} >, {cols} < ${cols} >`)
+            throw valueError(`incorrect matrix size: {rows} < ${rows} >, {cols} < ${cols} >`)
         }
 
         const res: number[][] = Helpers.vector(rows, [])

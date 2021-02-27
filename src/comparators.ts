@@ -1,5 +1,5 @@
 import { Checkers } from './checkers'
-import { Exceptions } from './exceptions'
+import { Errors } from './errors'
 
 export namespace Comparators {
     import isNull = Checkers.isNull
@@ -7,7 +7,7 @@ export namespace Comparators {
     import isObject = Checkers.isObject
     import isFunction = Checkers.isFunction
     import isArray = Checkers.isArray
-    import valueException = Exceptions.valueException
+    import valueError = Errors.valueError
 
     /**
      * Comparator type
@@ -20,7 +20,7 @@ export namespace Comparators {
      * @param column initial input {@link String} or {@link Number} column name
      * @return {@link Number} -1 - lower, 0 - equals, 1 - greater
      */
-    export const comparator = <T>(column: string | number): Comparator<T> => {
+    export const comparator = <T>(column: PropertyKey): Comparator<T> => {
         return (a: T, b: T) => cmpByDefault(a[column], b[column])
     }
 
@@ -181,7 +181,7 @@ export namespace Comparators {
      * @param {String} value Property name.
      * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
-    export const cmpByProperty = <T>(a: T, b: T, value: string | number): number => {
+    export const cmpByProperty = <T>(a: T, b: T, value: PropertyKey): number => {
         return +(a[value] > b[value]) || +(a[value] === b[value]) - 1
     }
 
@@ -241,7 +241,7 @@ export namespace Comparators {
                 return typeof a_ < typeof b_ ? -1 : 1
             }
 
-            throw valueException(`Expected an object when sorting by < ${property} >`)
+            throw valueError(`Expected an object when sorting by < ${property} >`)
         }
     }
 }

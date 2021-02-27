@@ -1,14 +1,14 @@
 import { Checkers } from './checkers'
-import { Exceptions } from './exceptions'
+import { Errors } from './errors'
 import { Maths } from './maths'
 import { Comparators } from './comparators'
 
 export namespace Sorting {
     import isFunction = Checkers.isFunction
-    import valueException = Exceptions.valueException
+    import valueError = Errors.valueError
     import isArray = Checkers.isArray
     import isIntNumber = Checkers.isIntNumber
-    import typeException = Exceptions.typeException
+    import typeError = Errors.typeError
     import Comparator = Comparators.Comparator
     import cmpByDefault = Comparators.cmpByDefault
     import Helpers = Maths.Helpers
@@ -45,7 +45,7 @@ export namespace Sorting {
      */
     export const bubbleSort = <T>(array: T[], cmp: Comparator<T>): T[] => {
         if (!isArray(array)) {
-            throw valueException(`incorrect input parameter: array < ${array} >`)
+            throw valueError(`incorrect input parameter: array < ${array} >`)
         }
         cmp = isFunction(cmp) ? cmp : cmpByDefault
 
@@ -77,7 +77,7 @@ export namespace Sorting {
      */
     export const bucketSort = (array: number[], cmp: Comparator<number>): number[] => {
         if (!isArray(array)) {
-            throw valueException(`incorrect input parameter: not array < ${array} >`)
+            throw valueError(`incorrect input parameter: not array < ${array} >`)
         }
         cmp = isFunction(cmp) ? cmp : cmpByDefault
 
@@ -141,7 +141,7 @@ export namespace Sorting {
 
         return <T>(array: T[], cmp: Comparator<T>): T[] => {
             if (!isArray(array)) {
-                throw valueException(`incorrect input parameter: array < ${array} >`)
+                throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
             cmp = isFunction(cmp) ? cmp : cmpByDefault
@@ -176,7 +176,7 @@ export namespace Sorting {
      */
     export const shellSort2 = <T>(array: T[], step: number, cmp: Comparator<T>): T[] => {
         if (!isArray(array)) {
-            throw valueException(`incorrect input parameter: array < ${array} >`)
+            throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
         step = isIntNumber(step) && step > 0 ? step : array.length
@@ -214,7 +214,7 @@ export namespace Sorting {
      */
     export const shellsort3 = <T>(array: T[], cmp: Comparator<T>): T[] => {
         if (!isArray(array)) {
-            throw valueException(`incorrect input parameter: array < ${array} >`)
+            throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
         cmp = isFunction(cmp) ? cmp : cmpByDefault
@@ -275,7 +275,7 @@ export namespace Sorting {
 
         return <T>(array: T[], left: number, right: number, cmp: Comparator<T>) => {
             if (!isArray(array)) {
-                throw valueException(`incorrect input parameters: array < ${array} >`)
+                throw valueError(`incorrect input parameters: array < ${array} >`)
             }
 
             left = isIntNumber(left) && left > 0 ? left : 0
@@ -310,7 +310,7 @@ export namespace Sorting {
      */
     export const insertionSort2 = <T>(array: T[], cmp: Comparator<T>): T[] => {
         if (!isArray(array)) {
-            throw valueException(`incorrect input parameter: array < ${array} >`)
+            throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
         cmp = isFunction(cmp) ? cmp : cmpByDefault
@@ -360,7 +360,7 @@ export namespace Sorting {
 
         return <T>(array: T[], start: number, cmp: Comparator<T>) => {
             if (!isArray(array)) {
-                throw valueException(`incorrect input parameter: array < ${array} >`)
+                throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
             cmp = isFunction(cmp) ? cmp : cmpByDefault
@@ -429,7 +429,7 @@ export namespace Sorting {
 
         return <T>(array: T[], cmp: Comparator<T>): T[] => {
             if (!isArray(array)) {
-                throw valueException(`incorrect input parameter: array < ${array} >`)
+                throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
             cmp = isFunction(cmp) ? cmp : cmpByDefault
@@ -476,7 +476,7 @@ export namespace Sorting {
 
         return <T>(array: T[], cmp: Comparator<T>) => {
             if (!isArray(array)) {
-                throw valueException(`incorrect input parameter: array < ${array} >`)
+                throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
             cmp = isFunction(cmp) ? cmp : cmpByDefault
@@ -526,7 +526,7 @@ export namespace Sorting {
 
         return <T>(array: T[], cmp: Comparator<T>): void => {
             if (!isArray(array)) {
-                throw valueException(`incorrect input array: < ${array} >`)
+                throw valueError(`incorrect input array: < ${array} >`)
             }
 
             cmp = isFunction(cmp) ? cmp : cmpByDefault
@@ -556,7 +556,7 @@ export namespace Sorting {
      */
     export const quickSort = <T>(array: T[], cmp: Comparator<T>): T[] => {
         if (!isArray(array)) {
-            throw valueException(`incorrect input array: < ${array} >`)
+            throw valueError(`incorrect input array: < ${array} >`)
         }
 
         cmp = isFunction(cmp) ? cmp : cmpByDefault
@@ -618,14 +618,14 @@ export namespace Sorting {
      */
     // export const heapsort = <T>(array: T[], min: number, max: number, cmp: Comparator<T>): T[] => {
     //     if (!isArray(array)) {
-    //         throw valueException(`incorrect input parameter: array < ${array} >`)
+    //         throw valueError(`incorrect input parameter: array < ${array} >`)
     //     }
     //
     //     min = isIntNumber(min) && min > 0 && min < array.length ? min : 0
     //     max = isIntNumber(max) && max > 0 && max < array.length ? max : array.length - 1
     //
     //     if (min > max) {
-    //         throw valueException(`incorrect min or max value: min < ${min} >, max < ${max} >`)
+    //         throw valueError(`incorrect min or max value: min < ${min} >, max < ${max} >`)
     //     }
     //
     //     cmp = isFunction(cmp) ? cmp : cmpByDefault
@@ -668,7 +668,7 @@ export namespace Sorting {
 
         return <T>(array: T[], cmp: Comparator<T>) => {
             if (!isArray(array)) {
-                throw valueException(`incorrect input parameter: array < ${array} >`)
+                throw valueError(`incorrect input parameter: array < ${array} >`)
             }
             cmp = isFunction(cmp) ? cmp : cmpByDefault
 
@@ -735,7 +735,7 @@ export namespace Sorting {
 
         return <T>(array: T[], cmp: Comparator<T>): T[] => {
             if (!isArray(array)) {
-                throw valueException(`incorrect input parameter: array < ${array} >`)
+                throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
             cmp = isFunction(cmp) ? cmp : cmpByDefault
@@ -769,7 +769,7 @@ export namespace Sorting {
      */
     // export const pqsort = <T>(array: T[], cmp: Comparator<T>): T[] => {
     //     if (!isArray(array)) {
-    //         throw valueException(`incorrect input parameter: array < ${array} >`)
+    //         throw valueError(`incorrect input parameter: array < ${array} >`)
     //     }
     //
     //     cmp = isFunction(cmp) ? cmp : cmpByDefault
@@ -795,7 +795,7 @@ export namespace Sorting {
      */
     export const insertionSort = <T>(array: T[], cmp: Comparator<T>): void => {
         if (!isArray(array)) {
-            throw valueException(`incorrect input parameter: array < ${array} >`)
+            throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
         cmp = isFunction(cmp) ? cmp : cmpByDefault
@@ -821,7 +821,7 @@ export namespace Sorting {
      */
     export const sort = <T>(array: T[], min: number, max: number, cmp: Comparator<T>): void => {
         if (!isArray(array)) {
-            throw valueException(`incorrect input parameter: array < ${array} >`)
+            throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
         min = isIntNumber(min) && min > 0 ? min : 0
@@ -829,7 +829,7 @@ export namespace Sorting {
         cmp = isFunction(cmp) ? cmp : cmpByDefault
 
         if (min > max) {
-            throw valueException(`incorrect min or max value: min < ${min} >, max < ${max} >`)
+            throw valueError(`incorrect min or max value: min < ${min} >, max < ${max} >`)
         }
 
         for (let i = min; i < max; i++) {
@@ -849,7 +849,7 @@ export namespace Sorting {
      */
     export const gnomeSort = <T>(array: T[], cmp: Comparator<T>): void => {
         if (!isArray(array)) {
-            throw valueException(`incorrect input parameter: array < ${array} >`)
+            throw valueError(`incorrect input parameter: array < ${array} >`)
         }
         cmp = isFunction(cmp) ? cmp : cmpByDefault
 
@@ -880,7 +880,7 @@ export namespace Sorting {
      */
     export const cocktailSort = <T>(array: T[], cmp: Comparator<T>): void => {
         if (!isArray(array)) {
-            throw valueException(`incorrect input parameter: array < ${array} >`)
+            throw valueError(`incorrect input parameter: array < ${array} >`)
         }
         cmp = isFunction(cmp) ? cmp : cmpByDefault
 
@@ -921,7 +921,7 @@ export namespace Sorting {
      */
     export const simpleCountSort = <T>(array: T[], cmp: Comparator<T>): T[] => {
         if (!isArray(array)) {
-            throw valueException(`incorrect input parameter: array < ${array} >`)
+            throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
         cmp = isFunction(cmp) ? cmp : cmpByDefault
@@ -968,7 +968,7 @@ export namespace Sorting {
 
         return <T>(array: T[], cmp: Comparator<T>): void => {
             if (!isArray(array)) {
-                throw typeException(`incorrect input argument: not array < ${array} >`)
+                throw typeError(`incorrect input argument: not array < ${array} >`)
             }
             cmp = isFunction(cmp) ? cmp : cmpByDefault
 

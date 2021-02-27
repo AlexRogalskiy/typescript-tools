@@ -1,12 +1,13 @@
 import { ALPHA_REGEX, EMAIL_REGEX, MOBILE_NAVIGATOR_CODE_REGEX, MOBILE_NAVIGATOR_TYPE_REGEX } from './regexes'
 import { Numbers } from './numbers'
-import { Exceptions } from './exceptions'
+import { Errors } from './errors'
 import { Objects } from './objects'
 
 export namespace Checkers {
-    import toUint32 = Numbers.toUint32
-    import typeException = Exceptions.typeException
-    import valueException = Exceptions.valueException
+    //const toUint32 = Numbers.toUint32
+    import typeError = Errors.typeError
+    import valueError = Errors.valueError
+    import validationError = Errors.validationError
     import getType = Objects.getType
 
     export const isNull = (value: any): boolean => {
@@ -14,7 +15,7 @@ export namespace Checkers {
     }
 
     export const isNotNull = (value: any): boolean => {
-        return value !== null
+        return !isNull(value)
     }
 
     export const isMobileBrowser = (navigator: string): boolean => {
@@ -43,20 +44,20 @@ export namespace Checkers {
 
     export const isInRange = (num: number, min: number, max: number): boolean => {
         if (!isNumber(num) || !isNumber(min) || !isNumber(max)) {
-            throw typeException(
+            throw typeError(
                 `incorrect type of arguments: number < ${num} >, lower border < ${min} >, upper border < ${max} >`,
             )
         }
 
         if (min > max) {
-            throw valueException(`incorrect arguments: lower border < ${min} >, upper border < ${max} >`)
+            throw valueError(`incorrect arguments: lower border < ${min} >, upper border < ${max} >`)
         }
 
         return num < max && num > min
     }
 
     export const isArrayIndex = (key: string): boolean => {
-        const numericKey = toUint32(key)
+        const numericKey = Numbers.toUint32(key)
 
         return String(numericKey) === key && numericKey < Math.pow(2, 32) - 1
     }
@@ -133,10 +134,14 @@ export namespace Checkers {
         )
     }
 
+    export const isPropertyInRange = (obj: any, prop: string, lowval: number, hival: number): void => {
+        if (obj[prop] < lowval || obj[prop] > hival) {
+            throw validationError(`Invalid property value=${obj[prop]}, is out of range: ${lowval}-${hival}`)
+        }
+    }
+
     export const isFunction = (value: any): boolean => {
-        return (
-            isNotNull(value) && typeof value === 'function' && value.constructor && value.cal && value.apply
-        )
+        return isNotNull(value) && typeof value === 'function' && value.constructor && value.apply
     }
 
     export const isBoolean = (value: any): boolean => {

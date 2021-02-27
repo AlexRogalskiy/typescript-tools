@@ -151,4 +151,18 @@ export namespace Commons {
     export const isHostObject = (obj: any, prop: string): boolean => {
         return !!(typeof obj[prop] === 'object' && obj[prop])
     }
+
+    export const getAllProperties = (o: any): string[] => {
+        let result: string[] = []
+
+        for (
+            let objectToInspect = o;
+            objectToInspect !== null;
+            objectToInspect = Object.getPrototypeOf(objectToInspect)
+        ) {
+            result = result.concat(Object.getOwnPropertyNames(objectToInspect))
+        }
+
+        return result
+    }
 }

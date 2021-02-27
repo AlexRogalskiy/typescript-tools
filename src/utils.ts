@@ -1,7 +1,7 @@
 import { Iterator } from '../typings/function-types'
 import { Checkers } from './checkers'
 import { Numbers } from './numbers'
-import { Exceptions } from './exceptions'
+import { Errors } from './errors'
 
 export namespace Utils {
     export namespace Translation {
@@ -42,7 +42,7 @@ export namespace Utils {
         import isArray = Checkers.isArray
         import isNull = Checkers.isNull
         import random = Numbers.random
-        import valueException = Exceptions.valueException
+        import validationError = Errors.validationError
 
         /**
          * @private
@@ -154,7 +154,7 @@ export namespace Utils {
          */
         export const sourceFromHex = (color: string): number[] => {
             if (!color.match(/^#[0-9a-fA-F]$/)) {
-                throw valueException(`Invalid color value ${color}`)
+                throw validationError(`Invalid color value ${color}`)
             }
 
             const value = color.slice(color.indexOf('#') + 1),

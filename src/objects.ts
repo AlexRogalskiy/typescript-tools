@@ -1,18 +1,13 @@
 import { Numbers } from './numbers'
 import { Checkers } from './checkers'
-import { Exceptions } from './exceptions'
+import { Errors } from './errors'
 
 export namespace Objects {
-    import random = Numbers.random
-    import isObject = Checkers.isObject
-    import randInt = Numbers.randInt
-    import typeException = Exceptions.typeException
-
     export const randomEnum = <T>(enumType: T): T[keyof T] => {
-        const enumValues = (Object.values(enumType) as unknown) as T[keyof T][]
-        const randomIndex = random(enumValues.length)
+        const values = (Object.values(enumType) as unknown) as T[keyof T][]
+        const index = Numbers.random(values.length)
 
-        return enumValues[randomIndex]
+        return values[index]
     }
 
     export const pluckBy = <T, K extends keyof T>(obj: T, propertyNames: K[]): T[K][] => {
@@ -62,8 +57,8 @@ export namespace Objects {
     }
 
     export const randWeightedObject = (nums: any): number[] => {
-        if (!isObject(nums)) {
-            throw typeException(`incorrect input argument: {numbers} is not object < ${nums} >`)
+        if (!Checkers.isObject(nums)) {
+            throw Errors.typeError(`incorrect input argument: {numbers} is not object < ${nums} >`)
         }
 
         let total = 0
@@ -75,7 +70,7 @@ export namespace Objects {
             }
         }
 
-        const rand = randInt(0, total)
+        const rand = Numbers.randInt(0, total)
         const result: number[] = []
         for (const index in dist) {
             if (dist.hasOwnProperty(index)) {

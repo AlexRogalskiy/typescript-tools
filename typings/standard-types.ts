@@ -1,4 +1,3 @@
-// -------------------------------------------------------------------------------------------------
 /**
  * Primitive
  * @desc Type representing [`Primitive`](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) types in TypeScript: `string | number | bigint | boolean |  symbol | null | undefined`
@@ -62,6 +61,14 @@ export type BooleanOrUndef = boolean | null | undefined
  * @desc Type representing [`Primitive`](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) types in TypeScript: `boolean | null | undefined`
  */
 export type ValueOrUndef<T> = T | null | undefined
+// -------------------------------------------------------------------------------------------------
+/**
+ * ExtendableError
+ * @desc Type representing extendable error
+ */
+export default class ExtendableError extends Error {
+    // empty
+}
 // -------------------------------------------------------------------------------------------------
 /**
  * DomElement

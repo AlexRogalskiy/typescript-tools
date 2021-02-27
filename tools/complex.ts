@@ -1,5 +1,5 @@
-import { Checkers, Exceptions } from '../src'
-import valueException = Exceptions.valueException
+import { Checkers, Errors } from '../src'
+import valueError = Errors.valueError
 import isNumber = Checkers.isNumber
 
 export class Complex {
@@ -46,7 +46,7 @@ export class Complex {
 
     add(complex: Complex): void {
         if (!Complex.isComplex(complex)) {
-            throw valueException(`not complex number instance: < ${complex} >`)
+            throw valueError(`not complex number instance: < ${complex} >`)
         }
 
         this.x += complex.x
@@ -55,7 +55,7 @@ export class Complex {
 
     sub(complex: Complex): void {
         if (!Complex.isComplex(complex)) {
-            throw valueException(`not complex number instance: < ${complex} >`)
+            throw valueError(`not complex number instance: < ${complex} >`)
         }
 
         this.x -= complex.x
@@ -64,7 +64,7 @@ export class Complex {
 
     mult(complex: Complex): Complex {
         if (!Complex.isComplex(complex)) {
-            throw valueException(`not complex number instance: < ${complex} >`)
+            throw valueError(`not complex number instance: < ${complex} >`)
         }
 
         const cxx = this.x * complex.x - this.y * complex.y
@@ -77,7 +77,7 @@ export class Complex {
 
     div(complex: Complex): Complex {
         if (!Complex.isComplex(complex)) {
-            throw valueException(`not complex number instance: < ${complex} >`)
+            throw valueError(`not complex number instance: < ${complex} >`)
         }
 
         const denom = complex.x * complex.x + complex.y * complex.y
@@ -91,7 +91,7 @@ export class Complex {
 
     scale(value: number): void {
         if (!isNumber(value) || value === 0) {
-            throw valueException(`incorrect input value: scale < ${value} >`)
+            throw valueError(`incorrect input value: scale < ${value} >`)
         }
 
         this.x /= value
@@ -100,7 +100,7 @@ export class Complex {
 
     addnum(value: number): void {
         if (!isNumber(value)) {
-            throw valueException(`incorrect input value: number < ${value} >`)
+            throw valueError(`incorrect input value: number < ${value} >`)
         }
 
         this.x += value
@@ -108,7 +108,7 @@ export class Complex {
 
     subnum(value: number): void {
         if (!isNumber(value)) {
-            throw valueException(`incorrect input value: number < ${value} >`)
+            throw valueError(`incorrect input value: number < ${value} >`)
         }
 
         this.x -= value
@@ -123,7 +123,7 @@ export class Complex {
 
     power(num: number): Complex {
         if (!isNumber(num)) {
-            throw valueException(`incorrect power value: < ${num} >`)
+            throw valueError(`incorrect power value: < ${num} >`)
         }
         const data = Complex.convertToTrig(this.x, this.y)
         const rr = Math.pow(data.r, num)
@@ -199,7 +199,7 @@ export class Complex {
 
     equals(complex: Complex): boolean {
         if (!Complex.isComplex(complex)) {
-            throw valueException(`not complex number instance: < ${complex} >`)
+            throw valueError(`not complex number instance: < ${complex} >`)
         }
 
         return this.x === complex.x && this.y === complex.x

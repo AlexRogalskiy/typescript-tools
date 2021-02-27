@@ -1,5 +1,5 @@
 import { Checkers } from './checkers'
-import { Exceptions } from './exceptions'
+import { Errors } from './errors'
 import { Processor } from '../typings/function-types'
 
 export namespace Maths {
@@ -7,11 +7,11 @@ export namespace Maths {
     import isNumber = Checkers.isNumber
     import isString = Checkers.isString
     import isNull = Checkers.isNull
-    import valueException = Exceptions.valueException
+    import valueError = Errors.valueError
     import isFunction = Checkers.isFunction
     import isArray = Checkers.isArray
     import isRealNumber = Checkers.isRealNumber
-    import typeException = Exceptions.typeException
+    import typeError = Errors.typeError
     import isObject = Checkers.isObject
 
     export const sqrt = Math.sqrt
@@ -22,6 +22,122 @@ export namespace Maths {
     export const PiBy180Inv = 180 / Math.PI
     export const PiBy2 = Math.PI / 2
     export const invLog2 = 1 / Math.log(2)
+
+    export namespace Helpers {
+        export const memoizer = (
+            memo: number[],
+            formula: (func: (num: number) => number, value: number) => number,
+        ): ((num: number) => void) => {
+            if (!isArray(memo)) {
+                throw valueError(`incorrect input parameter: initial array < ${memo} >`)
+            }
+            if (!isFunction(formula)) {
+                throw valueError(`incorrect formula function: function < ${formula} >`)
+            }
+
+            const recur = (num: number): number => {
+                let result = memo[num]
+                if (!isNumber(result)) {
+                    result = formula(recur, num)
+                    memo[num] = result
+                }
+                return result
+            }
+
+            return recur
+        }
+
+        export const serial = (): { next: number } => {
+            let $n = 0
+            return {
+                // Увеличение и возврат значения
+                get next() {
+                    return $n++
+                },
+                // Установка нового значения, 11 если оно больше текущего
+                set next(n) {
+                    if (n >= $n) {
+                        $n = n
+                    } else {
+                        throw valueError(`invalid serial number: ${n}`)
+                    }
+                },
+            }
+        }
+
+        export const toRadians = (value: number): number => {
+            if (!isNumber(value)) {
+                throw typeError(`incorrect type of argument: degrees < ${value} >`)
+            }
+
+            return value * PiBy180
+        }
+
+        export const toDegrees = (value: number): number => {
+            if (!isNumber(value)) {
+                throw typeError(`incorrect type of argument: radians < ${value} >`)
+            }
+
+            return value * PiBy180Inv
+        }
+
+        export const vector = <T>(dimension: number, initial: T): T[] => {
+            if (!isIntNumber(dimension) || dimension < 0) {
+                throw valueError(`incorrect input values: array dimension < ${dimension} >`)
+            }
+
+            const arr: T[] = []
+            for (let i = 0; i < dimension; i++) {
+                arr[i] = initial
+            }
+
+            return arr
+        }
+
+        export const matrix = <T>(rows: number, columns: number, initial: T): T[][] => {
+            if (!isIntNumber(rows) || !isIntNumber(columns) || rows < 0 || columns < 0) {
+                throw valueError(
+                    `incorrect input values: number of rows < ${rows} >, number of columns < ${columns} >`,
+                )
+            }
+
+            const matrix: T[][] = []
+            let arr: T[] = []
+            for (let i = 0; i < rows; i++) {
+                arr = []
+                for (let j = 0; j < columns; j++) {
+                    arr[j] = initial
+                }
+                matrix[i] = arr
+            }
+
+            return matrix
+        }
+
+        export const nextPow2 = (value: number): number => {
+            return Math.pow(2, Math.ceil(Math.log(value) * invLog2))
+        }
+
+        export const sum = (...values: number[]): number => {
+            return values.reduce((previous, current) => previous + current, 0)
+        }
+
+        export const getEmptyNumberVector = (): number[] => {
+            return vector<number>(0, 0)
+        }
+
+        export const getEmptyStringVector = (): string[] => {
+            return vector<string>(0, '')
+        }
+
+        export const getEmptyBooleanVector = (): boolean[] => {
+            return vector<boolean>(0, false)
+        }
+
+        export const EMPTY_NUMBER_VECTOR = vector<number>(0, 0)
+        export const EMPTY_STRING_VECTOR = vector<string>(0, '')
+        export const EMPTY_BOOLEAN_VECTOR = vector<boolean>(0, false)
+    }
 
     export namespace Distances {
         import matrix = Helpers.matrix
@@ -35,7 +151,7 @@ export namespace Maths {
             sub: number,
         ): number | null => {
             if (!isString(a) || !isString(b)) {
-                throw valueException(`incorrect input values: string1 < ${a} >, string2 < ${b} >`)
+                throw valueError(`incorrect input values: string1 < ${a} >, string2 < ${b} >`)
             }
 
             if (a.length === 0 || b.length === 0) {
@@ -44,17 +160,17 @@ export namespace Maths {
 
             const insValue = ins == null ? 2 : isNumber(ins) && ins >= 0 ? ins : null
             if (insValue == null) {
-                throw valueException(`incorrect ins value: < ${insValue} >`)
+                throw valueError(`incorrect ins value: < ${insValue} >`)
             }
 
             const delValue = del == null ? 2 : isNumber(del) && del >= 0 ? del : null
             if (delValue == null) {
-                throw valueException(`incorrect del value: < ${delValue} >`)
+                throw valueError(`incorrect del value: < ${delValue} >`)
             }
 
             const subValue = sub == null ? 1 : isNumber(sub) && sub >= 0 ? sub : null
             if (subValue == null) {
-                throw valueException(`incorrect sub value: < ${subValue} >`)
+                throw valueError(`incorrect sub value: < ${subValue} >`)
             }
 
             const d = matrix(b.length + 1, a.length + 1, 0)
@@ -85,7 +201,7 @@ export namespace Maths {
          */
         export const levenshteinDistance3 = (s1: string, s2: string, costs: any): number => {
             if (!isString(s1) || !isString(s2)) {
-                throw valueException(`incorrect input values: string1 < ${s1} >, string2 < ${s2} >`)
+                throw valueError(`incorrect input values: string1 < ${s1} >, string2 < ${s2} >`)
             }
 
             let i, j, flip, ch, chl, ii, ii2, cost
@@ -129,7 +245,7 @@ export namespace Maths {
 
         export const hammingDistance = (a: string, b: string): number => {
             if (!isString(a) || !isString(b)) {
-                throw valueException(`incorrect input values: string1 < ${a} >, string2 < ${b} >`)
+                throw valueError(`incorrect input values: string1 < ${a} >, string2 < ${b} >`)
             }
 
             if (!a.length) return b.length
@@ -151,7 +267,7 @@ export namespace Maths {
             weighter: { insert: (v) => number; delete: (v) => number; replace: (v1, v2) => number },
         ): number => {
             if (!isString(seq1) || !isString(seq2)) {
-                throw valueException(`incorrect input values: string1 < ${seq1} >, string2 < ${seq2} >`)
+                throw valueError(`incorrect input values: string1 < ${seq1} >, string2 < ${seq2} >`)
             }
 
             let len1 = seq1.length,
@@ -215,7 +331,7 @@ export namespace Maths {
         /* number of operations to get <b> from <a>*/
         export const levenshteinDistance = (a: string, b: string): number[][] => {
             if (!isString(a) || !isString(b)) {
-                throw valueException(`incorrect input values: string1 < ${a} >, string2 < ${b} >`)
+                throw valueError(`incorrect input values: string1 < ${a} >, string2 < ${b} >`)
             }
 
             const res = matrix(a.length + 1, b.length + 1, 0)
@@ -268,7 +384,7 @@ export namespace Maths {
 
             export const circleArea = (radius: number): string => {
                 if (!isNumber(radius) || radius < 0) {
-                    throw valueException(`incorrect radius value: radius < ${radius} >`)
+                    throw valueError(`incorrect radius value: radius < ${radius} >`)
                 }
 
                 return (Math.PI * radius * radius).toFixed(2)
@@ -276,7 +392,7 @@ export namespace Maths {
 
             export const squareArea = (a: number): string => {
                 if (!isNumber(a) || a < 0) {
-                    throw valueException(`incorrect side value: side < ${a} >`)
+                    throw valueError(`incorrect side value: side < ${a} >`)
                 }
 
                 return (a * a).toFixed(2)
@@ -284,7 +400,7 @@ export namespace Maths {
 
             export const rectangularArea = (a: number, b: number): string => {
                 if (!isNumber(a) || !isNumber(b) || a < 0 || b < 0) {
-                    throw valueException(`incorrect side values: a < ${a} >, b < ${b} >`)
+                    throw valueError(`incorrect side values: a < ${a} >, b < ${b} >`)
                 }
 
                 return (a * b).toFixed(2)
@@ -292,7 +408,7 @@ export namespace Maths {
 
             export const triangleArea = (a: number, b: number, c: number): string => {
                 if (!isNumber(a) || !isNumber(b) || !isNumber(c) || a < 0 || b < 0 || c < 0) {
-                    throw valueException(`incorrect side values: a < ${a} >, b < ${b} >, c < ${c} >`)
+                    throw valueError(`incorrect side values: a < ${a} >, b < ${b} >, c < ${c} >`)
                 }
 
                 const s = (a + b + c) / 2
@@ -301,7 +417,7 @@ export namespace Maths {
 
             export const trapeziumArea = (a: number, b: number, h: number): string => {
                 if (!isNumber(a) || !isNumber(b) || !isNumber(h) || a < 0 || b < 0 || h < 0) {
-                    throw valueException(`incorrect side values: a < ${a} >, b < ${b} >, height < ${h} >`)
+                    throw valueError(`incorrect side values: a < ${a} >, b < ${b} >, height < ${h} >`)
                 }
 
                 return (((a + b) * h) / 2).toFixed(2)
@@ -337,7 +453,7 @@ export namespace Maths {
                     !isFunction(func1) ||
                     !isFunction(func2)
                 ) {
-                    throw valueException(
+                    throw valueError(
                         `incorrect input values: x0 < ${x0} >, x < ${x} >, x < ${x} >, precision < ${e} >, function1 < ${func1} >, function2 < ${func2} >`,
                     )
                 }
@@ -361,7 +477,7 @@ export namespace Maths {
                 func: Processor<number, number>,
             ): number | null => {
                 if (!isNumber(a) || !isNumber(b) || !isNumber(x) || !isNumber(e) || !isFunction(func)) {
-                    throw valueException(
+                    throw valueError(
                         `incorrect input values: lower border < ${a} >, upper border < ${b} >, x < ${x} >, precision < ${e} >, function < ${func} >`,
                     )
                 }
@@ -398,7 +514,7 @@ export namespace Maths {
             // Метод простой итерации
             export const simple = (x0: number, x: number, e: number, func): number => {
                 if (!isNumber(x0) || !isNumber(x) || !isNumber(e) || !isFunction(func)) {
-                    throw valueException(
+                    throw valueError(
                         `incorrect input values: x0 < ${x0} >, x < ${x} >, precision < ${e} >, function < ${func} >`,
                     )
                 }
@@ -418,7 +534,7 @@ export namespace Maths {
             // метод половинного деления
             export const hdiv = (a: number, b: number, e: number, func): number | null => {
                 if (!isNumber(a) || !isNumber(b) || !isNumber(e) || !isFunction(func)) {
-                    throw valueException(
+                    throw valueError(
                         `incorrect input values: lower border < ${a} >, upper border < ${b} >, precision < ${e} >, function < ${func} >`,
                     )
                 }
@@ -451,14 +567,14 @@ export namespace Maths {
             // document.writeln("let getFuncMinimum: " + xx.xmin + ' ' + xx.ymin)
             export const getFuncMinimum = (a: number, b: number, func, eps: number): { xmin; ymin } => {
                 if (!isNumber(a) || !isNumber(b) || !isFunction(func)) {
-                    throw valueException(
+                    throw valueError(
                         `incorrect input values: lower border < ${a} >, upper border < ${b} >, function < ${func} >`,
                     )
                 }
 
                 const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
                 if (precision == null) {
-                    throw valueException(`incorrect 'precision' value: < ${precision} >`)
+                    throw valueError(`incorrect 'precision' value: < ${precision} >`)
                 }
 
                 let x0 = a,
@@ -496,7 +612,7 @@ export namespace Maths {
             // document.writeln("interpolation: " + res);
             export const interpolate = (arrayX: number[], arrayY: number[], x: number, n: number): number => {
                 if (!isArray(arrayX) || !isArray(arrayY) || !isNumber(x)) {
-                    throw valueException(
+                    throw valueError(
                         `incorrect input values: arrayX < ${arrayX} >, arrayY < ${arrayY} >, x < ${x} >`,
                     )
                 }
@@ -524,11 +640,11 @@ export namespace Maths {
 
                 const num = n == null ? 9 : isIntNumber(n) && n > 0 ? n : null
                 if (num == null) {
-                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
 
                 if (x < 0 || x > num) {
-                    throw valueException(`incorrect input value: x < ${x} > is out of range [0, ${num}]`)
+                    throw valueError(`incorrect input value: x < ${x} > is out of range [0, ${num}]`)
                 }
 
                 return lagr(x)
@@ -615,7 +731,7 @@ export namespace Maths {
                 }
 
                 if (!isNumber(value) || !isFunction(func)) {
-                    throw valueException(`incorrect input values: x < ${value} >, function < ${func} >`)
+                    throw valueError(`incorrect input values: x < ${value} >, function < ${func} >`)
                 }
 
                 if (func(-1) === func(1)) {
@@ -716,7 +832,7 @@ export namespace Maths {
                 point: { x: number; y: number },
             ): boolean => {
                 if (!isObject(polygon)) {
-                    throw valueException(`incorrect input value: {polygon} not an object < ${polygon} >`)
+                    throw valueError(`incorrect input value: {polygon} not an object < ${polygon} >`)
                 }
 
                 if (
@@ -725,19 +841,19 @@ export namespace Maths {
                     !isArray(polygon['arrayX']) ||
                     !isArray(polygon['arrayY'])
                 ) {
-                    throw valueException(
+                    throw valueError(
                         `incorrect input value: {polygon} is invalid {'arrayX': array, 'arrayY': array} < ${polygon} >`,
                     )
                 }
 
                 if (polygon['arrayX'].length !== polygon['arrayY'].length) {
-                    throw valueException(
+                    throw valueError(
                         `incorrect input value: {polygon} length of {arrayX} is not equal to {arrayY} in < ${polygon} >`,
                     )
                 }
 
                 if (!isObject(point)) {
-                    throw valueException(`incorrect input values: {point} is not object < ${point} >`)
+                    throw valueError(`incorrect input values: {point} is not object < ${point} >`)
                 }
 
                 if (
@@ -746,7 +862,7 @@ export namespace Maths {
                     !isNumber(point['x']) ||
                     !isNumber(point['arrayY'])
                 ) {
-                    throw valueException(
+                    throw valueError(
                         `incorrect input value: {point} is invalid {'x': number, 'y': number} < ${point} >`,
                     )
                 }
@@ -777,13 +893,13 @@ export namespace Maths {
                 destCoords: { longitude: number; latitude: number },
             ): number => {
                 if (!isObject(startCoords) || !isObject(destCoords)) {
-                    throw valueException('incorrect initialization value: [not an object]')
+                    throw valueError('incorrect initialization value: [not an object]')
                 }
                 if (
                     !Object.prototype.hasOwnProperty.call(startCoords, 'latitude') ||
                     !Object.prototype.hasOwnProperty.call(startCoords, 'longitude')
                 ) {
-                    throw valueException(
+                    throw valueError(
                         "incorrect initialization value 'start coordinates': {'latitude': [number], 'longitude': [number]}",
                     )
                 }
@@ -792,7 +908,7 @@ export namespace Maths {
                     !Object.prototype.hasOwnProperty.call(destCoords, 'latitude') ||
                     !Object.prototype.hasOwnProperty.call(destCoords, 'longitude')
                 ) {
-                    throw valueException(
+                    throw valueError(
                         "incorrect initialization value 'destination coordinates': {'latitude': [number], 'longitude': [number]}",
                     )
                 }
@@ -815,7 +931,7 @@ export namespace Maths {
                 arrayOfCoords: { longitude; latitude }[],
             ): void => {
                 if (!isArray(arrayOfCoords)) {
-                    throw valueException(`incorrect array value: < ${arrayOfCoords} >`)
+                    throw valueError(`incorrect array value: < ${arrayOfCoords} >`)
                 }
 
                 let closestCoords
@@ -848,20 +964,20 @@ export namespace Maths {
 
                 return (point): { north: number; east: number } => {
                     if (!isObject(point)) {
-                        throw valueException(`incorrect input value: <point> not an object < ${point} >`)
+                        throw valueError(`incorrect input value: <point> not an object < ${point} >`)
                     }
 
                     if (
                         !Object.prototype.hasOwnProperty.call(point, 'lon') ||
                         !Object.prototype.hasOwnProperty.call(point, 'lat')
                     ) {
-                        throw valueException(
+                        throw valueError(
                             `incorrect input value: {point} is invalid {'lon': number, 'lat': number} < ${point} >`,
                         )
                     }
 
                     if (!isNumber(point['lon']) || !isArray(point['lat'])) {
-                        throw valueException(
+                        throw valueError(
                             `incorrect type value: not a number {'lon': ${point['lon']}, 'lat': ${point['lat']}}`,
                         )
                     }
@@ -991,7 +1107,7 @@ export namespace Maths {
                     }
                 }
                 if (!isArray(str)) {
-                    throw valueException(`incorrect input parameter: array < ${str} >`)
+                    throw valueError(`incorrect input parameter: array < ${str} >`)
                 }
                 permute(str)
 
@@ -1000,14 +1116,14 @@ export namespace Maths {
 
             export const exp = (value: number, n: number): number => {
                 if (!isNumber(value)) {
-                    throw valueException(
+                    throw valueError(
                         `incorrect input values:  value< ${value} >, number of iterations < ${n} >`,
                     )
                 }
 
                 const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
                 if (num == null) {
-                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
 
                 let s = 1,
@@ -1035,14 +1151,12 @@ export namespace Maths {
             // Метод Ньютона-Рафсона
             export const polinom = (array: number[], init: number, n: number): number => {
                 if (!isArray(array) || !isNumber(init)) {
-                    throw valueException(
-                        `incorrect input values:  array < ${array} >, initial value < ${init} >`,
-                    )
+                    throw valueError(`incorrect input values:  array < ${array} >, initial value < ${init} >`)
                 }
 
                 const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
                 if (num == null) {
-                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
 
                 const b: number[] = []
@@ -1071,14 +1185,14 @@ export namespace Maths {
             // };
             export const polinom2 = (func: Processor<number, number>, init: number, n: number): number => {
                 if (!isNumber(init) || !isFunction(func)) {
-                    throw valueException(
+                    throw valueError(
                         `incorrect input values:  initial value < ${init} >, function < ${func} >`,
                     )
                 }
 
                 const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
                 if (num == null) {
-                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
 
                 let res = init
@@ -1094,12 +1208,12 @@ export namespace Maths {
             // document.writeln("monteCarlo: " + monteCarlo(2, 5));
             export const monteCarlo = (r: number, h: number, N: number): number => {
                 if (!isNumber(r) || !isNumber(h)) {
-                    throw valueException(`incorrect input values:  r < ${r} >, h < ${h} >`)
+                    throw valueError(`incorrect input values:  r < ${r} >, h < ${h} >`)
                 }
 
                 const num = N == null ? 150 : isIntNumber(N) && N > 0 ? N : null
                 if (num == null) {
-                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
 
                 let n = 0
@@ -1135,21 +1249,21 @@ export namespace Maths {
                 }
 
                 if (!isIntNumber(high) || num < 1) {
-                    throw typeException(
+                    throw typeError(
                         `incorrect input argument: {number of points} is not positive integer number < ${num} >`,
                     )
                 }
 
                 if (!isFunction(func)) {
-                    throw typeException(`incorrect input argument: not a function < ${func} >`)
+                    throw typeError(`incorrect input argument: not a function < ${func} >`)
                 }
 
                 if (!isNumber(low)) {
-                    throw typeException(`incorrect input argument: {low} is not number < ${low} >`)
+                    throw typeError(`incorrect input argument: {low} is not number < ${low} >`)
                 }
 
                 if (!isNumber(high)) {
-                    throw typeException(`incorrect input argument: {high} is not number < ${high} >`)
+                    throw typeError(`incorrect input argument: {high} is not number < ${high} >`)
                 }
 
                 if (low > high) {
@@ -1169,14 +1283,14 @@ export namespace Maths {
 
             export const sinus = (a: number, b: number, h: number, eps: number): number[] => {
                 if (!isNumber(a) || !isNumber(b) || !isNumber(h) || !isNumber(eps)) {
-                    throw valueException(
+                    throw valueError(
                         `incorrect input values: lower border < ${a} >, upper border < ${b} >, step < ${h} >, precision < ${eps} >`,
                     )
                 }
 
                 const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
                 if (precision == null) {
-                    throw valueException(`incorrect 'precision' value: < ${precision} >`)
+                    throw valueError(`incorrect 'precision' value: < ${precision} >`)
                 }
 
                 const result: number[] = []
@@ -1203,12 +1317,12 @@ export namespace Maths {
 
             export const sin2 = (x: number, n: number): number => {
                 if (!isNumber(x)) {
-                    throw valueException(`incorrect input values: x < ${x} >`)
+                    throw valueError(`incorrect input values: x < ${x} >`)
                 }
 
                 const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
                 if (num == null) {
-                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
 
                 let q = x,
@@ -1223,17 +1337,17 @@ export namespace Maths {
 
             export const sin3 = (x: number, e: number, n: number, eps: number): number | null => {
                 if (!isNumber(x) || !isRealNumber(e) || e <= 0 || e >= 1) {
-                    throw valueException(`incorrect input values: x < ${x} >, precision < ${e} >`)
+                    throw valueError(`incorrect input values: x < ${x} >, precision < ${e} >`)
                 }
 
                 const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
                 if (num === null) {
-                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
 
                 const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
                 if (precision === null) {
-                    throw valueException(`incorrect 'precision' value: < ${precision} >`)
+                    throw valueError(`incorrect 'precision' value: < ${precision} >`)
                 }
 
                 let r = x,
@@ -1300,17 +1414,17 @@ export namespace Maths {
 
             export const cos2 = (x: number, e: number, n: number, eps: number): number | null => {
                 if (!isNumber(x) || !isRealNumber(e) || e <= 0 || e >= 1) {
-                    throw valueException(`incorrect input values: x < ${x} >, precision < ${e} >`)
+                    throw valueError(`incorrect input values: x < ${x} >, precision < ${e} >`)
                 }
 
                 const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
                 if (num == null) {
-                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
 
                 const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
                 if (precision == null) {
-                    throw valueException(`incorrect 'precision' value: < ${precision} >`)
+                    throw valueError(`incorrect 'precision' value: < ${precision} >`)
                 }
 
                 let r = 1
@@ -1328,7 +1442,7 @@ export namespace Maths {
             export const quarterPI = (n: number): number => {
                 const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
                 if (num == null) {
-                    throw valueException(`incorrect 'number of iterations' value: < ${n} >`)
+                    throw valueError(`incorrect 'number of iterations' value: < ${n} >`)
                 }
 
                 let sum = 0,
@@ -1344,12 +1458,12 @@ export namespace Maths {
 
             export const geron = (a: number, eps: number): number => {
                 if (!isNumber(a) || a < 0) {
-                    throw valueException(`incorrect input value: expression < ${a} >`)
+                    throw valueError(`incorrect input value: expression < ${a} >`)
                 }
 
                 const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
                 if (precision == null) {
-                    throw valueException(`incorrect 'precision' value: < ${precision} >`)
+                    throw valueError(`incorrect 'precision' value: < ${precision} >`)
                 }
 
                 let rad = 1.0,
@@ -1364,7 +1478,7 @@ export namespace Maths {
 
             export const sqrt32 = (a: number): number => {
                 if (!isNumber(a) || a < 0) {
-                    throw valueException(`incorrect input value: expression < ${a} >`)
+                    throw valueError(`incorrect input value: expression < ${a} >`)
                 }
                 let c = 0x8000,
                     g = 0x8000
@@ -1384,7 +1498,7 @@ export namespace Maths {
             // http://en.wikipedia.org/wiki/Hyperbolic_function
             export const sinh = (z: number, n: number): number => {
                 if (!isNumber(z)) {
-                    throw valueException(`incorrect input value: z < ${z} >`)
+                    throw valueError(`incorrect input value: z < ${z} >`)
                 }
 
                 let s = z,
@@ -1392,7 +1506,7 @@ export namespace Maths {
 
                 const num = n == null ? 100 : isIntNumber(n) && n >= 1 ? n : null
                 if (num == null) {
-                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
 
                 for (let i = 1; i <= num; i++) {
@@ -1406,7 +1520,7 @@ export namespace Maths {
             // http://en.wikipedia.org/wiki/Hyperbolic_function
             export const cosh = (z: number, n: number): number => {
                 if (!isNumber(z)) {
-                    throw valueException(`incorrect input value: z < ${z} >`)
+                    throw valueError(`incorrect input value: z < ${z} >`)
                 }
 
                 let s = 1,
@@ -1414,7 +1528,7 @@ export namespace Maths {
 
                 const num = n == null ? 100 : isIntNumber(n) && n >= 1 ? n : null
                 if (num == null) {
-                    throw valueException(`incorrect 'number of iterations' value: < ${num} >`)
+                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
 
                 for (let i = 1; i <= num; i++) {
@@ -1464,7 +1578,7 @@ export namespace Maths {
 
         export const factorial2 = (num: number): number => {
             if (!isIntNumber(num) || num < 0) {
-                throw valueException(`incorrect input parameter: factorial (n!) < ${num} >`)
+                throw valueError(`incorrect input parameter: factorial (n!) < ${num} >`)
             }
 
             let val = 1
@@ -1477,7 +1591,7 @@ export namespace Maths {
 
         export const factorial3 = (num: number): number[] => {
             if (!isIntNumber(num) || num < 0) {
-                throw valueException(`incorrect input parameters: max number < ${num} >`)
+                throw valueError(`incorrect input parameters: max number < ${num} >`)
             }
 
             const doAllFactorials = (n: number, results: number[], level: number): number => {
@@ -1507,6 +1621,22 @@ export namespace Maths {
                 return _factorial(n)
             }
         })()
+
+        export const factorial5 = (num: number): number => {
+            const cache = {
+                0: 1,
+                1: 1,
+            }
+
+            const factorial_ = (num: number): number => {
+                if (!cache[num]) {
+                    cache[num] = num * factorial_(num - 1)
+                }
+                return cache[num]
+            }
+
+            return factorial_(num)
+        }
     }
 
     export namespace Vectors {
@@ -1522,6 +1652,10 @@ export namespace Maths {
             constructor(public x = 0, public y = 0) {
                 this.x = x
                 this.y = y
+            }
+
+            static overlap(a: Point2D, b: Point2D): boolean {
+                return a.x <= b.x && a.y >= b.y && a.x >= b.x && a.y <= b.y
             }
         }
 
@@ -1719,23 +1853,23 @@ export namespace Maths {
 
             const minValue = isNumber(min) ? min : null
             if (isNull(minValue)) {
-                throw valueException(`incorrect {min} value: < ${min} >`)
+                throw valueError(`incorrect {min} value: < ${min} >`)
             }
 
             const maxValue = isNumber(max) ? max : null
             if (isNull(maxValue)) {
-                throw valueException(`incorrect {max} value: < ${max} >`)
+                throw valueError(`incorrect {max} value: < ${max} >`)
             }
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             if (minValue > maxValue) {
-                throw valueException(`incorrect range size: min < ${minValue} >, max < ${maxValue} >`)
+                throw valueError(`incorrect range size: min < ${minValue} >, max < ${maxValue} >`)
             }
 
             const deltaValue = delta == null ? 1 : isNumber(delta) && delta > 0 ? delta : null
             if (isNull(deltaValue)) {
-                throw valueException(`incorrect {delta} value: < ${delta} >`)
+                throw valueError(`incorrect {delta} value: < ${delta} >`)
             }
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -1748,121 +1882,5 @@ export namespace Maths {
 
             return res
         }
-    }
-
-    export namespace Helpers {
-        export const memoizer = (
-            memo: number[],
-            formula: (func: (num: number) => number, value: number) => number,
-        ): ((num: number) => void) => {
-            if (!isArray(memo)) {
-                throw valueException(`incorrect input parameter: initial array < ${memo} >`)
-            }
-            if (!isFunction(formula)) {
-                throw valueException(`incorrect formula function: function < ${formula} >`)
-            }
-
-            const recur = (num: number): number => {
-                let result = memo[num]
-                if (!isNumber(result)) {
-                    result = formula(recur, num)
-                    memo[num] = result
-                }
-                return result
-            }
-
-            return recur
-        }
-
-        export const serial = (): { next: number } => {
-            let $n = 0
-            return {
-                // Увеличение и возврат значения
-                get next() {
-                    return $n++
-                },
-                // Установка нового значения, 11 если оно больше текущего
-                set next(n) {
-                    if (n >= $n) {
-                        $n = n
-                    } else {
-                        throw valueException(`invalid serial number: ${n}`)
-                    }
-                },
-            }
-        }
-
-        export const toRadians = (value: number): number => {
-            if (!isNumber(value)) {
-                throw typeException(`incorrect type of argument: degrees < ${value} >`)
-            }
-
-            return value * PiBy180
-        }
-
-        export const toDegrees = (value: number): number => {
-            if (!isNumber(value)) {
-                throw typeException(`incorrect type of argument: radians < ${value} >`)
-            }
-
-            return value * PiBy180Inv
-        }
-
-        export const vector = <T>(dimension: number, initial: T): T[] => {
-            if (!isIntNumber(dimension) || dimension < 0) {
-                throw valueException(`incorrect input values: array dimension < ${dimension} >`)
-            }
-
-            const arr: T[] = []
-            for (let i = 0; i < dimension; i++) {
-                arr[i] = initial
-            }
-
-            return arr
-        }
-
-        export const matrix = <T>(rows: number, columns: number, initial: T): T[][] => {
-            if (!isIntNumber(rows) || !isIntNumber(columns) || rows < 0 || columns < 0) {
-                throw valueException(
-                    `incorrect input values: number of rows < ${rows} >, number of columns < ${columns} >`,
-                )
-            }
-
-            const matrix: T[][] = []
-            let arr: T[] = []
-            for (let i = 0; i < rows; i++) {
-                arr = []
-                for (let j = 0; j < columns; j++) {
-                    arr[j] = initial
-                }
-                matrix[i] = arr
-            }
-
-            return matrix
-        }
-
-        export const nextPow2 = (value: number): number => {
-            return Math.pow(2, Math.ceil(Math.log(value) * invLog2))
-        }
-
-        export const sum = (...values: number[]): number => {
-            return values.reduce((previous, current) => previous + current, 0)
-        }
-
-        export const getEmptyNumberVector = (): number[] => {
-            return vector<number>(0, 0)
-        }
-
-        export const getEmptyStringVector = (): string[] => {
-            return vector<string>(0, '')
-        }
-
-        export const getEmptyBooleanVector = (): boolean[] => {
-            return vector<boolean>(0, false)
-        }
-
-        export const EMPTY_NUMBER_VECTOR = vector<number>(0, 0)
-        export const EMPTY_STRING_VECTOR = vector<string>(0, '')
-        export const EMPTY_BOOLEAN_VECTOR = vector<boolean>(0, false)
     }
 }

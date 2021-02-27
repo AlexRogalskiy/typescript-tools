@@ -2,12 +2,12 @@ import _ from 'lodash'
 
 import { Callback, Executor, Supplier } from '../typings/function-types'
 import { Checkers } from './checkers'
-import { Exceptions } from './exceptions'
+import { Errors } from './errors'
 
 export namespace Functions {
     import isFunction = Checkers.isFunction
-    import typeException = Exceptions.typeException
-    import valueException = Exceptions.valueException
+    import typeError = Errors.typeError
+    import valueError = Errors.valueError
 
     export const composeAsync = async (...funcArgs) => async x =>
         // eslint-disable-next-line github/no-then
@@ -32,7 +32,7 @@ export namespace Functions {
     */
     export const proxy = <T>(callback: Callback, self: any, ...args: any[]): Supplier<T> => {
         if (!isFunction(callback)) {
-            throw typeException(`incorrect type value: function < ${callback} >`)
+            throw typeError(`incorrect type value: function < ${callback} >`)
         }
 
         return () => callback.apply(self, args)
@@ -73,7 +73,7 @@ export namespace Functions {
             // if the queue had been flushed, return immediately
             //otherwise push it on the queue
             if (!isFunction(fn)) {
-                throw valueException(`incorrect function value < ${fn} >`)
+                throw valueError(`incorrect function value < ${fn} >`)
             }
             if (flushed) {
                 fn(response)

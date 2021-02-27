@@ -1,11 +1,11 @@
 import { Checkers } from './checkers'
-import { Exceptions } from './exceptions'
+import { Errors } from './errors'
 
 export namespace Numbers {
     import isNumber = Checkers.isNumber
     import isIntNumber = Checkers.isIntNumber
-    import valueException = Exceptions.valueException
-    import typeException = Exceptions.typeException
+    import valueError = Errors.valueError
+    import typeError = Errors.typeError
 
     export const random = (max: number): number => {
         return Math.floor(Math.random() * max)
@@ -21,11 +21,11 @@ export namespace Numbers {
 
     export const rand = (min: number, max: number): number => {
         if (!isNumber(min)) {
-            throw typeException(`incorrect input argument: {lower border} is not number < ${min} >`)
+            throw typeError(`incorrect input argument: {lower border} is not number < ${min} >`)
         }
 
         if (!isNumber(max)) {
-            throw typeException(`incorrect input argument: {upper border} is not number < ${max} >`)
+            throw typeError(`incorrect input argument: {upper border} is not number < ${max} >`)
         }
 
         if (min > max) {
@@ -37,11 +37,11 @@ export namespace Numbers {
 
     export const randInt = (min: number, max: number): number => {
         if (!isIntNumber(min)) {
-            throw typeException(`incorrect input argument: {lower border} is not integer number < ${min} >`)
+            throw typeError(`incorrect input argument: {lower border} is not integer number < ${min} >`)
         }
 
         if (!isIntNumber(max)) {
-            throw typeException(`incorrect input argument: {upper border} is not integer number < ${max} >`)
+            throw typeError(`incorrect input argument: {upper border} is not integer number < ${max} >`)
         }
 
         if (min > max) {
@@ -53,11 +53,11 @@ export namespace Numbers {
 
     export const randUnevenInt = (min: number, max: number): number => {
         if (!isIntNumber(min)) {
-            throw typeException(`incorrect input argument: {lower border} is not integer number < ${min} >`)
+            throw typeError(`incorrect input argument: {lower border} is not integer number < ${min} >`)
         }
 
         if (!isIntNumber(max)) {
-            throw typeException(`incorrect input argument: {upper border} is not integer number < ${max} >`)
+            throw typeError(`incorrect input argument: {upper border} is not integer number < ${max} >`)
         }
 
         if (min > max) {
@@ -155,7 +155,7 @@ export namespace Numbers {
 
     export const dec2bin = (dec: number, length: number): string => {
         if (!isIntNumber(dec) || !isIntNumber(length)) {
-            throw valueException(`incorrect input values: decimal < ${dec} >, output length < ${length} >`)
+            throw valueError(`incorrect input values: decimal < ${dec} >, output length < ${length} >`)
         }
 
         let out = ''

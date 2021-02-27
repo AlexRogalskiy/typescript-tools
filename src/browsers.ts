@@ -1,15 +1,15 @@
 import { Checkers } from './checkers'
-import { Exceptions } from './exceptions'
+import { Errors } from './errors'
 import { DomElement } from '../typings/standard-types'
 import { Commons } from './commons'
 
 export namespace Browsers {
-    import isDomElement = Checkers.isDomElement;
-    import isString = Checkers.isString;
-    import valueException = Exceptions.valueException;
-    import isNull = Checkers.isNull;
-    import toBoolean = Commons.toBoolean;
-    import isNumber = Checkers.isNumber;
+    import isDomElement = Checkers.isDomElement
+    import isString = Checkers.isString
+    import valueError = Errors.valueError
+    import isNull = Checkers.isNull
+    import toBoolean = Commons.toBoolean
+    import isNumber = Checkers.isNumber
 
     /**
      * let supportsSlider = supportsInputOfType('range');
@@ -47,12 +47,12 @@ export namespace Browsers {
 
         const nodeValue = node == null ? document : isDomElement(node) ? node : null
         if (isNull(nodeValue)) {
-            throw valueException(`incorrect node value: < ${nodeValue} >`)
+            throw valueError(`incorrect node value: < ${nodeValue} >`)
         }
 
         const tagValue = tag == null ? '*' : isString(tag) ? tag : null
         if (isNull(tagValue)) {
-            throw valueException(`incorrect tag value: < ${tagValue} >`)
+            throw valueError(`incorrect tag value: < ${tagValue} >`)
         }
 
         const els = nodeValue.getElementsByTagName(tagValue)
@@ -126,7 +126,7 @@ export namespace Browsers {
 
     export const getElemText = <T extends HTMLElement>(elem: T): string => {
         if (!isDomElement(elem)) {
-            throw valueException(`incorrect DOMElement: < ${elem} >`)
+            throw valueError(`incorrect DOMElement: < ${elem} >`)
         }
         const getElemText_ = elem.innerText !== undefined ? elem => elem.innerText : elem => elem.textContent
 
@@ -171,7 +171,7 @@ export namespace Browsers {
 
     export const firstAncestor = <T extends Element>(elem: T, tagName: string): T => {
         if (!isDomElement(elem) || !isString(tagName)) {
-            throw valueException(`incorrect input values: DOMElement < ${elem} >, tag name < ${tagName} >`)
+            throw valueError(`incorrect input values: DOMElement < ${elem} >, tag name < ${tagName} >`)
         }
 
         let el: (Node & ParentNode) | null = elem
@@ -244,7 +244,7 @@ export namespace Browsers {
         }
 
         if (!isDomElement(elem)) {
-            throw valueException(`incorrect DOMElement: < ${elem} >`)
+            throw valueError(`incorrect DOMElement: < ${elem} >`)
         }
 
         isHidden(elem) ? show(elem) : hide(elem)
@@ -264,7 +264,7 @@ export namespace Browsers {
 
     export const elem2span = <T extends HTMLElement>(elem: T): void => {
         if (!isDomElement(elem)) {
-            throw valueException(`incorrect DOMElement: < ${elem} >`)
+            throw valueError(`incorrect DOMElement: < ${elem} >`)
         }
 
         const span = document.createElement('span')
@@ -274,7 +274,7 @@ export namespace Browsers {
 
     export const getElementsByAttribute = <T extends Node>(elem: T, att: string, value: any): T[] => {
         if (!isDomElement(elem) || !isString(att)) {
-            throw valueException(`incorrect input parameters: DOMElement < ${elem} >, attribute < ${att} >`)
+            throw valueError(`incorrect input parameters: DOMElement < ${elem} >, attribute < ${att} >`)
         }
 
         const res: T[] = []
@@ -301,12 +301,12 @@ export namespace Browsers {
 
     export const fade = <T extends HTMLElement>(elem: T, period: number): void => {
         if (!isDomElement(elem)) {
-            throw valueException(`incorrect DOMElement: < ${elem} >`)
+            throw valueError(`incorrect DOMElement: < ${elem} >`)
         }
 
         const per = period == null ? 100 : isNumber(period) && period > 0 ? period : null
         if (per == null) {
-            throw valueException(`incorrect period value: < ${per} >`)
+            throw valueError(`incorrect period value: < ${per} >`)
         }
 
         let level = 1
@@ -363,7 +363,7 @@ export namespace Browsers {
 
     export const cleanNode = <T extends Element>(elem: T): void => {
         if (!isDomElement(elem)) {
-            throw valueException(`incorrect DOMElement: < ${elem} >`)
+            throw valueError(`incorrect DOMElement: < ${elem} >`)
         }
 
         while (elem.firstChild) {
@@ -373,7 +373,7 @@ export namespace Browsers {
 
     export const getOffset = <T extends Element>(elem: T): { top; left } => {
         if (!isDomElement(elem)) {
-            throw valueException(`incorrect DOMElement: < ${elem} >`)
+            throw valueError(`incorrect DOMElement: < ${elem} >`)
         }
 
         const getOffsetSum = (elem): { top; left } => {
@@ -415,7 +415,7 @@ export namespace Browsers {
         elem: T,
     ): { left: number; top: number; width: number; height: number } => {
         if (!isDomElement(elem)) {
-            throw valueException(`incorrect DOMElement: < ${elem} >`)
+            throw valueError(`incorrect DOMElement: < ${elem} >`)
         }
 
         let left = elem.offsetLeft
@@ -466,7 +466,7 @@ export namespace Browsers {
     // Вставка дочернего узла в позицию n
     export const insertAt = <T extends Node>(parent: T, child: T, num: number): void => {
         if (num < 0 || num > parent.childNodes.length) {
-            throw valueException(`invalid node value=${num}`)
+            throw valueError(`invalid node value=${num}`)
         } else if (num === parent.childNodes.length) {
             parent.appendChild(child)
         } else {
