@@ -133,4 +133,22 @@ export namespace Commons {
     export function discard<A>(a: A, toDiscard: string | string[]): A {
         return typeof toDiscard === 'string' ? discardSingle(a, toDiscard) : discardMany(a, toDiscard)
     }
+
+    export const hasPrototypeProperty = (obj: any, name: string): boolean => {
+        return !obj.hasOwnProperty(name) && name in obj
+    }
+
+    export const inheritPrototype = (subType: any, superType: any): void => {
+        const prototype = new Object(superType.prototype)
+        prototype.constructor = subType
+        subType.prototype = prototype
+    }
+
+    export const isHostMethod = (obj: any, prop: string): boolean => {
+        return typeof obj[prop] === 'function' || isHostObject(obj, prop)
+    }
+
+    export const isHostObject = (obj: any, prop: string): boolean => {
+        return !!(typeof obj[prop] === 'object' && obj[prop])
+    }
 }

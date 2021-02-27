@@ -4,12 +4,12 @@ import { DomElement } from '../typings/standard-types'
 import { Commons } from './commons'
 
 export namespace Browsers {
-    import isDomElement = Checkers.isDomElement
-    import isString = Checkers.isString
-    import valueException = Exceptions.valueException
-    import isNull = Checkers.isNull
-    import toBoolean = Commons.toBoolean
-    import isNumber = Checkers.isNumber
+    import isDomElement = Checkers.isDomElement;
+    import isString = Checkers.isString;
+    import valueException = Exceptions.valueException;
+    import isNull = Checkers.isNull;
+    import toBoolean = Commons.toBoolean;
+    import isNumber = Checkers.isNumber;
 
     /**
      * let supportsSlider = supportsInputOfType('range');
@@ -472,5 +472,51 @@ export namespace Browsers {
         } else {
             parent.insertBefore(child, parent.childNodes[num])
         }
+    }
+
+    export const rowHeights = (rows: CSSStyleDeclaration[][]): number[] => {
+        return rows.map(row => {
+            return row.reduce((max, cell) => {
+                return Math.max(max, parseInt(cell.minHeight))
+            }, 0)
+        })
+    }
+
+    export const colWidths = (rows: CSSStyleDeclaration[][]): number[] => {
+        return rows[0].map((_, i) => {
+            return rows.reduce((max, row) => {
+                return Math.max(max, parseInt(row[i].minWidth))
+            }, 0)
+        })
+    }
+
+    export const drawTable = (rows: CSSStyleDeclaration[][]): string => {
+        const heights = rowHeights(rows)
+        const widths = colWidths(rows)
+
+        const drawLine = (blocks: CSSStyleDeclaration[], lineNo: number): string => {
+            return blocks.map(block => block[lineNo]).join('	')
+        }
+
+        const drawRow = (row, rowNum: number): string => {
+            const blocks = row.map((cell, colNum) => {
+                return cell.draw(widths[colNum], heights[rowNum])
+            })
+
+            return blocks[0].map((_, lineNo) => drawLine(blocks, lineNo)).join('\n')
+        }
+
+        return rows.map(drawRow).join('\n')
+    }
+
+    export const hasPlugin = (name: string): boolean => {
+        name = name.toLowerCase()
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
+        for (let i = 0; i < navigator.plugins.length; i++) {
+            if (navigator.plugins[i].name.toLowerCase().includes(name)) {
+                return true
+            }
+        }
+        return false
     }
 }

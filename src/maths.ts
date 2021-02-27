@@ -635,6 +635,80 @@ export namespace Maths {
                 return { x: radius * Math.cos(angle), y: radius * Math.sin(angle) }
             }
 
+            // Пересекающиеся прямоугольники
+            export const computeLength = (arr: any[], prop = 'y1'): number => {
+                let len = arr.length
+                if (len === 0) {
+                    return 0
+                }
+
+                arr.sort((a, b) => {
+                    return a[prop] - b[prop]
+                })
+
+                let i = 0,
+                    left = 0,
+                    right = 0
+                while (i++ < len) {
+                    const l = arr[i - 1],
+                        r = arr[i]
+                    if (l > right) {
+                        len += right - left
+                        left = l
+                        right = r
+                    } else if (r > right) {
+                        right = r
+                    }
+                }
+
+                return len + (right - left)
+            }
+
+            // let rect = [{'x1': 0, 'x2': 2, 'y1': 14, 'y2': 15}, {'x1': 1, 'x2': 33, 'y1': 1, 'y2': 2}];
+            // let rect = [{'x1': 0, 'x2': 2, 'y1': 1.5, 'y2': 2.5}, {'x1': 1, 'x2': 3, 'y1': 1, 'y2': 2}, {'x1': 1.5, 'x2': 3.5, 'y1': 1, 'y2': 2}];
+            // let rect = [{'x1': 0, 'x2': 2, 'y1': 1.5, 'y2': 2.5}, {'x1': 0, 'x2': 2, 'y1': 1.5, 'y2': 2.5}, {'x1': 0, 'x2': 2, 'y1': 1.5, 'y2': 2.5}];
+            export const computeArea = (
+                rect: { x1: number; x2: number; y1: number; y2: number }[],
+            ): number => {
+                const queue: { x: number; status: boolean; size: { y1: number; y2: number } }[] = []
+
+                let area = 0,
+                    index
+                rect.map(item => {
+                    queue.push({
+                        x: item['x1'],
+                        status: true,
+                        size: { y1: item['y1'], y2: item['y2'] },
+                    })
+                    queue.push({
+                        x: item['x2'],
+                        status: false,
+                        size: { y1: item['y1'], y2: item['y2'] },
+                    })
+                })
+
+                queue.sort((a, b) => {
+                    return a['x'] - b['x']
+                })
+
+                const segments: { y1: number; y2: number }[] = []
+                let last = queue[0]['x']
+                queue.map(item => {
+                    area += (item['x'] - last) * computeLength(segments)
+                    last = item['x']
+                    if (item['status']) {
+                        segments.push(item['size'])
+                    } else {
+                        index = segments.indexOf(item['size'])
+                        if (index > -1) {
+                            segments.splice(index, 1)
+                        }
+                    }
+                })
+
+                return area
+            }
+
             // polygon = {arrayX: [-73,-33,7,-33], arrayY: [-85,-126,-85,-45]};
             // point = {x: -40, y: -60};
             export const inPolygon = (
@@ -677,7 +751,7 @@ export namespace Maths {
                     )
                 }
 
-                let c = false
+                let flag = false
                 for (let i = 0, len = polygon['arrayX'].length, j = len - 1; i < len; i++) {
                     const inArray =
                         (polygon['arrayY'][i] <= point['y'] && point['y'] < polygon['arrayY'][j]) ||
@@ -689,12 +763,12 @@ export namespace Maths {
                     const inArray2 = point['x'] > f1 / f2
 
                     if (inArray && inArray2) {
-                        c = !c
+                        flag = !flag
                     }
                     j = i
                 }
 
-                return c
+                return flag
             }
 
             /* Сферический закон косинуса */
@@ -868,6 +942,36 @@ export namespace Maths {
         }
 
         export namespace Algebra {
+            export const getNumOnesInBinary = (num: number): number => {
+                let numOnes = 0
+                while (num !== 0) {
+                    if ((num & 1) === 1) {
+                        numOnes++
+                    }
+                    // num = num & (num - 1);
+                    num >>>= 1
+                }
+                return numOnes
+            }
+
+            export const getMedian = (array1, array2, left, right, n): number => {
+                if (left > right) {
+                    return getMedian(array2, array1, 0, n - 1, n)
+                }
+                const i = Math.floor(left + right) / 2
+                const j = n - i - 1
+
+                if (array1[i] > array2[j] && (j === n - 1 || array1[i] <= array2[j + 1])) {
+                    if (i === 0 || array2[j] > array1[i - 1]) {
+                        return (array1[i] + array2[j]) / 2
+                    }
+                    return (array1[i] + array1[i - 1]) / 2
+                } else if (array1[i] > array2[j] && j !== n - 1 && array1[i] > array2[j + 1]) {
+                    return getMedian(array1, array2, left, i - 1, n)
+                }
+                return getMedian(array1, array2, i + 1, right, n)
+            }
+
             // let res = permutation([1, 2, 3, 4]);
             // document.writeln("permutation: " + res);
             export const permutation = (str: string[]): string[][] => {

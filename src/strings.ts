@@ -16,6 +16,16 @@ export namespace Strings {
     import isNumber = Checkers.isNumber
     import Helpers = Maths.Helpers
 
+    export const xor = (input: string, pass: string): string => {
+        let output = ''
+        let pos = 0
+        for (let i = 0; i < input.length; i++) {
+            pos = Math.floor(i % pass.length)
+            output += String.fromCharCode(input.charCodeAt(i) ^ pass.charCodeAt(pos))
+        }
+        return output
+    }
+
     export const isNonEmptyString = (value: string): boolean => {
         return value !== undefined && value !== null && value.length > 0
     }
