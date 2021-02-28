@@ -1,7 +1,6 @@
 import { Checkers } from './checkers'
 
 export namespace Commons {
-    import isFunction = Checkers.isFunction
     const WINDOW_USER_SCRIPT_VARIABLE = '__USER__'
 
     export const getUserScript = (value: string): string => {
@@ -224,12 +223,12 @@ export namespace Commons {
         Object['setProperty'] = (mask: number, obj: any, prop: string, getter: any, setter: any): any => {
             if (mask & 8) {
                 // accessor descriptor
-                if (isFunction(getter)) {
+                if (Checkers.isFunction(getter)) {
                     global.get = getter
                 } else {
                     delete global.get
                 }
-                if (isFunction(setter)) {
+                if (Checkers.isFunction(setter)) {
                     global.set = setter
                 } else {
                     delete global.set
@@ -238,7 +237,7 @@ export namespace Commons {
                 delete global.writable
             } else {
                 // data descriptor
-                if (isFunction(getter)) {
+                if (Checkers.isFunction(getter)) {
                     global.value = getter()
                 } else {
                     delete global.value

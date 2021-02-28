@@ -1,8 +1,10 @@
 import { ErrorData, ErrorType } from '../typings/domain-types'
 import { Logging } from './logging'
+import { Commons } from './commons'
 
 export namespace Errors {
     import errors = Logging.errors
+    import defineProperty = Commons.defineProperty
 
     /**
      * ExtendableError
@@ -17,21 +19,21 @@ export namespace Errors {
         constructor(readonly type: ErrorType, readonly message: string) {
             super(message)
 
-            Object.defineProperty(this, 'message', {
+            defineProperty(this, 'message', {
                 configurable: true,
                 enumerable: false,
                 value: message,
                 writable: true,
             })
 
-            Object.defineProperty(this, 'type', {
+            defineProperty(this, 'type', {
                 configurable: true,
                 enumerable: false,
                 value: type,
                 writable: true,
             })
 
-            Object.defineProperty(this, 'name', {
+            defineProperty(this, 'name', {
                 configurable: true,
                 enumerable: false,
                 value: this.constructor.name,
@@ -43,7 +45,7 @@ export namespace Errors {
                 return
             }
 
-            Object.defineProperty(this, 'stack', {
+            defineProperty(this, 'stack', {
                 configurable: true,
                 enumerable: false,
                 value: new Error(message).stack,

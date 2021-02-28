@@ -366,6 +366,325 @@ export namespace Maths {
         import vector = Helpers.vector
         import toRadians = Helpers.toRadians
 
+        export namespace Trigonometry {
+            export const cosec = (x): number => {
+                if (!isNumber(x)) {
+                    throw valueError(`incorrect input value: x < ${x} >`)
+                }
+
+                return 1 / Math.sin(x)
+            }
+
+            export const sinus = (a: number, b: number, h: number, eps: number): number[] => {
+                if (!isNumber(a) || !isNumber(b) || !isNumber(h) || !isNumber(eps)) {
+                    throw valueError(
+                        `incorrect input values: lower border < ${a} >, upper border < ${b} >, step < ${h} >, precision < ${eps} >`,
+                    )
+                }
+
+                const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
+                if (precision == null) {
+                    throw valueError(`incorrect 'precision' value: < ${precision} >`)
+                }
+
+                const result: number[] = []
+
+                const sinx = (x: number, eps: number): number => {
+                    let n = 1
+                    const x2 = -x * x
+                    let snx = x,
+                        xn = x
+                    while (Math.abs(xn) > eps) {
+                        n += 2.0
+                        xn *= x2 / n / (n - 1)
+                        snx += xn
+                    }
+                    return snx
+                }
+
+                for (let x = a; x <= b; x += h) {
+                    result.push(sinx(x, precision))
+                }
+
+                return result
+            }
+
+            export const sin2 = (x: number, n: number): number => {
+                if (!isNumber(x)) {
+                    throw valueError(`incorrect input values: x < ${x} >`)
+                }
+
+                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
+                if (num == null) {
+                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
+                }
+
+                let q = x,
+                    s = 0
+                for (let i = 0; i < num; i++) {
+                    s += q
+                    q *= (-1 * x * x) / (2 * i) / (2 * i + 1)
+                }
+
+                return s
+            }
+
+            export const sin3 = (x: number, e: number, n: number, eps: number): number | null => {
+                if (!isNumber(x) || !isRealNumber(e) || e <= 0 || e >= 1) {
+                    throw valueError(`incorrect input values: x < ${x} >, precision < ${e} >`)
+                }
+
+                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
+                if (num === null) {
+                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
+                }
+
+                const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
+                if (precision === null) {
+                    throw valueError(`incorrect 'precision' value: < ${precision} >`)
+                }
+
+                let r = x,
+                    s = x
+                let i = 1
+                while (Math.abs(r) > precision && i <= num) {
+                    r *= (-1 * x * x) / (2 * i) / (2 * i + 1)
+                    s += r
+                    i++
+                }
+
+                return i <= n ? s : null
+            }
+
+            /**
+             * Calculate the sin of an angle, avoiding returning floats for known results
+             * @static
+             * @param {Number} angle the angle in radians or in degree
+             * @return {Number}
+             */
+            export const sin = (angle: number): number => {
+                if (angle === 0) {
+                    return 0
+                }
+                const angleSlice = angle / PiBy2
+                let sign = 1
+                if (angle < 0) {
+                    // sin(-a) = -sin(a)
+                    sign = -1
+                }
+                if (angleSlice === 1) {
+                    return sign
+                } else if (angleSlice === 2) {
+                    return 0
+                } else if (angleSlice === 3) {
+                    return -sign
+                }
+
+                return Math.sin(angle)
+            }
+
+            /**
+             * Calculate the cos of an angle, avoiding returning floats for known results
+             * @param {Number} angle the angle in radians or in degree
+             * @return {Number}
+             */
+            export const cos = (angle: number): number => {
+                if (angle === 0) {
+                    return 1
+                }
+                if (angle < 0) {
+                    // cos(a) = cos(-a)
+                    angle = -angle
+                }
+                const angleSlice = angle / PiBy2
+                if (angleSlice === 1 || angleSlice === 3) {
+                    return 0
+                } else if (angleSlice === 2) {
+                    return -1
+                }
+
+                return Math.cos(angle)
+            }
+
+            export const cos2 = (x: number, e: number, n: number, eps: number): number | null => {
+                if (!isNumber(x) || !isRealNumber(e) || e <= 0 || e >= 1) {
+                    throw valueError(`incorrect input values: x < ${x} >, precision < ${e} >`)
+                }
+
+                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
+                if (num == null) {
+                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
+                }
+
+                const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
+                if (precision == null) {
+                    throw valueError(`incorrect 'precision' value: < ${precision} >`)
+                }
+
+                let r = 1
+                let s = 1
+                let i = 1
+                while (Math.abs(r) > precision && i <= num) {
+                    r *= (-1 * x * x) / (2 * i * (2 * i - 1))
+                    s += r
+                    i++
+                }
+
+                return i <= num ? s : null
+            }
+
+            export const quarterPI = (n: number): number => {
+                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
+                if (num == null) {
+                    throw valueError(`incorrect 'number of iterations' value: < ${n} >`)
+                }
+
+                let sum = 0,
+                    x
+                for (let i = n; i > 0; i--) {
+                    x = 1 / (2 * i - 1)
+                    if (i % 2 === 0) x = -x
+                    sum += x
+                }
+
+                return sum
+            }
+
+            export const geron = (a: number, eps: number): number => {
+                if (!isNumber(a) || a < 0) {
+                    throw valueError(`incorrect input value: expression < ${a} >`)
+                }
+
+                const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
+                if (precision == null) {
+                    throw valueError(`incorrect 'precision' value: < ${precision} >`)
+                }
+
+                let rad = 1.0,
+                    z
+                do {
+                    z = rad
+                    rad = (rad + a / rad) / 2 //rad = (rad + a / rad) >> 1;
+                } while (Math.abs(z - rad) >= precision)
+
+                return rad
+            }
+
+            export const sqrt32 = (a: number): number => {
+                if (!isNumber(a) || a < 0) {
+                    throw valueError(`incorrect input value: expression < ${a} >`)
+                }
+                let c = 0x8000,
+                    g = 0x8000
+                // eslint-disable-next-line no-constant-condition
+                while (true) {
+                    if (g * g > a) {
+                        g ^= c
+                    }
+                    c >>= 1
+                    if (c === 0) {
+                        return g
+                    }
+                    g |= c
+                }
+            }
+
+            // http://en.wikipedia.org/wiki/Hyperbolic_function
+            export const sinh = (z: number, n: number): number => {
+                if (!isNumber(z)) {
+                    throw valueError(`incorrect input value: z < ${z} >`)
+                }
+
+                let s = z,
+                    g = z
+
+                const num = n == null ? 100 : isIntNumber(n) && n >= 1 ? n : null
+                if (num == null) {
+                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
+                }
+
+                for (let i = 1; i <= num; i++) {
+                    g *= (z * z) / (2 * i) / (2 * i + 1)
+                    s += g
+                }
+
+                return s
+            }
+
+            // http://en.wikipedia.org/wiki/Hyperbolic_function
+            export const cosh = (z: number, n: number): number => {
+                if (!isNumber(z)) {
+                    throw valueError(`incorrect input value: z < ${z} >`)
+                }
+
+                let s = 1,
+                    g = 1
+
+                const num = n == null ? 100 : isIntNumber(n) && n >= 1 ? n : null
+                if (num == null) {
+                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
+                }
+
+                for (let i = 1; i <= num; i++) {
+                    g *= (z * z) / (2 * i - 1) / (2 * i)
+                    s += g
+                }
+
+                return s
+            }
+
+            export const tabX = (low: number, i: number, h: number): number => {
+                return low + i * h
+            }
+
+            export const tabUnevenX = (low: number, high: number, i: number, n: number): number => {
+                return (low + high + (high - low) * Math.cos(((2 * i + 1) * Math.PI) / (2 * n))) / 2
+            }
+
+            export const tabulate = (
+                low: number,
+                high: number,
+                num: number,
+                func: Processor<number, number>,
+            ): { x; y }[] => {
+                const point = (x: number, y: number): { x; y } => {
+                    return { x, y }
+                }
+
+                if (!isIntNumber(high) || num < 1) {
+                    throw typeError(
+                        `incorrect input argument: {number of points} is not positive integer number < ${num} >`,
+                    )
+                }
+
+                if (!isFunction(func)) {
+                    throw typeError(`incorrect input argument: not a function < ${func} >`)
+                }
+
+                if (!isNumber(low)) {
+                    throw typeError(`incorrect input argument: {low} is not number < ${low} >`)
+                }
+
+                if (!isNumber(high)) {
+                    throw typeError(`incorrect input argument: {high} is not number < ${high} >`)
+                }
+
+                if (low > high) {
+                    low = [high, (high = low)][0]
+                }
+
+                const h = Math.floor((high - low) / (num - 1))
+                const res: { x; y }[] = []
+                for (let i = 1; i <= num; i++) {
+                    const x = low + (i - 1) * h
+                    const y = func(x)
+                    res.push(point(x, y))
+                }
+
+                return res
+            }
+        }
+
         export namespace Areas {
             export const squared = Object.defineProperties(
                 {},
@@ -1219,315 +1538,6 @@ export namespace Maths {
 
                 return (v0 * n) / Math.pow(N + 1, 3)
             }
-
-            export const tabulate = (
-                low: number,
-                high: number,
-                num: number,
-                func: Processor<number, number>,
-            ): { x; y }[] => {
-                const point = (x: number, y: number): { x; y } => {
-                    return { x, y }
-                }
-
-                if (!isIntNumber(high) || num < 1) {
-                    throw typeError(
-                        `incorrect input argument: {number of points} is not positive integer number < ${num} >`,
-                    )
-                }
-
-                if (!isFunction(func)) {
-                    throw typeError(`incorrect input argument: not a function < ${func} >`)
-                }
-
-                if (!isNumber(low)) {
-                    throw typeError(`incorrect input argument: {low} is not number < ${low} >`)
-                }
-
-                if (!isNumber(high)) {
-                    throw typeError(`incorrect input argument: {high} is not number < ${high} >`)
-                }
-
-                if (low > high) {
-                    low = [high, (high = low)][0]
-                }
-
-                const h = Math.floor((high - low) / (num - 1))
-                const res: { x; y }[] = []
-                for (let i = 1; i <= num; i++) {
-                    const x = low + (i - 1) * h
-                    const y = func(x)
-                    res.push(point(x, y))
-                }
-
-                return res
-            }
-
-            export const sinus = (a: number, b: number, h: number, eps: number): number[] => {
-                if (!isNumber(a) || !isNumber(b) || !isNumber(h) || !isNumber(eps)) {
-                    throw valueError(
-                        `incorrect input values: lower border < ${a} >, upper border < ${b} >, step < ${h} >, precision < ${eps} >`,
-                    )
-                }
-
-                const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
-                if (precision == null) {
-                    throw valueError(`incorrect 'precision' value: < ${precision} >`)
-                }
-
-                const result: number[] = []
-
-                const sinx = (x: number, eps: number): number => {
-                    let n = 1
-                    const x2 = -x * x
-                    let snx = x,
-                        xn = x
-                    while (Math.abs(xn) > eps) {
-                        n += 2.0
-                        xn *= x2 / n / (n - 1)
-                        snx += xn
-                    }
-                    return snx
-                }
-
-                for (let x = a; x <= b; x += h) {
-                    result.push(sinx(x, precision))
-                }
-
-                return result
-            }
-
-            export const sin2 = (x: number, n: number): number => {
-                if (!isNumber(x)) {
-                    throw valueError(`incorrect input values: x < ${x} >`)
-                }
-
-                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
-                if (num == null) {
-                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
-                }
-
-                let q = x,
-                    s = 0
-                for (let i = 0; i < num; i++) {
-                    s += q
-                    q *= (-1 * x * x) / (2 * i) / (2 * i + 1)
-                }
-
-                return s
-            }
-
-            export const sin3 = (x: number, e: number, n: number, eps: number): number | null => {
-                if (!isNumber(x) || !isRealNumber(e) || e <= 0 || e >= 1) {
-                    throw valueError(`incorrect input values: x < ${x} >, precision < ${e} >`)
-                }
-
-                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
-                if (num === null) {
-                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
-                }
-
-                const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
-                if (precision === null) {
-                    throw valueError(`incorrect 'precision' value: < ${precision} >`)
-                }
-
-                let r = x,
-                    s = x
-                let i = 1
-                while (Math.abs(r) > precision && i <= num) {
-                    r *= (-1 * x * x) / (2 * i) / (2 * i + 1)
-                    s += r
-                    i++
-                }
-
-                return i <= n ? s : null
-            }
-
-            /**
-             * Calculate the sin of an angle, avoiding returning floats for known results
-             * @static
-             * @param {Number} angle the angle in radians or in degree
-             * @return {Number}
-             */
-            export const sin = (angle: number): number => {
-                if (angle === 0) {
-                    return 0
-                }
-                const angleSlice = angle / PiBy2
-                let sign = 1
-                if (angle < 0) {
-                    // sin(-a) = -sin(a)
-                    sign = -1
-                }
-                if (angleSlice === 1) {
-                    return sign
-                } else if (angleSlice === 2) {
-                    return 0
-                } else if (angleSlice === 3) {
-                    return -sign
-                }
-
-                return Math.sin(angle)
-            }
-
-            /**
-             * Calculate the cos of an angle, avoiding returning floats for known results
-             * @param {Number} angle the angle in radians or in degree
-             * @return {Number}
-             */
-            export const cos = (angle: number): number => {
-                if (angle === 0) {
-                    return 1
-                }
-                if (angle < 0) {
-                    // cos(a) = cos(-a)
-                    angle = -angle
-                }
-                const angleSlice = angle / PiBy2
-                if (angleSlice === 1 || angleSlice === 3) {
-                    return 0
-                } else if (angleSlice === 2) {
-                    return -1
-                }
-
-                return Math.cos(angle)
-            }
-
-            export const cos2 = (x: number, e: number, n: number, eps: number): number | null => {
-                if (!isNumber(x) || !isRealNumber(e) || e <= 0 || e >= 1) {
-                    throw valueError(`incorrect input values: x < ${x} >, precision < ${e} >`)
-                }
-
-                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
-                if (num == null) {
-                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
-                }
-
-                const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
-                if (precision == null) {
-                    throw valueError(`incorrect 'precision' value: < ${precision} >`)
-                }
-
-                let r = 1
-                let s = 1
-                let i = 1
-                while (Math.abs(r) > precision && i <= num) {
-                    r *= (-1 * x * x) / (2 * i * (2 * i - 1))
-                    s += r
-                    i++
-                }
-
-                return i <= num ? s : null
-            }
-
-            export const quarterPI = (n: number): number => {
-                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
-                if (num == null) {
-                    throw valueError(`incorrect 'number of iterations' value: < ${n} >`)
-                }
-
-                let sum = 0,
-                    x
-                for (let i = n; i > 0; i--) {
-                    x = 1 / (2 * i - 1)
-                    if (i % 2 === 0) x = -x
-                    sum += x
-                }
-
-                return sum
-            }
-
-            export const geron = (a: number, eps: number): number => {
-                if (!isNumber(a) || a < 0) {
-                    throw valueError(`incorrect input value: expression < ${a} >`)
-                }
-
-                const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
-                if (precision == null) {
-                    throw valueError(`incorrect 'precision' value: < ${precision} >`)
-                }
-
-                let rad = 1.0,
-                    z
-                do {
-                    z = rad
-                    rad = (rad + a / rad) / 2 //rad = (rad + a / rad) >> 1;
-                } while (Math.abs(z - rad) >= precision)
-
-                return rad
-            }
-
-            export const sqrt32 = (a: number): number => {
-                if (!isNumber(a) || a < 0) {
-                    throw valueError(`incorrect input value: expression < ${a} >`)
-                }
-                let c = 0x8000,
-                    g = 0x8000
-                // eslint-disable-next-line no-constant-condition
-                while (true) {
-                    if (g * g > a) {
-                        g ^= c
-                    }
-                    c >>= 1
-                    if (c === 0) {
-                        return g
-                    }
-                    g |= c
-                }
-            }
-
-            // http://en.wikipedia.org/wiki/Hyperbolic_function
-            export const sinh = (z: number, n: number): number => {
-                if (!isNumber(z)) {
-                    throw valueError(`incorrect input value: z < ${z} >`)
-                }
-
-                let s = z,
-                    g = z
-
-                const num = n == null ? 100 : isIntNumber(n) && n >= 1 ? n : null
-                if (num == null) {
-                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
-                }
-
-                for (let i = 1; i <= num; i++) {
-                    g *= (z * z) / (2 * i) / (2 * i + 1)
-                    s += g
-                }
-
-                return s
-            }
-
-            // http://en.wikipedia.org/wiki/Hyperbolic_function
-            export const cosh = (z: number, n: number): number => {
-                if (!isNumber(z)) {
-                    throw valueError(`incorrect input value: z < ${z} >`)
-                }
-
-                let s = 1,
-                    g = 1
-
-                const num = n == null ? 100 : isIntNumber(n) && n >= 1 ? n : null
-                if (num == null) {
-                    throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
-                }
-
-                for (let i = 1; i <= num; i++) {
-                    g *= (z * z) / (2 * i - 1) / (2 * i)
-                    s += g
-                }
-
-                return s
-            }
-
-            export const tabX = (low: number, i: number, h: number): number => {
-                return low + i * h
-            }
-
-            export const tabUnevenX = (low: number, high: number, i: number, n: number): number => {
-                return (low + high + (high - low) * Math.cos(((2 * i + 1) * Math.PI) / (2 * n))) / 2
-            }
         }
     }
 
@@ -1622,7 +1632,7 @@ export namespace Maths {
     }
 
     export namespace Vectors {
-        import Algebra = Calculations.Algebra
+        import Trigonometry = Calculations.Trigonometry
 
         export type Vector2D = { x: number; y: number }
         export type Vector3D = { x: number; y: number; z: number }
@@ -1821,8 +1831,8 @@ export namespace Maths {
          * @return {Object} The new rotated point
          */
         export const rotateVector = (vector: Vector2D, radians: number): Vector2D => {
-            const sinValue = Algebra.sin(radians)
-            const cosValue = Algebra.cos(radians)
+            const sinValue = Trigonometry.sin(radians)
+            const cosValue = Trigonometry.cos(radians)
 
             const x = vector.x * cosValue - vector.y * sinValue
             const y = vector.x * sinValue + vector.y * cosValue
