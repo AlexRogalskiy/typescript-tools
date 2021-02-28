@@ -552,4 +552,41 @@ export class Matrix {
 
         return this
     }
+
+    shiftColumns(shift: number): Matrix {
+        const mi1 = this.rows,
+            mj1 = this.cols
+        if (mi1 === 0 || mj1 === 0) {
+            throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
+        }
+
+        const shiftValue = shift == null ? 1 : isIntNumber(shift) ? shift % mj1 : null
+        if (shiftValue == null) {
+            throw valueError(`incorrect shift value < ${shiftValue} >`)
+        }
+
+        let index = Math.abs(shift),
+            temp
+        const sign = shift > 0 ? 1 : 0
+        for (let i = 0; i < mi1; i++) {
+            while (index > 0) {
+                if (sign) {
+                    temp = this.matrix[i][mj1 - 1]
+                    for (let j = mj1 - 1; j > 0; j--) {
+                        this.matrix[i][j] = this.matrix[i][j - 1]
+                    }
+                    this.matrix[i][0] = temp
+                } else {
+                    temp = this.matrix[i][0]
+                    for (let j = 1; j < mj1; j++) {
+                        this.matrix[i][j - 1] = this.matrix[i][j]
+                    }
+                    this.matrix[i][mj1 - 1] = temp
+                }
+                index--
+            }
+        }
+
+        return this
+    }
 }
