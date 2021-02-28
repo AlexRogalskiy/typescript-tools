@@ -1,6 +1,7 @@
 import { Checkers } from './checkers'
 import { Errors } from './errors'
 import { Processor } from '../typings/function-types'
+import { Sorting } from './sorting'
 
 export namespace Maths {
     import isIntNumber = Checkers.isIntNumber
@@ -24,6 +25,7 @@ export namespace Maths {
     export const invLog2 = 1 / Math.log(2)
 
     export namespace Helpers {
+        import shellSort = Sorting.shellSort
         export const memoizer = (
             memo: number[],
             formula: (func: (num: number) => number, value: number) => number,
@@ -112,6 +114,68 @@ export namespace Maths {
             }
 
             return matrix
+        }
+
+        export const arcsech = (value: number): number => {
+            if (!isNumber(value) || value > 1 || value <= 0) {
+                throw valueError(`incorrect input value: x < ${value} >`)
+            }
+
+            return Math.log(1 / value + Math.sqrt(1 / (value * value) - 1))
+        }
+
+        export const summ = (x, n, m, ...args: number[]): number => {
+            if (!isNumber(x) || !isNumber(n) || !isNumber(m) || !isArray(args)) {
+                throw valueError(
+                    `incorrect input values: x < ${x} >, power < ${n} >, step < ${m} >, array < ${args} >`,
+                )
+            }
+
+            if (args.length === 0) {
+                return 0
+            }
+
+            let sum = args[0] * Math.pow(x, n)
+            for (let i = 1; i < args.length; i++) {
+                sum += args[i] * Math.pow(x, n + i * m)
+            }
+
+            return sum
+        }
+
+        export const geomProgress = (a: number, n: number): number => {
+            if (!isNumber(a) || !isNumber(n) || a < 0 || a === 1 || n < 0) {
+                throw valueError(`incorrect input values: ratio < ${a} >, n < ${n} >`)
+            }
+
+            return (1 - Math.pow(a, n + 1)) / (1 - a)
+        }
+
+        export const residue = (a: number, d: number): number => {
+            if (!isNumber(a) || !isNumber(d)) {
+                throw valueError(`incorrect input values: numerator < ${a} >, denominator < ${d} >`)
+            }
+
+            let t = a / d
+            t = t >= 0 ? Math.floor(t) : Math.floor(t) - 1
+
+            return a - d * t
+        }
+
+        export const maxn = (n: number, ...args: number[]): number | null => {
+            if (!isArray(args) || !isIntNumber(n) || n < 1 || n > args.length) {
+                throw valueError(`incorrect input value: array < ${args} >, n-th maximum < ${n} >`)
+            }
+
+            const arr = shellSort(args).filter(function (e, i, c) {
+                return c.indexOf(e) === i
+            })
+
+            if (arr.length < n) {
+                return null
+            }
+
+            return arr[arr.length - 1 - (n - 1)]
         }
 
         export const nextPow2 = (value: number): number => {
@@ -367,12 +431,127 @@ export namespace Maths {
         import toRadians = Helpers.toRadians
 
         export namespace Trigonometry {
-            export const cosec = (x): number => {
+            import shellSort = Sorting.shellSort
+            export const cosec = (x: number): number => {
                 if (!isNumber(x)) {
                     throw valueError(`incorrect input value: x < ${x} >`)
                 }
 
                 return 1 / Math.sin(x)
+            }
+
+            export const sec = (value: number): number => {
+                if (!isNumber(value)) {
+                    throw valueError(`incorrect input value: x < ${value} >`)
+                }
+
+                return 1 / Math.cos(value)
+            }
+
+            export const sinh2 = (value: number): number => {
+                if (!isNumber(value)) {
+                    throw valueError(`incorrect input value: x < ${value} >`)
+                }
+
+                return (Math.exp(value) - Math.exp(-value)) / 2
+            }
+
+            export const cosh2 = (value: number): number => {
+                if (!isNumber(value)) {
+                    throw valueError(`incorrect input value: x < ${value} >`)
+                }
+
+                return (Math.exp(value) + Math.exp(-value)) / 2
+            }
+
+            export const tanh = (value: number): number => {
+                if (!isNumber(value)) {
+                    throw valueError(`incorrect input value: x < ${value} >`)
+                }
+
+                return sinh2(value) / cosh2(value)
+            }
+
+            export const cotanh = (value: number): number => {
+                if (!isNumber(value)) {
+                    throw valueError(`incorrect input value: x < ${value} >`)
+                }
+
+                return 1 / tanh(value)
+            }
+
+            export const cosech = (value: number): number => {
+                if (!isNumber(value)) {
+                    throw valueError(`incorrect input value: x < ${value} >`)
+                }
+
+                return 1 / sinh2(value)
+            }
+
+            export const sech = (value: number): number => {
+                if (!isNumber(value)) {
+                    throw valueError(`incorrect input value: x < ${value} >`)
+                }
+
+                return 1 / cosh2(value)
+            }
+
+            export const arcsinh = (value: number): number => {
+                if (!isNumber(value)) {
+                    throw valueError(`incorrect input value: x < ${value} >`)
+                }
+
+                return Math.log(value + Math.sqrt(value * value + 1))
+            }
+
+            export const arccosh = (value: number): number => {
+                if (!isNumber(value) || value < 1) {
+                    throw valueError(`incorrect input value: x < ${value} >`)
+                }
+
+                return Math.log(value + Math.sqrt(value * value - 1))
+            }
+
+            export const arctanh = (value: number): number => {
+                if (!isNumber(value) || Math.abs(value) >= 1 || Math.abs(value) < 0) {
+                    throw valueError(`incorrect input value: x < ${value} >`)
+                }
+
+                return (1 / 2) * Math.log((1 + value) / (1 - value))
+            }
+
+            export const arcotanh = (value: number): number => {
+                if (!isNumber(value) || Math.abs(value) <= 1) {
+                    throw valueError(`incorrect input value: x < ${value} >`)
+                }
+
+                return (1 / 2) * Math.log((value + 1) / (value - 1))
+            }
+
+            export const arccosech = (x: number): number => {
+                if (!isNumber(x) || x === 0) {
+                    throw valueError(`incorrect input value: x < ${x} >`)
+                }
+
+                return x < 0
+                    ? Math.log(1 / x - Math.sqrt(1 / (x * x) + 1))
+                    : Math.log(1 / x + Math.sqrt(1 / (x * x) + 1))
+            }
+
+            export const inn = (n: number, ...args: number[]): number | null => {
+                if (!isArray(args) || !isIntNumber(n) || n < 1 || n > args.length) {
+                    throw valueError(`incorrect input value: array < ${args} >, n-th minimum < ${n} >`)
+                }
+
+                const arr = shellSort(args).filter((e, i, c) => {
+                    return c.indexOf(e) === i
+                })
+
+                if (arr.length < n) {
+                    return null
+                }
+
+                return arr[n - 1]
             }
 
             export const sinus = (a: number, b: number, h: number, eps: number): number[] => {
@@ -1628,6 +1807,23 @@ export namespace Maths {
             }
 
             return factorial_(num)
+        }
+
+        export const factfact = (value: number): number => {
+            if (!isIntNumber(value) || value < 0) {
+                throw valueError(`incorrect input value: num < ${value} >`)
+            }
+
+            let res = 1
+            if (value === 0 || value === 1) {
+                return res
+            }
+
+            for (let i = value; i > 0; i -= 2) {
+                res *= i
+            }
+
+            return res
         }
     }
 

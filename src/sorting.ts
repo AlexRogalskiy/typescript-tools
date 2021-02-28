@@ -11,7 +11,6 @@ export namespace Sorting {
     import typeError = Errors.typeError
     import Comparator = Comparators.Comparator
     import cmpByDefault = Comparators.cmpByDefault
-    import Helpers = Maths.Helpers
 
     /**
      * @private
@@ -43,19 +42,19 @@ export namespace Sorting {
      * memory: in-place
      * stable: true
      */
-    export const bubbleSort = <T>(array: T[], cmp: Comparator<T>): T[] => {
+    export const bubbleSort = <T>(array: T[], cmp?: Comparator<T>): T[] => {
         if (!isArray(array)) {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
-        cmp = isFunction(cmp) ? cmp : cmpByDefault
 
+        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
         const n = array.length
         let swapped
 
         do {
             swapped = false
             for (let i = 1; i < n; i++) {
-                if (cmp(array[i - 1], array[i]) > 0) {
+                if (cmp_(array[i - 1], array[i]) > 0) {
                     swap(array, i - 1, i)
                     swapped = true
                 }
@@ -102,7 +101,7 @@ export namespace Sorting {
         // Т.е. для каждого элемента массива выделяется "карман" List<int>.
         // При заполнении данных "карманов" элементы исходного не отсортированного массива
         // будут размещаться в порядке возрастания собственных значений "слева направо".
-        const bucket: number[][] = Helpers.matrix(maxVal - minVal + 1, 0, 0)
+        const bucket: number[][] = Maths.Helpers.matrix(maxVal - minVal + 1, 0, 0)
         for (const item of array) {
             // Занесение значений в пакеты
             bucket[item - minVal].push(item)
@@ -139,16 +138,16 @@ export namespace Sorting {
     export const shellSort = (() => {
         const steps = [701, 301, 132, 57, 23, 10, 4, 1]
 
-        return <T>(array: T[], cmp: Comparator<T>): T[] => {
+        return <T>(array: T[], cmp?: Comparator<T>): T[] => {
             if (!isArray(array)) {
                 throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
-            cmp = isFunction(cmp) ? cmp : cmpByDefault
+            const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
             for (const gap of steps) {
                 for (let i = gap; i < array.length; i += gap) {
                     const current = array[i]
-                    for (let j = i; j >= gap && cmp(array[j - gap], current) > 0; j -= gap) {
+                    for (let j = i; j >= gap && cmp_(array[j - gap], current) > 0; j -= gap) {
                         array[j] = array[j - gap]
                     }
                     array[i] = current
@@ -174,20 +173,20 @@ export namespace Sorting {
      * document.writeln("shellSort: " + initArraySorted);
      *
      */
-    export const shellSort2 = <T>(array: T[], step: number, cmp: Comparator<T>): T[] => {
+    export const shellSort2 = <T>(array: T[], step: number, cmp?: Comparator<T>): T[] => {
         if (!isArray(array)) {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        step = isIntNumber(step) && step > 0 ? step : array.length
-        cmp = isFunction(cmp) ? cmp : cmpByDefault
+        const step_ = isIntNumber(step) && step > 0 ? step : array.length
+        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
 
         let isSorted
-        for (let gap = Math.floor(step / 2); gap > 0; gap = Math.floor(gap / 2)) {
+        for (let gap = Math.floor(step_ / 2); gap > 0; gap = Math.floor(gap / 2)) {
             do {
                 isSorted = 0
-                for (let i = 0, j = gap; j < step; i++, j++) {
-                    if (cmp(array[i], array[j]) > 0) {
+                for (let i = 0, j = gap; j < step_; i++, j++) {
+                    if (cmp_(array[i], array[j]) > 0) {
                         swap(array, i, j)
                         isSorted = 1
                     }
@@ -212,12 +211,12 @@ export namespace Sorting {
      * document.writeln('shellsort: ' + res);
      *
      */
-    export const shellsort3 = <T>(array: T[], cmp: Comparator<T>): T[] => {
+    export const shellsort3 = <T>(array: T[], cmp?: Comparator<T>): T[] => {
         if (!isArray(array)) {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        cmp = isFunction(cmp) ? cmp : cmpByDefault
+        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
 
         let temp,
             gap = 1
@@ -229,7 +228,7 @@ export namespace Sorting {
         for (gap /= 3; gap > 0; gap /= 3) {
             for (let i = gap; i < n; i++) {
                 temp = array[i]
-                for (let j = i - gap; j >= 0 && cmp(array[j], temp) > 0; j -= gap) {
+                for (let j = i - gap; j >= 0 && cmp_(array[j], temp) > 0; j -= gap) {
                     array[j + gap] = array[j]
                 }
                 array[i + gap] = temp
@@ -273,16 +272,16 @@ export namespace Sorting {
             hoora(a, las + 1, r, cmp)
         }
 
-        return <T>(array: T[], left: number, right: number, cmp: Comparator<T>) => {
+        return <T>(array: T[], left: number, right: number, cmp?: Comparator<T>) => {
             if (!isArray(array)) {
                 throw valueError(`incorrect input parameters: array < ${array} >`)
             }
 
-            left = isIntNumber(left) && left > 0 ? left : 0
-            right = isIntNumber(right) && right > 0 ? right : array.length
-            cmp = isFunction(cmp) ? cmp : cmpByDefault
+            const left_ = isIntNumber(left) && left > 0 ? left : 0
+            const right_ = isIntNumber(right) && right > 0 ? right : array.length
+            const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
 
-            hoora(array, left, right, cmp)
+            hoora(array, left_, right_, cmp_)
 
             return array
         }
@@ -308,17 +307,17 @@ export namespace Sorting {
      * stable: true
      *
      */
-    export const insertionSort2 = <T>(array: T[], cmp: Comparator<T>): T[] => {
+    export const insertionSort2 = <T>(array: T[], cmp?: Comparator<T>): T[] => {
         if (!isArray(array)) {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        cmp = isFunction(cmp) ? cmp : cmpByDefault
+        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
 
         let temp
         for (let i = 1; i < array.length; i++) {
             temp = array[i]
-            for (let j = i - 1; j >= 0 && cmp(array[j], temp) > 0; j--) {
+            for (let j = i - 1; j >= 0 && cmp_(array[j], temp) > 0; j--) {
                 array[j + 1] = array[j]
             }
             array[i + 1] = temp
@@ -358,17 +357,17 @@ export namespace Sorting {
             selectionSortRecursive(data, start + 1, cmp)
         }
 
-        return <T>(array: T[], start: number, cmp: Comparator<T>) => {
+        return <T>(array: T[], start: number, cmp?: Comparator<T>) => {
             if (!isArray(array)) {
                 throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
-            cmp = isFunction(cmp) ? cmp : cmpByDefault
-            start = isIntNumber(start) && start >= 0 && start < array.length - 1 ? start : 0
+            const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+            const start_ = isIntNumber(start) && start >= 0 && start < array.length - 1 ? start : 0
 
             if (start === null) return
 
-            selectionSortRecursive(array, start, cmp)
+            selectionSortRecursive(array, start_, cmp_)
         }
     })()
 
@@ -427,14 +426,14 @@ export namespace Sorting {
             return merge(data, left, right, cmp)
         }
 
-        return <T>(array: T[], cmp: Comparator<T>): T[] => {
+        return <T>(array: T[], cmp?: Comparator<T>): T[] => {
             if (!isArray(array)) {
                 throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
-            cmp = isFunction(cmp) ? cmp : cmpByDefault
+            const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
 
-            return mergeSortSimple(array, cmp)
+            return mergeSortSimple(array, cmp_)
         }
     })()
 
@@ -474,14 +473,14 @@ export namespace Sorting {
             }
         }
 
-        return <T>(array: T[], cmp: Comparator<T>) => {
+        return <T>(array: T[], cmp?: Comparator<T>) => {
             if (!isArray(array)) {
                 throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
-            cmp = isFunction(cmp) ? cmp : cmpByDefault
+            const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
 
-            return mergeSort_(array, 0, array.length, cmp)
+            return mergeSort_(array, 0, array.length, cmp_)
         }
     })()
 
@@ -524,13 +523,13 @@ export namespace Sorting {
             }
         }
 
-        return <T>(array: T[], cmp: Comparator<T>): void => {
+        return <T>(array: T[], cmp?: Comparator<T>): void => {
             if (!isArray(array)) {
                 throw valueError(`incorrect input array: < ${array} >`)
             }
 
-            cmp = isFunction(cmp) ? cmp : cmpByDefault
-            quicksort(array, 0, array.length - 1, cmp)
+            const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+            quicksort(array, 0, array.length - 1, cmp_)
         }
     })()
 
@@ -554,12 +553,12 @@ export namespace Sorting {
      * memory: in-place
      * stable: false
      */
-    export const quickSort = <T>(array: T[], cmp: Comparator<T>): T[] => {
+    export const quickSort = <T>(array: T[], cmp?: Comparator<T>): T[] => {
         if (!isArray(array)) {
             throw valueError(`incorrect input array: < ${array} >`)
         }
 
-        cmp = isFunction(cmp) ? cmp : cmpByDefault
+        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
 
         const leftStack: number[] = []
         const rightStack: number[] = []
@@ -574,14 +573,14 @@ export namespace Sorting {
             left = leftStack[sp]
             right = rightStack[sp]
             sp--
-            while (cmp(left, right) < 0) {
+            while (cmp_(left, right) < 0) {
                 i = left
                 j = right
 
                 const middle = array[Math.floor((left + right) / 2)]
                 while (i < j) {
-                    while (cmp(array[i], middle) < 0) i++
-                    while (cmp(array[j], middle) > 0) j--
+                    while (cmp_(array[i], middle) < 0) i++
+                    while (cmp_(array[j], middle) > 0) j--
                     if (i <= j) {
                         swap(array, i, j)
                         i++
@@ -616,7 +615,7 @@ export namespace Sorting {
      * var res = globals.algorithms.heapsort([3, 4, 5, 2, 1, 4, 4, 2, 5, 1, 6, 2, 4]);
      * document.writeln('heapSort: ' + res);
      */
-    // export const heapsort = <T>(array: T[], min: number, max: number, cmp: Comparator<T>): T[] => {
+    // export const heapsort = <T>(array: T[], min: number, max: number, cmp?: Comparator<T>): T[] => {
     //     if (!isArray(array)) {
     //         throw valueError(`incorrect input parameter: array < ${array} >`)
     //     }
@@ -628,9 +627,9 @@ export namespace Sorting {
     //         throw valueError(`incorrect min or max value: min < ${min} >, max < ${max} >`)
     //     }
     //
-    //     cmp = isFunction(cmp) ? cmp : cmpByDefault
+    //     const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
     //
-    //     const heap = maxHeap(array.slice(min, max + 1), cmp),
+    //     const heap = maxHeap(array.slice(min, max + 1), cmp_),
     //         result = []
     //     while (!heap.isEmpty()) {
     //         result.push(heap.poll())
@@ -666,19 +665,19 @@ export namespace Sorting {
             }
         }
 
-        return <T>(array: T[], cmp: Comparator<T>) => {
+        return <T>(array: T[], cmp?: Comparator<T>) => {
             if (!isArray(array)) {
                 throw valueError(`incorrect input parameter: array < ${array} >`)
             }
-            cmp = isFunction(cmp) ? cmp : cmpByDefault
 
+            const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
             const n = array.length
             for (let j = Math.floor(n / 2); j > 0; j--) {
-                adjust(array, j, n, cmp)
+                adjust(array, j, n, cmp_)
             }
             for (let j = n - 1; j > 0; j--) {
                 swap(array, 0, j)
-                adjust(array, 1, j, cmp)
+                adjust(array, 1, j, cmp_)
             }
 
             return array
@@ -733,20 +732,19 @@ export namespace Sorting {
             }
         }
 
-        return <T>(array: T[], cmp: Comparator<T>): T[] => {
+        return <T>(array: T[], cmp?: Comparator<T>): T[] => {
             if (!isArray(array)) {
                 throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
-            cmp = isFunction(cmp) ? cmp : cmpByDefault
-
+            const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
             const n = array.length
             for (let i = n - 1; i >= 0; i--) {
-                siftup(array, i, n, cmp)
+                siftup(array, i, n, cmp_)
             }
             for (let i = n - 1; i > 0; i) {
                 swap(array, 0, i)
-                siftup(array, 0, i--, cmp)
+                siftup(array, 0, i--, cmp_)
             }
 
             // for (let i = array.length - 1; i >= 1; i--) {
@@ -767,14 +765,14 @@ export namespace Sorting {
      * zero, or positive value, depending on the arguments.
      * @return {Array} Current sorted array
      */
-    // export const pqsort = <T>(array: T[], cmp: Comparator<T>): T[] => {
+    // export const pqsort = <T>(array: T[], cmp?: Comparator<T>): T[] => {
     //     if (!isArray(array)) {
     //         throw valueError(`incorrect input parameter: array < ${array} >`)
     //     }
     //
-    //     cmp = isFunction(cmp) ? cmp : cmpByDefault
+    //     const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
     //
-    //     const pq = priqueue(array, cmp)
+    //     const pq = priqueue(array, cmp_)
     //     //for(var i=0; i<array.length; i++) {
     //     //	pq.insert(array[i]);
     //     //}
@@ -793,16 +791,15 @@ export namespace Sorting {
      * alternative sort order. The function should return a negative,
      * zero, or positive value, depending on the arguments.
      */
-    export const insertionSort = <T>(array: T[], cmp: Comparator<T>): void => {
+    export const insertionSort = <T>(array: T[], cmp?: Comparator<T>): void => {
         if (!isArray(array)) {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        cmp = isFunction(cmp) ? cmp : cmpByDefault
-
+        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
         for (let i = 1; i < array.length; i++) {
             const temp = array[i]
-            for (let j = i; j > 0 && cmp(array[j - 1], temp) > 0; j--) {
+            for (let j = i; j > 0 && cmp_(array[j - 1], temp) > 0; j--) {
                 array[j] = array[j - 1]
             }
             array[i] = temp
@@ -819,21 +816,21 @@ export namespace Sorting {
      * alternative sort order. The function should return a negative,
      * zero, or positive value, depending on the arguments.
      */
-    export const sort = <T>(array: T[], min: number, max: number, cmp: Comparator<T>): void => {
+    export const sort = <T>(array: T[], min: number, max: number, cmp?: Comparator<T>): void => {
         if (!isArray(array)) {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        min = isIntNumber(min) && min > 0 ? min : 0
-        max = isIntNumber(max) && max > 0 ? max : array.length - 1
-        cmp = isFunction(cmp) ? cmp : cmpByDefault
+        const min_ = isIntNumber(min) && min > 0 ? min : 0
+        const max_ = isIntNumber(max) && max > 0 ? max : array.length - 1
+        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
 
-        if (min > max) {
+        if (min_ > max_) {
             throw valueError(`incorrect min or max value: min < ${min} >, max < ${max} >`)
         }
 
-        for (let i = min; i < max; i++) {
-            for (let j = i; j > 0 && cmp(array[j - 1], array[j]) > 0; j--) {
+        for (let i = min_; i < max_; i++) {
+            for (let j = i; j > 0 && cmp_(array[j - 1], array[j]) > 0; j--) {
                 swap(array, j - 1, j)
             }
         }
@@ -847,17 +844,18 @@ export namespace Sorting {
      * alternative sort order. The function should return a negative,
      * zero, or positive value, depending on the arguments.
      */
-    export const gnomeSort = <T>(array: T[], cmp: Comparator<T>): void => {
+    export const gnomeSort = <T>(array: T[], cmp?: Comparator<T>): void => {
         if (!isArray(array)) {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
-        cmp = isFunction(cmp) ? cmp : cmpByDefault
 
+        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
         const n = array.length
+
         let i = 1
         let j = 2
         while (i < n) {
-            if (cmp(array[i - 1], array[i]) < 0) {
+            if (cmp_(array[i - 1], array[i]) < 0) {
                 i = j
                 j++
             } else {
@@ -878,11 +876,12 @@ export namespace Sorting {
      * alternative sort order. The function should return a negative,
      * zero, or positive value, depending on the arguments.
      */
-    export const cocktailSort = <T>(array: T[], cmp: Comparator<T>): void => {
+    export const cocktailSort = <T>(array: T[], cmp?: Comparator<T>): void => {
         if (!isArray(array)) {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
-        cmp = isFunction(cmp) ? cmp : cmpByDefault
+
+        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
 
         let j = array.length - 1
         let i = 0
@@ -891,7 +890,7 @@ export namespace Sorting {
         while (i < j && flag) {
             flag = false
             for (let k = i; k < j; k++) {
-                if (cmp(array[k], array[k + 1]) > 0) {
+                if (cmp_(array[k], array[k + 1]) > 0) {
                     swap(array, k, k + 1)
                     flag = true
                 }
@@ -900,7 +899,7 @@ export namespace Sorting {
             if (flag) {
                 flag = false
                 for (let k = j; k > i; k--) {
-                    if (cmp(array[k], array[k - 1]) < 0) {
+                    if (cmp_(array[k], array[k - 1]) < 0) {
                         swap(array, k, k - 1)
                         flag = true
                     }
@@ -919,20 +918,20 @@ export namespace Sorting {
      * zero, or positive value, depending on the arguments.
      * @return {Array} Sorted Array
      */
-    export const simpleCountSort = <T>(array: T[], cmp: Comparator<T>): T[] => {
+    export const simpleCountSort = <T>(array: T[], cmp?: Comparator<T>): T[] => {
         if (!isArray(array)) {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        cmp = isFunction(cmp) ? cmp : cmpByDefault
+        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
 
         const n = array.length
-        const count = Helpers.vector(n, 0)
+        const count = Maths.Helpers.vector(n, 0)
         const res: T[] = []
 
         for (let i = 0; i < n - 1; i++) {
             for (let j = i + 1; j < n; j++) {
-                if (cmp(array[i], array[j]) < 0) {
+                if (cmp_(array[i], array[j]) < 0) {
                     count[j]++
                 } else {
                     count[i]++
@@ -966,20 +965,21 @@ export namespace Sorting {
             return gap
         }
 
-        return <T>(array: T[], cmp: Comparator<T>): void => {
+        return <T>(array: T[], cmp?: Comparator<T>): void => {
             if (!isArray(array)) {
                 throw typeError(`incorrect input argument: not array < ${array} >`)
             }
-            cmp = isFunction(cmp) ? cmp : cmpByDefault
 
+            const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
             const n = array.length
+
             let gap = n,
                 flag
             do {
                 flag = false
                 gap = getGap(gap)
                 for (let i = 0; i < n - gap; i++) {
-                    if (cmp(array[i], array[i + gap]) > 0) {
+                    if (cmp_(array[i], array[i + gap]) > 0) {
                         flag = true
                         swap(array, i + gap, i)
                     }
