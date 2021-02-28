@@ -13,6 +13,7 @@
         "reinstall": "del-cli ./node_modules ./package-lock.json ./yarn.lock",
         "postreinstall": "yarn setup",
         "setup": "yarn",
+        "yarn:import": "rm -rf ./yarn.lock && yarn import",
         "prebuild": "rimraf dist coverage",
         "build": "tsdx build",
         "watch": "tsdx watch",
@@ -20,7 +21,7 @@
         "semantic-release": "semantic-release",
         "test:folio": "folio tests/spec/",
         "test": "TZ=utc jest",
-        "test:coverage": "jest --collectCoverage",
+        "test:coverage": "jest --collectCoverage --detectOpenHandles",
         "test:watch": "jest --watch",
         "all": "npm run format && npm run lint && npm run build"
     },

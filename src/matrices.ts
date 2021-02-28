@@ -5,7 +5,7 @@ import { Numbers } from './numbers'
 import { ValueOrUndef } from '../typings/standard-types'
 import { Maths } from './maths'
 
-export namespace Matrix {
+export namespace Matrices {
     import typeError = Errors.typeError
     import isArray = Checkers.isArray
     import valueError = Errors.valueError
@@ -86,18 +86,6 @@ export namespace Matrix {
         const i = 1
         let result = 0
 
-        const calculateDeterminant = (subMatrix): number => {
-            const len = subMatrix.length
-            if (len === 1) {
-                return det1(subMatrix)
-            } else if (len === 2) {
-                return det2(subMatrix)
-            } else if (len === 3) {
-                return det3(subMatrix)
-            }
-            return detn(subMatrix)
-        }
-
         for (let j = 0; j < matrix.length; j++) {
             result += Math.pow(-1, i + j + 1) * calculateDeterminant(getSubMatrix(i - 1, j, matrix))
         }
@@ -105,17 +93,32 @@ export namespace Matrix {
         return result
     }
 
+    export const calculateDeterminant = (matrix: any): number => {
+        const len = matrix.length
+
+        if (len === 1) {
+            return det1(matrix)
+        } else if (len === 2) {
+            return det2(matrix)
+        } else if (len === 3) {
+            return det3(matrix)
+        }
+
+        return detn(matrix)
+    }
+
     export const getSubMatrix = <T>(row: number, col: number, matrix: T[][]): T[][] => {
         const subMatrix: T[][] = []
-        let tmp
 
         for (let ii = 0; ii < matrix.length; ii++) {
             if (ii === row) continue
-            tmp = []
+
+            const tmp: T[] = []
             for (let jj = 0; jj < matrix[0].length; jj++) {
                 if (jj === col) continue
                 tmp.push(matrix[ii][jj])
             }
+
             subMatrix.push(tmp)
         }
 
