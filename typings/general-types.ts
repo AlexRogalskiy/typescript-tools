@@ -1,5 +1,20 @@
 // -------------------------------------------------------------------------------------------------
 /**
+ * Supported buffer encoding types
+ */
+export type BufferEncoding =
+    | 'ascii'
+    | 'utf8'
+    | 'utf-8'
+    | 'utf16le'
+    | 'ucs2'
+    | 'ucs-2'
+    | 'base64'
+    | 'latin1'
+    | 'binary'
+    | 'hex'
+// -------------------------------------------------------------------------------------------------
+/**
  * Keys
  * @desc Get the union type of all the keys in an object type `T`
  * @see https://flow.org/en/docs/types/utilities/#toc-keys

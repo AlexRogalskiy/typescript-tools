@@ -5,9 +5,9 @@ import { Checkers } from './checkers'
 import { Errors } from './errors'
 
 export namespace Functions {
-    import isFunction = Checkers.isFunction
-    import typeError = Errors.typeError
-    import valueError = Errors.valueError
+    import isFunction = Checkers.isFunction;
+    import typeError = Errors.typeError;
+    import valueError = Errors.valueError;
 
     export const composeAsync = async (...funcArgs) => async x =>
         // eslint-disable-next-line github/no-then
@@ -19,6 +19,13 @@ export namespace Functions {
 
     export const wait = async (ms: number, ...args: any[]): Promise<void> => {
         return new Promise(resolve => setTimeout(resolve, ms, args))
+    }
+
+    export const curry = (fn, ...args: any[]): any => {
+        args = Array.prototype.slice.call(args, 0)
+        return (...args2: any[]) => {
+            return fn.apply(fn, args.concat(Array.prototype.slice.call(args2, 0)))
+        }
     }
 
     /*

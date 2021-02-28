@@ -1,14 +1,19 @@
-import { ALPHA_REGEX, EMAIL_REGEX, MOBILE_NAVIGATOR_CODE_REGEX, MOBILE_NAVIGATOR_TYPE_REGEX } from './regexes'
+import {
+    ALPHA_REGEX,
+    EMAIL_REGEX,
+    MOBILE_NAVIGATOR_CODE_REGEX,
+    MOBILE_NAVIGATOR_TYPE_REGEX
+} from './regexes'
 import { Numbers } from './numbers'
 import { Errors } from './errors'
 import { Objects } from './objects'
 
 export namespace Checkers {
     //const toUint32 = Numbers.toUint32
-    import typeError = Errors.typeError
-    import valueError = Errors.valueError
-    import validationError = Errors.validationError
-    import getType = Objects.getType
+    import typeError = Errors.typeError;
+    import valueError = Errors.valueError;
+    import validationError = Errors.validationError;
+    import getType = Objects.getType;
 
     export const isNull = (value: any): boolean => {
         return value == null
@@ -138,6 +143,51 @@ export namespace Checkers {
         if (obj[prop] < lowval || obj[prop] > hival) {
             throw validationError(`Invalid property value=${obj[prop]}, is out of range: ${lowval}-${hival}`)
         }
+    }
+
+    export const isPowerOfTwo = (value: number): boolean => {
+        // value != 0 && !(value & (-value) == value);
+        return value !== null && !(value & (value - 1))
+    }
+
+    /**
+     * Set a bit
+     * @param value initial input {@link number} value
+     * @param index initial input {@link number} index
+     */
+    export const setBit = (value: number, index: number): number => {
+        return value | (1 << index)
+    }
+
+    /**
+     * Clear a bit
+     * @param value initial input {@link number} value
+     * @param index initial input {@link number} index
+     */
+    export const clearBit = (value: number, index: number): number => {
+        return value & ~(1 << index)
+    }
+
+    /**
+     * Toggle a bit
+     * @param value initial input {@link number} value
+     * @param index initial input {@link number} index
+     */
+    export const toggleBit = (value: number, index: number): number => {
+        return value ^ (1 << index)
+    }
+
+    /**
+     * Check a bit
+     * @param value initial input {@link number} value
+     * @param index initial input {@link number} index
+     */
+    export const checkBit = (value: number, index: number): number => {
+        return value & (1 << index)
+    }
+
+    export const isNumeric = (num: any): boolean => {
+        return !isNaN(parseFloat(num)) && isFinite(num)
     }
 
     export const isFunction = (value: any): boolean => {

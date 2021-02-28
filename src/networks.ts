@@ -68,7 +68,7 @@ export namespace Networks {
         return num
     }
 
-    export const getQueryParam = (value: string): string | null => {
+    export const getQueryParameter = (value: string): string | null => {
         const reg = new RegExp(`(^|&)${value}=([^&*])(&|$)`)
         const query = window.location.search.substr(1).match(reg)
 

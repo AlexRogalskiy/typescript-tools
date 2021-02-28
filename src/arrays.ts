@@ -16,6 +16,54 @@ export namespace Arrays {
     import Helpers = Maths.Helpers
     import Comparator = Comparators.Comparator
 
+    export const list = (...args: any[]): any[] => {
+        // const unboundSlice = Array.prototype.slice
+        // const slice = Function.prototype.call.bind(unboundSlice)
+        // return slice(args, 0)
+        return Array.prototype.slice.call(args, 0)
+    }
+
+    /**
+     * Creates array by range
+     * range(n) creates a array from 1 to n, including n
+     * range(n,m) creates a array from n to m, by step of 1. May not include m, if n or m are not integer.
+     * range(n,m,delta) creates a array from n to m, by step of delta. May not include m
+     *
+     * @param min
+     * @param max
+     * @param delta
+     */
+    export const rangeBy = (min: number, max?: number, delta?: number): number[] => {
+        const res: number[] = []
+        let myStepCount
+
+        if (!max) {
+            for (let i = 0; i < min; i++) {
+                res[i] = i + 1
+            }
+        } else {
+            if (!delta) {
+                myStepCount = max - min
+                for (let i = 0; i <= myStepCount; i++) {
+                    res.push(i + min)
+                }
+            } else {
+                myStepCount = Math.floor((max - min) / delta)
+                for (let i = 0; i <= myStepCount; i++) {
+                    res.push(i * delta + min)
+                }
+            }
+        }
+
+        return res
+    }
+
+    export const insert = (array: any[], index: number, ...args: any): any[] => {
+        index = Math.min(index, array.length)
+        array.splice(index, 0, ...args)
+        return array
+    }
+
     export function shuffle<T>(arr: T[]): T[] {
         if (!Array.isArray(arr)) {
             throw new Error('expected an array')
@@ -431,5 +479,42 @@ export namespace Arrays {
         }
 
         return array1
+    }
+
+    export const findArray = (array: number[], subArray: number[]): number => {
+        const arrayLen = array.length
+        const subArrayLen = subArray.length
+
+        if (0 === arrayLen || 0 === subArrayLen || subArrayLen > arrayLen) {
+            return -1
+        }
+
+        const len = arrayLen - subArrayLen
+        let index = -1
+        let flag = false
+
+        const isSubArrayExists = (array: number[], subArray: number[], index: number): boolean => {
+            if (subArray[0] === array[index]) {
+                for (let j = 1; j < subArray.length; j++) {
+                    if (subArray[j] !== array[index + j]) {
+                        return false
+                    }
+                }
+                return true
+            }
+            return false
+        }
+
+        for (let i = 0; i <= len; i++) {
+            flag = isSubArrayExists(array, subArray, i)
+            if (flag) {
+                if (len - i < subArrayLen) {
+                    return i
+                } else {
+                    index = i
+                }
+            }
+        }
+        return index
     }
 }

@@ -1070,24 +1070,6 @@ export namespace Maths {
                 return numOnes
             }
 
-            export const getMedian = (array1, array2, left, right, n): number => {
-                if (left > right) {
-                    return getMedian(array2, array1, 0, n - 1, n)
-                }
-                const i = Math.floor(left + right) / 2
-                const j = n - i - 1
-
-                if (array1[i] > array2[j] && (j === n - 1 || array1[i] <= array2[j + 1])) {
-                    if (i === 0 || array2[j] > array1[i - 1]) {
-                        return (array1[i] + array2[j]) / 2
-                    }
-                    return (array1[i] + array1[i - 1]) / 2
-                } else if (array1[i] > array2[j] && j !== n - 1 && array1[i] > array2[j + 1]) {
-                    return getMedian(array1, array2, left, i - 1, n)
-                }
-                return getMedian(array1, array2, i + 1, right, n)
-            }
-
             // let res = permutation([1, 2, 3, 4]);
             // document.writeln("permutation: " + res);
             export const permutation = (str: string[]): string[][] => {

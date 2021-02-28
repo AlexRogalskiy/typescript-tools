@@ -18,6 +18,7 @@ export namespace Matrix {
     import cmpByDefault = Comparators.cmpByDefault
 
     export type RowColumn = { row: number; column: number }
+
     export type Coordinate = {
         row: number
         column: number
@@ -58,6 +59,67 @@ export namespace Matrix {
         for (let i = 0; i < rows; i++) {
             data[i][col2_] = [data[i][col1_], (data[i][col1_] = data[i][col2_])][0]
         }
+    }
+
+    export const det1 = <T>(matrix: T[]): T => {
+        return matrix[0]
+    }
+
+    export const det2 = (matrix): number => {
+        return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
+    }
+
+    export const det3 = (matrix): number => {
+        let result = 0
+        const n = 3
+        for (let i = 0; i < n; i++) {
+            result +=
+                Math.pow(-1, i) *
+                matrix[0][i] *
+                (matrix[n - 2][(i + 1) % n] * matrix[n - 1][(i + 2) % n] -
+                    matrix[n - 2][(i + 2) % n] * matrix[n - 1][(i + 1) % n])
+        }
+        return result
+    }
+
+    export const detn = <T>(matrix: T[][]): number => {
+        const i = 1
+        let result = 0
+
+        const calculateDeterminant = (subMatrix): number => {
+            const len = subMatrix.length
+            if (len === 1) {
+                return det1(subMatrix)
+            } else if (len === 2) {
+                return det2(subMatrix)
+            } else if (len === 3) {
+                return det3(subMatrix)
+            }
+            return detn(subMatrix)
+        }
+
+        for (let j = 0; j < matrix.length; j++) {
+            result += Math.pow(-1, i + j + 1) * calculateDeterminant(getSubMatrix(i - 1, j, matrix))
+        }
+
+        return result
+    }
+
+    export const getSubMatrix = <T>(row: number, col: number, matrix: T[][]): T[][] => {
+        const subMatrix: T[][] = []
+        let tmp
+
+        for (let ii = 0; ii < matrix.length; ii++) {
+            if (ii === row) continue
+            tmp = []
+            for (let jj = 0; jj < matrix[0].length; jj++) {
+                if (jj === col) continue
+                tmp.push(matrix[ii][jj])
+            }
+            subMatrix.push(tmp)
+        }
+
+        return subMatrix
     }
 
     /** @public

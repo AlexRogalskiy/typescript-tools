@@ -1,4 +1,7 @@
+import { Checkers } from './checkers'
+
 export namespace Commons {
+    import isFunction = Checkers.isFunction
     const WINDOW_USER_SCRIPT_VARIABLE = '__USER__'
 
     export const getUserScript = (value: string): string => {
@@ -164,5 +167,105 @@ export namespace Commons {
         }
 
         return result
+    }
+
+    export const defineAccessorProperty = (obj: any, prop: string, value: any): any => {
+        return Object.defineProperty(obj, prop, {
+            get: () => value,
+            set: newValue => (value = newValue),
+            enumerable: true,
+            configurable: true,
+        })
+    }
+
+    export const defineProperty = (
+        obj: any,
+        prop: string,
+        attrs: PropertyDescriptor = { writable: true, enumerable: true, configurable: true },
+    ): any => {
+        return Object.defineProperty(obj, prop, attrs)
+    }
+
+    export const defineStaticProperty = (
+        obj: any,
+        prop: string,
+        attrs = { __proto__: null, value: 'static' },
+    ): any => {
+        // Object.defineProperty(obj, prop, withValue('static'));
+        return Object.defineProperty(obj, prop, attrs)
+    }
+
+    export const freeze = (obj: any): void => {
+        // if freeze is available, prevents adding or
+        // removing the object prototype properties
+        // (value, get, set, enumerable, writable, configurable)
+        ;(Object.freeze || Object)(obj.prototype)
+    }
+
+    export const withValue = (value: any): any => {
+        const d =
+            withValue['d'] ||
+            (withValue['d'] = {
+                enumerable: false,
+                writable: false,
+                configurable: false,
+                value: null,
+            })
+        d.value = value
+
+        return d
+    }
+
+    // adding a writable data descriptor - not configurable, not enumerable
+    // Object.setProperty(4, myObj, 'myNumber', 25);
+    // adding a readonly data descriptor - not configurable, enumerable
+    // Object.setProperty(1, myObj, 'myString', 'Hello world!');
+    export const createProperty = (global: any): void => {
+        Object['setProperty'] = (mask: number, obj: any, prop: string, getter: any, setter: any): any => {
+            if (mask & 8) {
+                // accessor descriptor
+                if (isFunction(getter)) {
+                    global.get = getter
+                } else {
+                    delete global.get
+                }
+                if (isFunction(setter)) {
+                    global.set = setter
+                } else {
+                    delete global.set
+                }
+                delete global.value
+                delete global.writable
+            } else {
+                // data descriptor
+                if (isFunction(getter)) {
+                    global.value = getter()
+                } else {
+                    delete global.value
+                }
+                global.writable = Boolean(mask & 4)
+                delete global.get
+                delete global.set
+            }
+            global.enumerable = Boolean(mask & 1)
+            global.configurable = Boolean(mask & 2)
+            Object.defineProperty(obj, prop, global)
+
+            return obj
+        }
+    }
+
+    // addMethod(this, "find", () => {})
+    // addMethod(this, "find", (name) => {})
+    // addMethod(this, "find", (first, last) => {})
+    export const addMethod = (obj: any, name: string, fn, ...args: any[]): any => {
+        const old = obj[name]
+        obj[name] = () => {
+            if (fn.length === args.length) {
+                return fn.apply(obj, args)
+            } else if (typeof old === 'function') {
+                return old.apply(obj, args)
+            }
+        }
     }
 }

@@ -6,6 +6,7 @@ export namespace Numbers {
     import isIntNumber = Checkers.isIntNumber
     import valueError = Errors.valueError
     import typeError = Errors.typeError
+    import isArray = Checkers.isArray
 
     export const random = (max: number): number => {
         return Math.floor(Math.random() * max)
@@ -85,6 +86,146 @@ export namespace Numbers {
         return Array.from(randomIndicesSet).map(random => {
             return array[random]
         })
+    }
+
+    export const multiply = (a: number, b: number): number => {
+        let c = 0
+        while (0 !== b) {
+            if ((b & 1) !== 0) {
+                c += a
+            }
+            a <<= 1
+            b >>= 1
+        }
+        return c
+    }
+
+    export const add = (a: number, b: number): number => {
+        if (0 === b) {
+            return a
+        }
+        while (0 !== a) {
+            let c = b & a
+            b = b ^ a
+            c <<= 1
+            a = c
+        }
+
+        return b
+    }
+
+    export const findKthSmallest = (k: number, arr1: number[], arr2: number[]): number | null => {
+        if (!isArray(arr1)) {
+            throw valueError(`incorrect input value: array # 1 < ${arr1} >`)
+        }
+
+        if (!isArray(arr2)) {
+            throw valueError(`incorrect input value: array # 2 < ${arr2} >`)
+        }
+
+        if (arr1.length === 0 && arr2.length === 0) {
+            throw valueError(`incorrect input values: array # 1 < ${arr1} > and array # 2 < ${arr2} >`)
+        }
+
+        if (arr1.length === 0) {
+            return arr2[k - 1]
+        } else if (arr2.length === 0) {
+            return arr1[k - 1]
+        }
+
+        const lastA = arr1[arr1.length - 1]
+        if (arr1.length + arr2.length === k) {
+            return Math.max(lastA, arr2[arr2.length - 1])
+        } else if (arr1.length <= k && arr2[k - arr1.length] >= lastA) {
+            return lastA
+        }
+
+        let start = 0,
+            end = Math.min(arr1.length - 1, k)
+        let k1, k2
+
+        while (start <= end) {
+            k1 = Math.floor(start + end) / 2
+            k2 = k - k1
+            if (k2 > arr2.length) {
+                start = k1 + 1
+            } else if (k1 === 0) {
+                if (arr1[k1] >= arr2[k2 - 1]) {
+                    return arr2[k2 - 1]
+                } else {
+                    start = k1 + 1
+                }
+            } else if (k2 === 0) {
+                if (arr2[k2] >= arr1[k1 - 1]) {
+                    return arr1[k1 - 1]
+                } else {
+                    end = k1 - 1
+                }
+            } else if (k2 === arr2.length) {
+                if (arr1[k1] >= arr2[k2 - 1]) {
+                    return Math.max(arr1[k1 - 1], arr2[k2 - 1])
+                } else if (arr1[k1] < arr2[k2 - 1]) {
+                    start = k1 + 1
+                } else {
+                    end = k1 - 1
+                }
+            }
+        }
+
+        return null
+    }
+
+    export const numberOf2sInRange = (n: number): number => {
+        const numberOf2s = (n): number => {
+            let count = 0
+            while (n > 0) {
+                if (n % 10 === 2) {
+                    count++
+                }
+                n = Math.floor(n / 10)
+            }
+            return count
+        }
+
+        let count = 0
+        for (let i = 2; i <= n; i++) {
+            count += numberOf2s(i)
+        }
+
+        return count
+    }
+
+    export const countLeadingZeros = (value: any): number => {
+        if (!isNumber(value)) {
+            throw valueError(`Invalid number value=${value}`)
+        }
+
+        if (0 === value) {
+            return 32
+        }
+
+        let n = 0
+        if ((value & 0xffff0000) === 0) {
+            n += 16
+            value <<= 16
+        }
+        if ((value & 0xff000000) === 0) {
+            n += 8
+            value <<= 8
+        }
+        if ((value & 0xf0000000) === 0) {
+            n += 4
+            value <<= 4
+        }
+        if ((value & 0xc0000000) === 0) {
+            n += 2
+            value <<= 2
+        }
+        if ((value & 0x80000000) === 0) {
+            n += 1
+        }
+
+        return n
     }
 
     export const average = (delta: number, numberOfDays: number): number | undefined => {

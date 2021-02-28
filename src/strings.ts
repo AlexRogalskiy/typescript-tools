@@ -6,6 +6,7 @@ import { NumberOrUndef, StringOrUndef } from '../typings/standard-types'
 import { Supplier } from '../typings/function-types'
 import { Maths } from './maths'
 import { Numbers } from './numbers'
+import { Comparators } from './comparators'
 
 export namespace Strings {
     import isString = Checkers.isString
@@ -17,6 +18,175 @@ export namespace Strings {
     import isNumber = Checkers.isNumber
     import Helpers = Maths.Helpers
     import random = Numbers.random
+    import Comparator = Comparators.Comparator
+
+    export const combinations = (value: string): string[] => {
+        let str = ''
+        const res: string[] = []
+
+        const combine_ = (start: number): void => {
+            for (let i = start; i < value.length - 1; i++) {
+                str += value.charAt(i)
+                res.push(str)
+                combine_(i + 1)
+                str = str.substring(0, str.length - 1) // res = res.slice(0, -1);
+            }
+            str += value.charAt(value.length - 1)
+            res.push(str)
+            str = str.substring(0, str.length - 1) // str = str.slice(0, -1);
+        }
+
+        combine_(0)
+
+        return res
+    }
+
+    export const permutations = (value: string): string[] => {
+        let str = ''
+        const used = new Array(value.length)
+        const res: string[] = []
+
+        const permute_ = (): void => {
+            if (str.length === value.length) {
+                res.push(str)
+            }
+            for (let i = 0; i < value.length; i++) {
+                if (used[i]) {
+                    continue
+                }
+                str += value.charAt(i)
+                used[i] = true
+                permute_()
+                used[i] = false
+                str = str.substring(0, str.length - 1)
+            }
+        }
+
+        permute_()
+
+        return res
+    }
+
+    export const strToInt = (str: string): number => {
+        let i = 0,
+            num = 0,
+            isNeg = false
+        const len = str.length
+
+        if (str.startsWith('-')) {
+            isNeg = true
+            i = 1
+        }
+        while (i < len) {
+            num *= 10
+            num += str.codePointAt(i++) || 0 - ('0'.codePointAt(0) || 0)
+        }
+        if (isNeg) {
+            num = -num
+        }
+
+        return num
+    }
+
+    export const removeChars = (str: string, remove: string): string => {
+        const s = str.split('')
+        const r = remove.split('')
+        let dst = 0
+        const flags: boolean[] = []
+
+        for (const item of r) {
+            flags[item.charCodeAt(0)] = true
+        }
+
+        for (const item of s) {
+            if (!flags[item.charCodeAt(0)]) {
+                s[dst++] = item
+            }
+        }
+
+        return s.join()
+    }
+
+    export const sortBy = (
+        comparator: Comparator<{ index: number; value: string }> | null,
+        ...args: string[]
+    ): string[] => {
+        const map = args.map((e, i) => {
+            return { index: i, value: e.toLowerCase() }
+        })
+
+        comparator =
+            comparator ||
+            ((a, b) => {
+                return +(a.value > b.value) || +(a.value === b.value) - 1
+            })
+
+        map.sort(comparator)
+
+        return map.map(e => {
+            return args[e.index]
+        })
+    }
+
+    export const shortest = (words: string[], word1: string, word2: string): number => {
+        let min = Number.MAX_VALUE
+        let lastPosWord1 = -1
+        let lastPosWord2 = -1
+        let currentWord, distance
+
+        for (let i = 0; i < words.length; i++) {
+            currentWord = words[i]
+            if (!currentWord.localeCompare(word1)) {
+                lastPosWord1 = i
+
+                distance = lastPosWord1 - lastPosWord2
+                if (lastPosWord2 >= 0 && min > distance) {
+                    min = distance
+                }
+            } else if (!currentWord.localeCompare(word2)) {
+                lastPosWord2 = i
+                distance = lastPosWord2 - lastPosWord1
+                if (lastPosWord2 > 0 && min > distance) {
+                    min = distance
+                }
+            }
+        }
+
+        return min
+    }
+
+    export const format = (n: number): string => {
+        return n.toString().replace(/\.(\d\d)\d+/, '.$1')
+    }
+
+    export const formatNumber = (num: number, precision: number): string => {
+        // format number with metric prefix such as 1.2k
+        // n is integer. The number to be converted
+        // m is integer. The number of decimal places to show. Default to 1.
+        // returns a string, with possibly one of k M G T ... suffix. Show 1 decimal digit
+
+        const prefix = [
+            '',
+            ' k',
+            ' M',
+            ' G',
+            ' T',
+            ' P',
+            ' E',
+            ' Z',
+            ' Y',
+            ' * 10^27',
+            ' * 10^30',
+            ' * 10^33',
+        ]
+        let i = 0
+        precision = precision === undefined ? 1 : precision
+        while ((num = num / 1000) >= 1) {
+            i++
+        }
+
+        return (num * 1000).toFixed(precision).toString() + prefix[i]
+    }
 
     export const twoChar = (num: number): string => {
         return String(num).length === 1 ? `0${num}` : `${num}`
