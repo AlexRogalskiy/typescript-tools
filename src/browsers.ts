@@ -519,4 +519,284 @@ export namespace Browsers {
         }
         return false
     }
+
+    export const tag = (name: string, elem: Element): any => {
+        return (elem || document).getElementsByTagName(name)
+    }
+
+    export const hasClass = (name: string, type): HTMLElementTagNameMap[] => {
+        const res: HTMLElementTagNameMap[] = []
+        // Locate the class name (allows for multiple class names)
+        const re = new RegExp(`(^|\\s)${name}(\\s|$)`)
+        // Limit search by type, or look through all elements
+        const e = document.getElementsByTagName(type || '*')
+
+        for (let j = 0; j < e.length; j++) {
+            // If the element has the class, add it for return
+            if (re.test(e[j])) {
+                res.push(e[j])
+            }
+        }
+
+        return res
+    }
+
+    export const attr = (elem, name: string, value: string): string | null => {
+        // Make sure that a valid name was provided
+        if (!name || name.constructor !== String) {
+            return ''
+        }
+        // Figure out if the name is one of the weird naming cases
+        name = { for: 'htmlFor', class: 'className' }[name] || name
+
+        if (typeof value != 'undefined') {
+            // Set the quick way first
+            elem[name] = value
+            // If we can, use setAttribute
+            if (elem.setAttribute) {
+                elem.setAttribute(name, value)
+            }
+            // Return the value of the attribute
+            return elem[name] || elem.getAttribute(name) || ''
+        }
+
+        return null
+    }
+
+    export const create = (elem: string): HTMLElement => {
+        return document.createElementNS
+            ? document.createElementNS('http://www.w3.org/1999/xhtml', elem)
+            : document.createElement(elem)
+    }
+
+    export const getStyle = (elem: any, name: string): string | null => {
+        // If the property exists in style[], then it's been set
+        // recently (and is current)
+        if (elem.style[name]) {
+            return elem.style[name]
+        } else if (elem.currentStyle) {
+            return elem.currentStyle[name]
+        } else if (document.defaultView && document.defaultView.getComputedStyle) {
+            // It uses the traditional 'text-align' style of rule writing,
+            // instead of textAlign
+            name = name.replace(/([A-Z])/g, '-$1')
+            name = name.toLowerCase()
+            // Get the style object and get the value of the property (if it exists)
+            const s = document.defaultView.getComputedStyle(elem, '')
+
+            return s && s.getPropertyValue(name)
+        }
+
+        return null
+    }
+
+    // Find the X (Horizontal, Left) position of an element
+    export const pageX = (elem: any): any => {
+        return elem && elem.offsetParent ? elem.offsetLeft + pageX(elem.offsetParent) : elem.offsetLeft
+    }
+
+    // Find the Y (Vertical, Top) position of an element
+    export const pageY = (elem: any): any => {
+        return elem && elem.offsetParent ? elem.offsetTop + pageY(elem.offsetParent) : elem.offsetTop
+    }
+
+    // Find the horizontal positioing of an element within its parent
+    export const parentX = (elem: any): any => {
+        return elem && elem.parentNode === elem.offsetParent
+            ? elem.offsetLeft
+            : pageX(elem) - pageX(elem.parentNode)
+    }
+
+    // Find the vertical positioning of an element within its parent
+    export const parentY = (elem: any): any => {
+        return elem && elem.parentNode === elem.offsetParent
+            ? elem.offsetTop
+            : pageY(elem) - pageY(elem.parentNode)
+    }
+
+    // Find the left position of an element
+    export const posX = (elem: any): number | null => {
+        const value = getStyle(elem, 'left')
+        return value ? parseInt(value) : null
+    }
+
+    // Find the top position of an element
+    export const posY = (elem: any): number | null => {
+        const value = getStyle(elem, 'top')
+        return value ? parseInt(value) : null
+    }
+
+    // A function for setting the horizontal position of an element
+    export const setX = (elem: any, pos: number): void => {
+        elem.style.left = `${pos}px`
+    }
+
+    // A function for setting the vertical position of an element
+    export const setY = (elem: any, pos: number): void => {
+        elem.style.top = `${pos}px`
+    }
+
+    // Get the actual height (using the computed CSS) of an element
+    export const getHeight = (elem: any): number | null => {
+        const value = getStyle(elem, 'height')
+        return value ? parseInt(value) : null
+    }
+
+    // Get the actual width (using the computed CSS) of an element
+    export const getWidth = (elem: any): number | null => {
+        // Gets the computed CSS value and parses out a usable number
+        const value = getStyle(elem, 'width')
+        return value ? parseInt(value) : null
+    }
+
+    // A function used for setting a set of CSS properties, which // can then be restored back again later
+    export const resetCSS = (elem: any, prop: any): any => {
+        const old = {}
+        // Go through each of the properties
+        for (const value in prop) {
+            if (Object.prototype.hasOwnProperty.call(prop, value)) {
+                old[value] = elem.style[value]
+                // And set the new value
+                elem.style[value] = prop[value]
+            }
+        }
+
+        return old
+    }
+
+    // Find the full, possible, height of an element (not the actual, // current, height)
+    export const fullHeight = (elem: any): number => {
+        // If the element is being displayed, then offsetHeight
+        // should do the trick, barring that, getHeight() will work
+        if (getStyle(elem, 'display') !== 'none') return elem.offsetHeight || getHeight(elem)
+        // Otherwise, we have to deal with an element with a display
+        // of none, so we need to reset its CSS properties to get a more
+        // accurate reading
+        const old = resetCSS(elem, { display: '', visibility: 'hidden', position: 'absolute' })
+        // Figure out what the full height of the element is, using clientHeight
+        // and if that doesn't work, use getHeight
+        const h = elem.clientHeight || getHeight(elem)
+        // Finally, restore the CSS properties back to what they were
+        restoreCSS(elem, old)
+        // and return the full height of the element
+        return h
+    }
+
+    export const fullWidth = (elem: any): number => {
+        // If the element is being displayed, then offsetWidth
+        // should do the trick, barring that, getWidth() will work
+        if (getStyle(elem, 'display') !== 'none') return elem.offsetWidth || getWidth(elem)
+        // Otherwise, we have to deal with an element with a display
+        // of none, so we need to reset its CSS properties to get a more
+        // accurate reading
+        const old = resetCSS(elem, { display: '', visibility: 'hidden', position: 'absolute' })
+        // Figure out what the full width of the element is, using clientWidth
+        // and if that doesn't work, use getWidth
+        const w = elem.clientWidth || getWidth(elem)
+        // Finally, restore the CSS properties back to what they were
+        restoreCSS(elem, old)
+        // and return the full width of the element
+        return w
+    }
+
+    // Set an opacity level for an element
+    // (where level is a number 0-100)
+    export const setOpacity = (elem, level): void => {
+        if (elem.filters) {
+            elem.style.filters = `alpha(opacity=${level})`
+        } else {
+            elem.style.opacity = level / 100
+        }
+    }
+
+    // Find the horizontal position of the cursor
+    export const getX = (e: any): number => {
+        // Check for the non-IE position, then the IE position
+        return e.pageX || e.clientX + (document.documentElement.scrollLeft || document.body.scrollLeft)
+    }
+
+    // Find the vertical position of the cursor
+    export const getY = (e: any): number => {
+        // Normalize the event object
+        return e.pageY || e.clientY + (document.documentElement.scrollTop || document.body.scrollTop)
+    }
+
+    // Returns the height of the web page // (could change if new content is added to the page)
+    export const pageHeight = (): number => {
+        return document.body.scrollHeight
+    }
+
+    // Returns the width of the web page
+    export const pageWidth = (): number => {
+        return document.body.scrollWidth
+    }
+
+    // A function for determining how far horizontally the browser is scrolled
+    export const scrollX = (): number => {
+        // A shortcut, in case we're using Internet Explorer 6 in Strict Mode
+        const e = document.documentElement
+        // If the pageXOffset of the browser is available, use that
+        return (
+            self.pageXOffset ||
+            // Otherwise, try to get the scroll left off of the root node
+            (e && e.scrollLeft) ||
+            // Finally, try to get the scroll left off of the body element
+            document.body.scrollLeft
+        )
+    }
+
+    // A function for determining how far vertically the browser is scrolled
+    export const scrollY = (): number => {
+        // A shortcut, in case we're using Internet Explorer 6 in Strict Mode
+        const e = document.documentElement
+        // If the pageYOffset of the browser is available, use that
+        return (
+            self.pageYOffset ||
+            // Otherwise, try to get the scroll top off of the root node
+            (e && e.scrollTop) ||
+            // Finally, try to get the scroll top off of the body element
+            document.body.scrollTop
+        )
+    }
+
+    // Find the height of the viewport
+    export const windowHeight = (): number => {
+        // A shortcut, in case we're using Internet Explorer 6 in Strict Mode
+        const e = document.documentElement
+        // If the innerHeight of the browser is available, use that
+        return (
+            self.innerHeight ||
+            // Otherwise, try to get the height off of the root node
+            (e && e.clientHeight) ||
+            // Finally, try to get the height off of the body element
+            document.body.clientHeight
+        )
+    }
+
+    // Find the width of the viewport
+    export const windowWidth = (): number => {
+        // A shortcut, in case we're using Internet Explorer 6 in Strict Mode
+        const e = document.documentElement
+        // If the innerWidth of the browser is available, use that
+        return (
+            self.innerWidth ||
+            // Otherwise, try to get the width off of the root node
+            (e && e.clientWidth) ||
+            // Finally, try to get the width off of the body element
+            document.body.clientWidth
+        )
+    }
+
+    export const restoreCSS = (elem: any, prop: any): void => {
+        // Reset all the properties back to their original values
+        for (const value in prop) {
+            if (Object.prototype.hasOwnProperty.call(prop, value)) {
+                elem.style[value] = prop[value]
+            }
+        }
+    }
+
+    export const hasAttribute = (elem, name: string): boolean => {
+        return elem.getAttribute(name) != null
+    }
 }

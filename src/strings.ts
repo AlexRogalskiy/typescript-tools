@@ -3,7 +3,7 @@ import slugify from 'slugify'
 import { Errors } from './errors'
 import { Checkers } from './checkers'
 import { NumberOrUndef, StringOrUndef } from '../typings/standard-types'
-import { Supplier } from '../typings/function-types'
+import { Processor, Supplier } from '../typings/function-types'
 import { Maths } from './maths'
 import { Numbers } from './numbers'
 import { Comparators } from './comparators'
@@ -126,6 +126,59 @@ export namespace Strings {
         return map.map(e => {
             return args[e.index]
         })
+    }
+
+    export const shortenString = (str: string, func: Processor<string, string>): string => {
+        if (!isString(str)) {
+            throw valueError(`incorrect input string: < ${str} >`)
+        }
+
+        return func(str[0]) + str.substring(1, str.length - 1).length + func(str[str.length - 1])
+    }
+
+    export const getRomanNotation = (num: number): string => {
+        if (!isIntNumber(num) || num < 0) {
+            throw valueError(`incorrect input value: number < ${num} >`)
+        }
+
+        let str = ''
+        const props = {
+            M: 1000,
+            IM: 999,
+            VM: 995,
+            XM: 990,
+            LM: 950,
+            CM: 900,
+            D: 500,
+            ID: 499,
+            VD: 495,
+            XD: 490,
+            LD: 450,
+            CD: 400,
+            C: 100,
+            IC: 99,
+            VC: 95,
+            XC: 90,
+            L: 50,
+            IL: 49,
+            VL: 45,
+            XL: 40,
+            X: 10,
+            IX: 9,
+            V: 5,
+            IV: 4,
+            I: 1,
+        }
+
+        const propNames = Object.getOwnPropertyNames(props)
+        for (const value of propNames) {
+            while (num - props[value] >= 0) {
+                num = num - props[value]
+                str += value
+            }
+        }
+
+        return str
     }
 
     export const shortest = (words: string[], word1: string, word2: string): number => {
@@ -744,5 +797,48 @@ export namespace Strings {
                 return prefixValue + seqValue++
             },
         }
+    }
+
+    export const stripComments = (code: string): string => {
+        return code.replace(/\/\/.*|\/\*[^]*\*\//g, '')
+    }
+
+    export const parseIni = (
+        value: string,
+    ): { name: string | null; fields: { name: string; value: string }[] }[] | null => {
+        // Start with an object to hold the top-level fields
+        const categories: { name: string | null; fields: { name: string; value: string }[] }[] = [
+            { name: null, fields: [] },
+        ]
+
+        for (const line of value.split(/\r?\n/)) {
+            let match
+            if (/^\s*(;.*)?$/.test(line)) {
+                return null
+            } else if ((match = line.match(/^\[(.*)]$/))) {
+                categories.push({ name: match[1], fields: [] })
+            } else if ((match = line.match(/^(\w+)=(.*)$/))) {
+                categories[0].fields.push({ name: match[1], value: match[2] })
+            } else {
+                throw new Error(`Line '${line} ' is invalid.`)
+            }
+        }
+
+        return categories
+    }
+
+    export const relativePos = (event, element): { x: number; y: number } => {
+        const rect = element.getBoundingClientRect()
+
+        return { x: Math.floor(event.clientX - rect.left), y: Math.floor(event.clientY - rect.top) }
+    }
+
+    export const encode = (value: string, delta: number): string => {
+        return value
+            .split('')
+            .map(ch => {
+                return String.fromCharCode(ch.charCodeAt(0) + delta)
+            })
+            .join('')
     }
 }

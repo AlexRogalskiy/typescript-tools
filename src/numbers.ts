@@ -8,6 +8,161 @@ export namespace Numbers {
     import typeError = Errors.typeError
     import isArray = Checkers.isArray
 
+    export namespace NumberOperations {
+        export const negate = (a: number): number => {
+            let neg = 0
+            const d = a < 0 ? 1 : -1
+            while (a !== 0) {
+                neg += d
+                a += d
+            }
+
+            return neg
+        }
+
+        export const minus = (a: number, b: number): number => {
+            if (!isIntNumber(a) || !isIntNumber(b)) {
+                throw valueError(`incorrect input parameters: a < ${a} >, b < ${b} >`)
+            }
+
+            return a + negate(b)
+        }
+
+        export const abs = (a: number): number => {
+            if (a < 0) {
+                return negate(a)
+            }
+            return a
+        }
+
+        export const multiply = (() => {
+            const multiply_ = (a: number, b: number): number => {
+                if (a < b) {
+                    return multiply_(b, a)
+                }
+                let sum = 0
+                for (let i = abs(b); i > 0; i--) {
+                    sum += a
+                }
+                if (b < 0) {
+                    sum = negate(sum)
+                }
+                return sum
+            }
+
+            return function (a: number, b: number) {
+                if (!isIntNumber(a) || !isIntNumber(b)) {
+                    throw valueError(`incorrect input parameters: a < ${a} >, b < ${b} >`)
+                }
+
+                return multiply_(a, b)
+            }
+        })()
+
+        export const divide = (a: number, b: number): number => {
+            if (!isIntNumber(a) || !isIntNumber(b)) {
+                throw valueError(`incorrect input parameters: a < ${a} >, b < ${b} >`)
+            }
+
+            if (b === 0) {
+                throw valueError('Division by zero')
+            }
+
+            const absa = abs(a)
+            const absb = abs(b)
+
+            let product = 0
+            let x = 0
+            while (product + absb <= absa) {
+                product += absb
+                x++
+            }
+
+            if ((a < 0 && b < 0) || (a > 0 && b > 0)) {
+                return x
+            }
+
+            return negate(x)
+        }
+    }
+
+    export const greatest = (a: number, b: number, c: number): number => {
+        return a > b ? (a > c ? a : c) : b > c ? b : c
+    }
+
+    export const isSimpleNumber = (num: number): boolean => {
+        if (!isIntNumber(num) || num < 0) {
+            throw valueError(`incorrect input parameter: number < ${num} >`)
+        }
+
+        let m = 0
+        const n = Math.sqrt(num) + 1
+        for (let j = 2; j < n; j++) {
+            if (num % j === 0) {
+                m++
+            }
+        }
+
+        return m === 0
+    }
+
+    export const getRandPrime = (): number => {
+        const isPrime = (n: number): boolean => {
+            let d = Math.ceil(Math.sqrt(n))
+            while (n % d-- && d) {
+                // empty
+            }
+
+            return !d
+        }
+
+        let n
+        while (((n = Math.round(Math.random() * 1_000_000_000)), !isPrime(n))) {
+            // empty
+        }
+        return n
+    }
+
+    export const getDiv3Xor7 = (n: number, m: number): number => {
+        if (!isIntNumber(n) || !isIntNumber(m) || n <= 0 || m <= 0 || n >= m) {
+            throw valueError(`incorrect input parameters: lower border < ${n} >, upper border < ${m} >`)
+        }
+
+        return Math.abs(
+            Math.floor(n / 7) +
+                Math.floor(n / 3) -
+                2 * Math.floor(n / 21) -
+                Math.floor((m - 1) / 7) -
+                Math.floor((m - 1) / 3) +
+                2 * Math.floor((m - 1) / 21),
+        )
+    }
+
+    export const isSuperSimpleNumber = (num: number): boolean => {
+        if (isSimpleNumber(num)) {
+            while (num) {
+                num = Math.floor(num / 10)
+            }
+            return isSimpleNumber(num)
+        }
+        return false
+    }
+
+    export const isPerfectNumber = (num: number): boolean => {
+        if (!isIntNumber(num) || num < 0) {
+            throw valueError(`incorrect input parameter: number < ${num} >`)
+        }
+
+        let m = 0
+        for (let j = 1; j < num; j++) {
+            if (num % j === 0) {
+                m += j
+            }
+        }
+
+        return num === m
+    }
+
     export const random = (max: number): number => {
         return Math.floor(Math.random() * max)
     }

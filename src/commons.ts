@@ -1,4 +1,8 @@
+import { sha1 } from 'object-hash'
+
 import { Checkers } from './checkers'
+import { Errors } from './errors'
+import { Objects } from './objects'
 
 export namespace Commons {
     const WINDOW_USER_SCRIPT_VARIABLE = '__USER__'
@@ -7,24 +11,24 @@ export namespace Commons {
         return `${WINDOW_USER_SCRIPT_VARIABLE} = ${JSON.stringify(value)};`
     }
 
-    const discardSingle = <A>(a: A, toDiscard: string): A => {
+    const discardSingle = <A>(obj: A, toDiscard: string): A => {
         const result = {}
-        const keys = Object.keys(a)
+        const keys = Object.keys(obj)
         for (const key of keys) {
-            if (key !== toDiscard && Object.prototype.hasOwnProperty.call(a, key)) {
-                result[key] = a[key]
+            if (key !== toDiscard && Object.prototype.hasOwnProperty.call(obj, key)) {
+                result[key] = obj[key]
             }
         }
 
         return result as A
     }
 
-    const discardMany = <A>(a: A, toDiscard: string[]): A => {
+    const discardMany = <A>(obj: A, toDiscard: string[]): A => {
         const result = {}
-        const keys = Object.keys(a)
+        const keys = Object.keys(obj)
         for (const key of keys) {
-            if (-1 === toDiscard.indexOf(key) && Object.prototype.hasOwnProperty.call(a, key)) {
-                result[key] = a[key]
+            if (-1 === toDiscard.indexOf(key) && Object.prototype.hasOwnProperty.call(obj, key)) {
+                result[key] = obj[key]
             }
         }
 
@@ -136,39 +140,7 @@ export namespace Commons {
         return typeof toDiscard === 'string' ? discardSingle(a, toDiscard) : discardMany(a, toDiscard)
     }
 
-    export const hasPrototypeProperty = (obj: any, name: string): boolean => {
-        return !obj.hasOwnProperty(name) && name in obj
-    }
-
-    export const inheritPrototype = (subType: any, superType: any): void => {
-        const prototype = new Object(superType.prototype)
-        prototype.constructor = subType
-        subType.prototype = prototype
-    }
-
-    export const isHostMethod = (obj: any, prop: string): boolean => {
-        return typeof obj[prop] === 'function' || isHostObject(obj, prop)
-    }
-
-    export const isHostObject = (obj: any, prop: string): boolean => {
-        return !!(typeof obj[prop] === 'object' && obj[prop])
-    }
-
-    export const getAllProperties = (o: any): string[] => {
-        let result: string[] = []
-
-        for (
-            let objectToInspect = o;
-            objectToInspect !== null;
-            objectToInspect = Object.getPrototypeOf(objectToInspect)
-        ) {
-            result = result.concat(Object.getOwnPropertyNames(objectToInspect))
-        }
-
-        return result
-    }
-
-    export const defineAccessorProperty = (obj: any, prop: string, value: any): any => {
+    export const defineAccessorProperty = (obj: any, prop: PropertyKey, value: any): any => {
         return Object.defineProperty(obj, prop, {
             get: () => value,
             set: newValue => (value = newValue),
@@ -179,7 +151,7 @@ export namespace Commons {
 
     export const defineProperty = (
         obj: any,
-        prop: string,
+        prop: PropertyKey,
         attrs: PropertyDescriptor = { writable: true, enumerable: true, configurable: true },
     ): any => {
         return Object.defineProperty(obj, prop, attrs)
@@ -187,7 +159,7 @@ export namespace Commons {
 
     export const defineStaticProperty = (
         obj: any,
-        prop: string,
+        prop: PropertyKey,
         attrs = { __proto__: null, value: 'static' },
     ): any => {
         // Object.defineProperty(obj, prop, withValue('static'));
@@ -220,7 +192,13 @@ export namespace Commons {
     // adding a readonly data descriptor - not configurable, enumerable
     // Object.setProperty(1, myObj, 'myString', 'Hello world!');
     export const createProperty = (global: any): void => {
-        Object['setProperty'] = (mask: number, obj: any, prop: string, getter: any, setter: any): any => {
+        Object['setProperty'] = (
+            mask: number,
+            obj: any,
+            prop: PropertyKey,
+            getter: any,
+            setter: any,
+        ): any => {
             if (mask & 8) {
                 // accessor descriptor
                 if (Checkers.isFunction(getter)) {
@@ -266,5 +244,55 @@ export namespace Commons {
                 return old.apply(obj, args)
             }
         }
+    }
+
+    /**
+     * Creates A function expression from the specified string lambda expression
+     * @param {String} exp String lambda expression.
+     * @returns {Function}
+     */
+    export const lambda = (exp: any): any => {
+        if (typeof exp === 'function') {
+            return exp
+        } else if (typeof exp === 'string') {
+            const _pattern = /^\s*\(?\s*(([a-z_$][a-z0-9_$]*)+([, ]+[a-z_$][a-z0-9_$]*)*)*\s*\)?\s*=>\s*(.*)$/i
+            if (_pattern.test(exp)) {
+                const _match = exp.match(_pattern)
+                return new Function(
+                    ((_match && _match[1]) || '').replace(/ /g, ''),
+                    `return ${_match && _match[4]}`,
+                )
+            }
+
+            throw Errors.valueError(`Cannot parse supplied expression: ${exp}`)
+        }
+
+        return null
+    }
+
+    /**
+     * Determines whether the specified object instances are considered equal. calls the overridden "equals" method when available.
+     * @param {Object} objA The first object to compare.
+     * @param {Object} objB The second object to compare.
+     * @returns {Boolean} true if the objA parameter is the same instance as the objB parameter, or if both are null, or if objA.equals(objB) returns true; otherwise, false.
+     */
+    export const equals = (objA: any, objB: any): boolean => {
+        if (objA === objB) {
+            return true // Objects are identical (including null)
+        } else if (objA == null || objB == null) {
+            return false
+        }
+
+        return sha1(objA) === sha1(objB) && Objects.shallowEquals(objA, objB)
+    }
+
+    /**
+     * Returns a boolean indicating whether the object has the specified property.
+     * @param {Object} obj An object.
+     * @param {String} prop A property name.
+     * @returns {Boolean}
+     */
+    export const hasProperty = (obj: any, prop: PropertyKey): boolean => {
+        return Checkers.isFunction(obj.hasOwnProperty) ? obj.hasOwnProperty(prop) : prop in obj
     }
 }

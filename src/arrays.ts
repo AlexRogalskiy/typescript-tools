@@ -231,7 +231,7 @@ export namespace Arrays {
         return res
     }
 
-    export const pluck = <T>(prop: string, ...values: T[]): T[] => {
+    export const pluck = <T>(prop: PropertyKey, ...values: T[]): T[] => {
         const res: T[] = []
         for (let i = 0, member; (member = values[i]); i++) {
             res.push(member[prop] || member)

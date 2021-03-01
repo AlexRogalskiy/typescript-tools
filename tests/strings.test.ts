@@ -11,6 +11,9 @@ export namespace Strings_Test {
     import sortBy = Strings.sortBy;
     import format = Strings.format;
     import shortest = Strings.shortest;
+    import getRomanNotation = Strings.getRomanNotation;
+    import shortenString = Strings.shortenString;
+    import stripComments = Strings.stripComments;
 
     describe('Check emoji replacer', () => {
         it('it should kill emojis in a string', () => {
@@ -43,6 +46,24 @@ export namespace Strings_Test {
         })
     })
 
+    describe('Check roman notation transformation', () => {
+        it('it should return valid roman notation', () => {
+            expect(getRomanNotation(5)).toEqual('V')
+            expect(getRomanNotation(15)).toEqual('XV')
+            expect(getRomanNotation(55)).toEqual('LV')
+            expect(getRomanNotation(155)).toEqual('CLV')
+        })
+    })
+
+    describe('Check shorten string operation', () => {
+        it('it should return valid shortened string', () => {
+            expect(shortenString('internationalisation', v => v.toUpperCase())).toEqual('I18N')
+            expect(shortenString('localization', v => v.toUpperCase())).toEqual('L10N')
+            expect(shortenString('internationalisation', v => v.toLowerCase())).toEqual('i18n')
+            expect(shortenString('localization', v => v.toLowerCase())).toEqual('l10n')
+        })
+    })
+
     describe('Check shortest path between items', () => {
         const strings = ["or", "in", "at", "for", "after", "next", "before", "previous", "in"]
 
@@ -59,6 +80,15 @@ export namespace Strings_Test {
             expect(format(3.1)).toEqual('3.1')
             expect(format(3.12)).toEqual('3.12')
             expect(format(3.123)).toEqual('3.12')
+        })
+    })
+
+    describe('Check strip comments operation', () => {
+        it('it should return valid string with stripped comments', () => {
+            expect(stripComments('a + b// comment')).toEqual('a + b')
+            expect(stripComments('1 + /* 2 */3')).toEqual('1 + 3')
+            expect(stripComments('x = 10;// ten!')).toEqual('x = 10;')
+            expect(stripComments('1 /* a */+/* b */ 1')).toEqual('1  1')
         })
     })
 

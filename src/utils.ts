@@ -82,6 +82,10 @@ export namespace Utils {
             return params.r * r + params.g * g + params.b * b
         }
 
+        export const get_random_color = (): string => {
+            return `#${(((1 << 24) * Math.random()) | 0).toString(16)}`
+        }
+
         /**
          * Adapted from <a href="https://rawgithub.com/mjijackson/mjijackson.github.com/master/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript.html">https://github.com/mjijackson</a>
          * @private
@@ -1345,5 +1349,23 @@ export namespace Utils {
 
             return iterator
         }
+
+        /**
+         * Freezes an object, makes the object effectively immutable.
+         */
+        export const freeze2 = ((): any => {
+            return Checkers.isFunction(Object.freeze) ? Object.freeze : o => o
+        })()
+
+        /**
+         * Defines a new property directly on an object, or modifies an existing property on an object, and returns the object
+         */
+        export const defineProperty2 = ((): any => {
+            const defineProperty_ = (obj: any, prop: PropertyKey, attr: PropertyDescriptor): any => {
+                obj[prop] = attr.get ? attr.get.apply(obj) : attr.value
+            }
+
+            return Checkers.isFunction(Object.defineProperty) ? Object.defineProperty : defineProperty_
+        })()
     }
 }

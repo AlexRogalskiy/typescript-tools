@@ -5,6 +5,7 @@ import { Commons } from './commons'
 export namespace Errors {
     import errors = Logging.errors
     import defineProperty = Commons.defineProperty
+    import hasProperty = Commons.hasProperty
 
     /**
      * ExtendableError
@@ -40,7 +41,7 @@ export namespace Errors {
                 writable: true,
             })
 
-            if (Error.hasOwnProperty('captureStackTrace')) {
+            if (hasProperty(Error, 'captureStackTrace')) {
                 Error.captureStackTrace(this, this.constructor)
                 return
             }

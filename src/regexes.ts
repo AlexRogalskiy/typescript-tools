@@ -3,7 +3,18 @@
  * @type {RegExp}
  */
 export const URL_REGEX = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/i
-export const SIMPLE_URL_REGEX = /(\w+):\/\/([\w. ]+)\/(\S*)/
+export const URL_REGEX2 = /^https?:\/\/([a-z0-9-]+\.)+[a-z0-9]{2,4}.*$/
+export const URL_REGEX3 = /(\w+):\/\/([\w. ]+)\/(\S*)/
+/**
+ * Phone regex patterns
+ * @type {RegExp}
+ */
+export const PHONE_REGEX = /(\d{3}).*(\d{3}).*(\d{4})/
+/**
+ * Date regex patterns
+ * @type {RegExp}
+ */
+export const DATE_REGEX = /^\d{2}\/\d{2}\/\d{2,4}$/
 /**
  * Emoji regex pattern
  * @type {RegExp}
@@ -31,6 +42,9 @@ export const ZIPCODE_REGEX = new RegExp('^[a-z]{3}(-[A-Z]{3})?$')
  */
 export const EMAIL_REGEX = new RegExp(
     '^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([a-z]{2,6}(?:\\.[a-z]{2})?)$',
+)
+export const EMAIL_REGEX2 = new RegExp(
+    '^(([^<>()[\\]\\\\.,;:\\s@"]+(\\.[^<>()[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$',
 )
 
 /**

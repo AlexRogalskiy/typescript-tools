@@ -1,14 +1,20 @@
-import { ALPHA_REGEX, EMAIL_REGEX, MOBILE_NAVIGATOR_CODE_REGEX, MOBILE_NAVIGATOR_TYPE_REGEX } from './regexes'
+import {
+    ALPHA_REGEX,
+    DATE_REGEX,
+    EMAIL_REGEX,
+    MOBILE_NAVIGATOR_CODE_REGEX,
+    MOBILE_NAVIGATOR_TYPE_REGEX,
+    PHONE_REGEX,
+    URL_REGEX2,
+} from './regexes'
 import { Numbers } from './numbers'
 import { Errors } from './errors'
 import { Objects } from './objects'
 
 export namespace Checkers {
-    //const toUint32 = Numbers.toUint32
     import typeError = Errors.typeError
     import valueError = Errors.valueError
     import validationError = Errors.validationError
-    import getType = Objects.getType
 
     export const isNull = (value: any): boolean => {
         return value == null
@@ -38,7 +44,7 @@ export namespace Checkers {
         return value && value.buffer instanceof ArrayBuffer && value.byteLength !== undefined
     }
 
-    export const isObjectBy = (obj: any, prop: string): boolean => {
+    export const isObjectBy = (obj: any, prop: PropertyKey): boolean => {
         return isNotNull(obj[prop]) && typeof obj[prop] === 'object' && !Array.isArray(obj[prop])
     }
 
@@ -62,18 +68,8 @@ export namespace Checkers {
         return String(numericKey) === key && numericKey < Math.pow(2, 32) - 1
     }
 
-    export const isIterable = (value: any): boolean => {
-        return isNotNull(value) && typeof value[Symbol.iterator] === 'function'
-    }
-
     export const areEqualNumbers = (num1: number, num2: number): boolean => {
         return Math.abs(num1 - num2) < Number.EPSILON
-    }
-
-    export const isNumber = (value: any): boolean => {
-        return (
-            isNotNull(value) && (typeof value === 'number' || getType(value) === 'number') && isFinite(value)
-        )
     }
 
     // let isInteger = function(x) { return (x ^ 0) === x; };
@@ -87,6 +83,18 @@ export namespace Checkers {
 
     export const isFloat = (value: any): boolean => {
         return Number.isFinite(value) && !Number.isSafeInteger(value)
+    }
+
+    export const isIterable = (value: any): boolean => {
+        return isNotNull(value) && typeof value[Symbol.iterator] === 'function'
+    }
+
+    export const isNumber = (value: any): boolean => {
+        return (
+            isNotNull(value) &&
+            (typeof value === 'number' || Objects.getType(value) === 'number') &&
+            isFinite(value)
+        )
     }
 
     // positive only, integer or decimal point
@@ -105,7 +113,7 @@ export namespace Checkers {
     }
 
     export const isString = (value: any): boolean => {
-        return isNotNull(value) && (typeof value === 'string' || getType(value) === 'string')
+        return isNotNull(value) && (typeof value === 'string' || Objects.getType(value) === 'string')
     }
 
     export const isArray = (value: any): boolean => {
@@ -134,9 +142,9 @@ export namespace Checkers {
         )
     }
 
-    export const isPropertyInRange = (obj: any, prop: string, lowval: number, hival: number): void => {
-        if (obj[prop] < lowval || obj[prop] > hival) {
-            throw validationError(`Invalid property value=${obj[prop]}, is out of range: ${lowval}-${hival}`)
+    export const isPropertyInRange = (obj: any, prop: PropertyKey, low: number, high: number): void => {
+        if (obj[prop] < low || obj[prop] > high) {
+            throw validationError(`incorrect property value=${obj[prop]}, is out of range: ${low}-${high}`)
         }
     }
 
@@ -190,7 +198,7 @@ export namespace Checkers {
     }
 
     export const isBoolean = (value: any): boolean => {
-        return isNotNull(value) && (typeof value === 'boolean' || getType(value) === 'boolean')
+        return isNotNull(value) && (typeof value === 'boolean' || Objects.getType(value) === 'boolean')
     }
 
     export const isDomElement = (value: any): boolean => {
@@ -210,15 +218,11 @@ export namespace Checkers {
     }
 
     export const isRegExp = (value: any): boolean => {
-        return isNotNull(value) && getType(value) === 'regexp'
+        return isNotNull(value) && Objects.getType(value) === 'regexp'
     }
 
     export const isSet = (value: string): boolean => {
         return isNotNull(value) && typeof value !== 'undefined'
-    }
-
-    export const isEmail = (value: string): boolean => {
-        return EMAIL_REGEX.test(value)
     }
 
     export const isDigit = (chr: string): boolean => {
@@ -231,8 +235,6 @@ export namespace Checkers {
         return code >= charCode('0') && code <= charCode('9')
     }
 
-    // let hasRegExpY = hasRegExp("y");
-    // let hasRegExpU = hasRegExp("u");
     export const hasRegExp = (value: any): boolean => {
         try {
             new RegExp('.', value)
@@ -241,4 +243,112 @@ export namespace Checkers {
             return false
         }
     }
+
+    export const checkEmail = (value: string): boolean => {
+        return EMAIL_REGEX.test(value)
+    }
+
+    export const checkUrl = (value: string): boolean => {
+        return URL_REGEX2.test(value)
+    }
+
+    export const checkPhone = (value: string): boolean => {
+        return PHONE_REGEX.test(value)
+    }
+
+    export const checkDate = (value: string): boolean => {
+        return DATE_REGEX.test(value)
+    }
+
+    export const CHECK_RULES = {
+        // Checks for when a specified field is required
+        required: {
+            msg: 'This field is required.',
+            test(obj, load) {
+                // Make sure that there is no text was entered in the field and that
+                // we aren't checking on page load (showing 'field required' messages
+                // would be annoying on page load)
+                return load || (obj && obj.value && obj.value !== obj.defaultValue)
+            },
+        },
+        // Makes sure that the field s a valid email address
+        email: {
+            msg: 'Not a valid email address.',
+            test(obj) {
+                // Make sure that something was entered and that it looks like
+                // an email address
+                return obj && obj.value && /^[a-z0-9_+.-]+\\@([a-z0-9-]+\.)+[a-z0-9]{2,4}$/i.test(obj.value)
+            },
+        },
+        // Makes sure the field is a phone number and
+        // auto-formats the number if it is one
+        phone: {
+            msg: 'Not a valid phone number.',
+            test(obj) {
+                // Check to see if we have something that looks like
+                // a valid phone number
+                const m = /(\d{3}).*(\d{3}).*(\d{4})/.exec(obj.value)
+                // If it is, seemingly, valid - force it into the specific
+                // format that we desire: (123) 456-7890
+                if (m) obj.value = `(${m[1]}) ${m[2]}-${m[3]}`
+                return obj && obj.value && m
+            },
+        },
+        // Makes sure that the field is a valid MM/DD/YYYY date
+        date: {
+            msg: 'Not a valid date.',
+            test(obj) {
+                // Make sure that something is entered, and that it
+                // looks like a valid MM/DD/YYYY date
+                return obj && obj.value && /^\d{2}\/\d{2}\/\d{2,4}$/.test(obj.value)
+            },
+        },
+        // Makes sure that the field is a valid URL
+        url: {
+            msg: 'Not a valid URL.',
+            test(obj) {
+                // Make sure that some text was entered, and that it's
+                // not the default http:// text
+                return (
+                    obj &&
+                    obj.value &&
+                    // Make sure that it looks like a valid URL
+                    /^https?:\/\/([a-z0-9-]+\.)+[a-z0-9]{2,4}.*$/.test(obj.value)
+                )
+            },
+        },
+    }
+
+    export const hasClass = (clazz: string, pattern: string): boolean => {
+        return new RegExp(`(^|\\s)${pattern}(\\s|$)`).test(clazz)
+    }
+
+    /**
+     * Checks for an object to be of the specified type; if not throws an Error.
+     */
+    export const checkType = (obj: any, type: string): void => {
+        if (!Objects.is(obj, type)) {
+            throw validationError(`Invalid parameter type. Expected type: ${type}`)
+        }
+    }
+
+    export const isHostMethod = (obj: any, prop: PropertyKey): boolean => {
+        return typeof obj[prop] === 'function' || isHostObject(obj, prop)
+    }
+
+    export const isHostObject = (obj: any, prop: PropertyKey): boolean => {
+        return !!(typeof obj[prop] === 'object' && obj[prop])
+    }
+
+    // Detects if an object is direct child of Object class (ie. object literal)
+    export const isObjectLiteral = (() => {
+        const _proto = Object.prototype,
+            _prototype = Object.getPrototypeOf
+
+        if (isFunction(_prototype)) {
+            return obj => _prototype(obj) === _proto
+        }
+
+        return obj => obj.constructor.prototype === _proto
+    })()
 }

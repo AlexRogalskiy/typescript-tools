@@ -62,7 +62,7 @@ export namespace Arrays_Test {
                 age: 30,
             },
         ]
-        
+
         it('it should group an array by property and return a grouped object', () => {
             expect(groupBy(array, (i) => i.lastName)).toEqual({
                 Smit: [

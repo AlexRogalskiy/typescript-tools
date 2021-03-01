@@ -48,7 +48,7 @@ export type StringOrUndef = string | null | undefined
  * NumberOrUndef
  * @desc Type representing [`Primitive`](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) types in TypeScript: `number | null | undefined`
  */
-export type NumberOrUndef = number | null | undefined
+export type NumberOrUndef = number | bigint | null | undefined
 
 /**
  * BooleanOrUndef

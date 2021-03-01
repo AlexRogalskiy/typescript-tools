@@ -1,6 +1,7 @@
 import { Numbers } from './numbers'
 import { Checkers } from './checkers'
 import { Errors } from './errors'
+import { Commons } from './commons'
 
 export namespace Objects {
     export const randomEnum = <T>(enumType: T): T[keyof T] => {
@@ -94,9 +95,169 @@ export namespace Objects {
         if (obj === null) {
             return 'Null'
         }
+
         if (obj === undefined) {
             return 'Undefined'
         }
+
         return Object.prototype.toString.call(obj).slice(8, -1)
+    }
+
+    export const hasPrototypeProperty = (obj: any, name: string): boolean => {
+        return !obj.hasOwnProperty(name) && name in obj
+    }
+
+    export const inheritPrototype = (subType: any, superType: any): void => {
+        const prototype = new Object(superType.prototype)
+        prototype.constructor = subType
+        subType.prototype = prototype
+    }
+
+    export const getAllProperties = (o: any): string[] => {
+        let result: string[] = []
+
+        for (
+            let objectToInspect = o;
+            objectToInspect !== null;
+            objectToInspect = Object.getPrototypeOf(objectToInspect)
+        ) {
+            result = result.concat(Object.getOwnPropertyNames(objectToInspect))
+        }
+
+        return result
+    }
+
+    /**
+     * Determines whether an object is instance of a given type.
+     * @param {Object} obj An object.
+     * @param {Function} type The type to check.
+     * @returns {Boolean}
+     */
+    export const is = (obj, type): boolean => {
+        if (typeof obj === 'number') {
+            return type === 'number'
+        } else if (typeof obj === 'string') {
+            return type === 'string'
+        } else if (typeof obj === 'function') {
+            return type === 'function'
+        } else if (typeof obj === 'boolean') {
+            return type === 'boolean'
+        }
+
+        return obj instanceof type
+    }
+
+    /**
+     * Determines whether the specified object is array-like.
+     * @param {Object} obj The object to check.
+     * @returns {Boolean}
+     */
+    export const isArrayLike = (obj: any): boolean => {
+        if (obj instanceof Array || typeof obj === 'string') {
+            // Arrays/String
+            return true
+        } else if (typeof obj === 'object' && typeof obj.length === 'number') {
+            // Array-likes have 'length' property (excelude 'function' type)
+
+            if (
+                typeof obj.splice === 'function' || // third party libraries. eg. jQuery
+                obj.toString() === '[object Arguments]' || // arguments
+                obj.buffer || // typed-array
+                obj instanceof NodeList
+            ) {
+                // NodeList: document.querySelectorAll
+                return true
+            }
+        }
+
+        return false
+    }
+
+    /**
+     * Defines new or modifies existing properties directly on the specified object, returning the object.
+     * @param {Object} obj The object on which to define or modify properties.
+     * @param {String} prop The name of the property to be defined or modified.
+     * @param {PropertyDescriptor} attributes The descriptor for the property being defined or modified.
+     * @returns {Object}
+     */
+    export const define = <T>(
+        obj: any,
+        prop: string,
+        attributes: { value: T; writable?: boolean; enumerable?: boolean; configurable?: boolean },
+    ): any => {
+        Commons.defineProperty(obj, prop, attributes)
+
+        if (is(prop, 'string') && Checkers.isFunction(attributes.value)) {
+            const _str = `function ${prop}() {...}`
+
+            Commons.defineProperty(attributes.value, 'toString', {
+                value() {
+                    return _str
+                },
+                writable: true,
+            })
+        }
+
+        return obj
+    }
+
+    /**
+     * Extends the given object by implementing supplied members.
+     * @param {Object} obj The object on which to define or modify properties.
+     * @param {Object} properties Represetnts the mixin source object
+     * @param {PropertyDescriptor=} attributes The descriptor for the property being defined or modified.
+     * @returns {Object}
+     */
+    export const mixin = (
+        obj: any,
+        properties: any,
+        attributes = { writable: true, enumerable: true, configurable: true },
+    ): any => {
+        if (obj) {
+            for (const _prop in properties) {
+                if (!Commons.hasProperty(obj, _prop)) {
+                    define(obj, _prop, {
+                        value: properties[_prop],
+                        writable: attributes.writable || false,
+                        enumerable: attributes.enumerable || false,
+                        configurable: attributes.configurable || false,
+                    })
+                }
+            }
+        }
+
+        return obj
+    }
+
+    /**
+     * Extends the given type by inheriting from a superType and/or extending its prototype.
+     * @param {Function} type The type to extend.
+     * @param {Function|Object} extender The super-type or the prototype mixin object.
+     * @param {Object=} args The prototype mixin object or a mixin source object to extend the type.
+     * @returns {Function}
+     */
+    export const extend = (type, extender, ...args: any[]): void => {
+        const _args = args,
+            _super = Checkers.isFunction(extender) ? extender : null,
+            _proto = _args.length === 4 || _super ? _args[2] : extender,
+            _static = _args.length === 4 || _super ? _args[3] : _args[2]
+
+        if (_super) {
+            const _ = (): void => {
+                define({}, 'constructor', { value: type })
+            }
+            _.prototype = _super.prototype
+            type.prototype = new _()
+        }
+
+        if (_proto) {
+            mixin(type.prototype, _proto)
+        }
+
+        if (_static) {
+            mixin(type, _static)
+        }
+
+        return type
     }
 }

@@ -438,7 +438,52 @@ export namespace Maths {
                     throw valueError(`incorrect input value: x < ${value} >`)
                 }
 
-                return Math.log(value) / Math.LN10
+                return Math.ceil(Math.log(value) / Math.LN10)
+            }
+
+            export const log = (x: number, a: number): number => {
+                if (!isNumber(a) || !isNumber(x) || x <= 0 || a <= 0 || a === 1) {
+                    throw valueError(`incorrect input values: base < ${a} >, num < ${x} >`)
+                }
+
+                return Math.log(x) / Math.log(a)
+            }
+
+            export const pow = (base: number, exponent: number): number => {
+                if (!isNumber(base) || !isNumber(exponent)) {
+                    throw valueError(`incorrect input values: base < ${base} >, exponent < ${exponent} >`)
+                }
+
+                if (base === 0) return 0
+                if (base === 1) return 1
+                if (base === -1) return exponent % 2 === 0 ? 1 : -1
+
+                let result = 1
+                const flag = exponent < 0
+                exponent = Math.abs(exponent)
+
+                while (exponent > 0) {
+                    if (exponent % 2) {
+                        result *= base
+                    }
+                    base *= base
+                    exponent = Math.floor(exponent / 2)
+                }
+
+                return flag ? 1 / result : result
+            }
+
+            export const triangleSide = (a: number, b: number): number => {
+                if (!isNumber(a) || !isNumber(b)) {
+                    throw valueError(`incorrect input values: a < ${a} >, b < ${b} >`)
+                }
+
+                const angleA = Math.atan(a / b),
+                    angleB = Math.atan(b / a),
+                    angleC = Math.PI - angleA - angleB
+                const c = Math.pow(a, 2) + Math.pow(b, 2) - 2 * a * b * Math.cos(angleC)
+
+                return Math.sqrt(c)
             }
 
             export const cosec = (x: number): number => {
@@ -948,6 +993,21 @@ export namespace Maths {
                     },
                 }
             }
+
+            export const triangleSquare = (array: number[][]): number => {
+                if (!isArray(array) || !isArray(array[0])) {
+                    throw valueError(`incorrect array value: array < ${array} >`)
+                }
+
+                if (!Geometry.isTriangleSquared(array)) {
+                    throw valueError(`incorrect squared triangle < ${JSON.stringify(array)} >`)
+                }
+
+                const left = (array[0][0] - array[2][0]) * (array[1][1] - array[2][1])
+                const right = (array[0][1] - array[2][1]) * (array[1][0] - array[2][0])
+
+                return Math.abs(left - right) / 2
+            }
         }
 
         export namespace Integrals {
@@ -1252,6 +1312,201 @@ export namespace Maths {
         }
 
         export namespace Geometry {
+            import toDegrees = Helpers.toDegrees
+
+            export const intersection = (obj1, obj2): boolean => {
+                if (!isObject(obj1)) {
+                    throw valueError(`incorrect input argument: {obj1} is not an object < ${obj1} >`)
+                }
+                if (!isObject(obj2)) {
+                    throw valueError(`incorrect input argument: {obj2} is not an object < ${obj2} >`)
+                }
+
+                const x =
+                    (obj1.x.max -
+                        obj1.x.min +
+                        obj2.x.max -
+                        obj2.x.min -
+                        Math.abs(obj1.x.max + obj1.x.min - obj2.x.max - obj2.x.min)) /
+                    2
+                const y =
+                    (obj1.y.max -
+                        obj1.jy.min +
+                        obj2.y.max -
+                        obj2.y.min -
+                        Math.abs(obj1.y.max + obj1.y.min - obj2.y.max - obj2.y.min)) /
+                    2
+
+                return x > 0 && y > 0
+            }
+
+            export const penetration = (
+                obj1,
+                obj2,
+            ): { x: number; y: number; direction: { x: number; y: number } } | null => {
+                if (!isObject(obj1)) {
+                    throw valueError(`incorrect input argument: {obj1} is not an object < ${obj1} >`)
+                }
+                if (!isObject(obj2)) {
+                    throw valueError(`incorrect input argument: {obj2} is not an object < ${obj2} >`)
+                }
+
+                const dx = obj1.x.max + obj1.x.min - obj2.x.max - obj2.x.min,
+                    dy = obj1.y.max + obj1.y.min - obj2.y.max - obj2.y.min,
+                    x = (obj1.x.max - obj1.x.min + obj2.x.max - obj2.x.min - Math.abs(dx)) / 2,
+                    y = (obj1.y.max - obj1.y.min + obj2.y.max - obj2.y.min - Math.abs(dy)) / 2
+
+                return x > 0 && y > 0
+                    ? { x, y, direction: { x: dx / Math.abs(dx), y: dy / Math.abs(dy) } }
+                    : null
+            }
+
+            export const direction = (obj1, obj2): { x: number; y: number } => {
+                if (!isObject(obj1)) {
+                    throw valueError(`incorrect input argument: {obj1} is not an object < ${obj1} >`)
+                }
+                if (!isObject(obj2)) {
+                    throw valueError(`incorrect input argument: {obj2} is not an object < ${obj2} >`)
+                }
+
+                const x = obj1.x.max + obj1.x.min - obj2.x.max - obj2.x.min,
+                    y = obj1.y.max + obj1.y.min - obj2.y.max - obj2.y.min
+
+                return { x: x / Math.abs(x), y: y / Math.abs(y) }
+            }
+
+            export const distance = (obj1, obj2): number => {
+                if (!isObject(obj1)) {
+                    throw valueError(`incorrect input argument: {obj1} is not an object < ${obj1} >`)
+                }
+                if (!isObject(obj2)) {
+                    throw valueError(`incorrect input argument: {obj2} is not an object < ${obj2} >`)
+                }
+
+                const x = Math.abs(obj1.x.max + obj1.x.min - obj2.x.max - obj2.x.min),
+                    y = Math.abs(obj1.y.max + obj1.y.min - obj2.y.max - obj2.y.min)
+
+                return Math.sqrt(x * x + y * y)
+            }
+
+            export const calculateDistance = (
+                lat1: number,
+                lon1: number,
+                lat2: number,
+                lon2: number,
+                radius: number,
+            ): number => {
+                if (!isNumber(lat1) || !isNumber(lon1)) {
+                    throw valueError(
+                        `incorrect input arguments: start point latitude < ${lat1} > and longitude < ${lon1} >`,
+                    )
+                }
+
+                if (!isNumber(lat2) || !isNumber(lon2)) {
+                    throw valueError(
+                        `incorrect input arguments: start point latitude < ${lat2} > and longitude < ${lon2} >`,
+                    )
+                }
+
+                const radius_ = radius == null ? 6378.135 : isNumber(radius) && radius > 0 ? radius : null
+                if (radius_ == null) {
+                    throw valueError(`incorrect {radius} value: < ${radius_} >`)
+                }
+
+                const rad = toRadians(Math.PI / 180)
+                lat1 = toRadians(lat1) * rad
+                lon1 = toRadians(lon1) * rad
+                lat2 = toRadians(lat2) * rad
+                lon2 = toRadians(lon2) * rad
+
+                const theta = lon2 - lon1
+                let dist = Math.acos(
+                    Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(theta),
+                )
+                if (dist < 0) {
+                    dist += Math.PI
+                }
+
+                return dist * radius
+            }
+
+            export const calculateBearing = (
+                lat1: number,
+                lon1: number,
+                lat2: number,
+                lon2: number,
+            ): number => {
+                const value = Math.atan2(
+                    Math.sin(lon2 - lon1) * Math.cos(lat2),
+                    Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1),
+                )
+
+                return toDegrees(value)
+            }
+
+            export const getInnerCircleRadius = (a: number, b: number, c: number): number => {
+                if (isTriangle(a, b, c)) {
+                    const perim = a + b + c
+                    const p = perim / 2
+                    const square = Math.sqrt(p * (p - a) * (p - b) * (p - c))
+
+                    return parseInt(((2 * square) / perim).toFixed(3))
+                }
+
+                return 0
+            }
+
+            export const getOuterCircleRadius = (a: number, b: number, c: number): number => {
+                if (isTriangle(a, b, c)) {
+                    const p = (a + b + c) / 2
+                    const square = Math.sqrt(p * (p - a) * (p - b) * (p - c))
+
+                    return parseInt(((a * b * c) / 4 / square).toFixed(3))
+                }
+
+                return 0
+            }
+
+            export const isTriangle = (a, b, c): boolean => {
+                if (!isNumber(a) || !isNumber(b) || !isNumber(c) || a < 0 || b < 0 || c < 0) {
+                    throw valueError(`incorrect input parameters: a < ${a} >, b < ${b} >, c < ${c} >`)
+                }
+
+                return !!(Math.max(a + b, c) && Math.max(a + c, b) && Math.max(b + c, a))
+            }
+
+            export const isTriangleSquared = (array: number[][]): boolean => {
+                if (!isArray(array) || !isArray(array[0])) {
+                    throw valueError(`incorrect array value: array < ${array} >`)
+                }
+
+                const a = Math.pow(array[0][0] - array[1][0], 2) + Math.pow(array[0][1] - array[1][1], 2)
+                const b = Math.pow(array[1][0] - array[2][0], 2) + Math.pow(array[1][1] - array[2][1], 2)
+                const c = Math.pow(array[0][0] - array[2][0], 2) + Math.pow(array[0][1] - array[2][1], 2)
+
+                const hipot = a > b ? (a > c ? a : c) : b > c ? b : c
+
+                return hipot === (hipot === a ? b + c : hipot === b ? a + c : a + b)
+            }
+
+            export const crossLines = (line1, line2): { x0: number; y0: number } | string => {
+                if (!isObject(line1) || !isObject(line2)) {
+                    throw valueError(`incorrect input values: line1 < ${line1} >, line2 < ${line2} >`)
+                }
+
+                if (line1.a * line2.b === line1.b * line2.a) {
+                    if (line1.a * line2.c !== line1.c * line2.a) {
+                        return 'parallel lines'
+                    }
+                    return 'coincided lines'
+                }
+
+                const x0 = (line1.b * line2.c - line2.b * line1.c) / (line1.a * line2.b - line1.b * line2.a)
+                const y0 = (line1.a * line2.c - line1.c * line2.a) / (line1.b * line2.a - line2.b * line1.a)
+
+                return { x0, y0 }
+            }
+
             export const randomPointOnCircle = (radius: number): { x; y } => {
                 const angle = Math.random() * 2 * Math.PI
 
@@ -1577,6 +1832,199 @@ export namespace Maths {
                 return numOnes
             }
 
+            export const isArmStrongNumber = (num: number): boolean => {
+                if (!isNumber(num)) {
+                    throw valueError(`incorrect input value: num < ${num} >`)
+                }
+
+                const splitNum: number[] = []
+                let res = 0
+                while (num > 0) {
+                    splitNum.push(num % 10)
+                    num = Math.floor(num / 10)
+                }
+
+                const pw = splitNum.length
+                for (let i = 0; i < pw; i++) {
+                    res += Math.pow(splitNum[i], pw)
+                }
+
+                return res === num
+            }
+
+            export const isLatinSquare = (array: number[][]): boolean => {
+                if (!isArray(array)) {
+                    throw valueError(`incorrect array value: < ${array} >`)
+                }
+
+                const w = array.length ? array.length : 0,
+                    h = array[0] && isArray(array[0]) ? array[0].length : 0
+                if (h === 0 || w === 0 || h !== w) {
+                    throw valueError(`incorrect matrix size width=${w}, height=${h}`)
+                }
+
+                for (let i = 0; i < h; i++) {
+                    for (let j = 0; j < h; j++) {
+                        if (array[i][j] < 1 || array[i][j] > w) {
+                            return false
+                        }
+                    }
+                }
+
+                for (let i = 0; i < h; i++) {
+                    for (let j = 0; j < h; j++) {
+                        for (let k = j + 1; k < h; k++) {
+                            if (array[i][j] === array[i][k]) {
+                                return false
+                            }
+                        }
+                    }
+                }
+                for (let i = 0; i < h; i++) {
+                    for (let j = 0; j < h; j++) {
+                        for (let k = j + 1; k < h; k++) {
+                            if (array[i][j] === array[k][j]) {
+                                return false
+                            }
+                        }
+                    }
+                }
+
+                return false
+            }
+
+            export const denom = (num: number): number[] => {
+                if (!isIntNumber(num)) {
+                    throw valueError(`incorrect input value: num < ${num} >`)
+                }
+
+                let i = 2,
+                    temp = num
+                const result: number[] = []
+                while (temp > 1 && i <= num) {
+                    if (temp % i === 0) {
+                        result.push(i)
+                        temp /= i
+                    }
+                    i++
+                }
+
+                return result
+            }
+
+            export const denom2 = (num: number): number[] => {
+                if (!isIntNumber(num)) {
+                    throw valueError(`incorrect input value: num < ${num} >`)
+                }
+
+                let i = 1
+                const result: number[] = []
+                while (i <= num) {
+                    if (num % i === 0) {
+                        result.push(i)
+                    }
+                    i++
+                }
+
+                return result
+            }
+
+            export const sumNum = (num: number): number => {
+                if (!isNumber(num)) {
+                    throw valueError(`incorrect input value: num < ${num} >`)
+                }
+
+                let sum = 0
+                num = Math.abs(num)
+                while (num > 0) {
+                    sum += num % 10
+                    num = Math.floor(num / 10)
+                }
+
+                return sum
+            }
+
+            export const prefixAverages = (array: number[]): number[] => {
+                if (!isArray(array)) {
+                    throw valueError(`incorrect array value: < ${array} >`)
+                }
+
+                let sum = 0
+                const result: number[] = []
+                for (let i = 0; i < array.length; i++) {
+                    sum += array[i]
+                    result[i] = sum / (i + 1)
+                }
+
+                return result
+            }
+
+            export const gcd = (i: number, j: number): number => {
+                if (!isNumber(i) || !isNumber(j)) {
+                    throw valueError(`incorrect input values: x < ${i} >, y < ${j} >`)
+                }
+
+                i = Math.floor(Math.abs(i))
+                j = Math.floor(Math.abs(j))
+                while (i !== j) {
+                    if (i > j) {
+                        i -= j
+                    } else {
+                        j -= i
+                    }
+                }
+
+                return i
+            }
+
+            export const gcd2 = (i: number, j: number): number => {
+                if (!isNumber(i) || !isNumber(j)) {
+                    throw valueError(`incorrect input values: x < ${i} >, y < ${j} >`)
+                }
+
+                let temp
+                i = Math.floor(Math.abs(i))
+                j = Math.floor(Math.abs(j))
+                while (j !== 0) {
+                    temp = j
+                    j = i % j
+                    i = temp
+                }
+
+                return i
+            }
+
+            export const gcd3 = (x: number, y: number): number => {
+                if (!isNumber(x) || !isNumber(y)) {
+                    throw valueError(`incorrect input values: x < ${x} >, y < ${y} >`)
+                }
+
+                let temp,
+                    temp2 = 0
+                if (x === 0) return y
+                if (y === 0) return x
+
+                while (((x | y) & 1) === 0) {
+                    x >>= 1
+                    y >>= 1
+                    ++temp2
+                }
+
+                while ((x & 1) === 0) x >>= 1
+                while (y) {
+                    while ((y & 1) === 0) y >>= 1
+                    temp = y
+                    if (x > y) {
+                        y = x - y
+                    } else {
+                        y = y - x
+                    }
+                    x = temp
+                }
+
+                return x << temp2
+            }
+
             // let res = permutation([1, 2, 3, 4]);
             // document.writeln("permutation: " + res);
             export const permutation = (str: string[]): string[][] => {
@@ -1729,7 +2177,7 @@ export namespace Maths {
         }
     }
 
-    export namespace Factorials {
+    export namespace Numerals {
         import vector = Helpers.vector
         import memoizer = Helpers.memoizer
 
@@ -1750,6 +2198,162 @@ export namespace Maths {
             }
 
             return fib
+        })()
+
+        export const fibonacci3 = (num: number): number[] => {
+            if (!isIntNumber(num) || num < 0) {
+                throw valueError(`incorrect input value: count < ${num} >`)
+            }
+
+            const res: number[] = []
+            let next,
+                n = 0,
+                a = 0,
+                b = 1
+
+            const nextFibonacci = (): number => {
+                next = a + b
+                return (b = ((a = b), next))
+            }
+
+            while (n++ < num) {
+                res.push(nextFibonacci())
+            }
+
+            return res
+        }
+
+        export const fibonacci4 = (num: number): number[] => {
+            if (!isIntNumber(num) || num < 0) {
+                throw valueError(`incorrect input string: value < ${num} >`)
+            }
+
+            const res = [0, 1]
+            for (let i = 2; i < num; res.push(res[i - 1] + res[i - 2]), i++) {
+                // empty
+            }
+
+            return res
+        }
+
+        export const fibonacci5 = (() => {
+            const map = [
+                '0',
+                '1',
+                '1',
+                '2',
+                '3',
+                '5',
+                '8',
+                '13',
+                '21',
+                '34',
+                '55',
+                '89',
+                '144',
+                '233',
+                '377',
+                '610',
+                '987',
+                '1597',
+                '2584',
+                '4181',
+                '6765',
+                '10946',
+                '17711',
+                '28657',
+                '46368',
+                '75025',
+                '121393',
+                '196418',
+                '317811',
+                '514229',
+                '832040',
+                '1346269',
+                '2178309',
+                '3524578',
+                '5702887',
+                '9227465',
+                '14930352',
+                '24157817',
+                '39088169',
+                '63245986',
+                '102334155',
+                '165580141',
+                '267914296',
+                '433494437',
+                '701408733',
+                '1134903170',
+                '1836311903',
+                '2971215073',
+                '4807526976',
+                '7778742049',
+                '12586269025',
+                '20365011074',
+                '32951280099',
+                '53316291173',
+                '86267571272',
+                '139583862445',
+                '225851433717',
+                '365435296162',
+                '591286729879',
+                '956722026041',
+                '1548008755920',
+                '2504730781961',
+                '4052739537881',
+                '6557470319842',
+                '10610209857723',
+                '17167680177565',
+                '27777890035288',
+                '44945570212853',
+                '72723460248141',
+                '117669030460994',
+                '190392490709135',
+                '308061521170129',
+                '498454011879264',
+                '806515533049393',
+                '1304969544928657',
+                '2111485077978050',
+                '3416454622906707',
+                '5527939700884757',
+                '8944394323791464',
+                '14472334024676221',
+                '23416728348467685',
+                '37889062373143906',
+                '61305790721611591',
+                '99194853094755497',
+                '160500643816367088',
+                '259695496911122585',
+                '420196140727489673',
+                '679891637638612258',
+                '1100087778366101931',
+                '1779979416004714189',
+                '2880067194370816120',
+                '4660046610375530309',
+                '7540113804746346429',
+                '12200160415121876738',
+                '19740274219868223167',
+                '31940434634990099905',
+                '51680708854858323072',
+                '83621143489848422977',
+                '135301852344706746049',
+                '218922995834555169026',
+                '354224848179261915075',
+            ]
+
+            return (n: number) => {
+                if (!isIntNumber(n)) {
+                    throw valueError(`incorrect input argument: fibonacci sequence number < ${n} >`)
+                }
+
+                if (n < 0 || n >= map.length) {
+                    throw valueError(
+                        `incorrect input value: fibonacci sequence number < ${n} > is out of range [0, ${map.length}]`,
+                    )
+                }
+
+                return map[n]
+            }
         })()
 
         export const factorial = memoizer([1, 1], (recur, n) => {
@@ -1828,7 +2432,7 @@ export namespace Maths {
                 return res
             }
 
-            for (let i = value; i > 0; i -= 2) {
+            for (let i = value; i > 0; i -= 1) {
                 res *= i
             }
 
