@@ -1,19 +1,14 @@
-import {
-    ALPHA_REGEX,
-    EMAIL_REGEX,
-    MOBILE_NAVIGATOR_CODE_REGEX,
-    MOBILE_NAVIGATOR_TYPE_REGEX
-} from './regexes'
+import { ALPHA_REGEX, EMAIL_REGEX, MOBILE_NAVIGATOR_CODE_REGEX, MOBILE_NAVIGATOR_TYPE_REGEX } from './regexes'
 import { Numbers } from './numbers'
 import { Errors } from './errors'
 import { Objects } from './objects'
 
 export namespace Checkers {
     //const toUint32 = Numbers.toUint32
-    import typeError = Errors.typeError;
-    import valueError = Errors.valueError;
-    import validationError = Errors.validationError;
-    import getType = Objects.getType;
+    import typeError = Errors.typeError
+    import valueError = Errors.valueError
+    import validationError = Errors.validationError
+    import getType = Objects.getType
 
     export const isNull = (value: any): boolean => {
         return value == null

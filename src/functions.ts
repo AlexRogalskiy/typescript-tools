@@ -5,9 +5,9 @@ import { Checkers } from './checkers'
 import { Errors } from './errors'
 
 export namespace Functions {
-    import isFunction = Checkers.isFunction;
-    import typeError = Errors.typeError;
-    import valueError = Errors.valueError;
+    import isFunction = Checkers.isFunction
+    import typeError = Errors.typeError
+    import valueError = Errors.valueError
 
     export const composeAsync = async (...funcArgs) => async x =>
         // eslint-disable-next-line github/no-then
