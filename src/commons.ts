@@ -160,7 +160,7 @@ export namespace Commons {
     export const defineStaticProperty = (
         obj: any,
         prop: PropertyKey,
-        attrs = { __proto__: null, value: 'static' },
+        attrs: { __proto__?: null; value: any },
     ): any => {
         // Object.defineProperty(obj, prop, withValue('static'));
         return Object.defineProperty(obj, prop, attrs)
@@ -293,6 +293,126 @@ export namespace Commons {
      * @returns {Boolean}
      */
     export const hasProperty = (obj: any, prop: PropertyKey): boolean => {
+        if (Checkers.isNull(obj)) return false
         return Checkers.isFunction(obj.hasOwnProperty) ? obj.hasOwnProperty(prop) : prop in obj
     }
+
+    /**
+     * Determines whether the specified object instances are considered equal.
+     */
+    export const computeEquals = (() => {
+        const _equalsSymbol = '__equals__'
+
+        /**
+         * Determines whether the specified object instances are considered equal.
+         * @param {Object} objA The first object to compare.
+         * @param {Object} objB The second object to compare.
+         * @param {Boolean} override When true, uses the overriden __equals__ function if it is defined.
+         * @returns {Boolean}
+         */
+        const computeEquals = (objA, objB, override): boolean => {
+            // Objects are identical (including null)
+            if (objA === objB) {
+                return true
+            }
+
+            // null is not equal to any object
+            else if (objA == null || objB == null) {
+                return false
+            }
+
+            // Objects check for equality for primitive types
+            if (typeof objA === 'number' || typeof objA === 'string' || typeof objA === 'boolean') {
+                return objA === objB
+            } else if (typeof objA === 'object') {
+                // Objects are from "Date" type
+                if (objA instanceof Date) {
+                    return computeDateEquals(objA, objB)
+                } else if (override && typeof objA.__equals__ === 'function') {
+                    return objA.__equals__(objB)
+                }
+
+                return computeObjectEquals(objA, objB)
+            }
+
+            // Objects are already not equal
+            return false
+        }
+
+        // Compares Date objects by their time
+        const computeDateEquals = (objA: any, objB: any): boolean => {
+            return objA instanceof Date && objB instanceof Date && objA.getTime() === objB.getTime()
+        }
+
+        // Compares Primitive objects
+        const computePrimitiveEquals = (objA: any, objB: any): boolean => {
+            return objA === objB
+        }
+
+        // Compares Object types by their Hash code and Properties
+        const computeObjectEquals = (objA: any, objB: any): boolean => {
+            if (typeof objA === 'object' && typeof objB === 'object') {
+                if (sha1(objA, true) !== sha1(objB, true)) {
+                    return false
+                }
+
+                /// Process equality for object literals:
+                /// object literals may have equal hash code, we process equality by each property.
+                /// regular "class" instances have different hash code, hence do not fall into following code.
+                /// object objA is direct descendant of Object hence no need to check "hasOwnProperty"
+
+                let _val
+
+                for (const _prop in objA) {
+                    if (hasProperty(objA, _prop)) {
+                        _val = objA[_prop]
+
+                        /// Object methods are not considered for equality
+                        if (typeof _val === 'function') {
+                            continue
+                        }
+
+                        if (hasProperty(objB, _prop)) {
+                            if (!computeEquals(_val, objB[_prop], true)) {
+                                return false
+                            }
+                        }
+                    }
+
+                    /// no need to browse objB properties, all properties of objA is checked against objB
+                    /// it is very unlikely for object literals with the same hash code to have different properties
+                    /// even in such a rare case, objects are considered equal
+
+                    return true
+                }
+            }
+
+            // Objects are equal (with auto type conversion)
+            // Objects from the same type are considered equal (eg. new Number(1) and 1)
+            return objA === objB
+        }
+
+        /// Define "__equals__" function for built-in types
+        defineStaticProperty(Date, _equalsSymbol, {
+            value: (obj1, obj2) => computeDateEquals(obj1, obj2),
+        })
+
+        defineStaticProperty(Number, _equalsSymbol, {
+            value: (obj1, obj2) => computePrimitiveEquals(obj1, obj2),
+        })
+
+        defineProperty(String, _equalsSymbol, {
+            value: (obj1, obj2) => computePrimitiveEquals(obj1, obj2),
+        })
+
+        defineProperty(Boolean, _equalsSymbol, {
+            value: (obj1, obj2) => computePrimitiveEquals(obj1, obj2),
+        })
+
+        defineProperty(Object, _equalsSymbol, {
+            value: (obj1, obj2) => computeObjectEquals(obj1, obj2),
+        })
+
+        return computeEquals
+    })()
 }
