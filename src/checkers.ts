@@ -49,6 +49,10 @@ export namespace Checkers {
     }
 
     export const isInRange = (num: number, min: number, max: number): boolean => {
+        checkType(num, 'number')
+        checkType(min, 'number')
+        checkType(max, 'number')
+
         if (!isNumber(num) || !isNumber(min) || !isNumber(max)) {
             throw typeError(
                 `incorrect type of arguments: number < ${num} >, lower border < ${min} >, upper border < ${max} >`,
@@ -149,8 +153,8 @@ export namespace Checkers {
     }
 
     export const isPowerOfTwo = (value: number): boolean => {
-        // value != 0 && !(value & (-value) == value);
-        return value !== null && !(value & (value - 1))
+        // return isIntNumber(value) && !(value && -value === value)
+        return isIntNumber(value) && !(value & (value - 1))
     }
 
     /**
@@ -327,7 +331,7 @@ export namespace Checkers {
      * Checks for an object to be of the specified type; if not throws an Error.
      */
     export const checkType = (obj: any, type: string): void => {
-        if (!Objects.is(obj, type)) {
+        if (!is(obj, type)) {
             throw validationError(`Invalid parameter type. Expected type: ${type}`)
         }
     }
@@ -351,4 +355,24 @@ export namespace Checkers {
 
         return obj => obj.constructor.prototype === _proto
     })()
+
+    /**
+     * Determines whether an object is instance of a given type.
+     * @param {Object} obj An object.
+     * @param {Function} type The type to check.
+     * @returns {Boolean}
+     */
+    export const is = (obj: any, type: any): boolean => {
+        if (isNumber(obj)) {
+            return type === 'number'
+        } else if (isString(obj)) {
+            return type === 'string'
+        } else if (isFunction(obj)) {
+            return type === 'function'
+        } else if (isBoolean(obj)) {
+            return type === 'boolean'
+        }
+
+        return obj instanceof type
+    }
 }

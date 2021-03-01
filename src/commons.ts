@@ -108,6 +108,10 @@ export namespace Commons {
         },
     }
 
+    export const hash = (...args: any[]): string => {
+        return sha1(...args)
+    }
+
     // console.log(mediator.relay('join', 'bar', 'baz'));
     export const mediator = {
         relay(method: string, ...args: any[]) {
@@ -414,5 +418,56 @@ export namespace Commons {
         })
 
         return computeEquals
+    })()
+
+    /**
+     * Performs a comparison of two objects of the same type and returns a value indicating whether one object is less than, equal to, or greater than the other.
+     */
+    export const computeCompare = (() => {
+        /**
+         * Performs a comparison of two objects of the same type and returns a value indicating whether one object is less than, equal to, or greater than the other.
+         * @param {Object} objA The first object to compare.
+         * @param {Object} objB The second object to compare.
+         * @returns {Number}
+         */
+        const computeCompare_ = (objA: any, objB: any): number => {
+            if (objA === objB) {
+                // Identical objects
+                return 0
+            } else if (objA == null) {
+                // null or undefined is less than everything
+                return -1
+            } else if (objB == null) {
+                // Everything is greater than null or undefined
+                return 1
+            }
+            if (
+                typeof objA === 'number' || // numbers compare using "gt" operator
+                typeof objA === 'boolean'
+            ) {
+                // booleans compare using "gt" operator
+                return objA > objB ? 1 : -1 // values are already checked to equality
+            } else if (typeof objA === 'string') {
+                return objA.localeCompare(objB) // Strings are compared using String.prototype.localeCompare method
+            }
+
+            if (
+                objA instanceof Date && // Dates are compared using 'getTime' method
+                objB instanceof Date
+            ) {
+                const _t1 = objA.getTime(),
+                    _t2 = objB.getTime()
+
+                return _t1 > _t2 ? 1 : _t2 > _t1 ? -1 : 0
+            } else {
+                // Objects are compared using 'valueOf' method
+                const _v1 = objA.valueOf(),
+                    _v2 = objB.valueOf()
+
+                return _v1 > _v2 ? 1 : _v2 > _v1 ? -1 : 0
+            }
+        }
+
+        return computeCompare_
     })()
 }

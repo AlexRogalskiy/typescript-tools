@@ -128,26 +128,6 @@ export namespace Objects {
     }
 
     /**
-     * Determines whether an object is instance of a given type.
-     * @param {Object} obj An object.
-     * @param {Function} type The type to check.
-     * @returns {Boolean}
-     */
-    export const is = (obj, type): boolean => {
-        if (typeof obj === 'number') {
-            return type === 'number'
-        } else if (typeof obj === 'string') {
-            return type === 'string'
-        } else if (typeof obj === 'function') {
-            return type === 'function'
-        } else if (typeof obj === 'boolean') {
-            return type === 'boolean'
-        }
-
-        return obj instanceof type
-    }
-
-    /**
      * Determines whether the specified object is array-like.
      * @param {Object} obj The object to check.
      * @returns {Boolean}
@@ -187,7 +167,7 @@ export namespace Objects {
     ): any => {
         Commons.defineProperty(obj, prop, attributes)
 
-        if (is(prop, 'string') && Checkers.isFunction(attributes.value)) {
+        if (Checkers.is(prop, 'string') && Checkers.isFunction(attributes.value)) {
             const _str = `function ${prop}() {...}`
 
             Commons.defineProperty(attributes.value, 'toString', {
@@ -236,7 +216,7 @@ export namespace Objects {
      * @param {Object=} args The prototype mixin object or a mixin source object to extend the type.
      * @returns {Function}
      */
-    export const extend = (type, extender, ...args: any[]): void => {
+    export const extend = (type, extender, ...args: any[]): any => {
         const _args = args,
             _super = Checkers.isFunction(extender) ? extender : null,
             _proto = _args.length === 4 || _super ? _args[2] : extender,

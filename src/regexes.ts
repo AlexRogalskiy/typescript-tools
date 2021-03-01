@@ -16,6 +16,11 @@ export const PHONE_REGEX = /(\d{3}).*(\d{3}).*(\d{4})/
  */
 export const DATE_REGEX = /^\d{2}\/\d{2}\/\d{2,4}$/
 /**
+ * Host/port regex patterns
+ * @type {RegExp}
+ */
+export const HOST_PORT_REGEX = /\b((?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\b(?::([\d]+))?/
+/**
  * Emoji regex pattern
  * @type {RegExp}
  */
