@@ -432,6 +432,15 @@ export namespace Maths {
 
         export namespace Trigonometry {
             import shellSort = Sorting.shellSort
+
+            export const log10 = (value: number): number => {
+                if (!isNumber(value) || value <= 0) {
+                    throw valueError(`incorrect input value: x < ${value} >`)
+                }
+
+                return Math.log(value) / Math.LN10
+            }
+
             export const cosec = (x: number): number => {
                 if (!isNumber(x)) {
                     throw valueError(`incorrect input value: x < ${x} >`)
