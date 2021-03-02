@@ -3,7 +3,8 @@ import { Checkers } from './checkers'
 import { Errors } from './errors'
 import { Maths } from './maths'
 import { Comparators } from './comparators'
-import { Processor } from '../typings/function-types'
+import { Predicate, Processor } from '../typings/function-types'
+import { Commons } from './commons'
 
 export namespace Arrays {
     import random = Numbers.random
@@ -15,6 +16,10 @@ export namespace Arrays {
     import valueError = Errors.valueError
     import Helpers = Maths.Helpers
     import Comparator = Comparators.Comparator
+    import lambda = Commons.lambda
+    import checkType = Checkers.checkType
+    import isInRange = Checkers.isInRange
+    import checkArray = Checkers.checkArray;
 
     export const list = (...args: any[]): any[] => {
         // const unboundSlice = Array.prototype.slice
@@ -58,7 +63,11 @@ export namespace Arrays {
         return res
     }
 
-    export const insert = (array: any[], index: number, ...args: any): any[] => {
+    export const insertAll = (array: any[], index: number, ...args: any): any[] => {
+        if (!isArray(array)) {
+            throw valueError(`incorrect input value: array # 1 < ${array} >`)
+        }
+
         index = Math.min(index, array.length)
         array.splice(index, 0, ...args)
         return array
@@ -516,5 +525,62 @@ export namespace Arrays {
             }
         }
         return index
+    }
+
+    export const trueForAll = <T>(match: Predicate<T>, ...array: T[]): boolean => {
+        if (!isArray(array)) {
+            throw valueError(`incorrect input value: array # 1 < ${array} >`)
+        }
+
+        match = lambda(match)
+        checkType(match, 'function')
+
+        for (let i = 0, _len = array.length; i < _len; i++) {
+            if (!match(array[i])) {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    export const removeAt = <T>(index: number, array: T[]): void => {
+        if (!isArray(array)) {
+            throw valueError(`incorrect input value: array # 1 < ${array} >`)
+        }
+
+        isInRange(index, 0, array.length)
+
+        let _i = index
+        const _len = --array.length
+        for (; _i < _len; _i++) {
+            array[_i] = array[_i + 1]
+        }
+
+        delete array[_len]
+    }
+
+    /**
+     * Inserts an element into the List at the specified index.
+     * @param {Number} index The zero-based index at which item should be inserted.
+     * @param {Object} item The object to insert.
+     * @param array
+     */
+    export const insert = (index: number, item: any, array: any[]): any[] => {
+        checkArray(array)
+
+        if (index !== array.length) {
+            isInRange(index, 0, array.length)
+        }
+
+        let _len = ++array.length
+
+        while (_len-- > index) {
+            array[_len] = array[_len - 1]
+        }
+
+        array[index] = item
+
+        return array
     }
 }

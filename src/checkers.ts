@@ -52,7 +52,7 @@ export namespace Checkers {
         return isNotNull(obj[prop]) && typeof obj[prop] === 'object' && !Array.isArray(obj[prop])
     }
 
-    export const isInRange = (num: number, min: number, max: number): boolean => {
+    export const isInRange = (num: number, min: number, max: number, includeBounds = false): boolean => {
         checkType(num, 'number')
         checkType(min, 'number')
         checkType(max, 'number')
@@ -67,7 +67,7 @@ export namespace Checkers {
             throw valueError(`incorrect arguments: lower border < ${min} >, upper border < ${max} >`)
         }
 
-        return num < max && num > min
+        return includeBounds ? num <= max && num >= min : num < max && num > min
     }
 
     export const isArrayIndex = (key: string): boolean => {
@@ -264,8 +264,8 @@ export namespace Checkers {
         return PHONE_REGEX.test(value)
     }
 
-    export const checkDate = (value: string): boolean => {
-        return DATE_REGEX.test(value)
+    export const checkDateBy = (value: string, regex: string | RegExp = DATE_REGEX): boolean => {
+        return new RegExp(regex).test(value)
     }
 
     export const CHECK_RULES = {
@@ -336,7 +336,85 @@ export namespace Checkers {
      */
     export const checkType = (obj: any, type: any): void => {
         if (!is(obj, type)) {
-            throw validationError(`Invalid parameter type. Expected type: ${type}`)
+            throw validationError(`Invalid parameter type: ${obj}. Expected type: ${type}`)
+        }
+    }
+
+    /**
+     * Checks for an object to be of the number type; if not throws an Error.
+     */
+    export const checkNumber = (obj: any): void => {
+        checkType(obj, 'number')
+    }
+
+    /**
+     * Checks for an object to be of the date type; if not throws an Error.
+     */
+    export const checkDate = (obj: any): void => {
+        checkType(obj, 'date')
+    }
+
+    /**
+     * Checks for an object to be of the object type; if not throws an Error.
+     */
+    export const checkObject = (obj: any): void => {
+        checkType(obj, 'object')
+    }
+
+    /**
+     * Checks for an object to be of the string type; if not throws an Error.
+     */
+    export const checkString = (obj: any): void => {
+        checkType(obj, 'string')
+    }
+
+    /**
+     * Checks for an object to be of the boolean type; if not throws an Error.
+     */
+    export const checkBoolean = (obj: any): void => {
+        checkType(obj, 'boolean')
+    }
+
+    /**
+     * Checks for an object to be of the function type; if not throws an Error.
+     */
+    export const checkFunction = (obj: any): void => {
+        checkType(obj, 'function')
+    }
+
+    /**
+     * Checks for an object to be of the null type; if not throws an Error.
+     */
+    export const checkNull = (obj: any): void => {
+        checkType(obj, 'null')
+    }
+
+    /**
+     * Checks for an object to be of the undefined type; if not throws an Error.
+     */
+    export const checkUndefined = (obj: any): void => {
+        checkType(obj, 'undefined')
+    }
+
+    /**
+     * Checks for an object to be of the json type; if not throws an Error.
+     */
+    export const checkJson = (obj: any): void => {
+        checkType(obj, 'json')
+    }
+
+    /**
+     * Checks for an object to be of the array type; if not throws an Error.
+     */
+    export const checkArray = (obj: any): void => {
+        checkType(obj, 'array')
+    }
+
+    export const checkRange = (index: number, array: any[]): void => {
+        checkNumber(index)
+
+        if (index < 0 || index >= array.length) {
+            throw validationError(`Invalid index: ${index}. not in range: ${array}`)
         }
     }
 
@@ -385,6 +463,8 @@ export namespace Checkers {
             return type === 'null'
         } else if (isUndefined(obj)) {
             return type === 'undefined'
+        } else if (isArray(obj)) {
+            return type === 'array'
         }
 
         return obj && obj instanceof type

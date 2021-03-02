@@ -1,4 +1,5 @@
-import { Checkers } from '../src'
+import { Checkers, Errors } from '../src'
+import checkRange = Checkers.checkRange;
 
 export namespace Checkers_Test {
     import isInRange = Checkers.isInRange;
@@ -19,15 +20,35 @@ export namespace Checkers_Test {
     import isHostObject = Checkers.isHostObject;
     import isHostMethod = Checkers.isHostMethod;
     import checkType = Checkers.checkType;
+    import ValidationError = Errors.ValidationError;
+    import checkNumber = Checkers.checkNumber;
+    import checkDate = Checkers.checkDate;
+    import checkObject = Checkers.checkObject;
+    import checkString = Checkers.checkString;
+    import checkBoolean = Checkers.checkBoolean;
+    import checkFunction = Checkers.checkFunction;
+    import checkNull = Checkers.checkNull;
+    import checkUndefined = Checkers.checkUndefined;
+    import checkArray = Checkers.checkArray;
+    import checkJson = Checkers.checkJson;
 
     describe('Check value is in range', () => {
-        it('it should return true when value is in range', () => {
+        it('it should return true when value is in range without bounds', () => {
             expect(isInRange(1, 0, 6)).toBeTruthy()
             expect(isInRange(7, 0, 6)).toBeFalsy()
             expect(isInRange(7, 0, 7)).toBeFalsy()
             expect(isInRange(7, 0, 8)).toBeTruthy()
             expect(isInRange(5.6, 0, 7)).toBeTruthy()
             expect(isInRange(0, 0, 7)).toBeFalsy()
+        })
+
+        it('it should return true when value is in range with bounds', () => {
+            expect(isInRange(1, 0, 6, true)).toBeTruthy()
+            expect(isInRange(7, 0, 6, true)).toBeFalsy()
+            expect(isInRange(7, 0, 7, true)).toBeTruthy()
+            expect(isInRange(7, 0, 8, true)).toBeTruthy()
+            expect(isInRange(5.6, 0, 7, true)).toBeTruthy()
+            expect(isInRange(0, 0, 7, true)).toBeTruthy()
         })
     })
 
@@ -37,8 +58,10 @@ export namespace Checkers_Test {
             expect(isIntNumber(1.1)).toBeFalsy()
             expect(isIntNumber('1')).toBeFalsy()
             expect(isIntNumber('test')).toBeFalsy()
+            expect(isIntNumber([])).toBeFalsy()
             expect(isIntNumber(true)).toBeFalsy()
             expect(isIntNumber(null)).toBeFalsy()
+            expect(isIntNumber(undefined)).toBeFalsy()
         })
     })
 
@@ -49,6 +72,9 @@ export namespace Checkers_Test {
             expect(isDate(new Date())).toBeTruthy()
             expect(isDate(new Date('2020-02-02'))).toBeTruthy()
             expect(isDate(null)).toBeFalsy()
+            expect(isDate(undefined)).toBeFalsy()
+            expect(isDate(() => 5)).toBeFalsy()
+            expect(isDate([])).toBeFalsy()
         })
     })
 
@@ -60,6 +86,8 @@ export namespace Checkers_Test {
             expect(isBoolean(Boolean())).toBeTruthy()
             expect(isBoolean(Boolean(true))).toBeTruthy()
             expect(isBoolean(null)).toBeFalsy()
+            expect(isBoolean(undefined)).toBeFalsy()
+            expect(isBoolean(() => 5)).toBeFalsy()
         })
     })
 
@@ -71,24 +99,25 @@ export namespace Checkers_Test {
             expect(isNumeric(Boolean())).toBeFalsy()
             expect(isNumeric(1.56)).toBeTruthy()
             expect(isNumeric(null)).toBeFalsy()
+            expect(isNumeric(undefined)).toBeFalsy()
+            expect(isNumeric([])).toBeFalsy()
+            expect(isNumeric(() => 5)).toBeFalsy()
         })
     })
 
     describe('Check value is function', () => {
         it('it should return true when value is function', () => {
-            const dummy = () => {
-                // empty
-            }
-
             expect(isFunction(1)).toBeFalsy()
             expect(isFunction('1')).toBeFalsy()
             expect(isFunction(true)).toBeFalsy()
             expect(isFunction(Boolean())).toBeFalsy()
             expect(isFunction(1.56)).toBeFalsy()
-            expect(isFunction(dummy)).toBeTruthy()
+            expect(isFunction(() => 5)).toBeTruthy()
             expect(isFunction(Function())).toBeTruthy()
             expect(isFunction(new Function())).toBeTruthy()
             expect(isFunction(null)).toBeFalsy()
+            expect(isFunction(undefined)).toBeFalsy()
+            expect(isFunction([])).toBeFalsy()
         })
     })
 
@@ -99,6 +128,7 @@ export namespace Checkers_Test {
             expect(isPowerOfTwo(4)).toBeTruthy()
             expect(isPowerOfTwo(8)).toBeTruthy()
             expect(isPowerOfTwo(9)).toBeFalsy()
+            expect(isPowerOfTwo(64)).toBeTruthy()
         })
     })
 
@@ -113,6 +143,7 @@ export namespace Checkers_Test {
             expect(isString(Function())).toBeFalsy()
             expect(isString(new Function())).toBeFalsy()
             expect(isString(null)).toBeFalsy()
+            expect(isString(undefined)).toBeFalsy()
         })
     })
 
@@ -131,6 +162,7 @@ export namespace Checkers_Test {
             expect(isObject(Function())).toBeFalsy()
             expect(isObject(new Function())).toBeFalsy()
             expect(isObject(null)).toBeFalsy()
+            expect(isObject(undefined)).toBeFalsy()
         })
     })
 
@@ -151,12 +183,14 @@ export namespace Checkers_Test {
             expect(isArray(Function())).toBeFalsy()
             expect(isArray(new Function())).toBeFalsy()
             expect(isArray(null)).toBeFalsy()
+            expect(isArray(undefined)).toBeFalsy()
         })
     })
 
     describe('Check value is json', () => {
         it('it should return true when value is json', () => {
             expect(isJSON('{ a: 5 }')).toBeFalsy()
+            expect(isJSON(undefined)).toBeFalsy()
             expect(isJSON('1')).toBeFalsy()
             expect(isJSON(true)).toBeFalsy()
             expect(isJSON(Boolean())).toBeFalsy()
@@ -184,6 +218,8 @@ export namespace Checkers_Test {
             expect(isRealNumber('test')).toBeFalsy()
             expect(isRealNumber(true)).toBeFalsy()
             expect(isRealNumber(null)).toBeFalsy()
+            expect(isRealNumber(undefined)).toBeFalsy()
+            expect(isRealNumber([])).toBeFalsy()
         })
     })
 
@@ -197,6 +233,8 @@ export namespace Checkers_Test {
             expect(isAlphaNumeric('1test&')).toBeFalsy()
             expect(isAlphaNumeric(true)).toBeFalsy()
             expect(isAlphaNumeric(null)).toBeFalsy()
+            expect(isAlphaNumeric(undefined)).toBeFalsy()
+            expect(isAlphaNumeric([])).toBeFalsy()
         })
     })
 
@@ -210,6 +248,12 @@ export namespace Checkers_Test {
             expect(is('1test&', 'number')).toBeFalsy()
             expect(is(true, 'boolean')).toBeTruthy()
             expect(is(null, 'object')).toBeFalsy()
+            expect(is(null, 'null')).toBeTruthy()
+            expect(is(undefined, 'undefined')).toBeTruthy()
+            expect(is(Date(), 'string')).toBeTruthy()
+            expect(is(new Date(), 'date')).toBeTruthy()
+            expect(is(new Function(), 'function')).toBeTruthy()
+            expect(is(() => 5, 'function')).toBeTruthy()
         })
     })
 
@@ -224,6 +268,7 @@ export namespace Checkers_Test {
             expect(isObjectLiteral('1test&')).toBeFalsy()
             expect(isObjectLiteral(true)).toBeFalsy()
             expect(isObjectLiteral(null)).toBeFalsy()
+            expect(isObjectLiteral(undefined)).toBeFalsy()
         })
     })
 
@@ -234,6 +279,7 @@ export namespace Checkers_Test {
             expect(isHostObject({ a: {} }, 'a')).toBeTruthy()
             expect(isHostObject({ a: 5 }, 'b')).toBeFalsy()
             expect(isHostObject(null, 'b')).toBeFalsy()
+            expect(isHostObject(undefined, 'b')).toBeFalsy()
         })
     })
 
@@ -245,11 +291,12 @@ export namespace Checkers_Test {
             expect(isHostMethod({ a: 5 }, 'b')).toBeFalsy()
             expect(isHostMethod({ a: v => v }, 'a')).toBeTruthy()
             expect(isHostMethod(null, 'b')).toBeFalsy()
+            expect(isHostMethod(undefined, 'b')).toBeFalsy()
         })
     })
 
-    describe('Check value is valid type', () => {
-        it('it should return true when value is valid type', () => {
+    describe('Check value is valid object type', () => {
+        it('it should return true when value is valid object type', () => {
             expect(checkType({}, 'object')).toBeUndefined()
             expect(checkType(true, 'boolean')).toBeUndefined()
             expect(checkType({ a: {} }, 'object')).toBeUndefined()
@@ -257,6 +304,182 @@ export namespace Checkers_Test {
             expect(checkType('a', 'string')).toBeUndefined()
             expect(checkType(null, 'null')).toBeUndefined()
             expect(checkType(undefined, 'undefined')).toBeUndefined()
+            expect(checkType(Date(), 'string')).toBeUndefined()
+            expect(checkType(new Date(), 'date')).toBeUndefined()
+
+            expect(() => checkType(new Date('2012-01-26T13:51:50.417Z'), 'test')).toThrowError(ValidationError)
+            expect(() => checkType('1number', 'number')).toThrowError(ValidationError)
+            expect(() => checkType({}, 'string')).toThrowError(ValidationError)
+            expect(() => checkType({}, 'function')).toThrowError(ValidationError)
+            expect(() => checkType(3, 'boolean')).toThrowError(ValidationError)
+            expect(() => checkType(Date(), 'date')).toThrowError(ValidationError)
+            expect(() => checkType('test', 'object')).toThrowError(ValidationError)
+            expect(() => checkType(undefined, 'object')).toThrowError(ValidationError)
+            expect(() => checkType(null, 'object')).toThrowError(ValidationError)
+        })
+    })
+
+    describe('Check index is in array range', () => {
+        it('it should return true when index is in array range', () => {
+            expect(checkRange(3, [1, 2, 3, 4])).toBeUndefined()
+            expect(checkRange(0, [1])).toBeUndefined()
+
+            expect(() => checkRange(0, [])).toThrow('Invalid index: 0. not in range:')
+            expect(() => checkRange(1, [1])).toThrow('Invalid index: 1. not in range: 1')
+        })
+    })
+
+    describe('Check value is a valid number', () => {
+        it('it should throw error when value is not a valid number', () => {
+            expect(checkNumber(Number())).toBeUndefined()
+            expect(checkNumber(3)).toBeUndefined()
+
+            expect(() => checkNumber('3')).toThrowError(ValidationError)
+            expect(() => checkNumber({})).toThrowError(ValidationError)
+            expect(() => checkNumber({ a: 5 })).toThrowError(ValidationError)
+            expect(() => checkNumber({})).toThrowError(ValidationError)
+            expect(() => checkNumber(true)).toThrowError(ValidationError)
+            expect(() => checkNumber(null)).toThrowError(ValidationError)
+            expect(() => checkNumber(undefined)).toThrowError(ValidationError)
+        })
+    })
+
+    describe('Check value is a valid date', () => {
+        it('it should throw error when value is not a valid date', () => {
+            expect(checkDate(new Date())).toBeUndefined()
+
+            expect(() => checkDate(Date())).toThrowError(ValidationError)
+            expect(() => checkDate('3')).toThrowError(ValidationError)
+            expect(() => checkDate({})).toThrowError(ValidationError)
+            expect(() => checkDate({ a: 5 })).toThrowError(ValidationError)
+            expect(() => checkDate({})).toThrowError(ValidationError)
+            expect(() => checkDate(true)).toThrowError(ValidationError)
+            expect(() => checkDate(null)).toThrowError(ValidationError)
+            expect(() => checkDate(undefined)).toThrowError(ValidationError)
+        })
+    })
+
+    describe('Check value is a valid object', () => {
+        it('it should throw error when value is not a valid object', () => {
+            expect(checkObject(Object())).toBeUndefined()
+            expect(checkObject(new Object({}))).toBeUndefined()
+            expect(checkObject({})).toBeUndefined()
+            expect(checkObject({ a: 5 })).toBeUndefined()
+
+            expect(() => checkObject(new Object('{}'))).toThrowError(ValidationError)
+            expect(() => checkObject('3')).toThrowError(ValidationError)
+            expect(() => checkObject('{}')).toThrowError(ValidationError)
+            expect(() => checkObject(true)).toThrowError(ValidationError)
+            expect(() => checkObject(null)).toThrowError(ValidationError)
+            expect(() => checkObject(undefined)).toThrowError(ValidationError)
+        })
+    })
+
+    describe('Check value is a valid string', () => {
+        it('it should throw error when value is not a valid string', () => {
+            expect(checkString('')).toBeUndefined()
+            expect(checkString("null")).toBeUndefined()
+
+            expect(() => checkString(3)).toThrowError(ValidationError)
+            expect(() => checkString({})).toThrowError(ValidationError)
+            expect(() => checkString({ a: 5 })).toThrowError(ValidationError)
+            expect(() => checkString({})).toThrowError(ValidationError)
+            expect(() => checkString(true)).toThrowError(ValidationError)
+            expect(() => checkString(null)).toThrowError(ValidationError)
+            expect(() => checkString(undefined)).toThrowError(ValidationError)
+        })
+    })
+
+    describe('Check value is a valid boolean', () => {
+        it('it should throw error when value is not a valid boolean', () => {
+            expect(checkBoolean(true)).toBeUndefined()
+            expect(checkBoolean(Boolean())).toBeUndefined()
+
+            expect(() => checkBoolean(3)).toThrowError(ValidationError)
+            expect(() => checkBoolean({})).toThrowError(ValidationError)
+            expect(() => checkBoolean({ a: 5 })).toThrowError(ValidationError)
+            expect(() => checkBoolean({})).toThrowError(ValidationError)
+            expect(() => checkBoolean('true')).toThrowError(ValidationError)
+            expect(() => checkBoolean(null)).toThrowError(ValidationError)
+            expect(() => checkBoolean(undefined)).toThrowError(ValidationError)
+        })
+    })
+
+    describe('Check value is a valid function', () => {
+        it('it should throw error when value is not a valid function', () => {
+            expect(checkFunction(() => 5)).toBeUndefined()
+            expect(checkFunction(new Function())).toBeUndefined()
+
+            expect(() => checkFunction(3)).toThrowError(ValidationError)
+            expect(() => checkFunction({})).toThrowError(ValidationError)
+            expect(() => checkFunction({ a: 5 })).toThrowError(ValidationError)
+            expect(() => checkFunction({})).toThrowError(ValidationError)
+            expect(() => checkFunction(true)).toThrowError(ValidationError)
+            expect(() => checkFunction('true')).toThrowError(ValidationError)
+            expect(() => checkFunction(null)).toThrowError(ValidationError)
+            expect(() => checkFunction(undefined)).toThrowError(ValidationError)
+        })
+    })
+
+    describe('Check value is null', () => {
+        it('it should throw error when value is not null', () => {
+            expect(checkNull(null)).toBeUndefined()
+
+            expect(() => checkNull(new Function())).toThrowError(ValidationError)
+            expect(() => checkNull(3)).toThrowError(ValidationError)
+            expect(() => checkNull({})).toThrowError(ValidationError)
+            expect(() => checkNull({ a: 5 })).toThrowError(ValidationError)
+            expect(() => checkNull({})).toThrowError(ValidationError)
+            expect(() => checkNull('true')).toThrowError(ValidationError)
+            expect(() => checkNull(true)).toThrowError(ValidationError)
+            expect(() => checkNull('null')).toThrowError(ValidationError)
+            expect(() => checkNull(undefined)).toThrowError(ValidationError)
+        })
+    })
+
+    describe('Check value is undefined', () => {
+        it('it should throw error when value is not undefined', () => {
+            expect(checkUndefined(undefined)).toBeUndefined()
+
+            expect(() => checkUndefined(new Function())).toThrowError(ValidationError)
+            expect(() => checkUndefined(3)).toThrowError(ValidationError)
+            expect(() => checkUndefined({})).toThrowError(ValidationError)
+            expect(() => checkUndefined({ a: 5 })).toThrowError(ValidationError)
+            expect(() => checkUndefined({})).toThrowError(ValidationError)
+            expect(() => checkUndefined(true)).toThrowError(ValidationError)
+            expect(() => checkUndefined('null')).toThrowError(ValidationError)
+            expect(() => checkUndefined(null)).toThrowError(ValidationError)
+        })
+    })
+
+    describe('Check value is json', () => {
+        it('it should throw error when value is not json', () => {
+            expect(() => checkJson(undefined)).toThrowError(ValidationError)
+            expect(() => checkJson(new Function())).toThrowError(ValidationError)
+            expect(() => checkJson(3)).toThrowError(ValidationError)
+            expect(() => checkJson({})).toThrowError(ValidationError)
+            expect(() => checkJson({ a: 5 })).toThrowError(ValidationError)
+            expect(() => checkJson({})).toThrowError(ValidationError)
+            expect(() => checkJson(true)).toThrowError(ValidationError)
+            expect(() => checkJson('null')).toThrowError(ValidationError)
+            expect(() => checkJson(null)).toThrowError(ValidationError)
+        })
+    })
+
+    describe('Check value is array', () => {
+        it('it should throw error when value is not array', () => {
+            expect(checkArray([])).toBeUndefined()
+            expect(checkArray(Array())).toBeUndefined()
+
+            expect(() => checkArray(undefined)).toThrowError(ValidationError)
+            expect(() => checkArray(new Function())).toThrowError(ValidationError)
+            expect(() => checkArray(3)).toThrowError(ValidationError)
+            expect(() => checkArray({})).toThrowError(ValidationError)
+            expect(() => checkArray({ a: 5 })).toThrowError(ValidationError)
+            expect(() => checkArray({})).toThrowError(ValidationError)
+            expect(() => checkArray(true)).toThrowError(ValidationError)
+            expect(() => checkArray('null')).toThrowError(ValidationError)
+            expect(() => checkArray(null)).toThrowError(ValidationError)
         })
     })
 }

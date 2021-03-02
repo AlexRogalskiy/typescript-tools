@@ -2,10 +2,11 @@ import { Arrays } from '../src'
 
 export namespace Arrays_Test {
     import groupBy = Arrays.groupBy;
-    import insert = Arrays.insert;
+    import insertAll = Arrays.insertAll;
     import list = Arrays.list;
     import rangeBy = Arrays.rangeBy;
     import findArray = Arrays.findArray;
+    import insert = Arrays.insert;
 
     describe('Check list values from array', () => {
         it('it should perform valid array sequence', () => {
@@ -32,15 +33,6 @@ export namespace Arrays_Test {
             expect(rangeBy(1, 5, 2).join("-")).toEqual('1-3-5')
             expect(rangeBy(1).join("-")).toEqual('1')
             expect(rangeBy(1, 5).join("-")).toEqual('1-2-3-4-5')
-        })
-    })
-
-    describe('Check insert values into array', () => {
-        it('it should perform valid array sequence', () => {
-            expect(insert(['a', 'b', 'c', 'd'], 2, 'V', 'W', 'X', 'Y', 'Z').join("-")).toEqual('a-b-V-W-X-Y-Z-c-d')
-            expect(insert(['a', 'b', 'c', 'd'], 2, 'V', ['W', 'X', 'Y'], 'Z').join("-")).toEqual('a-b-V-W,X,Y-Z-c-d')
-            expect(insert(['a', 'b', 'c', 'd'], 2, ['X', 'Y', 'Z']).join("-")).toEqual('a-b-X,Y,Z-c-d')
-            expect(insert(['a', 'b', 'c', 'd'], 2, 'X').join("-")).toEqual('a-b-X-c-d')
         })
     })
 
@@ -80,6 +72,28 @@ export namespace Arrays_Test {
                 ],
                 '32': [{ firstName: 'Daphne', lastName: 'Smit', age: 32 }],
             })
+        })
+    })
+
+    describe('Check insert values into array', () => {
+        it('it should perform valid array sequence', () => {
+            expect(insertAll(['a', 'b', 'c', 'd'], 2, 'V', 'W', 'X', 'Y', 'Z').join("-")).toEqual('a-b-V-W-X-Y-Z-c-d')
+            expect(insertAll(['a', 'b', 'c', 'd'], 2, 'V', ['W', 'X', 'Y'], 'Z').join("-")).toEqual('a-b-V-W,X,Y-Z-c-d')
+            expect(insertAll(['a', 'b', 'c', 'd'], 2, ['X', 'Y', 'Z']).join("-")).toEqual('a-b-X,Y,Z-c-d')
+            expect(insertAll(['a', 'b', 'c', 'd'], 2, 'X').join("-")).toEqual('a-b-X-c-d')
+            expect(insertAll([], 2, 'X').join("-")).toEqual('X')
+        })
+    })
+
+    describe('Check array insert operator', () => {
+        it('it should perform valid array insertion order', () => {
+            // expect(insert(1, 2, [1, 2, 3, 4, 5]).join("-")).toEqual('1-2-2-3-4-5')
+            // expect(insert(0, 2, [1, 2, 3, 4, 5]).join("-")).toEqual('2-1-2-3-4-5')
+            // expect(insert(5, null, [1, 2, 3, 4, 5]).join("-")).toEqual('1-2-3-4-5-')
+            // expect(insert(5, null, []).join("-")).toEqual('-----')
+            // expect(insert(5, undefined, []).join("-")).toEqual('-----')
+            expect(insert(-5, 2, []).join("-")).toEqual('')
+            // expect(insert(0, '2', []).join("-")).toEqual('2')
         })
     })
 }
