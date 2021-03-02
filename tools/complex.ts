@@ -197,12 +197,12 @@ export class Complex {
         return new Complex(rr, rphi)
     }
 
-    equals(complex: Complex): boolean {
-        if (!Complex.isComplex(complex)) {
-            throw valueError(`not complex number instance: < ${complex} >`)
+    equals(obj: any): boolean {
+        if (!Complex.isComplex(obj)) {
+            throw valueError(`not complex instance: < ${obj} >`)
         }
 
-        return this.x === complex.x && this.y === complex.x
+        return this.x === obj.x && this.y === obj.x
     }
 
     clone(): Complex {
