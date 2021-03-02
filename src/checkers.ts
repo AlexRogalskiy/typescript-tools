@@ -90,6 +90,7 @@ export namespace Checkers {
     }
 
     export const isFloat = (value: any): boolean => {
+        // return typeof n === 'number' && n % 1 !== 0
         return Number.isFinite(value) && !Number.isSafeInteger(value)
     }
 
@@ -115,9 +116,13 @@ export namespace Checkers {
         return (isNumber(value) || isString(value)) && !/^\s*$/.test(value) && !/\W/.test(value)
     }
 
-    export const isRealNumber = (value): boolean => {
+    export const isRealNumber = (value: any): boolean => {
         // Math.round(x) === x;
         return isNumber(value) && value % 1 !== 0
+    }
+
+    export const isInteger = (value: any): boolean => {
+        return value === (value | 0)
     }
 
     export const isString = (value: any): boolean => {

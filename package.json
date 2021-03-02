@@ -6,6 +6,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
+        "install-peers": "npm ls 2>/dev/null | grep \"UNMET PEER DEPENDENCY\" | awk '{print $NF}' | xargs npm install -D",
         "format": "prettier --write \"./src/**/*.ts\" \"./tools/**/*.ts\"",
         "format:check": "prettier --check \"./src/**/*.ts\" \"./tools/**/*.ts\"",
         "postpublish": "npm run clean",

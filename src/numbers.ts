@@ -433,20 +433,24 @@ export namespace Numbers {
         return (x << n) | (x >>> (32 - n))
     }
 
-    export const isFloat = (n: any): boolean => {
-        return typeof n === 'number' && n % 1 !== 0
-    }
-
-    export const isInteger = (n: number): boolean => {
-        return n === (n | 0)
-    }
-
     export const toUint32 = (value: any): number => {
         return Math.floor(Math.abs(Number(value))) % Math.pow(2, 32)
     }
 
     export const toFixed = (number: number, fractionDigits: number): number => {
         return parseFloat(Number(number).toFixed(fractionDigits))
+    }
+
+    export const getPrime = (min: number): number => {
+        const _primes = [17, 67, 257, 1031, 4099, 16411, 65537, 262147, 1048583, 4194319, 16777259]
+
+        for (let i = 0, _len = _primes.length; i < _len; i++) {
+            if (_primes[i] > min) {
+                return _primes[i]
+            }
+        }
+
+        return _primes[_primes.length - 1]
     }
 
     export const dec2bin = (dec: number, length: number): string => {

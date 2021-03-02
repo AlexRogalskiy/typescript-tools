@@ -13,12 +13,13 @@
 ![GitHub Repository branches](https://badgen.net/github/branches/AlexRogalskiy/typescript-tools)
 ![GitHub Repository dependents](https://badgen.net/github/dependents-repo/AlexRogalskiy/typescript-tools)
 [![Tokei](https://tokei.rs/b1/github/AlexRogalskiy/typescript-tools?category=lines)](https://github.com/XAMPPRocky/tokei)
+![Mergify Status](https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/AlexRogalskiy/typescript-tools)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/alexrogalskiy/typescript-tools/master/LICENSE?token=AH44ZFH7IF2KSEDK7LSIW3C7YOFYC)
 [![Issue](https://img.shields.io/github/issues/alexrogalskiy/typescript-tools)](https://img.shields.io/github/issues/alexrogalskiy/typescript-tools)
 [![Forks](https://img.shields.io/github/forks/alexrogalskiy/typescript-tools)](https://img.shields.io/github/forks/alexrogalskiy/typescript-tools)
 [![Stars](https://img.shields.io/github/stars/alexrogalskiy/typescript-tools)](https://img.shields.io/github/stars/alexrogalskiy/typescript-tools)
-![code style](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)
+![Code Style](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)
 [![Maintainability](https://api.codeclimate.com/v1/badges/ed7702f8cf28917829fa/maintainability)](https://codeclimate.com/github/AlexRogalskiy/typescript-tools/maintainability)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/AlexRogalskiy/typescript-tools.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AlexRogalskiy/typescript-tools/alerts/)
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/AlexRogalskiy/typescript-tools.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AlexRogalskiy/typescript-tools/context:javascript)
@@ -138,7 +139,7 @@ Like _**TypeScript Tools**_ ? Consider buying me a coffee :\)
 [![forthebadge](https://img.shields.io/badge/made%20with-%20typescript-C1282D.svg?logo=typescript&style=for-the-badge)](https://www.typescriptlang.org/)
 [![forthebadge](https://img.shields.io/badge/powered%20by-%20github-7116FB.svg?logo=github&style=for-the-badge)](https://github.com/)
 [![forthebadge](https://img.shields.io/badge/build%20with-%20%E2%9D%A4-B6FF9B.svg?logo=heart&style=for-the-badge)](https://forthebadge.com/)
-
+[![forthebadge](https://img.shields.io/badge/makes%20people-%20smile-31C4F3.svg?logo=none&style=for-the-badge)](https://forthebadge.com)
 
   [repo]:           https://github.com/AlexRogalskiy/typescript-tools
   [tags]:           https://github.com/AlexRogalskiy/typescript-tools/tags

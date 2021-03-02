@@ -31,6 +31,11 @@ export namespace Checkers_Test {
     import checkUndefined = Checkers.checkUndefined;
     import checkArray = Checkers.checkArray;
     import checkJson = Checkers.checkJson;
+    import isFloat = Checkers.isFloat;
+    import isInteger = Checkers.isInteger;
+    import isPositiveDecimal = Checkers.isPositiveDecimal;
+    import isIterable = Checkers.isIterable;
+    import areEqualNumbers = Checkers.areEqualNumbers;
 
     describe('Check value is in range', () => {
         it('it should return true when value is in range without bounds', () => {
@@ -223,6 +228,69 @@ export namespace Checkers_Test {
         })
     })
 
+    describe('Check value is float number', () => {
+        it('it should return true when value is float number', () => {
+            expect(isFloat(1)).toBeFalsy()
+            expect(isFloat(1.1)).toBeTruthy()
+            expect(isFloat('1')).toBeFalsy()
+            expect(isFloat('test')).toBeFalsy()
+            expect(isFloat(true)).toBeFalsy()
+            expect(isFloat(null)).toBeFalsy()
+            expect(isFloat(undefined)).toBeFalsy()
+            expect(isFloat([])).toBeFalsy()
+        })
+    })
+
+    describe('Check value is integer number', () => {
+        it('it should return true when value is integer number', () => {
+            expect(isInteger(1)).toBeTruthy()
+            expect(isInteger(-1)).toBeTruthy()
+            expect(isInteger(1.1)).toBeFalsy()
+            expect(isInteger('1')).toBeFalsy()
+            expect(isInteger('test')).toBeFalsy()
+            expect(isInteger(true)).toBeFalsy()
+            expect(isInteger(null)).toBeFalsy()
+            expect(isInteger(undefined)).toBeFalsy()
+            expect(isInteger([])).toBeFalsy()
+        })
+    })
+
+    describe('Check value is positive decimal number', () => {
+        it('it should return true when value is positive decimal number', () => {
+            expect(isPositiveDecimal(1)).toBeTruthy()
+            expect(isPositiveDecimal(1.1)).toBeTruthy()
+            expect(isPositiveDecimal(-1.1)).toBeFalsy()
+            expect(isPositiveDecimal('1')).toBeFalsy()
+            expect(isPositiveDecimal('test')).toBeFalsy()
+            expect(isPositiveDecimal(true)).toBeFalsy()
+            expect(isPositiveDecimal(null)).toBeFalsy()
+            expect(isPositiveDecimal(undefined)).toBeFalsy()
+            expect(isPositiveDecimal([])).toBeFalsy()
+        })
+    })
+
+    describe('Check value is iterable', () => {
+        it('it should return true when value is iterable', () => {
+            expect(isIterable(1)).toBeFalsy()
+            expect(isIterable(1.1)).toBeFalsy()
+            expect(isIterable(-1.1)).toBeFalsy()
+            expect(isIterable('1')).toBeTruthy()
+            expect(isIterable('test')).toBeTruthy()
+            expect(isIterable(true)).toBeFalsy()
+            expect(isIterable(null)).toBeFalsy()
+            expect(isIterable([])).toBeTruthy()
+            expect(isIterable(new Function())).toBeFalsy()
+            expect(isIterable(Array())).toBeTruthy()
+            expect(isIterable(Date())).toBeTruthy()
+            expect(isIterable(Boolean())).toBeFalsy()
+            expect(isIterable(String())).toBeTruthy()
+            expect(isIterable({})).toBeFalsy()
+            expect(isIterable({ [Symbol.iterator]: null })).toBeFalsy()
+
+            expect(() => isIterable(undefined)).toThrowError(TypeError)
+        })
+    })
+
     describe('Check value is alpha numeric', () => {
         it('it should return true when value is alpha numeric', () => {
             expect(isAlphaNumeric(1)).toBeTruthy()
@@ -254,6 +322,16 @@ export namespace Checkers_Test {
             expect(is(new Date(), 'date')).toBeTruthy()
             expect(is(new Function(), 'function')).toBeTruthy()
             expect(is(() => 5, 'function')).toBeTruthy()
+        })
+    })
+
+    describe('Check number values are equal with a precision', () => {
+        it('it should return true when values are equal', () => {
+            expect(areEqualNumbers(4.11, 4.12)).toBeFalsy()
+            expect(areEqualNumbers(4, 5)).toBeFalsy()
+            expect(areEqualNumbers(0, 0)).toBeTruthy()
+            expect(areEqualNumbers(4 + Number.EPSILON/2, 4)).toBeTruthy()
+            expect(areEqualNumbers(Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER + 1)).toBeFalsy()
         })
     })
 
