@@ -429,6 +429,42 @@ export namespace Numbers {
         return (x & z) | (y & ~z)
     }
 
+    /**
+     * Set a bit
+     * @param value initial input {@link number} value
+     * @param index initial input {@link number} index
+     */
+    export const setBit = (value: number, index: number): number => {
+        return value | (1 << index)
+    }
+
+    /**
+     * Clear a bit
+     * @param value initial input {@link number} value
+     * @param index initial input {@link number} index
+     */
+    export const clearBit = (value: number, index: number): number => {
+        return value & ~(1 << index)
+    }
+
+    /**
+     * Toggle a bit
+     * @param value initial input {@link number} value
+     * @param index initial input {@link number} index
+     */
+    export const toggleBit = (value: number, index: number): number => {
+        return value ^ (1 << index)
+    }
+
+    /**
+     * Check a bit
+     * @param value initial input {@link number} value
+     * @param index initial input {@link number} index
+     */
+    export const checkBit = (value: number, index: number): number => {
+        return value & (1 << index)
+    }
+
     export const rotl = (x: number, n: number): number => {
         return (x << n) | (x >>> (32 - n))
     }

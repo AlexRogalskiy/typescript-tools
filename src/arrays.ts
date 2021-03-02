@@ -608,4 +608,23 @@ export namespace Arrays {
 
         throw new Error('The provided min/max length is out of boundaries.')
     }
+
+    export const flatten = (...args: any[]): any[] => {
+        return args.reduce((a, b) => a.concat(b))
+    }
+
+    // Алгоритм Фишера-Йетса — отличный пример, он не только несмещенный, но и выполняется
+    // за линейное время, использует константную память и легок в реализации.
+    export const shuffle2 = (array: any[]): any[] => {
+        let n = array.length
+        let t, i
+        while (n) {
+            i = (Math.random() * n--) | 0
+            t = array[n]
+            array[n] = array[i]
+            array[i] = t
+        }
+
+        return array
+    }
 }

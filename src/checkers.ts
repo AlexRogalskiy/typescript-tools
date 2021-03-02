@@ -10,10 +10,12 @@ import {
 import { Numbers } from './numbers'
 import { Errors } from './errors'
 import { Objects } from './objects'
+import { Commons } from './commons'
 
 export namespace Checkers {
     import valueError = Errors.valueError
     import validationError = Errors.validationError
+    import hasProperty = Commons.hasProperty
 
     export const isNull = (value: any): boolean => {
         return value === null
@@ -160,8 +162,19 @@ export namespace Checkers {
         )
     }
 
-    export const isPropertyInRange = (obj: any, prop: PropertyKey, low: number, high: number): void => {
-        if (obj[prop] < low || obj[prop] > high) {
+    export const isPropertyInRange = (
+        obj: any,
+        prop: PropertyKey,
+        low: number,
+        high: number,
+        includeBounds = false,
+    ): void => {
+        checkProperty(obj, prop)
+
+        const value = includeBounds
+            ? obj[prop] < low || obj[prop] > high
+            : obj[prop] <= low || obj[prop] >= high
+        if (value) {
             throw validationError(`incorrect property value=${obj[prop]}, is out of range: ${low}-${high}`)
         }
     }
@@ -169,42 +182,6 @@ export namespace Checkers {
     export const isPowerOfTwo = (value: number): boolean => {
         // return isIntNumber(value) && !(value && -value === value)
         return isIntNumber(value) && !(value & (value - 1))
-    }
-
-    /**
-     * Set a bit
-     * @param value initial input {@link number} value
-     * @param index initial input {@link number} index
-     */
-    export const setBit = (value: number, index: number): number => {
-        return value | (1 << index)
-    }
-
-    /**
-     * Clear a bit
-     * @param value initial input {@link number} value
-     * @param index initial input {@link number} index
-     */
-    export const clearBit = (value: number, index: number): number => {
-        return value & ~(1 << index)
-    }
-
-    /**
-     * Toggle a bit
-     * @param value initial input {@link number} value
-     * @param index initial input {@link number} index
-     */
-    export const toggleBit = (value: number, index: number): number => {
-        return value ^ (1 << index)
-    }
-
-    /**
-     * Check a bit
-     * @param value initial input {@link number} value
-     * @param index initial input {@link number} index
-     */
-    export const checkBit = (value: number, index: number): number => {
-        return value & (1 << index)
     }
 
     export const isNumeric = (num: any): boolean => {
@@ -222,6 +199,7 @@ export namespace Checkers {
     export const isDomElement = (value: any): boolean => {
         return (
             isNotNull(value) &&
+            isNotUndefined(value) &&
             value.nodeName &&
             value === document.documentElement &&
             (value instanceof Element || value instanceof Node)
@@ -339,6 +317,12 @@ export namespace Checkers {
 
     export const hasClass = (clazz: string, pattern: string): boolean => {
         return new RegExp(`(^|\\s)${pattern}(\\s|$)`).test(clazz)
+    }
+
+    export const checkProperty = (obj: any, prop: PropertyKey): void => {
+        if (!hasProperty(obj, prop)) {
+            throw validationError(`Invalid property=${String(prop)} on object=${obj}`)
+        }
     }
 
     /**

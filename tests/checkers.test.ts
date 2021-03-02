@@ -44,6 +44,9 @@ export namespace Checkers_Test {
     import isObjectWith = Checkers.isObjectWith;
     import isNull = Checkers.isNull;
     import isUndefined = Checkers.isUndefined;
+    import isArray2 = Checkers.isArray2;
+    import isPropertyInRange = Checkers.isPropertyInRange;
+    import isDomElement = Checkers.isDomElement;
 
     describe('Check value is in range', () => {
         it('it should return true when value is in range without bounds', () => {
@@ -127,6 +130,19 @@ export namespace Checkers_Test {
             expect(isBoolean(null)).toBeFalsy()
             expect(isBoolean(undefined)).toBeFalsy()
             expect(isBoolean(() => 5)).toBeFalsy()
+        })
+    })
+
+    describe('Check value is DOM element', () => {
+        it('it should return true when value is DOM element', () => {
+            expect(isDomElement(1)).toBeFalsy()
+            expect(isDomElement('1')).toBeFalsy()
+            expect(isDomElement(true)).toBeFalsy()
+            expect(isDomElement(Boolean())).toBeFalsy()
+            expect(isDomElement(Boolean(true))).toBeFalsy()
+            expect(isDomElement(null)).toBeFalsy()
+            expect(isDomElement(undefined)).toBeFalsy()
+            expect(isDomElement(() => 5)).toBeFalsy()
         })
     })
 
@@ -253,6 +269,23 @@ export namespace Checkers_Test {
             expect(isArray(new Function())).toBeFalsy()
             expect(isArray(null)).toBeFalsy()
             expect(isArray(undefined)).toBeFalsy()
+
+            expect(isArray2(1)).toBeFalsy()
+            expect(isArray2('1')).toBeFalsy()
+            expect(isArray2(true)).toBeFalsy()
+            expect(isArray2(Boolean())).toBeFalsy()
+            expect(isArray2(1.56)).toBeFalsy()
+            expect(isArray2(String())).toBeFalsy()
+            expect(isArray2([])).toBeTruthy()
+            expect(isArray2([1, 2, 3, 4, 5, 6])).toBeTruthy()
+            expect(isArray2(Array())).toBeTruthy()
+            expect(isArray2({ a: 5 })).toBeFalsy()
+            expect(isArray2(Object())).toBeFalsy()
+            expect(isArray2(Object({}))).toBeFalsy()
+            expect(isArray2(Function())).toBeFalsy()
+            expect(isArray2(new Function())).toBeFalsy()
+            expect(isArray2(null)).toBeFalsy()
+            expect(isArray2(undefined)).toBeFalsy()
         })
     })
 
@@ -302,6 +335,20 @@ export namespace Checkers_Test {
             expect(isFloat(null)).toBeFalsy()
             expect(isFloat(undefined)).toBeFalsy()
             expect(isFloat([])).toBeFalsy()
+        })
+    })
+
+    describe('Check property is in range', () => {
+        it('it should return true when property value is in range', () => {
+            expect(isPropertyInRange({ 'a': 5 }, 'a', 1, 6)).toBeUndefined()
+            expect(isPropertyInRange({ 'a': 0 }, 'a', 0, 1, true)).toBeUndefined()
+            expect(isPropertyInRange({ 'a': 1 }, 'a', 0, 1, true)).toBeUndefined()
+
+            expect(() => isPropertyInRange({ 'a': 5 }, 'b', 1, 4)).toThrowError(ValidationError)
+            expect(() => isPropertyInRange({ 'a': 5 }, 'a', 1, 4)).toThrowError(ValidationError)
+            expect(() => isPropertyInRange({}, 'a', 1, 4)).toThrowError(ValidationError)
+            expect(() => isPropertyInRange(null, 'a', 1, 4)).toThrowError(ValidationError)
+            expect(() => isPropertyInRange(undefined, 'a', 1, 4)).toThrowError(ValidationError)
         })
     })
 

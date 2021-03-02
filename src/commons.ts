@@ -297,7 +297,10 @@ export namespace Commons {
      * @returns {Boolean}
      */
     export const hasProperty = (obj: any, prop: PropertyKey): boolean => {
-        if (Checkers.isNull(obj)) return false
+        if (Checkers.isNull(obj) || Checkers.isUndefined(obj)) {
+            return false
+        }
+
         return Checkers.isFunction(obj.hasOwnProperty) ? obj.hasOwnProperty(prop) : prop in obj
     }
 

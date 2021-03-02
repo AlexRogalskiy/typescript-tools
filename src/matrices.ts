@@ -1,7 +1,6 @@
 import { Errors } from './errors'
 import { Checkers } from './checkers'
 import { Comparators } from './comparators'
-import { Numbers } from './numbers'
 import { ValueOrUndef } from '../typings/standard-types'
 import { Maths } from './maths'
 
@@ -12,10 +11,10 @@ export namespace Matrices {
     import isIntNumber = Checkers.isIntNumber
     import comparator = Comparators.comparator
     import isNumber = Checkers.isNumber
-    import isInteger = Numbers.isInteger
     import Comparator = Comparators.Comparator
     import Helpers = Maths.Helpers
     import cmpByDefault = Comparators.cmpByDefault
+    import isInteger = Checkers.isInteger
 
     export type RowColumn = { row: number; column: number }
 
