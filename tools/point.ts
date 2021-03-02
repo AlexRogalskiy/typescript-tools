@@ -1,4 +1,5 @@
 import { Checkers, Errors } from '../src'
+
 import checkNumber = Checkers.checkNumber
 import valueError = Errors.valueError
 
@@ -11,6 +12,15 @@ export class Point {
         return new Point(x, y)
     }
 
+    static fromPoint(value: Point): Point {
+        return new Point(value.x, value.y)
+    }
+
+    /**
+     * Default {@link Point} constructor by input parameters
+     * @param x initial input {@link Number} x
+     * @param y initial input {@link Number} y
+     */
     constructor(private x: number, private y: number) {
         this.x = x
         this.y = y

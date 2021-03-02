@@ -30,6 +30,15 @@ export class Complex {
         return new Complex(data.x, data.y)
     }
 
+    static fromComplex(value: Complex): Complex {
+        return new Complex(value.x, value.y)
+    }
+
+    /**
+     * Default {@link Complex} constructor by input parameters
+     * @param x initial input {@link Number} x
+     * @param y initial input {@link Number} y
+     */
     constructor(private x: number, private y: number) {
         this.x = x
         this.y = y

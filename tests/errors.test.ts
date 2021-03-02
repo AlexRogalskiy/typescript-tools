@@ -13,6 +13,14 @@ export namespace Errors_Test {
     }
 
     describe('Test extendable error type', () => {
+        beforeAll(() => {
+            console.log("Test suite started");
+        });
+
+        afterAll(() => {
+            console.log("Test suite finished");
+        });
+
         it('it should be a valid error instance of', () => {
             const err = new ExtendableError(ErrorType.value_error, 'Value error')
             expect(err).toBeInstanceOf(Error)
