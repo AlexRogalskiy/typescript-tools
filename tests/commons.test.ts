@@ -67,6 +67,24 @@ export namespace Commons_Test {
 
             expect(Object['__equals__']({ a: 5, b: 7 }, { a: 6, b: 7 })).toBeFalsy()
             expect(Object['__equals__']({ a: 5, b: 7 }, { a: 5, b: 7 })).toBeTruthy()
+
+            expect(left['eq'](right)).toBeFalsy()
+            expect(now['eq'](now)).toBeTruthy()
+
+            expect(Number(4)['eq'](Number(4))).toBeTruthy()
+            expect(4['eq'](Number(4))).toBeTruthy()
+
+            expect(true['eq'](true)).toBeTruthy()
+            expect(true['eq'](false)).toBeFalsy()
+            expect(Boolean(true)['eq'](true)).toBeTruthy()
+
+            expect('test'['eq']('test')).toBeTruthy()
+            expect(String('test')['eq']('test2')).toBeFalsy()
+            expect(String('test')['eq']('test')).toBeTruthy()
+
+            expect({}['eq']({})).toBeFalsy()
+            expect({ a: 5 }['eq']({ a: 6 })).toBeFalsy()
+            expect(Object({ a: 5 })['eq']({ a: 5 })).toBeTruthy()
         })
     })
 }

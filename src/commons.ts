@@ -306,6 +306,7 @@ export namespace Commons {
      */
     export const computeEquals = (() => {
         const _equalsSymbol = '__equals__'
+        const _eqSymbol = 'eq'
 
         /**
          * Determines whether the specified object instances are considered equal.
@@ -405,16 +406,46 @@ export namespace Commons {
             value: (obj1, obj2) => computePrimitiveEquals(obj1, obj2),
         })
 
-        defineProperty(String, _equalsSymbol, {
+        defineStaticProperty(String, _equalsSymbol, {
             value: (obj1, obj2) => computePrimitiveEquals(obj1, obj2),
         })
 
-        defineProperty(Boolean, _equalsSymbol, {
+        defineStaticProperty(Boolean, _equalsSymbol, {
             value: (obj1, obj2) => computePrimitiveEquals(obj1, obj2),
         })
 
-        defineProperty(Object, _equalsSymbol, {
+        defineStaticProperty(Object, _equalsSymbol, {
             value: (obj1, obj2) => computeObjectEquals(obj1, obj2),
+        })
+
+        defineProperty(Date.prototype, _eqSymbol, {
+            value(obj) {
+                return computeDateEquals(this, obj)
+            },
+        })
+
+        defineProperty(Number.prototype, _eqSymbol, {
+            value(obj) {
+                return computePrimitiveEquals(this, obj)
+            },
+        })
+
+        defineProperty(String.prototype, _eqSymbol, {
+            value(obj) {
+                return computePrimitiveEquals(this, obj)
+            },
+        })
+
+        defineProperty(Boolean.prototype, _eqSymbol, {
+            value(obj) {
+                return computePrimitiveEquals(this, obj)
+            },
+        })
+
+        defineProperty(Object.prototype, _eqSymbol, {
+            value(obj) {
+                return computeObjectEquals(this, obj)
+            },
         })
 
         return computeEquals
