@@ -19,7 +19,7 @@ export namespace Arrays {
     import lambda = Commons.lambda
     import checkType = Checkers.checkType
     import isInRange = Checkers.isInRange
-    import checkArray = Checkers.checkArray;
+    import checkArray = Checkers.checkArray
 
     export const list = (...args: any[]): any[] => {
         // const unboundSlice = Array.prototype.slice
@@ -582,5 +582,30 @@ export namespace Arrays {
         array[index] = item
 
         return array
+    }
+
+    export const search = (arr: any[], num: number, lowest: boolean): number => {
+        let start = 0
+        let end = arr.length - 1
+
+        while (start <= end) {
+            let middle = Math.floor((start + end) / 2)
+
+            if (arr[middle].q.length === num) {
+                if (lowest) {
+                    while (arr[middle - 1] && arr[middle].q.length === arr[middle - 1].q.length) middle--
+                } else {
+                    while (arr[middle + 1] && arr[middle].q.length === arr[middle + 1].q.length) middle++
+                }
+
+                return middle
+            } else if (arr[middle].q.length < num) {
+                start = middle + 1
+            } else {
+                end = middle - 1
+            }
+        }
+
+        throw new Error('The provided min/max length is out of boundaries.')
     }
 }

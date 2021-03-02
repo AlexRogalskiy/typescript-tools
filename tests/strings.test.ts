@@ -14,6 +14,7 @@ export namespace Strings_Test {
     import getRomanNotation = Strings.getRomanNotation;
     import shortenString = Strings.shortenString;
     import stripComments = Strings.stripComments;
+    import capitalize = Strings.capitalize;
 
     describe('Check emoji replacer', () => {
         it('it should kill emojis in a string', () => {
@@ -101,6 +102,14 @@ export namespace Strings_Test {
             expect(formatNumber(111222333444, 1)).toEqual('111.2 G')
             expect(formatNumber(111222333444, 3)).toEqual('111.222 G')
             expect(formatNumber(111222333444, 0)).toEqual('111 G')
+        })
+    })
+
+    describe('Check capitalize letters string', () => {
+        it('it should return valid string with capitalized first letters', () => {
+            expect(capitalize('test')).toEqual('Test')
+            expect(capitalize('valid format')).toEqual('Valid Format')
+            expect(capitalize('valid format string')).toEqual('Valid Format String')
         })
     })
 

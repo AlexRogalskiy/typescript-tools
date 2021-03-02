@@ -1,5 +1,6 @@
 export namespace ArrayBuffers {
     const ARRAY_BUFFER_TYPES = [
+        '[object ArrayBuffer]',
         '[object Int8Array]',
         '[object Uint8Array]',
         '[object Uint8ClampedArray]',

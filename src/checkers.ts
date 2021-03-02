@@ -12,7 +12,6 @@ import { Errors } from './errors'
 import { Objects } from './objects'
 
 export namespace Checkers {
-    import typeError = Errors.typeError
     import valueError = Errors.valueError
     import validationError = Errors.validationError
 
@@ -26,6 +25,10 @@ export namespace Checkers {
 
     export const isNotNull = (value: any): boolean => {
         return !isNull(value)
+    }
+
+    export const isNotUndefined = (value: any): boolean => {
+        return !isUndefined(value)
     }
 
     export const isMobileBrowser = (navigator: string): boolean => {
@@ -45,23 +48,17 @@ export namespace Checkers {
     }
 
     export const isBuffer = (value: any): boolean => {
-        return value && value.buffer instanceof ArrayBuffer && value.byteLength !== undefined
+        return value && isArrayBuffer(value.buffer || value) && !isUndefined(value.byteLength)
     }
 
-    export const isObjectBy = (obj: any, prop: PropertyKey): boolean => {
+    export const isObjectWith = (obj: any, prop: PropertyKey): boolean => {
         return isNotNull(obj[prop]) && typeof obj[prop] === 'object' && !Array.isArray(obj[prop])
     }
 
     export const isInRange = (num: number, min: number, max: number, includeBounds = false): boolean => {
-        checkType(num, 'number')
-        checkType(min, 'number')
-        checkType(max, 'number')
-
-        if (!isNumber(num) || !isNumber(min) || !isNumber(max)) {
-            throw typeError(
-                `incorrect type of arguments: number < ${num} >, lower border < ${min} >, upper border < ${max} >`,
-            )
-        }
+        checkNumber(num)
+        checkNumber(min)
+        checkNumber(max)
 
         if (min > max) {
             throw valueError(`incorrect arguments: lower border < ${min} >, upper border < ${max} >`)
@@ -147,6 +144,14 @@ export namespace Checkers {
 
     export const isObject = (value: any): boolean => {
         return isNotNull(value) && Object.prototype.toString.apply(value) === '[object Object]'
+    }
+
+    export const isArrayBuffer = (value: any): boolean => {
+        return (
+            isNotNull(value) &&
+            isNotUndefined(value) &&
+            Object.prototype.toString.apply(value.buffer || value) === '[object ArrayBuffer]'
+        )
     }
 
     export const isDate = (value: any): boolean => {

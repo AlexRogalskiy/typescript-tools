@@ -1,4 +1,4 @@
-import { Checkers, Errors } from '../src'
+import { ArrayBuffers, Checkers, Errors } from '../src'
 import checkRange = Checkers.checkRange;
 
 export namespace Checkers_Test {
@@ -36,6 +36,14 @@ export namespace Checkers_Test {
     import isPositiveDecimal = Checkers.isPositiveDecimal;
     import isIterable = Checkers.isIterable;
     import areEqualNumbers = Checkers.areEqualNumbers;
+    import isArrayIndex = Checkers.isArrayIndex;
+    import isArrayBuffer = ArrayBuffers.isArrayBuffer;
+    import isArrayBuffer2 = Checkers.isArrayBuffer;
+    import isBuffer = Checkers.isBuffer;
+    import isValidSymbol = Checkers.isValidSymbol;
+    import isObjectWith = Checkers.isObjectWith;
+    import isNull = Checkers.isNull;
+    import isUndefined = Checkers.isUndefined;
 
     describe('Check value is in range', () => {
         it('it should return true when value is in range without bounds', () => {
@@ -67,6 +75,32 @@ export namespace Checkers_Test {
             expect(isIntNumber(true)).toBeFalsy()
             expect(isIntNumber(null)).toBeFalsy()
             expect(isIntNumber(undefined)).toBeFalsy()
+        })
+    })
+
+    describe('Check value is null', () => {
+        it('it should return true when value is null', () => {
+            expect(isNull(1)).toBeFalsy()
+            expect(isNull(1.1)).toBeFalsy()
+            expect(isNull('1')).toBeFalsy()
+            expect(isNull('test')).toBeFalsy()
+            expect(isNull([])).toBeFalsy()
+            expect(isNull(true)).toBeFalsy()
+            expect(isNull(null)).toBeTruthy()
+            expect(isNull(undefined)).toBeFalsy()
+        })
+    })
+
+    describe('Check value is undefined', () => {
+        it('it should return true when value is undefined', () => {
+            expect(isUndefined(1)).toBeFalsy()
+            expect(isUndefined(1.1)).toBeFalsy()
+            expect(isUndefined('1')).toBeFalsy()
+            expect(isUndefined('test')).toBeFalsy()
+            expect(isUndefined([])).toBeFalsy()
+            expect(isUndefined(true)).toBeFalsy()
+            expect(isUndefined(null)).toBeFalsy()
+            expect(isUndefined(undefined)).toBeTruthy()
         })
     })
 
@@ -168,6 +202,36 @@ export namespace Checkers_Test {
             expect(isObject(new Function())).toBeFalsy()
             expect(isObject(null)).toBeFalsy()
             expect(isObject(undefined)).toBeFalsy()
+        })
+    })
+
+    describe('Check value is array buffer', () => {
+        it('it should return true when value is array buffer', () => {
+            expect(isArrayBuffer('1')).toBeFalsy()
+            expect(isArrayBuffer(1)).toBeFalsy()
+            expect(isArrayBuffer(true)).toBeFalsy()
+            expect(isArrayBuffer(Boolean())).toBeFalsy()
+            expect(isArrayBuffer(1.56)).toBeFalsy()
+            expect(isArrayBuffer(String())).toBeFalsy()
+            expect(isArrayBuffer({})).toBeFalsy()
+            expect(isArrayBuffer({ a: 5 })).toBeFalsy()
+            expect(isArrayBuffer(Object())).toBeFalsy()
+            expect(isArrayBuffer(Object({}))).toBeFalsy()
+            expect(isArrayBuffer(Function())).toBeFalsy()
+            expect(isArrayBuffer(new Function())).toBeFalsy()
+            expect(isArrayBuffer(null)).toBeFalsy()
+            expect(isArrayBuffer(undefined)).toBeFalsy()
+
+            expect(isArrayBuffer(new ArrayBuffer(1))).toBeTruthy()
+            expect(isArrayBuffer(new Int8Array(1))).toBeTruthy()
+            expect(isArrayBuffer(new Uint8Array(1))).toBeTruthy()
+            expect(isArrayBuffer(new Uint8ClampedArray(1))).toBeTruthy()
+            expect(isArrayBuffer(new Int16Array(1))).toBeTruthy()
+            expect(isArrayBuffer(new Uint16Array(1))).toBeTruthy()
+            expect(isArrayBuffer(new Int32Array(1))).toBeTruthy()
+            expect(isArrayBuffer(new Uint32Array(1))).toBeTruthy()
+            expect(isArrayBuffer(new Float32Array(1))).toBeTruthy()
+            expect(isArrayBuffer(new Float64Array(1))).toBeTruthy()
         })
     })
 
@@ -330,12 +394,23 @@ export namespace Checkers_Test {
             expect(areEqualNumbers(4.11, 4.12)).toBeFalsy()
             expect(areEqualNumbers(4, 5)).toBeFalsy()
             expect(areEqualNumbers(0, 0)).toBeTruthy()
-            expect(areEqualNumbers(4 + Number.EPSILON/2, 4)).toBeTruthy()
+            expect(areEqualNumbers(4 + Number.EPSILON / 2, 4)).toBeTruthy()
             expect(areEqualNumbers(Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER + 1)).toBeFalsy()
         })
     })
 
-    describe('Check value is object literal', () => {
+    describe('Check number is an array index', () => {
+        it('it should return true when number is valid array index', () => {
+            expect(isArrayIndex('1')).toBeTruthy()
+            expect(isArrayIndex('test')).toBeFalsy()
+            expect(isArrayIndex('0')).toBeTruthy()
+            expect(isArrayIndex('-1')).toBeFalsy()
+            expect(isArrayIndex(Number.EPSILON.toString())).toBeFalsy()
+            expect(isArrayIndex(Number.MAX_SAFE_INTEGER.toString())).toBeFalsy()
+        })
+    })
+
+    describe('Check value is an object literal', () => {
         it('it should return true when value is valid object literal', () => {
             expect(isObjectLiteral({})).toBeTruthy()
             expect(isObjectLiteral({ a: 5 })).toBeTruthy()
@@ -350,8 +425,95 @@ export namespace Checkers_Test {
         })
     })
 
-    describe('Check value is host object', () => {
-        it('it should return true when value is host object', () => {
+    describe('Check value is a symbol', () => {
+        it('it should return true when value is valid symbol', () => {
+            expect(isValidSymbol({})).toBeFalsy()
+            expect(isValidSymbol({ a: 5 })).toBeFalsy()
+            expect(isValidSymbol(1.1)).toBeFalsy()
+            expect(isValidSymbol('1')).toBeFalsy()
+            expect(isValidSymbol([])).toBeFalsy()
+            expect(isValidSymbol(() => 5)).toBeFalsy()
+            expect(isValidSymbol('test')).toBeTruthy()
+            expect(isValidSymbol('true')).toBeTruthy()
+            expect(isValidSymbol('1test&')).toBeFalsy()
+            expect(isValidSymbol(true)).toBeFalsy()
+            expect(isValidSymbol(null)).toBeFalsy()
+            expect(isValidSymbol(undefined)).toBeFalsy()
+        })
+    })
+
+    describe('Check value is a symbol', () => {
+        it('it should return true when value is a alid symbol', () => {
+            expect(isObjectWith({}, 'a')).toBeFalsy()
+            expect(isObjectWith({ a: {} }, 'a')).toBeTruthy()
+            expect(isObjectWith({ a: 5 }, 'b')).toBeFalsy()
+            expect(isObjectWith(1.1, 'a')).toBeFalsy()
+            expect(isObjectWith('1', 'a')).toBeFalsy()
+            expect(isObjectWith('test', 'a')).toBeFalsy()
+            expect(isObjectWith('true', 'a')).toBeFalsy()
+            expect(isObjectWith('1test&', 'a')).toBeFalsy()
+            expect(isObjectWith(true, 'a')).toBeFalsy()
+
+            expect(() => isObjectWith(null, 'a')).toThrowError(TypeError)
+            expect(() => isObjectWith(undefined, 'a')).toThrowError(TypeError)
+        })
+    })
+
+    describe('Check value is an array buffer', () => {
+        it('it should return true when value is a valid array buffer', () => {
+            expect(isArrayBuffer2({})).toBeFalsy()
+            expect(isArrayBuffer2({ a: 5 })).toBeFalsy()
+            expect(isArrayBuffer2(1.1)).toBeFalsy()
+            expect(isArrayBuffer2('1')).toBeFalsy()
+            expect(isArrayBuffer2('test')).toBeFalsy()
+            expect(isArrayBuffer2('true')).toBeFalsy()
+            expect(isArrayBuffer2('1test&')).toBeFalsy()
+            expect(isArrayBuffer2(true)).toBeFalsy()
+            expect(isArrayBuffer2(null)).toBeFalsy()
+            expect(isArrayBuffer2(undefined)).toBeFalsy()
+
+            expect(isArrayBuffer2(new ArrayBuffer(1))).toBeTruthy()
+            expect(isArrayBuffer2(new Int8Array(1))).toBeTruthy()
+            expect(isArrayBuffer2(new Uint8Array(1))).toBeTruthy()
+            expect(isArrayBuffer2(new Uint8ClampedArray(1))).toBeTruthy()
+            expect(isArrayBuffer2(new Int16Array(1))).toBeTruthy()
+            expect(isArrayBuffer2(new Uint16Array(1))).toBeTruthy()
+            expect(isArrayBuffer2(new Int32Array(1))).toBeTruthy()
+            expect(isArrayBuffer2(new Uint32Array(1))).toBeTruthy()
+            expect(isArrayBuffer2(new Float32Array(1))).toBeTruthy()
+            expect(isArrayBuffer2(new Float64Array(1))).toBeTruthy()
+        })
+    })
+
+    describe('Check value is an object buffer', () => {
+        it('it should return true when value is a valid object buffer', () => {
+            expect(isBuffer({})).toBeFalsy()
+            expect(isBuffer({ a: 5 })).toBeFalsy()
+            expect(isBuffer(1.1)).toBeFalsy()
+            expect(isBuffer('1')).toBeFalsy()
+            expect(isBuffer('test')).toBeFalsy()
+            expect(isBuffer('true')).toBeFalsy()
+            expect(isBuffer('1test&')).toBeFalsy()
+            expect(isBuffer(true)).toBeFalsy()
+            expect(isBuffer(null)).toBeFalsy()
+            expect(isBuffer(undefined)).toBeFalsy()
+
+            expect(isBuffer(new ArrayBuffer(1))).toBeTruthy()
+            expect(isBuffer(new Int8Array(1))).toBeTruthy()
+            expect(isBuffer(new Int8Array(1))).toBeTruthy()
+            expect(isBuffer(new Uint8Array(1))).toBeTruthy()
+            expect(isBuffer(new Uint8ClampedArray(1))).toBeTruthy()
+            expect(isBuffer(new Int16Array(1))).toBeTruthy()
+            expect(isBuffer(new Uint16Array(1))).toBeTruthy()
+            expect(isBuffer(new Int32Array(1))).toBeTruthy()
+            expect(isBuffer(new Uint32Array(1))).toBeTruthy()
+            expect(isBuffer(new Float32Array(1))).toBeTruthy()
+            expect(isBuffer(new Float64Array(1))).toBeTruthy()
+        })
+    })
+
+    describe('Check value is a host object', () => {
+        it('it should return true when value is a host object', () => {
             expect(isHostObject({}, 'toString')).toBeFalsy()
             expect(isHostObject({}, 'toLocaleString')).toBeFalsy()
             expect(isHostObject({ a: {} }, 'a')).toBeTruthy()
@@ -361,8 +523,8 @@ export namespace Checkers_Test {
         })
     })
 
-    describe('Check value is host method', () => {
-        it('it should return true when value is host method', () => {
+    describe('Check value is a host method', () => {
+        it('it should return true when value is a host method', () => {
             expect(isHostMethod({}, 'toString')).toBeTruthy()
             expect(isHostMethod({}, 'toLocaleString')).toBeTruthy()
             expect(isHostMethod({ a: {} }, 'a')).toBeTruthy()
@@ -373,8 +535,8 @@ export namespace Checkers_Test {
         })
     })
 
-    describe('Check value is valid object type', () => {
-        it('it should return true when value is valid object type', () => {
+    describe('Check value is a valid object type', () => {
+        it('it should return true when value is a valid object type', () => {
             expect(checkType({}, 'object')).toBeUndefined()
             expect(checkType(true, 'boolean')).toBeUndefined()
             expect(checkType({ a: {} }, 'object')).toBeUndefined()
