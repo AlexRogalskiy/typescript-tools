@@ -19,9 +19,9 @@ export namespace Commons_Test {
         })
 
         it('it should return valid extended object', () => {
-            expect(obj2['__hash__']).toEqual(undefined)
-            expect(obj2['__equals__']).toEqual(undefined)
-            expect(obj2['test']).toEqual(undefined)
+            expect(obj2['__hash__']()).toEqual('1aee48a1ce9885851ed10b486ed333ee181944db')
+            expect(obj2['__equals__'](obj2)).toBeTruthy()
+            expect(obj2['test']()).toEqual(5)
         })
     })
 }

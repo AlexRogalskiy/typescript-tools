@@ -14,6 +14,11 @@ export namespace Checkers_Test {
     import isJSON = Checkers.isJSON;
     import isRealNumber = Checkers.isRealNumber;
     import isAlphaNumeric = Checkers.isAlphaNumeric;
+    import is = Checkers.is;
+    import isObjectLiteral = Checkers.isObjectLiteral;
+    import isHostObject = Checkers.isHostObject;
+    import isHostMethod = Checkers.isHostMethod;
+    import checkType = Checkers.checkType;
 
     describe('Check value is in range', () => {
         it('it should return true when value is in range', () => {
@@ -192,6 +197,66 @@ export namespace Checkers_Test {
             expect(isAlphaNumeric('1test&')).toBeFalsy()
             expect(isAlphaNumeric(true)).toBeFalsy()
             expect(isAlphaNumeric(null)).toBeFalsy()
+        })
+    })
+
+    describe('Check value is object type', () => {
+        it('it should return true when value is valid object type', () => {
+            expect(is(1, 'number')).toBeTruthy()
+            expect(is(1.1, 'string')).toBeFalsy()
+            expect(is('1', 'string')).toBeTruthy()
+            expect(is('test', 'string')).toBeTruthy()
+            expect(is('true', 'string')).toBeTruthy()
+            expect(is('1test&', 'number')).toBeFalsy()
+            expect(is(true, 'boolean')).toBeTruthy()
+            expect(is(null, 'object')).toBeFalsy()
+        })
+    })
+
+    describe('Check value is object literal', () => {
+        it('it should return true when value is valid object literal', () => {
+            expect(isObjectLiteral({})).toBeTruthy()
+            expect(isObjectLiteral({ a: 5 })).toBeTruthy()
+            expect(isObjectLiteral(1.1)).toBeFalsy()
+            expect(isObjectLiteral('1')).toBeFalsy()
+            expect(isObjectLiteral('test')).toBeFalsy()
+            expect(isObjectLiteral('true')).toBeFalsy()
+            expect(isObjectLiteral('1test&')).toBeFalsy()
+            expect(isObjectLiteral(true)).toBeFalsy()
+            expect(isObjectLiteral(null)).toBeFalsy()
+        })
+    })
+
+    describe('Check value is host object', () => {
+        it('it should return true when value is host object', () => {
+            expect(isHostObject({}, 'toString')).toBeFalsy()
+            expect(isHostObject({}, 'toLocaleString')).toBeFalsy()
+            expect(isHostObject({ a: {} }, 'a')).toBeTruthy()
+            expect(isHostObject({ a: 5 }, 'b')).toBeFalsy()
+            expect(isHostObject(null, 'b')).toBeFalsy()
+        })
+    })
+
+    describe('Check value is host method', () => {
+        it('it should return true when value is host method', () => {
+            expect(isHostMethod({}, 'toString')).toBeTruthy()
+            expect(isHostMethod({}, 'toLocaleString')).toBeTruthy()
+            expect(isHostMethod({ a: {} }, 'a')).toBeTruthy()
+            expect(isHostMethod({ a: 5 }, 'b')).toBeFalsy()
+            expect(isHostMethod({ a: v => v }, 'a')).toBeTruthy()
+            expect(isHostMethod(null, 'b')).toBeFalsy()
+        })
+    })
+
+    describe('Check value is valid type', () => {
+        it('it should return true when value is valid type', () => {
+            expect(checkType({}, 'object')).toBeUndefined()
+            expect(checkType(true, 'boolean')).toBeUndefined()
+            expect(checkType({ a: {} }, 'object')).toBeUndefined()
+            expect(checkType((v) => v, 'function')).toBeUndefined()
+            expect(checkType('a', 'string')).toBeUndefined()
+            expect(checkType(null, 'null')).toBeUndefined()
+            expect(checkType(undefined, 'undefined')).toBeUndefined()
         })
     })
 }

@@ -231,7 +231,7 @@ export namespace Objects {
         }
 
         if (_proto) {
-            mixin(type.prototype, _proto)
+            mixin(type.prototype || type, _proto)
         }
 
         if (_static) {

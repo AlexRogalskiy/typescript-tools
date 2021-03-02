@@ -17,7 +17,11 @@ export namespace Checkers {
     import validationError = Errors.validationError
 
     export const isNull = (value: any): boolean => {
-        return value == null
+        return value === null
+    }
+
+    export const isUndefined = (value: any): boolean => {
+        return value === undefined
     }
 
     export const isNotNull = (value: any): boolean => {
@@ -330,18 +334,18 @@ export namespace Checkers {
     /**
      * Checks for an object to be of the specified type; if not throws an Error.
      */
-    export const checkType = (obj: any, type: string): void => {
+    export const checkType = (obj: any, type: any): void => {
         if (!is(obj, type)) {
             throw validationError(`Invalid parameter type. Expected type: ${type}`)
         }
     }
 
     export const isHostMethod = (obj: any, prop: PropertyKey): boolean => {
-        return typeof obj[prop] === 'function' || isHostObject(obj, prop)
+        return (obj && typeof obj[prop] === 'function') || isHostObject(obj, prop)
     }
 
     export const isHostObject = (obj: any, prop: PropertyKey): boolean => {
-        return !!(typeof obj[prop] === 'object' && obj[prop])
+        return !!(obj && typeof obj[prop] === 'object' && obj[prop])
     }
 
     // Detects if an object is direct child of Object class (ie. object literal)
@@ -350,10 +354,10 @@ export namespace Checkers {
             _prototype = Object.getPrototypeOf
 
         if (isFunction(_prototype)) {
-            return obj => _prototype(obj) === _proto
+            return obj => obj && _prototype(obj) === _proto
         }
 
-        return obj => obj.constructor.prototype === _proto
+        return obj => obj && obj.constructor.prototype === _proto
     })()
 
     /**
@@ -371,8 +375,18 @@ export namespace Checkers {
             return type === 'function'
         } else if (isBoolean(obj)) {
             return type === 'boolean'
+        } else if (isObject(obj)) {
+            return type === 'object'
+        } else if (isJSON(obj)) {
+            return type === 'json'
+        } else if (isDate(obj)) {
+            return type === 'date'
+        } else if (isNull(obj)) {
+            return type === 'null'
+        } else if (isUndefined(obj)) {
+            return type === 'undefined'
         }
 
-        return obj instanceof type
+        return obj && obj instanceof type
     }
 }
