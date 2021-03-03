@@ -20,9 +20,7 @@ test_script:
   - node --version
   - npm --version
   # run tests
-  - npm test:all
-  # run codecoverage report
-  - npm run coverage
+  - npm run test:all
 
 # Don't actually build.
 build: off
