@@ -950,4 +950,6 @@ export namespace Strings {
 
         return String.fromCharCode(r(), r(), r())
     }
+
+    export const delim = (value = '>', num = 80): string => value.repeat(num)
 }
