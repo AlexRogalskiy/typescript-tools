@@ -515,4 +515,8 @@ export namespace Numbers {
     export const compare = (a: number, b: number): number => {
         return a < b ? -1 : a > b ? 1 : 0
     }
+
+    export const isOdd = (n: number): boolean => {
+        return n % 2 !== 0
+    }
 }

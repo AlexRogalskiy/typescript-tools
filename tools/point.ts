@@ -4,6 +4,8 @@ import checkNumber = Checkers.checkNumber
 import valueError = Errors.valueError
 
 export class Point {
+    private subscribers = {}
+
     static isPoint(value: any): boolean {
         return value instanceof Point
     }
@@ -280,5 +282,23 @@ export class Point {
         }
 
         return this.x === obj.x && this.y === obj.y
+    }
+
+    on(eventName: string, cb: any): void {
+        const list: any[] = this.subscribers[eventName]
+        if (list && list.indexOf(cb) === 0) {
+            list.push(cb)
+        } else {
+            this.subscribers[eventName] = [cb]
+        }
+    }
+
+    notify(eventName: string): void {
+        const list: any[] = this.subscribers[eventName]
+        if (list) {
+            for (const cb of list) {
+                cb()
+            }
+        }
     }
 }

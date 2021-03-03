@@ -44,4 +44,8 @@ export namespace DataTimes {
 
         return days[d]
     }
+
+    export const toLocaleDateString = (value: number | string | Date): string => {
+        return new Date(value).toLocaleDateString()
+    }
 }

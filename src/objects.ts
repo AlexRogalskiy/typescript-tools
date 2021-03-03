@@ -257,4 +257,15 @@ export namespace Objects {
 
         return type
     }
+
+    export const extend2 = (...args: any[]): any => {
+        for (let i = 1; i < args.length; i++) {
+            for (const key in args[i]) {
+                if (args[i].hasOwnProperty(key)) {
+                    args[0][key] = args[i][key]
+                }
+            }
+        }
+        return args[0]
+    }
 }
