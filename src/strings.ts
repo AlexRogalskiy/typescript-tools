@@ -896,4 +896,51 @@ export namespace Strings {
     export const htmlText = (value: string): string => {
         return unescape(value.replace(/<.*?>/g, '')).replace(/&amp;/, '&')
     }
+
+    export const quote = (str: any, allowVars = false): string => {
+        if (Array.isArray(str)) {
+            return str.map(str => quote(str, allowVars)).join(' ')
+        } else if (typeof str !== 'string') {
+            str = String(str)
+        }
+
+        if (str === '') {
+            return "''"
+        }
+
+        // If we only have double quotes and spaces, and no
+        // single quotes, then we can simply surround with
+        // single quotes and add a layer of escaping
+        // sada\"sd -> 'sada\\"sd'
+        if (/["\s]/.test(str) && !str.includes("'") && !allowVars) {
+            return `'${str.replace(/([\\])/g, '\\$1')}'`
+        }
+
+        if (/["'\s]/.test(str)) {
+            return doubleQuote(str, allowVars)
+        }
+
+        // if we haven't surrounded the word with a double or single quote, then
+        // we escape any character with a special meaning. No idea what the ([A-z]:)?
+        // is for. But I'm keeping it just in case.
+        str = str.replace(/([A-z]:)?([#!"&'()*,:;<=>?@\\[\]^`{|}])/g, '$1\\$2')
+
+        // if we allow vars, then $ will not be escaped, otherwise, escape.
+        if (!allowVars) {
+            str = str.replace(/[$]/g, '\\$')
+        }
+
+        return str
+    }
+
+    export const doubleQuote = (str: string, allowVars = false): string => {
+        const escapedChars = ['"', '\\', '`', '!']
+        if (!allowVars) {
+            escapedChars.push('$')
+        }
+
+        const regex = RegExp(`([${escapedChars.join('')}])`, 'g')
+
+        return `"${str.replace(regex, '\\$1')}"`
+    }
 }

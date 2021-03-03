@@ -90,7 +90,7 @@ export type Truthy = true | 1 | 'on' | null | undefined
 /**
  * Tests for Truthy value
  *
- * The value is mostly in added type-information and explicity
+ * The value is mostly in added type-information and explicitly
  * but in case of this simple type much the same can often be archived by just using double negation `!!`:
  * @example
  *   const consumer = (value: boolean | Truthy) => {
@@ -117,7 +117,7 @@ export type Falsy = false | '' | 0 | 'off' | null | undefined
 /**
  * Tests for Falsy by simply applying negation `!` to the tested `val`.
  *
- * The value is mostly in added type-information and explicity,
+ * The value is mostly in added type-information and explicitly,
  * but in case of this simple type much the same can often be archived by just using negation `!`:
  * @example
  *   const consumer = (value: boolean | Falsy) => {

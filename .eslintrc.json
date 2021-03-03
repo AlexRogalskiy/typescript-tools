@@ -62,7 +62,7 @@
         "no-invalid-this": "off",
         "no-angle-bracket-type-assertion": "off",
         "spellcheck/spell-checker": [
-            1,
+            "off",
             {
                 "lang": "en_GB",
                 "skipWords": [
@@ -122,7 +122,8 @@
                     "olivernn",
                     "github",
                     "js",
-                    "cb"
+                    "cb",
+                    "init"
                 ]
             }
         ],

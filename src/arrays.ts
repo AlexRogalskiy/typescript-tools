@@ -661,4 +661,16 @@ export namespace Arrays {
 
         return arr
     }
+
+    export const removeValues = (data: any[], ...args: any[]): any[] => {
+        for (let i = 0, n = data.length; i < n; i++) {
+            for (let j = 0, n = args.length; i < n; i++) {
+                if (data[i] === args[j]) {
+                    data.splice(i, 1)
+                }
+            }
+        }
+
+        return data
+    }
 }

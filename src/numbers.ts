@@ -117,7 +117,7 @@ export namespace Numbers {
         }
 
         let n
-        while (((n = Math.round(Math.random() * 1_000_000_000)), !isPrime(n))) {
+        while (((n = Math.round(Math.random() * 1000 * 1000 * 1000)), !isPrime(n))) {
             // empty
         }
         return n
@@ -191,7 +191,7 @@ export namespace Numbers {
         return min + Math.random() * (max - min)
     }
 
-    export const randInt = (min: number, max: number): number => {
+    export const randInt = (min: number, max: number, even = false): number => {
         if (!isIntNumber(min)) {
             throw typeError(`incorrect input argument: {lower border} is not integer number < ${min} >`)
         }
@@ -204,23 +204,9 @@ export namespace Numbers {
             min = [max, (max = min)][0]
         }
 
-        return Math.floor(min + Math.random() * (max - min))
-    }
+        const value = min + Math.random() * (max - min)
 
-    export const randUnevenInt = (min: number, max: number): number => {
-        if (!isIntNumber(min)) {
-            throw typeError(`incorrect input argument: {lower border} is not integer number < ${min} >`)
-        }
-
-        if (!isIntNumber(max)) {
-            throw typeError(`incorrect input argument: {upper border} is not integer number < ${max} >`)
-        }
-
-        if (min > max) {
-            min = [max, (max = min)][0]
-        }
-
-        return Math.round(min + Math.random() * (max - min))
+        return even ? Math.round(value) : Math.floor(value)
     }
 
     export const randBigInt = (): number => {

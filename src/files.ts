@@ -108,4 +108,45 @@ export namespace Files {
         const url = `${wiki}${o.org}/${o.package_root}/${o.readme}.md`
         execSync(`${BIN}download ${url} > ${pth}`, { stdio })
     }
+
+    export const extractErrorsFromLogs = (outputPath: string): string[] => {
+        const out = readFileSync(outputPath, 'utf8')
+        const lines = out.split('\n')
+        const errors: string[] = []
+
+        for (const line of lines) {
+            const errIndex = line.indexOf('FATAL')
+            if (errIndex >= 0) {
+                const err = line.substring(errIndex)
+                errors.push(err)
+            }
+        }
+
+        return errors
+    }
+
+    export const getEnvVariables = async (): Promise<{ [key: string]: string }> => {
+        const result: { [key: string]: string } = {}
+
+        for (const key in process.env) {
+            result[key] = process.env[key] || ''
+        }
+
+        return result
+    }
+
+    export const ensureDirExists = (dir: string): void => {
+        if (!existsSync(dir)) {
+            mkdirSync(dir, { recursive: true })
+        }
+    }
+
+    export const getFileJson = (path: string): any => {
+        try {
+            const rawContent = readFileSync(path, 'utf-8')
+            return JSON.parse(rawContent)
+        } catch (ex) {
+            throw new Error(`An error occurred while parsing the contents of the file: ${path}. Error: ${ex}`)
+        }
+    }
 }

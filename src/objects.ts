@@ -5,20 +5,38 @@ import { Utils } from './utils'
 
 export namespace Objects {
     import Commons = Utils.Commons
+    import isFunction = Checkers.isFunction
 
     export const init = (() => {
-        const defineProperty = (obj: any, prop: PropertyKey, attr: PropertyDescriptor): any => {
-            obj[prop] = attr.get ? attr.get.apply(obj) : attr.value
-        }
-
         /**
          * Freezes an object, makes the object effectively immutable.
          */
-        Object.freeze = Object.freeze || (o => o)
+        if (!isFunction(Object.freeze)) {
+            Object.freeze = o => o
+        }
+
         /**
          * Defines a new property directly on an object, or modifies an existing property on an object, and returns the object
          */
-        Object.defineProperty = Object.defineProperty || defineProperty
+        if (!isFunction(Object.defineProperty)) {
+            Object.defineProperty = (obj: any, prop: PropertyKey, attr: PropertyDescriptor): any => {
+                obj[prop] = attr.get ? attr.get.apply(obj) : attr.value
+            }
+        }
+
+        /**
+         * Creates new object returns the instance
+         */
+        if (!isFunction(Object.create)) {
+            Object.create = function (o) {
+                function F(): void {
+                    // empty
+                }
+
+                F.prototype = o
+                return new F()
+            }
+        }
     })()
 
     export const randomEnum = <T>(enumType: T): T[keyof T] => {
@@ -37,10 +55,11 @@ export namespace Objects {
     }
 
     export const omitNull = <T>(obj: T): T => {
-        // eslint-disable-next-line github/array-foreach
-        Object.keys(obj)
-            .filter(k => obj[k] === null || obj[k] === undefined)
-            .forEach(k => delete obj[k])
+        for (const key of Object.keys(obj).keys()) {
+            if (obj[key] === null || obj[key] === undefined) {
+                delete obj[key]
+            }
+        }
 
         return obj
     }
@@ -99,13 +118,6 @@ export namespace Objects {
         }
 
         return result
-    }
-
-    export const getType = (obj: any): string => {
-        return {}.toString
-            .call(obj)
-            .match(/\s([a-z|A-Z]+)/)[1]
-            .toLowerCase()
     }
 
     export const classof = (obj: any): string => {

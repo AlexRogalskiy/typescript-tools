@@ -6,13 +6,17 @@ import { Errors } from './errors'
 import { Utils } from './utils'
 
 export namespace Functions {
+    import Commons = Utils.Commons
+    import isArray = Checkers.isArray
     import isFunction = Checkers.isFunction
     import typeError = Errors.typeError
     import valueError = Errors.valueError
-    import Commons = Utils.Commons
 
     export const init = (() => {
-        if (!Function.prototype.bind) {
+        /**
+         * Creates binding context for function input parameters
+         */
+        if (!isFunction(Function.prototype.bind)) {
             Commons.defineProperty(Function.prototype, 'bind', {
                 value(obj, ...args) {
                     const slice = [].slice,
@@ -45,7 +49,7 @@ export namespace Functions {
         return _.mergeWith({}, ...obj, (o, s) => (_.isNull(s) ? o : s))
     }
 
-    export const wait = async (ms: number, ...args: any[]): Promise<void> => {
+    export const wait = async (ms = 1000, ...args: any[]): Promise<void> => {
         return new Promise(resolve => setTimeout(resolve, ms, args))
     }
 
@@ -147,6 +151,64 @@ export namespace Functions {
 
             console.log(new Date(), '>>> Exitiпg method: ', method)
             return result
+        }
+    }
+
+    export const addEventHandler = (that: any): void => {
+        that.subscribe = function (event, callback) {
+            const calls = this._callbacks || (this._callbacks = this._callbacks || {})
+            calls[event] = calls[event] || []
+            calls[event].push(callback)
+
+            return this
+        }
+
+        that.unsubscribe = function (event) {
+            const calls = this._callbacks || (this._callbacks = {})
+
+            if (calls[event]) {
+                delete calls[event]
+            }
+
+            return this
+        }
+
+        that.unsubscribe = function (event, callback) {
+            const calls = this._callbacks || (this._callbacks = {})
+
+            if (calls[event]) {
+                if (isArray(calls[event])) {
+                    for (let i = 0; i < this._callbacks[event].length; i++) {
+                        if (calls[event][i] === callback) {
+                            calls[event].splice(i, 1)
+                        }
+                    }
+                } else {
+                    delete calls[event]
+                }
+            }
+
+            return this
+        }
+
+        that.publish = function (...args: any[]) {
+            const args_ = Array.prototype.slice.call(args, 0)
+            const event = args_.shift()
+
+            let list
+            const calls = this._callbacks
+            if (!calls) {
+                return this
+            }
+            if (!(list = calls[event])) {
+                return this
+            }
+
+            for (let i = 0, l = list.length; i < l; i++) {
+                list[i].apply(this, args)
+            }
+
+            return this
         }
     }
 }

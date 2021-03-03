@@ -8,6 +8,7 @@ export namespace Commons {
     import defineProperty = Utils.Commons.defineProperty
     import defineStaticProperty = Utils.Commons.defineStaticProperty
     import hasProperty = Checkers.hasProperty
+    import isFunction = Checkers.isFunction
 
     const WINDOW_USER_SCRIPT_VARIABLE = '__USER__'
 
@@ -75,7 +76,7 @@ export namespace Commons {
          * Determines whether the specified object instances are considered equal.
          * @param {Object} objA The first object to compare.
          * @param {Object} objB The second object to compare.
-         * @param {Boolean} override When true, uses the overriden __equals__ function if it is defined.
+         * @param {Boolean} override When true, uses the overridden __equals__ function if it is defined.
          * @returns {Boolean}
          */
         const computeEquals = (objA, objB, override): boolean => {
@@ -144,7 +145,7 @@ export namespace Commons {
             return _v1 > _v2 ? 1 : _v2 > _v1 ? -1 : 0
         }
 
-        if (!Date.prototype[_equalsSymbol]) {
+        if (!isFunction(Date.prototype[_equalsSymbol])) {
             defineProperty(Date.prototype, _equalsSymbol, {
                 value(obj) {
                     return computeDateEquals(this, obj)
@@ -152,7 +153,7 @@ export namespace Commons {
             })
         }
 
-        if (!Date.prototype[_compareSymbol]) {
+        if (!isFunction(Date.prototype[_compareSymbol])) {
             defineProperty(Date.prototype, _compareSymbol, {
                 value(obj) {
                     return computeCompare(this, obj)
@@ -160,7 +161,7 @@ export namespace Commons {
             })
         }
 
-        if (!Number.prototype[_equalsSymbol]) {
+        if (!isFunction(Number.prototype[_equalsSymbol])) {
             defineProperty(Number.prototype, _equalsSymbol, {
                 value(obj) {
                     return computePrimitiveEquals(this, obj)
@@ -168,7 +169,7 @@ export namespace Commons {
             })
         }
 
-        if (!Number.prototype[_compareSymbol]) {
+        if (!isFunction(Number.prototype[_compareSymbol])) {
             defineProperty(Number.prototype, _compareSymbol, {
                 value(obj) {
                     return computeCompare(this, obj)
@@ -176,7 +177,7 @@ export namespace Commons {
             })
         }
 
-        if (!String.prototype[_equalsSymbol]) {
+        if (!isFunction(String.prototype[_equalsSymbol])) {
             defineProperty(String.prototype, _equalsSymbol, {
                 value(obj) {
                     return computePrimitiveEquals(this, obj)
@@ -184,7 +185,7 @@ export namespace Commons {
             })
         }
 
-        if (!String.prototype[_compareSymbol]) {
+        if (!isFunction(String.prototype[_compareSymbol])) {
             defineProperty(String.prototype, _compareSymbol, {
                 value(obj) {
                     return computeCompare(this, obj)
@@ -192,7 +193,7 @@ export namespace Commons {
             })
         }
 
-        if (!Boolean.prototype[_equalsSymbol]) {
+        if (!isFunction(Boolean.prototype[_equalsSymbol])) {
             defineProperty(Boolean.prototype, _equalsSymbol, {
                 value(obj) {
                     return computePrimitiveEquals(this, obj)
@@ -200,7 +201,7 @@ export namespace Commons {
             })
         }
 
-        if (!Boolean.prototype[_compareSymbol]) {
+        if (!isFunction(Boolean.prototype[_compareSymbol])) {
             defineProperty(Boolean.prototype, _compareSymbol, {
                 value(obj) {
                     return computeCompare(this, obj)
@@ -208,7 +209,7 @@ export namespace Commons {
             })
         }
 
-        if (!Object.prototype[_equalsSymbol]) {
+        if (!isFunction(Object.prototype[_equalsSymbol])) {
             defineProperty(Object.prototype, _equalsSymbol, {
                 value(obj) {
                     return computeObjectEquals(this, obj)
@@ -216,7 +217,7 @@ export namespace Commons {
             })
         }
 
-        if (!Object.prototype[_compareSymbol]) {
+        if (!isFunction(Object.prototype[_compareSymbol])) {
             defineProperty(Object.prototype, _compareSymbol, {
                 value(obj) {
                     return computeCompare(this, obj)
@@ -224,75 +225,75 @@ export namespace Commons {
             })
         }
 
-        if (!Date[_equalsStaticSymbol]) {
+        if (!isFunction(Date[_equalsStaticSymbol])) {
             // Define "__equals__" function for built-in types
             defineStaticProperty(Date, _equalsStaticSymbol, {
                 value: (obj1, obj2) => computeDateEquals(obj1, obj2),
             })
         }
 
-        if (!Date[_compareStaticSymbol]) {
+        if (!isFunction(Date[_compareStaticSymbol])) {
             // Define "__equals__" function for built-in types
             defineStaticProperty(Date, _compareStaticSymbol, {
                 value: (obj1, obj2) => computeCompare(obj1, obj2),
             })
         }
 
-        if (!Number[_equalsStaticSymbol]) {
+        if (!isFunction(Number[_equalsStaticSymbol])) {
             defineStaticProperty(Number, _equalsStaticSymbol, {
                 value: (obj1, obj2) => computePrimitiveEquals(obj1, obj2),
             })
         }
 
-        if (!Number[_compareStaticSymbol]) {
+        if (!isFunction(Number[_compareStaticSymbol])) {
             defineStaticProperty(Number, _compareStaticSymbol, {
                 value: (obj1, obj2) => computeCompare(obj1, obj2),
             })
         }
 
-        if (!String[_equalsStaticSymbol]) {
+        if (!isFunction(String[_equalsStaticSymbol])) {
             defineStaticProperty(String, _equalsStaticSymbol, {
                 value: (obj1, obj2) => computePrimitiveEquals(obj1, obj2),
             })
         }
 
-        if (!String[_compareStaticSymbol]) {
+        if (!isFunction(String[_compareStaticSymbol])) {
             defineStaticProperty(String, _compareStaticSymbol, {
                 value: (obj1, obj2) => computeCompare(obj1, obj2),
             })
         }
 
-        if (!Boolean[_equalsStaticSymbol]) {
+        if (!isFunction(Boolean[_equalsStaticSymbol])) {
             defineStaticProperty(Boolean, _equalsStaticSymbol, {
                 value: (obj1, obj2) => computePrimitiveEquals(obj1, obj2),
             })
         }
 
-        if (!Boolean[_compareStaticSymbol]) {
+        if (!isFunction(Boolean[_compareStaticSymbol])) {
             defineStaticProperty(Boolean, _compareStaticSymbol, {
                 value: (obj1, obj2) => computeCompare(obj1, obj2),
             })
         }
 
-        if (!Object[_equalsStaticSymbol]) {
+        if (!isFunction(Object[_equalsStaticSymbol])) {
             defineStaticProperty(Object, _equalsStaticSymbol, {
                 value: (obj1, obj2) => computeObjectEquals(obj1, obj2),
             })
         }
 
-        if (!Object[_compareStaticSymbol]) {
+        if (!isFunction(Object[_compareStaticSymbol])) {
             defineStaticProperty(Object, _compareStaticSymbol, {
                 value: (obj1, obj2) => computeCompare(obj1, obj2),
             })
         }
 
-        if (!Function[_equalsStaticSymbol]) {
+        if (!isFunction(Function[_equalsStaticSymbol])) {
             defineStaticProperty(Function, _equalsStaticSymbol, {
                 value: (obj1, obj2, override) => computeEquals(obj1, obj2, override),
             })
         }
 
-        if (!Function[_compareStaticSymbol]) {
+        if (!isFunction(Function[_compareStaticSymbol])) {
             defineStaticProperty(Function, _compareStaticSymbol, {
                 value: (obj1, obj2) => computeCompare(obj1, obj2),
             })

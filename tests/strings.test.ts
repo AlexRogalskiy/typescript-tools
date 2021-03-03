@@ -15,6 +15,7 @@ export namespace Strings_Test {
     import shortenString = Strings.shortenString;
     import stripComments = Strings.stripComments;
     import capitalize = Strings.capitalize;
+    import quote = Strings.quote;
 
     describe('Check emoji replacer', () => {
         it('it should kill emojis in a string', () => {
@@ -113,6 +114,33 @@ export namespace Strings_Test {
         })
     })
 
+    describe('Check double quotes', () => {
+        it('it should return valid string with double quotes', () => {
+            let cmd = quote(['echo', "hell'o1 ${HOME}"], true);
+            cmd = ['bash', '-c', quote(cmd)].join(' ');
+            expect(quote(cmd)).toEqual("\"bash -c \\\"echo \\\\\"hell'o1 \\\\${HOME}\\\\\"\\\"\"")
+            expect(quote(['a', 'b', 'c d'])).toEqual("a b 'c d'")
+            expect(quote(['a', 'b', 'it\'s a "neat thing"'])).toEqual('a b "it\'s a \\"neat thing\\""')
+            expect(quote(['$', '`', "'"])).toEqual('\\$ \\` "\'"')
+            expect(quote([])).toEqual('')
+            expect(quote([''])).toEqual("''")
+            expect(quote(['a\nb'])).toEqual("'a\nb'")
+            expect(quote([' #(){}*|][!'])).toEqual("' #(){}*|][!'")
+            expect(quote(["'#(){}*|][!"])).toEqual('"\'#(){}*|][\\!"')
+            expect(quote(['X#(){}*|][!'])).toEqual('X\\#\\(\\)\\{\\}\\*\\|\\]\\[\\!')
+            expect(quote(['a\n#\nb'])).toEqual("'a\n#\nb'")
+            expect(quote(['><;{}'])).toEqual('\\>\\<\\;\\{\\}')
+            expect(quote(['a', 1, true, false])).toEqual('a 1 true false')
+            expect(quote(['a', 1, null, undefined])).toEqual('a 1 null undefined')
+            expect(quote(['a\\x'])).toEqual('a\\\\x')
+        })
+
+        it('it should return valid string with single quotes', () => {
+            expect(quote(['a', '|', 'b'])).toEqual('a \\| b')
+            expect(quote(['a', '&&', 'b', ';', 'c'])).toEqual('a \\&\\& b \\; c')
+        })
+    })
+
     describe('Check string padding', () => {
         it('it should add zero padding to numbers', () => {
             expect(pad(7, 2)).toEqual('07')
@@ -151,8 +179,8 @@ export namespace Strings_Test {
             expect(capFirstLetter('people are crazy!')).toEqual('People are crazy!')
         })
         it('it should uppercase the first character of a string', () => {
-            expect(capFirstLetter('typescript: you are so powerfull!')).toEqual(
-                'Typescript: you are so powerfull!',
+            expect(capFirstLetter('typescript: you are so powerful!')).toEqual(
+                'Typescript: you are so powerful!',
             )
         })
     })

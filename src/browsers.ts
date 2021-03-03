@@ -183,7 +183,7 @@ export namespace Browsers {
         return elem
     }
 
-    export const toogle = <T extends HTMLElement>(elem: T): void => {
+    export const toggle = <T extends HTMLElement>(elem: T): void => {
         const displayCache = {}
 
         const isHidden = <T extends HTMLElement>(el: T): boolean => {

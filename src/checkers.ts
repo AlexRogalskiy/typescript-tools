@@ -9,7 +9,6 @@ import {
 } from './regexes'
 import { Numbers } from './numbers'
 import { Errors } from './errors'
-import { Objects } from './objects'
 
 export namespace Checkers {
     import valueError = Errors.valueError
@@ -97,10 +96,15 @@ export namespace Checkers {
 
     export const isNumber = (value: any): boolean => {
         return (
-            isNotNull(value) &&
-            (typeof value === 'number' || Objects.getType(value) === 'number') &&
-            isFinite(value)
+            isNotNull(value) && (typeof value === 'number' || getType(value) === 'number') && isFinite(value)
         )
+    }
+
+    export const getType = (obj: any): string => {
+        return {}.toString
+            .call(obj)
+            .match(/\s([a-z|A-Z]+)/)[1]
+            .toLowerCase()
     }
 
     // positive only, integer or decimal point
@@ -123,7 +127,7 @@ export namespace Checkers {
     }
 
     export const isString = (value: any): boolean => {
-        return isNotNull(value) && (typeof value === 'string' || Objects.getType(value) === 'string')
+        return isNotNull(value) && (typeof value === 'string' || getType(value) === 'string')
     }
 
     export const isArray = (value: any): boolean => {
@@ -191,7 +195,7 @@ export namespace Checkers {
     }
 
     export const isBoolean = (value: any): boolean => {
-        return isNotNull(value) && (typeof value === 'boolean' || Objects.getType(value) === 'boolean')
+        return isNotNull(value) && (typeof value === 'boolean' || getType(value) === 'boolean')
     }
 
     export const isDomElement = (value: any): boolean => {
@@ -212,7 +216,7 @@ export namespace Checkers {
     }
 
     export const isRegExp = (value: any): boolean => {
-        return isNotNull(value) && Objects.getType(value) === 'regexp'
+        return isNotNull(value) && getType(value) === 'regexp'
     }
 
     export const isSet = (value: any): boolean => {
