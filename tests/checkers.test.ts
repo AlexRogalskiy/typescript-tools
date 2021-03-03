@@ -1,4 +1,4 @@
-import { ArrayBuffers, Checkers, Errors } from '../src'
+import { ALPHA_REGEX, ArrayBuffers, Checkers, Errors } from '../src'
 import checkRange = Checkers.checkRange;
 
 export namespace Checkers_Test {
@@ -47,6 +47,14 @@ export namespace Checkers_Test {
     import isArray2 = Checkers.isArray2;
     import isPropertyInRange = Checkers.isPropertyInRange;
     import isDomElement = Checkers.isDomElement;
+    import isRegExp = Checkers.isRegExp;
+    import isNullOrUndefined = Checkers.isNullOrUndefined;
+    import isDigit = Checkers.isDigit;
+    import isSet = Checkers.isSet;
+    import checkEmail = Checkers.checkEmail;
+    import checkUrl = Checkers.checkUrl;
+    import checkPhone = Checkers.checkPhone;
+    import checkDateBy = Checkers.checkDateBy;
 
     describe('Check value is in range', () => {
         it('it should return true when value is in range without bounds', () => {
@@ -143,6 +151,108 @@ export namespace Checkers_Test {
             expect(isDomElement(null)).toBeFalsy()
             expect(isDomElement(undefined)).toBeFalsy()
             expect(isDomElement(() => 5)).toBeFalsy()
+        })
+    })
+
+    describe('Check value is regex expression', () => {
+        it('it should return true when value is regex expression', () => {
+            expect(isRegExp(1)).toBeFalsy()
+            expect(isRegExp('1')).toBeFalsy()
+            expect(isRegExp(true)).toBeFalsy()
+            expect(isRegExp(Boolean())).toBeFalsy()
+            expect(isRegExp(Boolean(true))).toBeFalsy()
+            expect(isRegExp(null)).toBeFalsy()
+            expect(isRegExp(undefined)).toBeFalsy()
+            expect(isRegExp(() => 5)).toBeFalsy()
+            expect(isRegExp('/^$/')).toBeFalsy()
+
+            expect(isRegExp(ALPHA_REGEX)).toBeTruthy()
+            expect(isRegExp(new RegExp(''))).toBeTruthy()
+            expect(isRegExp(new RegExp(ALPHA_REGEX))).toBeTruthy()
+        })
+    })
+
+    describe('Check value is null or undefined', () => {
+        it('it should return true when value is null or undefined', () => {
+            expect(isNullOrUndefined(1)).toBeFalsy()
+            expect(isNullOrUndefined('1')).toBeFalsy()
+            expect(isNullOrUndefined(true)).toBeFalsy()
+            expect(isNullOrUndefined(Boolean())).toBeFalsy()
+            expect(isNullOrUndefined(Boolean(true))).toBeFalsy()
+            expect(isNullOrUndefined(() => 5)).toBeFalsy()
+
+            expect(isNullOrUndefined(null)).toBeTruthy()
+            expect(isNullOrUndefined(undefined)).toBeTruthy()
+        })
+    })
+
+    describe('Check value is email address', () => {
+        it('it should return true when value is valid email address', () => {
+            expect(checkEmail('1')).toBeFalsy()
+            expect(checkEmail('mail@')).toBeFalsy()
+            expect(checkEmail('mail@ru')).toBeFalsy()
+
+            expect(checkEmail('mail@domain.ru')).toBeTruthy()
+        })
+    })
+
+    describe('Check value is url address', () => {
+        it('it should return true when value is valid url address', () => {
+            expect(checkUrl('1')).toBeFalsy()
+            expect(checkUrl('mail@')).toBeFalsy()
+            expect(checkUrl('mail@ru')).toBeFalsy()
+            expect(checkUrl('mail@domain.ru')).toBeFalsy()
+            expect(checkUrl('https://')).toBeFalsy()
+
+            expect(checkUrl('https://domain.com')).toBeTruthy()
+        })
+    })
+
+    describe('Check value is phone address', () => {
+        it('it should return true when value is valid phone address', () => {
+            expect(checkPhone('1')).toBeFalsy()
+            expect(checkPhone('555')).toBeFalsy()
+            expect(checkPhone('555-55')).toBeFalsy()
+
+            expect(checkPhone('555-555-5555')).toBeTruthy()
+        })
+    })
+
+    describe('Check value is date', () => {
+        it('it should return true when value is valid date', () => {
+            expect(checkDateBy('1')).toBeFalsy()
+            expect(checkDateBy('555')).toBeFalsy()
+            expect(checkDateBy('555-55')).toBeFalsy()
+
+            expect(checkDateBy('02/02/20')).toBeTruthy()
+            expect(checkDateBy('02/02/202')).toBeTruthy()
+            expect(checkDateBy('02/02/2020')).toBeTruthy()
+        })
+    })
+
+    describe('Check value is digit', () => {
+        it('it should return true when value is digit', () => {
+            expect(isDigit('1')).toBeTruthy()
+            expect(isDigit(String('1'))).toBeTruthy()
+            expect(isDigit(String('1a'))).toBeTruthy()
+
+            expect(isDigit(String('a'))).toBeFalsy()
+            expect(isDigit(String('a1'))).toBeFalsy()
+            expect(isDigit('')).toBeFalsy()
+        })
+    })
+
+    describe('Check value is not null or undefined', () => {
+        it('it should return true when value is not null or undefined', () => {
+            expect(isSet(1)).toBeTruthy()
+            expect(isSet('1')).toBeTruthy()
+            expect(isSet(true)).toBeTruthy()
+            expect(isSet(Boolean())).toBeTruthy()
+            expect(isSet(Boolean(true))).toBeTruthy()
+            expect(isSet(() => 5)).toBeTruthy()
+
+            expect(isSet(null)).toBeFalsy()
+            expect(isSet(undefined)).toBeFalsy()
         })
     })
 

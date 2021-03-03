@@ -217,8 +217,8 @@ export namespace Checkers {
         return isNotNull(value) && Objects.getType(value) === 'regexp'
     }
 
-    export const isSet = (value: string): boolean => {
-        return isNotNull(value) && typeof value !== 'undefined'
+    export const isSet = (value: any): boolean => {
+        return isNotNull(value) && isNotUndefined(value)
     }
 
     export const isDigit = (chr: string): boolean => {
@@ -229,15 +229,6 @@ export namespace Checkers {
         const code = charCode(chr)
 
         return code >= charCode('0') && code <= charCode('9')
-    }
-
-    export const hasRegExp = (value: any): boolean => {
-        try {
-            new RegExp('.', value)
-            return true
-        } catch (ex) {
-            return false
-        }
     }
 
     export const checkEmail = (value: string): boolean => {
