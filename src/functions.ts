@@ -3,11 +3,39 @@ import _ from 'lodash'
 import { Callback, Executor, Supplier } from '../typings/function-types'
 import { Checkers } from './checkers'
 import { Errors } from './errors'
+import { Utils } from './utils'
 
 export namespace Functions {
     import isFunction = Checkers.isFunction
     import typeError = Errors.typeError
     import valueError = Errors.valueError
+    import Commons = Utils.Commons
+
+    export const init = (() => {
+        if (!Function.prototype.bind) {
+            Commons.defineProperty(Function.prototype, 'bind', {
+                value(obj, ...args) {
+                    const slice = [].slice,
+                        args_ = slice.call(args, 1),
+                        self = this,
+                        nop = (): void => {
+                            // empty
+                        }
+
+                    const bound = (...args): any => {
+                        return self['apply'](
+                            this instanceof nop ? this : obj || {},
+                            args_.concat(slice.call(args)),
+                        )
+                    }
+
+                    nop.prototype = self['prototype']
+                    bound.prototype = new nop()
+                    return bound
+                },
+            })
+        }
+    })()
 
     export const composeAsync = async (...funcArgs) => async x =>
         // eslint-disable-next-line github/no-then

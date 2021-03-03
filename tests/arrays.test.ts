@@ -87,13 +87,13 @@ export namespace Arrays_Test {
 
     describe('Check array insert operator', () => {
         it('it should perform valid array insertion order', () => {
-            // expect(insert(1, 2, [1, 2, 3, 4, 5]).join("-")).toEqual('1-2-2-3-4-5')
-            // expect(insert(0, 2, [1, 2, 3, 4, 5]).join("-")).toEqual('2-1-2-3-4-5')
-            // expect(insert(5, null, [1, 2, 3, 4, 5]).join("-")).toEqual('1-2-3-4-5-')
-            // expect(insert(5, null, []).join("-")).toEqual('-----')
-            // expect(insert(5, undefined, []).join("-")).toEqual('-----')
+            expect(insert(1, 2, [1, 2, 3, 4, 5]).join("-")).toEqual('1-2-2-3-4-5')
+            expect(insert(0, 2, [1, 2, 3, 4, 5]).join("-")).toEqual('2-1-2-3-4-5')
+            expect(insert(5, null, [1, 2, 3, 4, 5]).join("-")).toEqual('1-2-3-4-5-')
+            expect(insert(5, null, []).join("-")).toEqual('-----')
+            expect(insert(5, undefined, []).join("-")).toEqual('-----')
             expect(insert(-5, 2, []).join("-")).toEqual('')
-            // expect(insert(0, '2', []).join("-")).toEqual('2')
+            expect(insert(0, '2', []).join("-")).toEqual('2')
         })
     })
 }

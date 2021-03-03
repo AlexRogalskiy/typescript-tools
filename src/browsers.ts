@@ -10,6 +10,7 @@ export namespace Browsers {
     import isNull = Checkers.isNull
     import toBoolean = Commons.toBoolean
     import isNumber = Checkers.isNumber
+    import isNotNull = Checkers.isNotNull
 
     /**
      * let supportsSlider = supportsInputOfType('range');
@@ -524,6 +525,61 @@ export namespace Browsers {
         return (elem || document).getElementsByTagName(name)
     }
 
+    export const addClass = (obj: any, clazz: string): void => {
+        if (!hasClass(obj, clazz)) {
+            obj.className += ` ${clazz}`
+        }
+    }
+
+    export const removeClass = (obj: any, clazz: string): void => {
+        if (hasClass(obj, clazz)) {
+            obj.className = obj.className
+                .replace(new RegExp(`(\\s|^)${clazz}(\\s|$)`), ' ')
+                .replace(/\s+/g, ' ')
+                .replace(/^\s|\s$/, '')
+        }
+    }
+
+    export const findById = (() => {
+        const cache = {}
+
+        return (id: string): HTMLElement | null => {
+            if (cache[id] === undefined) {
+                cache[id] = document.getElementById(id) || null
+            }
+            return cache[id]
+        }
+    })()
+
+    export const isIdExists = (id: string): boolean => {
+        return isNotNull(findById(id))
+    }
+
+    export const findBy = (() => {
+        const cache = {}
+
+        return <K extends keyof HTMLElementTagNameMap>(
+            id: string,
+            el: K,
+        ): HTMLCollectionOf<HTMLElementTagNameMap[K]> | null => {
+            const a = id + el
+            if (cache[a] === undefined) {
+                const obj = document.getElementById(id)
+                if (obj) {
+                    cache[a] = obj.getElementsByTagName(el || '*') || null
+                } else {
+                    cache[a] = false
+                }
+            }
+
+            return cache[a]
+        }
+    })()
+
+    export const getAnchorFromURI = (uri: string): string => {
+        return uri.slice(uri.lastIndexOf('#') + 1)
+    }
+
     export const hasClass = (name: string, type): HTMLElementTagNameMap[] => {
         const res: HTMLElementTagNameMap[] = []
         // Locate the class name (allows for multiple class names)
@@ -531,6 +587,7 @@ export namespace Browsers {
         // Limit search by type, or look through all elements
         const e = document.getElementsByTagName(type || '*')
 
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
         for (let j = 0; j < e.length; j++) {
             // If the element has the class, add it for return
             if (re.test(e[j])) {

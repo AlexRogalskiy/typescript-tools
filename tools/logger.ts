@@ -31,9 +31,9 @@ export class Logger {
         return `Logger => time: ${dateTime}, message: ${message}, args: ${args}`
     }
 
-    private static getOutputStyle(type: string): string {
+    private static getOutputStyle(style: string): string {
         return `color: ${
-            Logger.COLORS_PRESET[type] ? Logger.COLORS_PRESET[type] : Logger.COLORS_PRESET['black']
+            Logger.COLORS_PRESET[style] ? Logger.COLORS_PRESET[style] : Logger.COLORS_PRESET['black']
         }`
     }
 

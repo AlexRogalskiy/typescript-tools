@@ -841,4 +841,59 @@ export namespace Strings {
             })
             .join('')
     }
+
+    export const checkPostCode = (toCheck: string): string | null => {
+        const alpha1 = '[abcdefghijklmnoprstuwyz]',
+            alpha2 = '[abcdefghklmnopqrstuvwxy]',
+            alpha3 = '[abcdefghjkpmnrstuvwxy]',
+            alpha4 = '[abehmnprvwxy]',
+            alpha5 = '[abdefghjlnpqrstuwxyz]'
+
+        const pcexp: RegExp[] = []
+        let postCode: string = toCheck,
+            valid = false
+
+        pcexp.push(new RegExp(`^(${alpha1}{1}${alpha2}?[0-9]{1,2})(\\s*)([0-9]{1}${alpha5}{2})$`, 'i'))
+        pcexp.push(new RegExp(`^(${alpha1}{1}[0-9]{1}${alpha3}{1})(\\s*)([0-9]{1}${alpha5}{2})$`, 'i'))
+        pcexp.push(
+            new RegExp(`^(${alpha1}{1}${alpha2}{1}?[0-9]{1}${alpha4}{1})(\\s*)([0-9]{1}${alpha5}{2})$`, 'i'),
+        )
+        pcexp.push(/^(GIR)(\s*)(0AA)$/i)
+        pcexp.push(/^(bfpo)(\s*)([0-9]{1,4})$/i)
+        pcexp.push(/^(bfpo)(\s*)(c\/o\s*[0-9]{1,3})$/i)
+        pcexp.push(/^([A-Z]{4})(\s*)(1ZZ)$/i)
+        pcexp.push(/^(ai-2640)$/i)
+
+        for (const item of pcexp) {
+            if (item.test(postCode)) {
+                item.exec(postCode)
+                postCode = `${RegExp.$1.toUpperCase()} ${RegExp.$3.toUpperCase()}`
+                postCode = postCode.replace(/C\/O\s*/, 'c/o ')
+                if (toCheck.toUpperCase() === 'AI-2640') {
+                    postCode = 'AI-2640'
+                }
+                valid = true
+                break
+            }
+        }
+
+        return valid ? postCode : null
+    }
+
+    export const packageName = (value: string): string => {
+        return value.replace(/extra-/, '').replace(/\W+/, '_')
+    }
+
+    export const toSnakeCase = (value: string, sep = '-'): string => {
+        value = value.replace(/([a-z0-9])([A-Z])/g, `$1${sep}$2`)
+        value = value.replace(/[^A-Za-z0-9\\.]+/g, sep)
+        value = value.replace(/^[^A-Za-z0-9\\.]+/, '')
+        value = value.replace(/[^A-Za-z0-9\\.]+$/, '')
+
+        return value.toLowerCase()
+    }
+
+    export const htmlText = (value: string): string => {
+        return unescape(value.replace(/<.*?>/g, '')).replace(/&amp;/, '&')
+    }
 }

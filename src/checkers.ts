@@ -10,12 +10,10 @@ import {
 import { Numbers } from './numbers'
 import { Errors } from './errors'
 import { Objects } from './objects'
-import { Commons } from './commons'
 
 export namespace Checkers {
     import valueError = Errors.valueError
     import validationError = Errors.validationError
-    import hasProperty = Commons.hasProperty
 
     export const isNull = (value: any): boolean => {
         return value === null
@@ -247,6 +245,12 @@ export namespace Checkers {
         return new RegExp(regex).test(value)
     }
 
+    export const checkStringByPatterns = (str: string): boolean => {
+        const fal = str.search(/(negati|never|refus|wrong|fal|off)|\b([fn0])\b/gi) < 0 ? 0 : 1
+        const not = (str.match(/\b(nay|nah|no|dis|un|in)/gi) || []).length & 1
+        return !(fal ^ not)
+    }
+
     export const CHECK_RULES = {
         // Checks for when a specified field is required
         required: {
@@ -316,6 +320,19 @@ export namespace Checkers {
         }
     }
 
+    /**
+     * Returns a boolean indicating whether the object has the specified property.
+     * @param {Object} obj An object.
+     * @param {String} prop A property name.
+     * @returns {Boolean}
+     */
+    export const hasProperty = (obj: any, prop: PropertyKey): boolean => {
+        if (isNull(obj) || isUndefined(obj)) {
+            return false
+        }
+
+        return isFunction(obj.hasOwnProperty) ? obj.hasOwnProperty(prop) : prop in obj
+    }
     /**
      * Checks for an object to be of the specified type; if not throws an Error.
      */

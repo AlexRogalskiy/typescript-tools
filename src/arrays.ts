@@ -4,7 +4,7 @@ import { Errors } from './errors'
 import { Maths } from './maths'
 import { Comparators } from './comparators'
 import { Predicate, Processor } from '../typings/function-types'
-import { Commons } from './commons'
+import { Utils } from './utils'
 
 export namespace Arrays {
     import random = Numbers.random
@@ -16,10 +16,10 @@ export namespace Arrays {
     import valueError = Errors.valueError
     import Helpers = Maths.Helpers
     import Comparator = Comparators.Comparator
-    import lambda = Commons.lambda
     import checkType = Checkers.checkType
     import isInRange = Checkers.isInRange
     import checkArray = Checkers.checkArray
+    import Commons = Utils.Commons
 
     export const list = (...args: any[]): any[] => {
         // const unboundSlice = Array.prototype.slice
@@ -88,6 +88,22 @@ export namespace Arrays {
         }
 
         return result
+    }
+
+    export const range = (start: number, end: number, step: number): number[] => {
+        const array: number[] = []
+
+        if (step > 0) {
+            for (let i = start; i <= end; i += step) {
+                array.push(i)
+            }
+        } else {
+            for (let i = start; i >= end; i += step) {
+                array.push(i)
+            }
+        }
+
+        return array
     }
 
     export const randomElement = <T>(arr: T[]): T => arr[random(arr.length)]
@@ -532,7 +548,7 @@ export namespace Arrays {
             throw valueError(`incorrect input value: array # 1 < ${array} >`)
         }
 
-        match = lambda(match)
+        match = Commons.lambda(match)
         checkType(match, 'function')
 
         for (let i = 0, _len = array.length; i < _len; i++) {
@@ -626,5 +642,23 @@ export namespace Arrays {
         }
 
         return array
+    }
+
+    // Random shuffle an array.
+    // https://stackoverflow.com/a/2450976/1413259
+    // https://github.com/coolaj86/knuth-shuffle
+    export const shuffle3 = (arr: any[]): any[] => {
+        let i = arr.length,
+            t,
+            j
+        while (0 !== i) {
+            j = Math.floor(Math.random() * i)
+            i -= 1
+            t = arr[i]
+            arr[i] = arr[j]
+            arr[j] = t
+        }
+
+        return arr
     }
 }

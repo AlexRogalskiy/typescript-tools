@@ -1,9 +1,26 @@
 import { Numbers } from './numbers'
 import { Checkers } from './checkers'
 import { Errors } from './errors'
-import { Commons } from './commons'
+import { Utils } from './utils'
 
 export namespace Objects {
+    import Commons = Utils.Commons
+
+    export const init = (() => {
+        const defineProperty = (obj: any, prop: PropertyKey, attr: PropertyDescriptor): any => {
+            obj[prop] = attr.get ? attr.get.apply(obj) : attr.value
+        }
+
+        /**
+         * Freezes an object, makes the object effectively immutable.
+         */
+        Object.freeze = Object.freeze || (o => o)
+        /**
+         * Defines a new property directly on an object, or modifies an existing property on an object, and returns the object
+         */
+        Object.defineProperty = Object.defineProperty || defineProperty
+    })()
+
     export const randomEnum = <T>(enumType: T): T[keyof T] => {
         const values = (Object.values(enumType) as unknown) as T[keyof T][]
         const index = Numbers.random(values.length)
@@ -195,7 +212,7 @@ export namespace Objects {
     ): any => {
         if (obj) {
             for (const _prop in properties) {
-                if (!Commons.hasProperty(obj, _prop)) {
+                if (!Checkers.hasProperty(obj, _prop)) {
                     define(obj, _prop, {
                         value: properties[_prop],
                         writable: attributes.writable || false,

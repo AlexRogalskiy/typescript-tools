@@ -1,5 +1,15 @@
-import { existsSync, mkdirSync, promises, readdirSync, rmdirSync, statSync, unlinkSync } from 'fs'
-import { join } from 'path'
+import {
+    existsSync,
+    mkdirSync,
+    promises,
+    readdirSync,
+    readFileSync,
+    rmdirSync,
+    statSync,
+    unlinkSync,
+} from 'fs'
+import path, { join } from 'path'
+import { execSync } from 'child_process'
 
 export namespace Files {
     export const createFilePath = (locations: { path; name; extension }): string => {
@@ -43,5 +53,59 @@ export namespace Files {
             }
         }
         rmdirSync(baseDir)
+    }
+
+    export const pathSplit = (value: string): string[] => {
+        const d = path.dirname(value)
+        const e = path.extname(value)
+        const f = value.substring(d.length, value.length - e.length).replace(/^\//, '')
+
+        return [d, f, e]
+    }
+
+    export const fsReadDir = (pth: string): any => {
+        return existsSync(pth) ? readdirSync(pth) : []
+    }
+
+    // Get path to root package.
+    export const packageRoot = (pth: string): any => {
+        while (!existsSync(path.join(pth, 'package.json'))) {
+            pth = path.dirname(pth)
+        }
+        return pth
+    }
+
+    // Gets requires from code.
+    export const packageRequires = (pth: string, a: string[] = []): any => {
+        const d = readFileSync(pth, 'utf8')
+        const re = /require\('(.*?)'\)/g
+        const reqs: string[] = []
+
+        for (let m: RegExpExecArray | null = null; (m = re.exec(d)) != null; m) {
+            reqs.push(m[1])
+            a.push(m[1])
+        }
+
+        if (reqs.length === 0) {
+            return a
+        }
+
+        const dir = path.dirname(pth)
+        for (const p of reqs) {
+            if (p.startsWith('.')) {
+                packageRequires(path.join(dir, p), a)
+            }
+        }
+
+        return a
+    }
+
+    // Download README.md from wiki.
+    export const downloadReadme = (pth: string, o): void => {
+        const stdio = [0, 1, 2]
+        const BIN = `${execSync('npm prefix -g')}/bin/`.replace('\n', '')
+        const wiki = 'https://raw.githubusercontent.com/wiki/'
+        const url = `${wiki}${o.org}/${o.package_root}/${o.readme}.md`
+        execSync(`${BIN}download ${url} > ${pth}`, { stdio })
     }
 }

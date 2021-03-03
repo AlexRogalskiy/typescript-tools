@@ -39,11 +39,6 @@ export namespace Utils {
     }
 
     export namespace Color {
-        import isArray = Checkers.isArray
-        import isNull = Checkers.isNull
-        import random = Numbers.random
-        import validationError = Errors.validationError
-
         /**
          * @private
          */
@@ -158,7 +153,7 @@ export namespace Utils {
          */
         export const sourceFromHex = (color: string): number[] => {
             if (!color.match(/^#[0-9a-fA-F]$/)) {
-                throw validationError(`Invalid color value ${color}`)
+                throw Errors.validationError(`Invalid color value ${color}`)
             }
 
             const value = color.slice(color.indexOf('#') + 1),
@@ -182,7 +177,7 @@ export namespace Utils {
         }
 
         export const getColorByUsername = (username: string, colors: string[]): string => {
-            colors = isArray(colors) ? colors : DEFAULT_COLORS_PRESET
+            colors = colors || DEFAULT_COLORS_PRESET
 
             let hash = 7
             for (let i = 0; i < username.length; i++) {
@@ -246,7 +241,7 @@ export namespace Utils {
 
             let color = '#'
             for (let i = 0; i < 6; i++) {
-                color += letters[random(16)]
+                color += letters[Numbers.random(16)]
             }
 
             return color
@@ -293,7 +288,7 @@ export namespace Utils {
         }
 
         export const shadeColor = (color: string, percent: number, rgb = false): string => {
-            if (isNull(color)) {
+            if (Checkers.isNull(color)) {
                 console.error('Null color is getting passed to darken')
             }
 
@@ -1312,10 +1307,8 @@ export namespace Utils {
     }
 
     export namespace Commons {
-        import isString = Checkers.isString
-
         export const normalizeBy = (name: string): string => {
-            if (!isString(name)) {
+            if (!Checkers.isString(name)) {
                 name = String(name)
             }
 
@@ -1327,7 +1320,7 @@ export namespace Utils {
         }
 
         export const normalize = (value: any): string => {
-            if (!isString(value)) {
+            if (!Checkers.isString(value)) {
                 value = String(value)
             }
 
@@ -1350,22 +1343,134 @@ export namespace Utils {
             return iterator
         }
 
-        /**
-         * Freezes an object, makes the object effectively immutable.
-         */
-        export const freeze2 = ((): any => {
-            return Checkers.isFunction(Object.freeze) ? Object.freeze : o => o
-        })()
+        export const defineAccessorProperty = (obj: any, prop: PropertyKey, value: any): any => {
+            return Object.defineProperty(obj, prop, {
+                get: () => value,
+                set: newValue => (value = newValue),
+                enumerable: true,
+                configurable: true,
+            })
+        }
+
+        export const defineProperty = (
+            obj: any,
+            prop: PropertyKey,
+            attrs: PropertyDescriptor = { writable: true, enumerable: true, configurable: true },
+        ): any => {
+            return Object.defineProperty(obj, prop, attrs)
+        }
+
+        export const defineStaticProperty = (
+            obj: any,
+            prop: PropertyKey,
+            attrs: { __proto__?: null; value: any },
+        ): any => {
+            // Object.defineProperty(obj, prop, withValue('static'));
+            return Object.defineProperty(obj, prop, attrs)
+        }
+
+        export const freeze = (obj: any): void => {
+            // if freeze is available, prevents adding or
+            // removing the object prototype properties
+            // (value, get, set, enumerable, writable, configurable)
+            ;(Object.freeze || Object)(obj.prototype)
+        }
+
+        export const withValue = (value: any): any => {
+            const d =
+                withValue['d'] ||
+                (withValue['d'] = {
+                    enumerable: false,
+                    writable: false,
+                    configurable: false,
+                    value: null,
+                })
+            d.value = value
+
+            return d
+        }
+
+        // adding a writable data descriptor - not configurable, not enumerable
+        // Object.setProperty(4, myObj, 'myNumber', 25);
+        // adding a readonly data descriptor - not configurable, enumerable
+        // Object.setProperty(1, myObj, 'myString', 'Hello world!');
+        export const createProperty = (global: any): void => {
+            Object['setProperty'] = (
+                mask: number,
+                obj: any,
+                prop: PropertyKey,
+                getter: any,
+                setter: any,
+            ): any => {
+                if (mask & 8) {
+                    // accessor descriptor
+                    if (Checkers.isFunction(getter)) {
+                        global.get = getter
+                    } else {
+                        delete global.get
+                    }
+                    if (Checkers.isFunction(setter)) {
+                        global.set = setter
+                    } else {
+                        delete global.set
+                    }
+                    delete global.value
+                    delete global.writable
+                } else {
+                    // data descriptor
+                    if (Checkers.isFunction(getter)) {
+                        global.value = getter()
+                    } else {
+                        delete global.value
+                    }
+                    global.writable = Boolean(mask & 4)
+                    delete global.get
+                    delete global.set
+                }
+                global.enumerable = Boolean(mask & 1)
+                global.configurable = Boolean(mask & 2)
+                Object.defineProperty(obj, prop, global)
+
+                return obj
+            }
+        }
+
+        // addMethod(this, "find", () => {})
+        // addMethod(this, "find", (name) => {})
+        // addMethod(this, "find", (first, last) => {})
+        export const addMethod = (obj: any, name: string, fn, ...args: any[]): any => {
+            const old = obj[name]
+            obj[name] = () => {
+                if (fn.length === args.length) {
+                    return fn.apply(obj, args)
+                } else if (typeof old === 'function') {
+                    return old.apply(obj, args)
+                }
+            }
+        }
 
         /**
-         * Defines a new property directly on an object, or modifies an existing property on an object, and returns the object
+         * Creates A function expression from the specified string lambda expression
+         * @param {String} exp String lambda expression.
+         * @returns {Function}
          */
-        export const defineProperty2 = ((): any => {
-            const defineProperty_ = (obj: any, prop: PropertyKey, attr: PropertyDescriptor): any => {
-                obj[prop] = attr.get ? attr.get.apply(obj) : attr.value
+        export const lambda = (exp: any): any => {
+            if (typeof exp === 'function') {
+                return exp
+            } else if (typeof exp === 'string') {
+                const _pattern = /^\s*\(?\s*(([a-z_$][a-z0-9_$]*)+([, ]+[a-z_$][a-z0-9_$]*)*)*\s*\)?\s*=>\s*(.*)$/i
+                if (_pattern.test(exp)) {
+                    const _match = exp.match(_pattern)
+                    return new Function(
+                        ((_match && _match[1]) || '').replace(/ /g, ''),
+                        `return ${_match && _match[4]}`,
+                    )
+                }
+
+                throw Errors.valueError(`Cannot parse supplied expression: ${exp}`)
             }
 
-            return Checkers.isFunction(Object.defineProperty) ? Object.defineProperty : defineProperty_
-        })()
+            return null
+        }
     }
 }

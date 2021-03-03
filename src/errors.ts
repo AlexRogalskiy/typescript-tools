@@ -1,11 +1,11 @@
 import { ErrorData, ErrorType } from '../typings/domain-types'
 import { Logging } from './logging'
-import { Commons } from './commons'
+import { Utils } from './utils'
+import { Checkers } from './checkers'
 
 export namespace Errors {
     import errors = Logging.errors
-    import defineProperty = Commons.defineProperty
-    import hasProperty = Commons.hasProperty
+    import Commons = Utils.Commons
 
     /**
      * ExtendableError
@@ -20,33 +20,33 @@ export namespace Errors {
         constructor(readonly type: ErrorType, readonly message: string) {
             super(message)
 
-            defineProperty(this, 'message', {
+            Commons.defineProperty(this, 'message', {
                 configurable: true,
                 enumerable: false,
                 value: message,
                 writable: true,
             })
 
-            defineProperty(this, 'type', {
+            Commons.defineProperty(this, 'type', {
                 configurable: true,
                 enumerable: false,
                 value: type,
                 writable: true,
             })
 
-            defineProperty(this, 'name', {
+            Commons.defineProperty(this, 'name', {
                 configurable: true,
                 enumerable: false,
                 value: this.constructor.name,
                 writable: true,
             })
 
-            if (hasProperty(Error, 'captureStackTrace')) {
+            if (Checkers.hasProperty(Error, 'captureStackTrace')) {
                 Error.captureStackTrace(this, this.constructor)
                 return
             }
 
-            defineProperty(this, 'stack', {
+            Commons.defineProperty(this, 'stack', {
                 configurable: true,
                 enumerable: false,
                 value: new Error(message).stack,

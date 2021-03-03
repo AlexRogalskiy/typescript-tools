@@ -1,12 +1,12 @@
-import { Commons } from '../src'
+import { Checkers, Commons } from '../src'
 
 export namespace Commons_Test {
     import isEmpty = Commons.isEmpty;
     import equals = Commons.equals;
-    import hasProperty = Commons.hasProperty;
     import hash = Commons.hash;
     import getUniqueId = Commons.getUniqueId;
     import toPrimitive = Commons.toPrimitive;
+    import hasProperty = Checkers.hasProperty;
 
     describe('Check isEmpty by input object', () => {
         it('it should return true when value is null', () => {
@@ -45,8 +45,8 @@ export namespace Commons_Test {
         })
     })
 
-    describe('Check object prototype equality', () => {
-        it('it should return valid objects prototype equality', () => {
+    describe('Check object equality', () => {
+        it('it should return true when objects are equal', () => {
             const left = new Date("2020-02-02T15:56:00")
             const right = new Date("2020-03-02T15:56:00")
             expect(Date['__equals__'](left, right)).toBeFalsy()
@@ -71,6 +71,11 @@ export namespace Commons_Test {
             expect(Object['__equals__']({ a: 5, b: 7 }, { a: 6, b: 7 })).toBeFalsy()
             expect(Object['__equals__']({ a: 5, b: 7 }, { a: 5, b: 7 })).toBeTruthy()
 
+            const dummy = () => 5
+            expect(Function['__equals__'](() => 5, () => 5)).toBeFalsy()
+            expect(Function['__equals__'](dummy, () => 5)).toBeFalsy()
+            expect(Function['__equals__'](dummy, dummy)).toBeTruthy()
+
             expect(left['eq'](right)).toBeFalsy()
             expect(now['eq'](now)).toBeTruthy()
 
@@ -88,6 +93,57 @@ export namespace Commons_Test {
             expect({}['eq']({})).toBeFalsy()
             expect({ a: 5 }['eq']({ a: 6 })).toBeFalsy()
             expect(Object({ a: 5 })['eq']({ a: 5 })).toBeTruthy()
+        })
+    })
+
+    describe('Check objects comparison', () => {
+        it('it should return true when object are equal', () => {
+            const left = new Date("2020-02-02T15:56:00")
+            const right = new Date("2020-03-02T15:56:00")
+            expect(Date['__compare__'](left, right)).toEqual(-1)
+            const now = new Date()
+            expect(Date['__compare__'](now, now)).toEqual(0)
+
+            expect(Number['__compare__'](Number(4), 6)).toEqual(-1)
+            expect(Number['__compare__'](Number(4), Number(4))).toEqual(0)
+            expect(Number['__compare__'](Number(4), 4)).toEqual(0)
+            expect(Number['__compare__'](4, 4)).toEqual(0)
+
+            expect(Boolean['__compare__'](false, true)).toEqual(-1)
+            expect(Boolean['__compare__'](true, true)).toEqual(0)
+            expect(Boolean['__compare__'](true, Boolean(true))).toEqual(0)
+            expect(Boolean['__compare__'](Boolean(true), Boolean(true))).toEqual(0)
+
+            expect(String['__compare__']('test', 'test2')).toEqual(-1)
+            expect(String['__compare__']('test', 'test')).toEqual(0)
+            expect(String['__compare__']('test', String('test'))).toEqual(0)
+            expect(String['__compare__'](String('test'), String('test'))).toEqual(0)
+
+            expect(Object['__compare__']({ a: 5, b: 7 }, { a: 6, b: 7 })).toEqual(0)
+            expect(Object['__compare__']({ a: 5, b: 7 }, { a: 5, b: 7 })).toEqual(0)
+
+            const dummy = () => 5
+            expect(Function['__compare__'](() => 5, () => 5)).toEqual(0)
+            expect(Function['__compare__'](dummy, () => 5)).toEqual(0)
+            expect(Function['__compare__'](dummy, dummy)).toEqual(0)
+
+            expect(left['cmp'](right)).toEqual(-1)
+            expect(now['cmp'](now)).toEqual(0)
+
+            expect(Number(4)['cmp'](Number(4))).toEqual(0)
+            expect(4['cmp'](Number(4))).toEqual(0)
+
+            expect(true['cmp'](true)).toEqual(0)
+            expect(true['cmp'](false)).toEqual(1)
+            expect(Boolean(true)['cmp'](true)).toEqual(0)
+
+            expect('test'['cmp']('test')).toEqual(0)
+            expect(String('test')['cmp']('test2')).toEqual(-1)
+            expect(String('test')['cmp']('test')).toEqual(0)
+
+            expect({}['cmp']({})).toEqual(0)
+            expect({ a: 5 }['cmp']({ a: 6 })).toEqual(0)
+            expect(Object({ a: 5 })['cmp']({ a: 5 })).toEqual(0)
         })
     })
 

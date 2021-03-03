@@ -65,3 +65,9 @@ export const ALPHA_REGEX = /^[a-zA-Z]+$/
 export const getRegex = <T extends string>(arr: T[]): RegExp => {
     return new RegExp(`^(${arr.join('|')})\\b`, 'i')
 }
+
+export const regexp = (value: string): RegExp => {
+    const [pattern, flags] = value.replace(/^\/(.*?)\/([igmuys]*)$|(.*)/, '$1$3:$2').split(':')
+
+    return new RegExp(pattern, flags)
+}
