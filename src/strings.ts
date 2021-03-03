@@ -19,6 +19,7 @@ export namespace Strings {
     import Helpers = Maths.Helpers
     import random = Numbers.random
     import Comparator = Comparators.Comparator
+    import randomBy = Numbers.randomBy
 
     export const combinations = (value: string): string[] => {
         let str = ''
@@ -942,5 +943,11 @@ export namespace Strings {
         const regex = RegExp(`([${escapedChars.join('')}])`, 'g')
 
         return `"${str.replace(regex, '\\$1')}"`
+    }
+
+    export const generateSymbol = (): string => {
+        const r = (): number => randomBy(65, 90)
+
+        return String.fromCharCode(r(), r(), r())
     }
 }

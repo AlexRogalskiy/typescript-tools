@@ -41,6 +41,8 @@
         "@typescript-eslint/parser": "^4.15.0",
         "axios": "^0.21.1",
         "dateformat": "^4.5.1",
+        "randomcolor": "^0.5.4",
+        "gradient-string": "^1.2.0",
         "del-cli": "^3.0.1",
         "eslint": "^7.18.0",
         "eslint-config-prettier": "^6.15.0",
