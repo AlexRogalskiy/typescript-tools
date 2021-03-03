@@ -4,6 +4,7 @@ import { BiConsumer, Consumer, Processor } from '../typings/function-types'
 
 export namespace Logging {
     const DATETIME_FORMAT = 'dddd, mmmm dS, yyyy, hh:MM:ss TT'
+
     const COLORS = {
         RESET: process.stdout.isTTY ? '\x1b[0m' : '',
         BLACK: process.stdout.isTTY ? '\x1b[0;30m' : '',

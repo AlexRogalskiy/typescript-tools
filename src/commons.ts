@@ -82,10 +82,7 @@ export namespace Commons {
             // Objects are identical (including null)
             if (objA === objB) {
                 return true
-            }
-
-            // null is not equal to any object
-            else if (objA == null || objB == null) {
+            } else if (objA == null || objB == null) {
                 return false
             }
 

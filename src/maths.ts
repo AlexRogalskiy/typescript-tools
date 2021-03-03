@@ -809,7 +809,7 @@ export namespace Maths {
                 }
                 let c = 0x8000,
                     g = 0x8000
-                // eslint-disable-next-line no-constant-condition
+
                 while (true) {
                     if (g * g > a) {
                         g ^= c
