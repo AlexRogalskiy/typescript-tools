@@ -151,4 +151,8 @@ export namespace Requests {
             },
         )
     }
+
+    export const replacePageNumber = (param: string, pageNum: number): string => {
+        return window.location.href.replace(new RegExp(`${param}=(\\d)`), `${param}=${pageNum}`)
+    }
 }

@@ -36,7 +36,9 @@ export namespace Logging {
             return
         }
 
+        console.group('>>>')
         console.log(`${COLORS.PURPLE}${getTime()}:${COLORS.RESET}`, message, ...args)
+        console.groupEnd()
     }
 
     export const createLog = (

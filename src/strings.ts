@@ -3,7 +3,7 @@ import slugify from 'slugify'
 import { Errors } from './errors'
 import { Checkers } from './checkers'
 import { NumberOrUndef, StringOrUndef } from '../typings/standard-types'
-import { Processor, Supplier } from '../typings/function-types'
+import { BiProcessor, Processor, StringProcessor, Supplier } from '../typings/function-types'
 import { Maths } from './maths'
 import { Numbers } from './numbers'
 import { Comparators } from './comparators'
@@ -837,9 +837,7 @@ export namespace Strings {
     export const encode = (value: string, delta: number): string => {
         return value
             .split('')
-            .map(ch => {
-                return String.fromCharCode(ch.charCodeAt(0) + delta)
-            })
+            .map(ch => String.fromCharCode(ch.charCodeAt(0) + delta))
             .join('')
     }
 
@@ -976,5 +974,29 @@ export namespace Strings {
         }
 
         return `${args.slice(0, n - 1).join(', ')} ${join} ${args[n - 1]}`
+    }
+
+    export const encoder = (value: string, encoder: BiProcessor<string, number, string> = encode): string => {
+        return [].map.call(value, encoder).join('')
+    }
+
+    export const replacer = (
+        value: string[],
+        pattern: RegExp | string = /\b./g,
+        encoder: StringProcessor<string> = (a: string): string => a.toUpperCase(),
+    ): string[] => {
+        return ''.replace.call(value, pattern, encoder).split(',')
+    }
+
+    export const matcher = (value: string[], pattern: RegExp | string = /[a-z][0-9]+/g): string[] => {
+        return ''.match.call(value, pattern)
+    }
+
+    export const lowerCase = (...args: string[]): string[] => {
+        return ''.toLowerCase.apply(args).split(',')
+    }
+
+    export const trimmer = (...args: string[]): string[] => {
+        return [].map.call(args, v => ''.trim.apply(v))
     }
 }

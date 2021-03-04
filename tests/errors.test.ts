@@ -4,7 +4,7 @@ import { Errors } from '../src'
 import { ErrorType } from '../typings/domain-types'
 
 export namespace Errors_Test {
-    import ExtendableError = Errors.ExtendableError
+    import ExtendableError = Errors.ExtendableError;
 
     class TestError extends ExtendableError {
     }
@@ -14,11 +14,13 @@ export namespace Errors_Test {
 
     describe('Test extendable error type', () => {
         beforeAll(() => {
-            console.log("Test suite started");
+            console.log("Test suite started")
+            console.time("Execution time took")
         });
 
         afterAll(() => {
-            console.log("Test suite finished");
+            console.log("Test suite finished")
+            console.timeEnd("Execution time took")
         });
 
         it('it should be a valid error instance of', () => {

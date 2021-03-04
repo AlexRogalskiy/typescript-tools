@@ -19,6 +19,11 @@ export namespace Strings_Test {
     import escape2 = Strings.escape2;
     import stringify = Strings.stringify;
     import joiner = Strings.joiner;
+    import encoder = Strings.encoder;
+    import replacer = Strings.replacer;
+    import matcher = Strings.matcher;
+    import lowerCase = Strings.lowerCase;
+    import trimmer = Strings.trimmer;
 
     describe('Check emoji replacer', () => {
         it('it should kill emojis in a string', () => {
@@ -140,6 +145,56 @@ export namespace Strings_Test {
         it('it should return valid joined string', () => {
             expect(joiner('and', ['a', 1, true, false], 0)).toEqual('')
             expect(joiner('and', ['a', '&&', 'b', ';', 'c'], 0)).toEqual('')
+        })
+    })
+
+    describe('Check encode string operation', () => {
+        it('it should return valid encoded string', () => {
+            expect(encoder('rhinocerous')).toEqual('rikqshkyw~}')
+            expect(encoder('test')).toEqual('tfuw')
+            expect(encoder('gender')).toEqual('gfpgiw')
+        })
+    })
+
+    describe('Check replace string operation', () => {
+        it('it should return valid replaced string', () => {
+            expect(replacer(['argentina', 'brazil', 'chile']).join('-')).toEqual('Argentina-Brazil-Chile')
+            expect(replacer(Array('a', 'b', 'c')).join('-')).toEqual('A-B-C')
+            expect(replacer(['gender']).join('-')).toEqual('Gender')
+            expect(replacer(['a16', 'b44', 'b bar']).join('-')).toEqual('A16-B44-B Bar')
+        })
+    })
+
+    describe('Check match string operation', () => {
+        it('it should return valid matched string', () => {
+            expect(matcher(['argentina', 'brazil', 'chile'])).toEqual(null)
+            expect(matcher(Array('a', 'b', 'c'))).toEqual(null)
+
+            expect(matcher(['gender13']).join('-')).toEqual('r13')
+            expect(matcher(['a16', 'b44', 'b bar']).join('-')).toEqual('a16-b44')
+        })
+    })
+
+    describe('Check lower case string operation', () => {
+        it('it should return valid lower case string', () => {
+            expect(lowerCase('Argentina', 'Brazil', 'Chile').join('-')).toEqual('argentina-brazil-chile')
+            expect(lowerCase('a', 'B', 'c').join('-')).toEqual('a-b-c')
+
+            expect(lowerCase('Gender13').join('-')).toEqual('gender13')
+            expect(lowerCase('a16', 'b44', 'b bar').join('-')).toEqual('a16-b44-b bar')
+            expect(lowerCase('DIV', 'H1', 'SPAN').join('-')).toEqual('div-h1-span')
+        })
+    })
+
+    describe('Check trim string operation', () => {
+        it('it should return valid trimmed string', () => {
+            expect(trimmer('Argentina ', ' Brazil', 'Chile').join('-')).toEqual('Argentina-Brazil-Chile')
+            expect(trimmer('a', 'B ', 'c').join('-')).toEqual('a-B-c')
+
+            expect(trimmer(' Gender13 ').join('-')).toEqual('Gender13')
+            expect(trimmer(' a16', 'b44 ', 'b  bar').join('-')).toEqual('a16-b44-b  bar')
+            expect(trimmer("  d ", "  h ", " s").join('-')).toEqual('d-h-s')
+            expect(trimmer(" a", " b ").join('-')).toEqual('a-b')
         })
     })
 

@@ -4,8 +4,8 @@ import { Errors } from './errors'
 import { Utils } from './utils'
 
 export namespace Objects {
-    import Commons = Utils.Commons
-    import isFunction = Checkers.isFunction
+    import Commons = Utils.Commons;
+    import isFunction = Checkers.isFunction;
 
     export const init = (() => {
         /**
@@ -279,5 +279,16 @@ export namespace Objects {
             }
         }
         return args[0]
+    }
+
+    export const nextId = (startId: number): { next: () => number; reset: () => void } => {
+        let id: number = startId || 0
+
+        return {
+            next: (): number => id++,
+            reset: (): void => {
+                id = 0
+            },
+        }
     }
 }

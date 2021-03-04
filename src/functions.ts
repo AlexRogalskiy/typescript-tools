@@ -211,4 +211,73 @@ export namespace Functions {
             return this
         }
     }
+
+    export const polymorph = (...args: any[]): any => {
+        const len2func: any[] = []
+
+        for (const item of args) {
+            if (isFunction(item)) {
+                len2func[item.length] = item
+            }
+        }
+
+        return (...args: any[]): any => {
+            return len2func[args.length](...args)
+        }
+    }
+
+    export const callLater = (fn, context: any, ...args: any[]): void => {
+        setTimeout(() => fn.apply(context, args), 2000)
+    }
+
+    export const createAdders = (): any[] => {
+        const fns: any[] = []
+
+        for (let i = 1; i < 4; i++) {
+            ;(i => {
+                fns[i] = n => {
+                    return i + n
+                }
+            })(i)
+        }
+
+        return fns
+    }
+
+    export const pluck = <T>(name: string): any => {
+        return (object: any): T => {
+            return object[name]
+        }
+    }
+
+    export const autoCurry = (() => {
+        const toArray = (arr: any[], from = 0): any[] => {
+            return Array.prototype.slice.call(arr, from)
+        }
+
+        const curry = (fn, ...args: any[]): any => {
+            const args_ = toArray(args, 1)
+
+            return (...args: any[]) => {
+                return fn.apply(curry, args_.concat(toArray(args)))
+            }
+        }
+
+        const autoCurry_ = (fn, numArgs: number): any => {
+            numArgs = numArgs || fn.length
+
+            const curry_ = (...args: any[]): any => {
+                if (args.length < numArgs) {
+                    const value = curry.apply(curry_, [fn].concat(toArray(args)))
+                    return numArgs - args.length > 0 ? autoCurry_(value, numArgs - args.length) : value
+                }
+
+                return fn.apply(autoCurry_, args)
+            }
+
+            return curry_
+        }
+
+        return autoCurry_
+    })()
 }
