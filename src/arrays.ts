@@ -8,20 +8,20 @@ import { Utils } from './utils'
 import { Sorting } from './sorting'
 
 export namespace Arrays {
-    import random = Numbers.random;
-    import isArray = Checkers.isArray;
-    import randInt = Numbers.randInt;
-    import isNull = Checkers.isNull;
-    import isFunction = Checkers.isFunction;
-    import typeError = Errors.typeError;
-    import valueError = Errors.valueError;
-    import Helpers = Maths.Helpers;
-    import Comparator = Comparators.Comparator;
-    import checkType = Checkers.checkType;
-    import isInRange = Checkers.isInRange;
-    import checkArray = Checkers.checkArray;
-    import Commons = Utils.Commons;
-    import swap = Sorting.swap;
+    import random = Numbers.random
+    import isArray = Checkers.isArray
+    import randInt = Numbers.randInt
+    import isNull = Checkers.isNull
+    import isFunction = Checkers.isFunction
+    import typeError = Errors.typeError
+    import valueError = Errors.valueError
+    import Helpers = Maths.Helpers
+    import Comparator = Comparators.Comparator
+    import checkType = Checkers.checkType
+    import isInRange = Checkers.isInRange
+    import checkArray = Checkers.checkArray
+    import Commons = Utils.Commons
+    import swap = Sorting.swap
 
     export const list = (...args: any[]): any[] => {
         // const unboundSlice = Array.prototype.slice

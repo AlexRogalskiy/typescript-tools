@@ -4,8 +4,8 @@ import { Errors } from './errors'
 import { Utils } from './utils'
 
 export namespace Objects {
-    import Commons = Utils.Commons;
-    import isFunction = Checkers.isFunction;
+    import Commons = Utils.Commons
+    import isFunction = Checkers.isFunction
 
     export const init = (() => {
         /**
