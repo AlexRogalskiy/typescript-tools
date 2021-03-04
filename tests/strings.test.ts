@@ -16,6 +16,9 @@ export namespace Strings_Test {
     import stripComments = Strings.stripComments;
     import capitalize = Strings.capitalize;
     import quote = Strings.quote;
+    import escape2 = Strings.escape2;
+    import stringify = Strings.stringify;
+    import joiner = Strings.joiner;
 
     describe('Check emoji replacer', () => {
         it('it should kill emojis in a string', () => {
@@ -111,6 +114,32 @@ export namespace Strings_Test {
             expect(capitalize('test')).toEqual('Test')
             expect(capitalize('valid format')).toEqual('Valid Format')
             expect(capitalize('valid format string')).toEqual('Valid Format String')
+        })
+    })
+
+    describe('Check escape letters string', () => {
+        it('it should return valid string with escaped letters', () => {
+            expect(escape2('test_()')).toEqual('test_()')
+            expect(escape2('test:test')).toEqual('test:test')
+            expect(escape2('valid format string')).toEqual('valid format string')
+        })
+    })
+
+    describe('Check stringify object properties', () => {
+        it('it should return valid json string', () => {
+            expect(stringify(new Date('2020-03-02T15:56:00'))).toEqual("\"2020-03-02T12:56:00.000Z\"")
+            expect(stringify(1)).toEqual('1')
+            expect(stringify({ a: 5, b: 6 }, 0)).toEqual("{\"a\":5,\"b\":6}")
+            expect(stringify(['a', 1, true, false], 0)).toEqual("[\"a\",1,true,false]")
+            expect(stringify(() => 5)).toEqual(undefined)
+            expect(stringify(['a', '&&', 'b', ';', 'c'], 0)).toEqual("[\"a\",\"&&\",\"b\",\";\",\"c\"]")
+        })
+    })
+
+    describe('Check string joiner', () => {
+        it('it should return valid joined string', () => {
+            expect(joiner('and', ['a', 1, true, false], 0)).toEqual('')
+            expect(joiner('and', ['a', '&&', 'b', ';', 'c'], 0)).toEqual('')
         })
     })
 

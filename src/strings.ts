@@ -955,5 +955,26 @@ export namespace Strings {
         return String.fromCharCode(r(), r(), r())
     }
 
+    export const escape2 = (text: string): string => {
+        return text.replace(/(\\:`_\*)/gi, '\\$1')
+    }
+
     export const delim = (value = '>', num = 80): string => value.repeat(num)
+
+    export const stringify = (obj: any, space = 2): string => {
+        return JSON.stringify(obj, null, space)
+    }
+
+    export const joiner = (join: string, ...args: any[]): string => {
+        const n = args.length
+
+        if (n === 1) {
+            return args[0]
+        }
+        if (n === 2) {
+            return args.join(` ${join} `)
+        }
+
+        return `${args.slice(0, n - 1).join(', ')} ${join} ${args[n - 1]}`
+    }
 }

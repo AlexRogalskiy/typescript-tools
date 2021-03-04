@@ -41,6 +41,8 @@
         "@typescript-eslint/parser": "^4.15.0",
         "axios": "^0.21.1",
         "dateformat": "^4.5.1",
+        "dayjs": "^1.10.4",
+        "dayjs-precise-range": "^1.0.1",
         "del-cli": "^3.0.1",
         "eslint": "^7.18.0",
         "eslint-config-prettier": "^6.15.0",

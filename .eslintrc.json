@@ -52,6 +52,7 @@
         "no-extend-native": "error",
         "no-implicit-globals": "error",
         "no-multi-spaces": "error",
+        "no-debugger": "error",
         "array-bracket-spacing": "error",
         "block-spacing": "error",
         "keyword-spacing": "error",

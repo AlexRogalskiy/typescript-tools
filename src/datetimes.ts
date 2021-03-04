@@ -1,6 +1,19 @@
 import vagueTime from 'vague-time'
+import dayjs from 'dayjs'
+import preciseDiff from 'dayjs-precise-range'
 
 export namespace DataTimes {
+    dayjs.extend(preciseDiff)
+
+    const measures = {
+        years: ['year', 'years'],
+        months: ['month', 'months'],
+        days: ['day', 'days'],
+        hours: ['hour', 'hours'],
+        minutes: ['minute', 'minutes'],
+        seconds: ['second', 'seconds'],
+    }
+
     // Function equivalent to moment(<stringDate>).fromNow()
     // but vague-time module is lighter than moment!
     export function fromNow(strDate: string | Date): string {
@@ -27,25 +40,38 @@ export namespace DataTimes {
 
         const y = year - a
         const m = mon_ + 12 * a - 2
-        const d =
-            (7000 +
-                parseInt(
-                    String(
-                        day_ +
-                            y +
-                            parseInt(String(y / 4), 10) -
-                            parseInt(String(y / 100), 10) +
-                            parseInt(String(y / 400), 10) +
-                            (31 * m) / 12,
-                    ),
-                    10,
-                )) %
-            7
+        const v = parseInt(String(y / 4), 10) - parseInt(String(y / 100), 10) + parseInt(String(y / 400), 10)
+        const d = (7000 + parseInt(String(day_ + y + v + (31 * m) / 12), 10)) % 7
 
         return days[d]
     }
 
     export const toLocaleDateString = (value: number | string | Date): string => {
         return new Date(value).toLocaleDateString()
+    }
+
+    export const diffDatesAsString = (timestamp: dayjs.ConfigType): string[] => {
+        const joined = dayjs(timestamp)
+        const now = dayjs()
+
+        const diff = dayjs['preciseDiff'](joined, now, true)
+
+        let count = 0
+        const timeParts: string[] = []
+        for (const [key, value] of Object.entries<number>(diff)) {
+            if (count === 3) {
+                break
+            } else if (count > 0) {
+                count++
+            }
+            if (measures[key] && value > 0) {
+                if (count === 0) {
+                    count++
+                }
+                timeParts.push(`${value} ${measures[key][value === 1 ? 0 : 1]}`)
+            }
+        }
+
+        return timeParts
     }
 }
