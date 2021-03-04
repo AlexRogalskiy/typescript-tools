@@ -10,6 +10,14 @@ export namespace Requests {
     import toInt = Formats.toInt
     import makeArray = Arrays.makeArray
 
+    export const BASE_URL = (lang: string): string => `https://${lang}.wikiquote.org/`
+    export const USER_URL = (lang: string): string => `${BASE_URL(lang)}wiki/`
+    export const BASE_API_URL = (lang: string): string => `${BASE_URL(lang)}w/api.php?origin=*`
+    export const SEARCH_URL = (lang: string): string =>
+        `${BASE_API_URL(lang)}&format=json&action=opensearch&redirects=resolve&limit=max&search=`
+    export const PAGE_URL = (lang: string): string =>
+        `${BASE_API_URL(lang)}&format=json&action=parse&prop=text|categories&disabletoc&page=`
+
     const checkStatus = async (response): Promise<Response> => {
         if (response.ok) {
             return response
@@ -25,6 +33,23 @@ export namespace Requests {
         const response = await checkStatus(data)
 
         return await response.json()
+    }
+
+    export const jsonFromUR = async (url: string, param: string): Promise<string> => {
+        if (param) {
+            url += encodeURIComponent(param)
+        }
+
+        const option = {
+            method: 'GET',
+            mode: 'cors',
+            credentials: 'omit',
+        }
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        const res = await fetch(url, option)
+        return await res.json()
     }
 
     export async function fetchHTML(url: string, options: RequestInit = {}): Promise<string> {

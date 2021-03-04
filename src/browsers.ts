@@ -1,7 +1,12 @@
+import 'jsdom-global/register'
+
 import { Checkers } from './checkers'
 import { Errors } from './errors'
 import { DomElement } from '../typings/standard-types'
 import { Commons } from './commons'
+import { Utils } from './utils'
+
+import { URL_REGEX4 } from './regexes'
 
 export namespace Browsers {
     import isDomElement = Checkers.isDomElement
@@ -11,6 +16,44 @@ export namespace Browsers {
     import toBoolean = Commons.toBoolean
     import isNumber = Checkers.isNumber
     import isNotNull = Checkers.isNotNull
+    import isFunction = Checkers.isFunction
+    import defineProperty = Utils.Commons.defineProperty
+    import defineStaticProperty = Utils.Commons.defineStaticProperty
+
+    export const init = (() => {
+        const _matchesStaticSymbol = '__matches__'
+        const _matchesSymbol = 'matches'
+
+        const matches_ = (obj: any, selector: string): boolean => {
+            const matches = (obj.document || obj.ownerDocument).querySelectorAll(selector)
+            let i = matches.length
+            while (--i >= 0 && matches.item(i) !== obj) {
+                // empty
+            }
+
+            return i > -1
+        }
+
+        if (!isFunction(Element.prototype[_matchesSymbol])) {
+            Element.prototype[_matchesSymbol] =
+                Element.prototype['matchesSelector'] ||
+                Element.prototype['mozMatchesSelector'] ||
+                Element.prototype['msMatchesSelector'] ||
+                Element.prototype['oMatchesSelector'] ||
+                Element.prototype['webkitMatchesSelector'] ||
+                defineProperty(Element.prototype, _matchesSymbol, {
+                    value(obj) {
+                        return matches_(this, obj)
+                    },
+                })
+        }
+
+        if (!isFunction(Element[_matchesStaticSymbol])) {
+            defineStaticProperty(Element, _matchesStaticSymbol, {
+                value: (obj1, obj2) => matches_(obj1, obj2),
+            })
+        }
+    })()
 
     /**
      * let supportsSlider = supportsInputOfType('range');
@@ -164,10 +207,10 @@ export namespace Browsers {
         }
     }
 
-    export const replaceURLWithHTMLLinks = (text: string): string => {
+    export const replaceUrlWithHtmlLinks = (text: string, title = '$1'): string => {
         const exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\\/%?=~_|!:,.;]*[-A-Z0-9+&@#\\/%=~_|])/gi
 
-        return text.replace(exp, "<a href='$1'>$1</a>")
+        return text.replace(exp, `<a href='$1'>${title}</a>`)
     }
 
     export const firstAncestor = <T extends Element>(elem: T, tagName: string): T => {
@@ -853,7 +896,7 @@ export namespace Browsers {
         }
     }
 
-    export const hasAttribute = (elem, name: string): boolean => {
+    export const hasAttribute = (elem: Element, name: string): boolean => {
         return elem.getAttribute(name) != null
     }
 
@@ -865,19 +908,27 @@ export namespace Browsers {
      * @param  {object} attributes        - any attributes
      * @returns {Element}
      */
-    export const make = (tagName, classNames = [], attributes = {}): any => {
-        const el = document.createElement(tagName)
+    export const make = <K extends keyof HTMLElementTagNameMap>(
+        tagName: K,
+        classNames: string[] = [],
+        attributes = {},
+    ): any => {
+        const elem = document.createElement(tagName)
 
         if (Array.isArray(classNames)) {
-            el.classList.add(...classNames)
+            elem.classList.add(...classNames)
         } else if (classNames) {
-            el.classList.add(classNames)
+            elem.classList.add(classNames)
         }
 
         for (const attrName in attributes) {
-            el[attrName] = attributes[attrName]
+            elem[attrName] = attributes[attrName]
         }
 
-        return el
+        return elem
+    }
+
+    export const autolink = (data: string): string => {
+        return data.replace(URL_REGEX4, '<a target="_blank" href="$1">$1</a> ')
     }
 }

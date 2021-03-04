@@ -76,23 +76,23 @@ export namespace Commons_Test {
             expect(Function['__equals__'](dummy, () => 5)).toBeFalsy()
             expect(Function['__equals__'](dummy, dummy)).toBeTruthy()
 
-            expect(left['eq'](right)).toBeFalsy()
-            expect(now['eq'](now)).toBeTruthy()
+            expect(left['eqTo'](right)).toBeFalsy()
+            expect(now['eqTo'](now)).toBeTruthy()
 
-            expect(Number(4)['eq'](Number(4))).toBeTruthy()
-            expect(4['eq'](Number(4))).toBeTruthy()
+            expect(Number(4)['eqTo'](Number(4))).toBeTruthy()
+            expect(4['eqTo'](Number(4))).toBeTruthy()
 
-            expect(true['eq'](true)).toBeTruthy()
-            expect(true['eq'](false)).toBeFalsy()
-            expect(Boolean(true)['eq'](true)).toBeTruthy()
+            expect(true['eqTo'](true)).toBeTruthy()
+            expect(true['eqTo'](false)).toBeFalsy()
+            expect(Boolean(true)['eqTo'](true)).toBeTruthy()
 
-            expect('test'['eq']('test')).toBeTruthy()
-            expect(String('test')['eq']('test2')).toBeFalsy()
-            expect(String('test')['eq']('test')).toBeTruthy()
+            expect('test'['eqTo']('test')).toBeTruthy()
+            expect(String('test')['eqTo']('test2')).toBeFalsy()
+            expect(String('test')['eqTo']('test')).toBeTruthy()
 
-            expect({}['eq']({})).toBeFalsy()
-            expect({ a: 5 }['eq']({ a: 6 })).toBeFalsy()
-            expect(Object({ a: 5 })['eq']({ a: 5 })).toBeTruthy()
+            expect({}['eqTo']({})).toBeFalsy()
+            expect({ a: 5 }['eqTo']({ a: 6 })).toBeFalsy()
+            expect(Object({ a: 5 })['eqTo']({ a: 5 })).toBeTruthy()
         })
     })
 
@@ -127,23 +127,23 @@ export namespace Commons_Test {
             expect(Function['__compare__'](dummy, () => 5)).toEqual(0)
             expect(Function['__compare__'](dummy, dummy)).toEqual(0)
 
-            expect(left['cmp'](right)).toEqual(-1)
-            expect(now['cmp'](now)).toEqual(0)
+            expect(left['cmpTo'](right)).toEqual(-1)
+            expect(now['cmpTo'](now)).toEqual(0)
 
-            expect(Number(4)['cmp'](Number(4))).toEqual(0)
-            expect(4['cmp'](Number(4))).toEqual(0)
+            expect(Number(4)['cmpTo'](Number(4))).toEqual(0)
+            expect(4['cmpTo'](Number(4))).toEqual(0)
 
-            expect(true['cmp'](true)).toEqual(0)
-            expect(true['cmp'](false)).toEqual(1)
-            expect(Boolean(true)['cmp'](true)).toEqual(0)
+            expect(true['cmpTo'](true)).toEqual(0)
+            expect(true['cmpTo'](false)).toEqual(1)
+            expect(Boolean(true)['cmpTo'](true)).toEqual(0)
 
-            expect('test'['cmp']('test')).toEqual(0)
-            expect(String('test')['cmp']('test2')).toEqual(-1)
-            expect(String('test')['cmp']('test')).toEqual(0)
+            expect('test'['cmpTo']('test')).toEqual(0)
+            expect(String('test')['cmpTo']('test2')).toEqual(-1)
+            expect(String('test')['cmpTo']('test')).toEqual(0)
 
-            expect({}['cmp']({})).toEqual(0)
-            expect({ a: 5 }['cmp']({ a: 6 })).toEqual(0)
-            expect(Object({ a: 5 })['cmp']({ a: 5 })).toEqual(0)
+            expect({}['cmpTo']({})).toEqual(0)
+            expect({ a: 5 }['cmpTo']({ a: 6 })).toEqual(0)
+            expect(Object({ a: 5 })['cmpTo']({ a: 5 })).toEqual(0)
         })
     })
 

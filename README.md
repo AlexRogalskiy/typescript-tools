@@ -14,6 +14,7 @@
 ![GitHub Repository dependents](https://badgen.net/github/dependents-repo/AlexRogalskiy/typescript-tools)
 [![Tokei](https://tokei.rs/b1/github/AlexRogalskiy/typescript-tools?category=lines)](https://github.com/XAMPPRocky/tokei)
 ![Mergify Status](https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/AlexRogalskiy/typescript-tools)
+[![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/alexrogalskiy/typescript-tools/master/LICENSE?token=AH44ZFH7IF2KSEDK7LSIW3C7YOFYC)
 [![Issue](https://img.shields.io/github/issues/alexrogalskiy/typescript-tools)](https://img.shields.io/github/issues/alexrogalskiy/typescript-tools)

@@ -4,7 +4,7 @@ import checkNumber = Checkers.checkNumber
 import valueError = Errors.valueError
 
 export class Point {
-    private subscribers = {}
+    private readonly subscribers = {}
 
     static isPoint(value: any): boolean {
         return value instanceof Point

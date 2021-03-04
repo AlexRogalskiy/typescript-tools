@@ -898,6 +898,10 @@ export namespace Strings {
         return unescape(value.replace(/<.*?>/g, '')).replace(/&amp;/, '&')
     }
 
+    export const joinList = (list: any[]): string => {
+        return `(?:${list.join('|')})`
+    }
+
     export const quote = (str: any, allowVars = false): string => {
         if (Array.isArray(str)) {
             return str.map(str => quote(str, allowVars)).join(' ')

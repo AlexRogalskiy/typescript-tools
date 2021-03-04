@@ -1,13 +1,10 @@
-export default ((globals, property) => {
+import { keywords } from './keywords'
+
+export const setup = ((globals, property) => {
     const properties = ['memory']
     const dummy = (): void => {
         // empty
     }
-    const methods = (
-        'assert,clear,count,debug,dir,dirxml,error,exception,group,' +
-        'groupCollapsed,groupEnd,info,log,markTimeline,profile,profiles,profileEnd,' +
-        'show,table,time,timeEnd,timeline,timelineEnd,timeStamp,trace,warn'
-    ).split(',')
 
     let prop, method
     const con = globals[property]
@@ -17,9 +14,16 @@ export default ((globals, property) => {
             con[prop] = {}
         }
     }
-    while ((method = methods.pop())) {
+    while ((method = keywords.pop())) {
         if (!con[method]) {
             con[method] = dummy
         }
+    }
+})(window, 'console')
+
+export const cleanup = ((globals, property) => {
+    const con = globals[property]
+    for (const key of keywords) {
+        delete con[key]
     }
 })(window, 'console')

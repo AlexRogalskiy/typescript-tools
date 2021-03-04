@@ -16,8 +16,8 @@ export namespace Commons {
         const _equalsStaticSymbol = '__equals__'
         const _compareStaticSymbol = '__compare__'
 
-        const _equalsSymbol = 'eq'
-        const _compareSymbol = 'cmp'
+        const _equalsSymbol = 'eqTo'
+        const _compareSymbol = 'cmpTo'
 
         // Compares Primitive objects
         const computePrimitiveEquals = (objA: any, objB: any): boolean => {

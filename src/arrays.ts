@@ -5,6 +5,7 @@ import { Maths } from './maths'
 import { Comparators } from './comparators'
 import { Predicate, Processor } from '../typings/function-types'
 import { Utils } from './utils'
+import { Sorting } from './sorting'
 
 export namespace Arrays {
     import random = Numbers.random
@@ -20,6 +21,7 @@ export namespace Arrays {
     import isInRange = Checkers.isInRange
     import checkArray = Checkers.checkArray
     import Commons = Utils.Commons
+    import swap = Sorting.swap
 
     export const list = (...args: any[]): any[] => {
         // const unboundSlice = Array.prototype.slice
@@ -672,5 +674,17 @@ export namespace Arrays {
         }
 
         return data
+    }
+
+    export const arrayShuffle = (array: any[]): any[] => {
+        checkArray(array)
+
+        for (let i = 0; i < array.length; i++) {
+            // const l = Math.floor(Math.random() * i + 1);
+            const l = Math.floor(Math.random() * array.length)
+            swap(array, l, i)
+        }
+
+        return array
     }
 }
