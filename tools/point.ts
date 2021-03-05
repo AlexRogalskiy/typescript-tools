@@ -1,7 +1,7 @@
 import { Checkers, Errors } from '../src'
-import checkNumber = Checkers.checkNumber;
-import valueError = Errors.valueError;
-import isFunction = Checkers.isFunction;
+import checkNumber = Checkers.checkNumber
+import valueError = Errors.valueError
+import isFunction = Checkers.isFunction
 
 export class Point {
     private static readonly operands: Point[] = []
