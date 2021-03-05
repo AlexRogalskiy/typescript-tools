@@ -1039,6 +1039,21 @@ export namespace Strings {
         return [].map.call(args, v => ''.trim.apply(v))
     }
 
+    export const repeat = (str: string, num: number): string => {
+        let result = ''
+
+        while (true) {
+            if (num & 1) {
+                result += str
+            }
+            num >>>= 1
+            if (num <= 0) break
+            str += str
+        }
+
+        return result
+    }
+
     export const longestSequence = (
         compareFunc,
         myEnum: string,

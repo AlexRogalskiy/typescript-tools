@@ -25,6 +25,7 @@ export namespace Strings_Test {
     import trimmer = Strings.trimmer;
     import longestSequence = Strings.longestSequence;
     import replaceBy = Strings.replaceBy;
+    import repeat = Strings.repeat;
 
     describe('Check emoji string replacer', () => {
         it('it should replace emojis in a string', () => {
@@ -34,6 +35,16 @@ export namespace Strings_Test {
             expect(replaceBy(EMOJI_REGEX, '🎉 Party 🚩 Flags! 🚀 Rockets!', 'X')).toEqual(
                 'X Party X Flags! X Rockets!',
             )
+        })
+    })
+
+    describe('Check string repetition', () => {
+        it('it should perform valid string repetition', () => {
+            expect(repeat('w', 5)).toEqual('wwwww')
+            expect(repeat('wz', 5)).toEqual('wzwzwzwzwz')
+            expect(repeat('', 1)).toEqual('')
+            expect(repeat('abc', 3)).toEqual('abcabcabc')
+            expect(repeat('abc', 0)).toEqual('')
         })
     })
 

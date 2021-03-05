@@ -898,7 +898,7 @@ export class Matrix {
             res += item.join(' ').concat('\n')
         }
 
-        return res
+        return `(${res})`
     }
 
     getGauss(): MatrixValueType[] {

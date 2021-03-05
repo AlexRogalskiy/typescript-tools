@@ -1,10 +1,10 @@
 import { Checkers, Errors } from '../src'
-import checkNumber = Checkers.checkNumber
-import valueError = Errors.valueError
-import isFunction = Checkers.isFunction
+import checkNumber = Checkers.checkNumber;
+import valueError = Errors.valueError;
+import isFunction = Checkers.isFunction;
 
 export class Point {
-    private readonly operands = []
+    private static readonly operands: Point[] = []
     private readonly subscribers = {}
 
     static isPoint(value: any): boolean {
@@ -37,17 +37,21 @@ export class Point {
         if (!isFunction(Point.prototype['_'])) {
             Object.defineProperty(Point.prototype, '_', {
                 set(value) {
-                    const ops = this.operands
+                    const ops = Point.operands
                     let operator
-                    if (ops.length >= 2 && value === 3 * ops.length) {
+                    if ((ops.length >= 2 && value === 3 * ops.length) || value === Math.pow(3, ops.length)) {
                         operator = this.addBy
                     } else if (ops.length === 2 && value === 0) {
                         operator = this.subtractBy
                     }
-                    this.operands.splice(0, this.operands.length)
 
-                    return operator.apply(this, ops)
+                    const result = operator.apply(this, ops)
+                    ops.splice(0, ops.length)
+
+                    return result
                 },
+                enumerable: true,
+                configurable: true,
             })
         }
     }
@@ -186,6 +190,10 @@ export class Point {
         return Math.sqrt(dx * dx + dy * dy)
     }
 
+    length(): number {
+        return Math.sqrt(this.x * this.x + this.y * this.y)
+    }
+
     /**
      * Returns the point between this point and another one
      * @return {Point}
@@ -218,7 +226,7 @@ export class Point {
      * @return {String}
      */
     toString(): string {
-        return `${this.x},${this.y}`
+        return `(x: ${this.x}, y: ${this.y})`
     }
 
     /**
@@ -342,8 +350,17 @@ export class Point {
         return this
     }
 
-    getOperands(): any[] {
-        return this.operands
+    getX(): number {
+        return this.x
+    }
+
+    getY(): number {
+        return this.y
+    }
+
+    valueOf(): number {
+        Point.operands.push(this)
+        return 3
     }
 
     on(event: string, cb: any): void {
