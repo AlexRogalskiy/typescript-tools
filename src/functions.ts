@@ -11,13 +11,20 @@ export namespace Functions {
     import isFunction = Checkers.isFunction
     import typeError = Errors.typeError
     import valueError = Errors.valueError
+    import defineProperty = Utils.Commons.defineProperty
 
-    export const init = (() => {
+    export const props = (() => {
+        const props = {
+            proto: {
+                bind: 'bind',
+            },
+        }
+
         /**
          * Creates binding context for function input parameters
          */
-        if (!isFunction(Function.prototype.bind)) {
-            Commons.defineProperty(Function.prototype, 'bind', {
+        if (!isFunction(Function.prototype[props.proto.bind])) {
+            Commons.defineProperty(Function.prototype, props.proto.bind, {
                 value(obj, ...args) {
                     const slice = [].slice,
                         args_ = slice.call(args, 1),
@@ -41,9 +48,24 @@ export namespace Functions {
         }
     })()
 
-    export const composeAsync = async (...funcArgs) => async x =>
+    export const extend = (target, source): any => {
+        for (const item of Object.getOwnPropertyNames(source)) {
+            defineProperty(target, item, Object.getOwnPropertyDescriptor(source, item))
+        }
+
+        return target
+    }
+
+    export const inherits = (subType, superType): void => {
+        const subProto = Object.create(superType.prototype)
+        extend(subProto, subType.prototype)
+        subType._super = superType.prototype
+        subType.prototype = subProto
+    }
+
+    export const composeAsync = async (...funcArgs) => async value =>
         // eslint-disable-next-line github/no-then
-        await funcArgs.reduce((acc, val) => acc.then(val), Promise.resolve(x))
+        await funcArgs.reduce((acc, val) => acc.then(val), Promise.resolve(value))
 
     export const mergeProps = <T>(...obj: any[]): T => {
         return _.mergeWith({}, ...obj, (o, s) => (_.isNull(s) ? o : s))
@@ -65,7 +87,7 @@ export namespace Functions {
          wasClicked: function() {},
          addListeners: function() {
              var self = this;
-             $('.clicky').click(globals.toolset.proxy(this.wasClicked, this)); //this.click.bind(this);
+             $('.clicky').click(proxy(this.wasClicked, this)); //this.click.bind(this);
          }
      };
     */
@@ -212,17 +234,43 @@ export namespace Functions {
         }
     }
 
+    export const getFunctionArgs = (func): string[] => {
+        // First match everything inside the function argument parenthesis
+        const args = func.toString().match(/(function\s)?.*?\(([^)]*)\)/)[2]
+
+        // Split the arguments string into an array comma delimited.
+        return args
+            .split(',')
+            .map(arg => arg.replace(/\/\*.*\*\//, '').trim())
+            .filter(arg => arg)
+    }
+
+    export const getFunctionArgTypes = (func): string[] => {
+        // First match everything inside the function argument parenthesis
+        const args = func.toString().match(/(function\s)?.*?\(([^)]*)\)/)[2]
+
+        // Split the arguments string into an array comma delimited.
+        return args
+            .split(',')
+            .map(arg => arg.replace(/\/\*.*\*\//, '').trim())
+            .filter(arg => arg)
+    }
+
     export const polymorph = (...args: any[]): any => {
-        const len2func: any[] = []
+        const len2func = {}
+
+        const index = (item: any): string => {
+            return item.length
+        }
 
         for (const item of args) {
             if (isFunction(item)) {
-                len2func[item.length] = item
+                len2func[index(item)] = item
             }
         }
 
         return (...args: any[]): any => {
-            return len2func[args.length](...args)
+            return len2func[index(args)](...args)
         }
     }
 

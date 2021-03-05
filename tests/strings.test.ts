@@ -1,10 +1,9 @@
 import { EMOJI_REGEX, Strings } from '../src'
 
 export namespace Strings_Test {
-    import replaceBy = Strings.replaceBy;
     import pad = Strings.pad;
     import parseJson = Strings.parseJson;
-    import capFirstLetter = Strings.capFirstLetter;
+    import capFirstLetter = Strings.capitalFirstLetter;
     import formatNumber = Strings.formatNumber;
     import combinations = Strings.combinations;
     import permutations = Strings.permutations;
@@ -25,9 +24,10 @@ export namespace Strings_Test {
     import lowerCase = Strings.lowerCase;
     import trimmer = Strings.trimmer;
     import longestSequence = Strings.longestSequence;
+    import replaceBy = Strings.replaceBy;
 
-    describe('Check emoji replacer', () => {
-        it('it should kill emojis in a string', () => {
+    describe('Check emoji string replacer', () => {
+        it('it should replace emojis in a string', () => {
             expect(replaceBy(EMOJI_REGEX, '🎉Party 🚩Flags! 🚀Rockets!')).toEqual('Party Flags! Rockets!')
         })
         it('it should kill emojis in a string and replace by a set replacement value', () => {
@@ -154,6 +154,21 @@ export namespace Strings_Test {
             expect(encoder('rhinocerous')).toEqual('rikqshkyw~}')
             expect(encoder('test')).toEqual('tfuw')
             expect(encoder('gender')).toEqual('gfpgiw')
+        })
+    })
+
+    describe('Check string replacement by pattern', () => {
+        it('it should return valid string with replacement pattern', () => {
+            expect("Smith, Bob; Raman, Ravi; Jones, Mary"['replaceWith'](/([\w]+), ([\w]+)/g, "$2 $1")).toEqual('Bob Smith; Ravi Raman; Mary Jones')
+            expect(""['replaceWith'](/([\w]+), ([\w]+)/g, "$2 $1")).toEqual('')
+            expect("test1, test2"['replaceWith'](/([\w]+), ([\w]+)/g, "$2 $1")).toEqual('test2 test1')
+            expect("California, San Francisco, O'Rourke, Gerry"['replaceWith'](/([\w'\s]+), ([\w'\s]+), ([\w'\s]+), ([\w'\s]+)/, "$4 $3 lives in $2, $1")).toEqual('Gerry O\'Rourke lives in San Francisco, California')
+        })
+
+        it('it should return valid string with replacement functional pattern', () => {
+            expect("72 101 108 108 111  87 111 114 108 100 33"['replaceByRegex'](/(\d+)(\s?)/gi, (_, $1) => String.fromCharCode($1))).toEqual('Hello World!')
+            expect("hello, world!"['replaceByRegex'](/(\S+)(\s?)/gi, (_, $1) => $1.toUpperCase())).toEqual('HELLO,WORLD!')
+            expect("HELLO,WORLD!"['replaceByRegex'](/(\S+)(\s?)/gi, (_, $1) => $1.toLowerCase())).toEqual('hello,world!')
         })
     })
 

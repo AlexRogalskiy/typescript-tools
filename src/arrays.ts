@@ -221,7 +221,7 @@ export namespace Arrays {
         const rand = randInt(0, total)
 
         for (const index of dist) {
-            if (dist.hasOwnProperty(index)) {
+            if (Object.prototype.hasOwnProperty.call(dist, index)) {
                 if (rand < dist[index]) {
                     result.push(Number(index))
                 }
@@ -250,6 +250,7 @@ export namespace Arrays {
                 `incorrect input values: start < ${start} >, end < ${end} >, function of elements < ${func} >`,
             )
         }
+
         const res: any[] = []
         for (let i = start; i < end; i = func(i)) {
             res.push(i)
@@ -260,6 +261,7 @@ export namespace Arrays {
 
     export const pluck = <T>(prop: PropertyKey, ...values: T[]): T[] => {
         const res: T[] = []
+
         for (let i = 0, member; (member = values[i]); i++) {
             res.push(member[prop] || member)
         }

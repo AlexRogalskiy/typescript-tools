@@ -7,7 +7,7 @@ export namespace Objects {
     import Commons = Utils.Commons
     import isFunction = Checkers.isFunction
 
-    export const init = (() => {
+    export const props = (() => {
         /**
          * Freezes an object, makes the object effectively immutable.
          */

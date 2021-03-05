@@ -9,6 +9,9 @@ import calculateDeterminant = Matrices.calculateDeterminant
 import isFunction = Checkers.isFunction
 import isBoolean = Checkers.isBoolean
 import Comparator = Comparators.Comparator
+import checkNumber = Checkers.checkNumber
+import checkArray = Checkers.checkArray
+import checkIntNumber = Checkers.checkIntNumber
 
 type MatrixValueType = number
 
@@ -21,6 +24,12 @@ export class Matrix {
 
     static from(rows: number, cols: number, values?: MatrixValueType[][]): Matrix {
         return new Matrix(rows, cols, values)
+    }
+
+    static checkMatrix(value: Matrix): void {
+        if (!Matrix.isMatrix(value)) {
+            throw valueError(`not valid matrix instance: [ ${value} ]`)
+        }
     }
 
     static fromMatrix(matrix: MatrixValueType[][]): Matrix {
@@ -55,15 +64,13 @@ export class Matrix {
         }
     }
 
-    multiply(matrix2: Matrix): Matrix {
-        if (!Matrix.isMatrix(matrix2)) {
-            throw valueError(`not matrix instance: < ${matrix2} >`)
-        }
+    multiply(matrix: Matrix): Matrix {
+        Matrix.checkMatrix(matrix)
 
-        const mi2 = matrix2.getRowsNum(),
-            mj2 = matrix2.getColumnsNum()
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi2 = matrix.getRows(),
+            mj2 = matrix.getColumns()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi2 === 0 || mj2 === 0 || mi1 === 0 || mj1 === 0 || mj1 !== mi2) {
             throw valueError(`incorrect matrix size: matrix1=[${mi1}, ${mj1}], matrix2=[${mi2}, ${mj2}]`)
@@ -73,7 +80,7 @@ export class Matrix {
         for (let i = 0; i < mi2; i++) {
             for (let j = 0; j < mj1; j++) {
                 for (let k = 0; k < mj1; k++) {
-                    result[i][j] += this.matrix[i][k] * matrix2.matrix[k + 1][j + 1]
+                    result[i][j] += this.matrix[i][k] * matrix.matrix[k + 1][j + 1]
                 }
             }
         }
@@ -81,15 +88,13 @@ export class Matrix {
         return Matrix.fromMatrix(result)
     }
 
-    sum(matrix2: Matrix): Matrix {
-        if (!Matrix.isMatrix(matrix2)) {
-            throw valueError(`not matrix instance: < ${matrix2} >`)
-        }
+    sum(matrix: Matrix): Matrix {
+        Matrix.checkMatrix(matrix)
 
-        const mi2 = matrix2.getRowsNum(),
-            mj2 = matrix2.getColumnsNum()
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi2 = matrix.getRows(),
+            mj2 = matrix.getColumns()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi2 === 0 || mj2 === 0 || mi1 === 0 || mj1 === 0 || mi2 !== mi1 || mj2 !== mj1) {
             throw valueError(`incorrect matrix size: matrix1=[${mi1}, ${mj1}], matrix2=[${mi2}, ${mj2}]`)
@@ -97,22 +102,20 @@ export class Matrix {
 
         for (let i = 0; i < mi1; i++) {
             for (let j = 0; j < mj1; j++) {
-                this.matrix[i][j] += matrix2.matrix[i + 1][j + 1]
+                this.matrix[i][j] += matrix.matrix[i + 1][j + 1]
             }
         }
 
         return this
     }
 
-    diff(matrix2: Matrix): Matrix {
-        if (!Matrix.isMatrix(matrix2)) {
-            throw valueError(`not matrix instance: < ${matrix2} >`)
-        }
+    diff(matrix: Matrix): Matrix {
+        Matrix.checkMatrix(matrix)
 
-        const mi2 = this.getRowsNum(),
-            mj2 = matrix2.getRowsNum()
-        const mi1 = this.getColumnsNum(),
-            mj1 = this.getColumnsNum()
+        const mi2 = this.getRows(),
+            mj2 = matrix.getRows()
+        const mi1 = this.getColumns(),
+            mj1 = this.getColumns()
 
         if (mi2 === 0 || mj2 === 0 || mi1 === 0 || mj1 === 0 || mi2 !== mi1 || mj2 !== mj1) {
             throw valueError(`incorrect matrix size: matrix1=[${mi1}, ${mj1}], matrix2=[${mi2}, ${mj2}]`)
@@ -120,7 +123,7 @@ export class Matrix {
 
         for (let i = 0; i < mi1; i++) {
             for (let j = 0; j < mj1; j++) {
-                this.matrix[i][j] -= matrix2.matrix[i + 1][j + 1]
+                this.matrix[i][j] -= matrix.matrix[i + 1][j + 1]
             }
         }
 
@@ -128,12 +131,10 @@ export class Matrix {
     }
 
     multiplyScalar(value: number): Matrix {
-        if (!isNumber(value)) {
-            throw valueError(`incorrect input scalar value < ${value} >`)
-        }
+        checkNumber(value)
 
-        for (let i = 0; i < this.getRowsNum(); i++) {
-            for (let j = 0; j < this.getColumnsNum(); j++) {
+        for (let i = 0; i < this.getRows(); i++) {
+            for (let j = 0; j < this.getColumns(); j++) {
                 this.matrix[i][j] *= value
             }
         }
@@ -142,12 +143,14 @@ export class Matrix {
     }
 
     divide(value: number): Matrix {
-        if (!isNumber(value) || value === 0) {
+        checkNumber(value)
+
+        if (value === 0) {
             throw valueError(`incorrect input value: divider < ${value} >`)
         }
 
-        for (let i = 0; i < this.getRowsNum(); i++) {
-            for (let j = 0; j < this.getColumnsNum(); j++) {
+        for (let i = 0; i < this.getRows(); i++) {
+            for (let j = 0; j < this.getColumns(); j++) {
                 this.matrix[i][j] /= value
             }
         }
@@ -156,8 +159,8 @@ export class Matrix {
     }
 
     det(): number {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0 || mi1 !== mj1) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -177,13 +180,14 @@ export class Matrix {
 
     normalize(): Matrix {
         const det = this.det()
+
         if (det === 0) {
             throw valueError(`incorrect matrix determinant: < ${det} >`)
         }
 
-        const result = new Matrix(this.getRowsNum(), this.getColumnsNum())
-        for (let i = 0; i < result.getRowsNum(); i++) {
-            for (let j = 0; j < result.getColumnsNum(); j++) {
+        const result = new Matrix(this.getRows(), this.getColumns())
+        for (let i = 0; i < result.getRows(); i++) {
+            for (let j = 0; j < result.getColumns(); j++) {
                 result.matrix[i][j] = this.matrix[i][j] / det
             }
         }
@@ -233,8 +237,8 @@ export class Matrix {
     }
 
     transpose(): Matrix {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -256,8 +260,8 @@ export class Matrix {
     }
 
     sort(): Matrix {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -281,8 +285,8 @@ export class Matrix {
     }
 
     identity(): Matrix {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0 || mi1 !== mj1) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -296,22 +300,20 @@ export class Matrix {
         return result
     }
 
-    equals(matrix2: Matrix): boolean {
-        if (!Matrix.isMatrix(matrix2)) {
-            throw valueError(`not matrix instance: < ${matrix2} >`)
-        }
+    equals(matrix: Matrix): boolean {
+        Matrix.checkMatrix(matrix)
 
-        const mi2 = matrix2.getRowsNum(),
-            mj2 = matrix2.getColumnsNum()
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi2 = matrix.getRows(),
+            mj2 = matrix.getColumns()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
         if (mi2 === 0 || mj2 === 0 || mi1 === 0 || mj1 === 0 || mi2 !== mi1 || mj2 !== mj1) {
             throw valueError(`incorrect matrix size: matrix1<${mi1}, ${mj1}>, matrix2<${mi2}, ${mj2}>`)
         }
 
         for (let i = 0; i < mi1; i++) {
             for (let j = 0; j < mj1; j++) {
-                if (this.matrix[i][j] !== matrix2.matrix[i + 1][j + 1]) {
+                if (this.matrix[i][j] !== matrix.matrix[i + 1][j + 1]) {
                     return false
                 }
             }
@@ -320,17 +322,17 @@ export class Matrix {
         return true
     }
 
-    getRowsNum(): number {
+    getRows(): number {
         return this.matrix.length
     }
 
-    getColumnsNum(): number {
+    getColumns(): number {
         return isArray(this.matrix[0]) ? this.matrix[0].length : 0
     }
 
     getElementAt(row: number, col: number): number {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -344,8 +346,8 @@ export class Matrix {
     }
 
     setElementAt(row: number, col: number, value: number): Matrix {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -369,8 +371,8 @@ export class Matrix {
     }
 
     isRowsInEqual(): boolean {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -390,8 +392,8 @@ export class Matrix {
     }
 
     isColumnsInEqual(): boolean {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -411,8 +413,8 @@ export class Matrix {
     }
 
     isLatinSquare(): boolean {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0 || mi1 !== mj1) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -448,8 +450,8 @@ export class Matrix {
     }
 
     sumGDiagonal(): number {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0 || mi1 !== mj1) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -464,8 +466,9 @@ export class Matrix {
     }
 
     prodADiagonal(): number {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
+
         if (mi1 === 0 || mj1 === 0 || mi1 !== mj1) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
         }
@@ -479,8 +482,8 @@ export class Matrix {
     }
 
     invert(): Matrix {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0 || mi1 !== mj1) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -503,8 +506,8 @@ export class Matrix {
     }
 
     subMatrix(row: number, col: number): Matrix {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -532,8 +535,8 @@ export class Matrix {
     }
 
     each(func): Matrix {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -553,8 +556,8 @@ export class Matrix {
     }
 
     shiftRows(shift: number): Matrix {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -588,8 +591,8 @@ export class Matrix {
     }
 
     shiftColumns(shift: number): Matrix {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -626,12 +629,13 @@ export class Matrix {
     }
 
     swapRows(row1: number, row2: number): Matrix {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
         }
+
         if (!isIntNumber(row1) || !isIntNumber(row2) || row1 < 1 || row2 < 1) {
             throw valueError(`incorrect input value: row1 < ${row1} >, row2 < ${row2} >`)
         }
@@ -651,8 +655,8 @@ export class Matrix {
     }
 
     swapColumns(col1: number, col2: number): Matrix {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -677,8 +681,8 @@ export class Matrix {
     }
 
     sumRows(): MatrixValueType[] {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -695,8 +699,8 @@ export class Matrix {
     }
 
     sumColumns(): MatrixValueType[] {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -713,12 +717,10 @@ export class Matrix {
     }
 
     addRow(row: MatrixValueType[] | string[], index: number): Matrix {
-        if (!isArray(row)) {
-            throw valueError(`incorrect input value: row < ${row} >`)
-        }
+        checkArray(row)
 
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -739,12 +741,10 @@ export class Matrix {
     }
 
     addColumn(column: MatrixValueType[] | string[], index: number): Matrix {
-        if (!isArray(column)) {
-            throw valueError(`incorrect input value: column < ${column} >`)
-        }
+        checkArray(column)
 
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
         }
@@ -766,8 +766,9 @@ export class Matrix {
     }
 
     deleteRow(index: number): Matrix {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
+
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
         }
@@ -783,8 +784,8 @@ export class Matrix {
     }
 
     deleteColumn(index: number): Matrix {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -803,8 +804,8 @@ export class Matrix {
     }
 
     hasNullRow(): boolean {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -825,8 +826,8 @@ export class Matrix {
     }
 
     hasNullColumn(): boolean {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -845,8 +846,8 @@ export class Matrix {
     }
 
     getMin(): MatrixValueType {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -861,8 +862,8 @@ export class Matrix {
     }
 
     getMax(): MatrixValueType {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -901,8 +902,8 @@ export class Matrix {
     }
 
     getGauss(): MatrixValueType[] {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0 || mi1 + 1 !== mj1) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -928,6 +929,7 @@ export class Matrix {
                 }
             }
         }
+
         // Обратный ход
         const arrayX = Helpers.vector(mi1 - 1, 0)
         arrayX[mi1 - 1] = tempMatrix.getElementAt(mi1, mj1) / tempMatrix.getElementAt(mi1, mi1)
@@ -943,12 +945,11 @@ export class Matrix {
     }
 
     getDeijkstraPath(start, end): { path: MatrixValueType[]; length: number } {
-        if (!isIntNumber(start) || !isIntNumber(end)) {
-            throw valueError(`incorrect input types: start vertex < ${start} >, end vertex < ${end} >`)
-        }
+        checkIntNumber(start)
+        checkIntNumber(end)
 
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0 || mi1 !== mj1) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -1003,8 +1004,9 @@ export class Matrix {
     }
 
     getShortestPaths(num: number): Matrix {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
+
         if (mi1 === 0 || mj1 === 0 || mi1 !== mj1 || num > mi1 || num > mj1) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
         }
@@ -1022,9 +1024,7 @@ export class Matrix {
     }
 
     getMinWeightedPath(num: number, weightedMatrix: Matrix): number {
-        if (!Matrix.isMatrix(weightedMatrix)) {
-            throw valueError(`not matrix instance: < ${weightedMatrix} >`)
-        }
+        Matrix.checkMatrix(weightedMatrix)
 
         const res = this.getShortestPaths(num)
 
@@ -1032,9 +1032,7 @@ export class Matrix {
     }
 
     getMaxWeightedPath(num: number, weightedMatrix: Matrix): number {
-        if (!Matrix.isMatrix(weightedMatrix)) {
-            throw valueError(`not matrix instance: < ${weightedMatrix} >`)
-        }
+        Matrix.checkMatrix(weightedMatrix)
 
         const res = this.getShortestPaths(num)
 
@@ -1042,8 +1040,8 @@ export class Matrix {
     }
 
     adductionOnRows(isNullDiagonal: boolean): Matrix {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -1068,8 +1066,8 @@ export class Matrix {
     }
 
     adductionOnColumns(isNullDiagonal: boolean): Matrix {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0 /* || mi1 !== mj1*/) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -1095,12 +1093,10 @@ export class Matrix {
     }
 
     getVertexPath(start: number): MatrixValueType[] {
-        if (!isIntNumber(start)) {
-            throw valueError(`incorrect input value: start vertex < ${start} >`)
-        }
+        checkIntNumber(start)
 
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
         if (mi1 === 0 || mj1 === 0 || mi1 !== mj1) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
         }
@@ -1137,8 +1133,9 @@ export class Matrix {
     }
 
     getMaxPairsMatching(): Matrix {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
+
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
         }
@@ -1191,6 +1188,7 @@ export class Matrix {
                 i = 0
             }
         }
+
         // output step
         const pairsGraph = Helpers.matrix(mi1, mj1, 0)
         for (let i = 0; i < mi1; i++) {
@@ -1208,8 +1206,9 @@ export class Matrix {
     }
 
     getMinInRows(func: Comparator<MatrixValueType>): MatrixValueType[] {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
+
         if (mi1 === 0 || mj1 === 0 /* || mi1 !== mj1*/) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
         }
@@ -1234,8 +1233,8 @@ export class Matrix {
     }
 
     getMinInColumns(func: Comparator<MatrixValueType>): MatrixValueType[] {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -1260,8 +1259,8 @@ export class Matrix {
     }
 
     sortByRowsSum(): Matrix {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -1295,8 +1294,8 @@ export class Matrix {
     }
 
     getMinMax(): { row: number; column: number }[] {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)
@@ -1331,8 +1330,8 @@ export class Matrix {
     }
 
     isSymmetric(): boolean {
-        const mi1 = this.getRowsNum(),
-            mj1 = this.getColumnsNum()
+        const mi1 = this.getRows(),
+            mj1 = this.getColumns()
 
         if (mi1 === 0 || mj1 === 0 || mi1 !== mj1) {
             throw valueError(`incorrect matrix size: rows < ${mi1} >, columns < ${mj1} >`)

@@ -55,6 +55,11 @@ export namespace Checkers_Test {
     import checkUrl = Checkers.checkUrl;
     import checkPhone = Checkers.checkPhone;
     import checkDateBy = Checkers.checkDateBy;
+    import getType = Checkers.getType;
+    import checkTypes = Checkers.checkTypes;
+    import validationError = Errors.validationError;
+    import checkIntNumber = Checkers.checkIntNumber;
+    import checkFloatNumber = Checkers.checkFloatNumber;
 
     describe('Check value is in range', () => {
         it('it should return true when value is in range without bounds', () => {
@@ -73,6 +78,40 @@ export namespace Checkers_Test {
             expect(isInRange(7, 0, 8, true)).toBeTruthy()
             expect(isInRange(5.6, 0, 7, true)).toBeTruthy()
             expect(isInRange(0, 0, 7, true)).toBeTruthy()
+        })
+    })
+
+    describe('Check object type', () => {
+        it('it should return valid object type', () => {
+            expect(getType(1)).toEqual('number')
+            expect(getType(1.1)).toEqual('number')
+            expect(getType('1')).toEqual('string')
+            expect(getType('test')).toEqual('string')
+            expect(getType([])).toEqual('array')
+            expect(getType(true)).toEqual('boolean')
+            expect(getType(null)).toEqual('null')
+            expect(getType(undefined)).toEqual('undefined')
+        })
+    })
+
+    describe('Check object types', () => {
+        it('it should return true if object types are valid', () => {
+            expect(checkTypes(['string', 'number', 'array'], 'test', 1, [])).toBeUndefined()
+            expect(checkTypes(['number'], 1.1)).toBeUndefined()
+            expect(checkTypes(['string'], 'test')).toBeUndefined()
+            expect(checkTypes(['array'], [])).toBeUndefined()
+            expect(checkTypes(['boolean'], true)).toBeUndefined()
+            expect(checkTypes(['null'], null)).toBeUndefined()
+            expect(checkTypes(['undefined'], undefined)).toBeUndefined()
+            expect(checkTypes([])).toBeUndefined()
+            expect(checkTypes(['string'], '')).toBeUndefined()
+
+            expect(() => checkTypes(['number'], '1')).toThrowError(validationError('param [0] must be of type [number]'))
+            expect(() => checkTypes(['string', 'number', 'boolean'], null, 1, true)).toThrowError(ValidationError)
+            expect(() => checkTypes(['undefined', 'boolean'], undefined, 1)).toThrowError(ValidationError)
+            expect(() => checkTypes(['string', 'boolean'], undefined, true)).toThrowError(ValidationError)
+            expect(() => checkTypes(['null', 'string', 'boolean'], 1, 'undefined', true)).toThrowError(ValidationError)
+            expect(() => checkTypes(['null', 'string', 'null'], 1, 'undefined', true)).toThrowError(ValidationError)
         })
     })
 
@@ -169,6 +208,7 @@ export namespace Checkers_Test {
             expect(isRegExp(ALPHA_REGEX)).toBeTruthy()
             expect(isRegExp(new RegExp(''))).toBeTruthy()
             expect(isRegExp(new RegExp(ALPHA_REGEX))).toBeTruthy()
+            expect(isRegExp(/a/)).toBeTruthy()
         })
     })
 
@@ -738,6 +778,38 @@ export namespace Checkers_Test {
             expect(() => checkNumber(true)).toThrowError(ValidationError)
             expect(() => checkNumber(null)).toThrowError(ValidationError)
             expect(() => checkNumber(undefined)).toThrowError(ValidationError)
+        })
+    })
+
+    describe('Check value is a valid integer number', () => {
+        it('it should throw error when value is not a valid integer number', () => {
+            expect(checkIntNumber(Number())).toBeUndefined()
+            expect(checkIntNumber(3)).toBeUndefined()
+
+            expect(() => checkIntNumber(64.11)).toThrowError(ValidationError)
+            expect(() => checkIntNumber('3')).toThrowError(ValidationError)
+            expect(() => checkIntNumber({})).toThrowError(ValidationError)
+            expect(() => checkIntNumber({ a: 5 })).toThrowError(ValidationError)
+            expect(() => checkIntNumber({})).toThrowError(ValidationError)
+            expect(() => checkIntNumber(true)).toThrowError(ValidationError)
+            expect(() => checkIntNumber(null)).toThrowError(ValidationError)
+            expect(() => checkIntNumber(undefined)).toThrowError(ValidationError)
+        })
+    })
+
+    describe('Check value is a valid float number', () => {
+        it('it should throw error when value is not a valid float number', () => {
+            expect(checkFloatNumber(3.5)).toBeUndefined()
+
+            expect(() => checkFloatNumber(Number())).toThrowError(ValidationError)
+            expect(() => checkFloatNumber(64)).toThrowError(ValidationError)
+            expect(() => checkFloatNumber('3')).toThrowError(ValidationError)
+            expect(() => checkFloatNumber({})).toThrowError(ValidationError)
+            expect(() => checkFloatNumber({ a: 5 })).toThrowError(ValidationError)
+            expect(() => checkFloatNumber({})).toThrowError(ValidationError)
+            expect(() => checkFloatNumber(true)).toThrowError(ValidationError)
+            expect(() => checkFloatNumber(null)).toThrowError(ValidationError)
+            expect(() => checkFloatNumber(undefined)).toThrowError(ValidationError)
         })
     })
 

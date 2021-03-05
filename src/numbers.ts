@@ -1,5 +1,6 @@
 import { Checkers } from './checkers'
 import { Errors } from './errors'
+import { Comparators } from './comparators'
 
 export namespace Numbers {
     import isNumber = Checkers.isNumber
@@ -7,17 +8,20 @@ export namespace Numbers {
     import valueError = Errors.valueError
     import typeError = Errors.typeError
     import isArray = Checkers.isArray
+    import Comparator = Comparators.Comparator
+    import cmp = Comparators.cmp
 
     export namespace NumberOperations {
         export const negate = (a: number): number => {
-            let neg = 0
+            let res = 0
             const d = a < 0 ? 1 : -1
+
             while (a !== 0) {
-                neg += d
+                res += d
                 a += d
             }
 
-            return neg
+            return res
         }
 
         export const minus = (a: number, b: number): number => {
@@ -84,6 +88,41 @@ export namespace Numbers {
 
             return negate(x)
         }
+    }
+
+    export const raffle = (
+        rowSize: number,
+        colSize: number,
+    ): { row: number; colDir: string; column: number } => {
+        return {
+            row: Math.floor(Math.random() * rowSize),
+            colDir: Math.random() < 0.5 ? 'left' : 'right',
+            column: Math.floor(Math.random() * colSize),
+        }
+    }
+
+    export const sortBy = <T extends string>(args: T[], comparator: Comparator<number> = cmp): T[] =>
+        Array.apply(0, Array(args.length)).reduce(r => {
+            return r.concat(
+                args.splice(
+                    args.reduce(
+                        (longest, e, i) => {
+                            return comparator(e.length, longest.e.length) >= 0 ? { i, e } : longest
+                        },
+                        { e: '', i: NaN },
+                    ).i,
+                    1,
+                ),
+            )
+        }, [])
+
+    export const findLongest = <T extends string>(...args: T[]): { index: number; value: string } => {
+        return args.reduce(
+            (longest, entry, index) => {
+                return entry.length > longest.value.length ? { index, value: entry } : longest
+            },
+            { index: -1, value: '' },
+        )
     }
 
     export const greatest = (a: number, b: number, c: number): number => {

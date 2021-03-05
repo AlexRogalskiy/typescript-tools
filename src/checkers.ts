@@ -14,6 +14,25 @@ export namespace Checkers {
     import valueError = Errors.valueError
     import validationError = Errors.validationError
 
+    export const getType = (obj: any): string => {
+        return (
+            {}.toString
+                .call(obj)
+                //.match(/\s(\w+)/)[1]
+                .match(/\s([a-z|A-Z]+)/)[1]
+                .toLowerCase()
+        )
+    }
+
+    export const checkTypes = (types: string[], ...args: any[]): void => {
+        args = [].slice.call(args)
+        for (let i = 0; i < types.length; ++i) {
+            if (getType(args[i]) !== types[i]) {
+                throw validationError(`param [${i}] must be of type [${types[i]}]`)
+            }
+        }
+    }
+
     export const isNull = (value: any): boolean => {
         return value === null
     }
@@ -98,13 +117,6 @@ export namespace Checkers {
         return (
             isNotNull(value) && (typeof value === 'number' || getType(value) === 'number') && isFinite(value)
         )
-    }
-
-    export const getType = (obj: any): string => {
-        return {}.toString
-            .call(obj)
-            .match(/\s([a-z|A-Z]+)/)[1]
-            .toLowerCase()
     }
 
     // positive only, integer or decimal point
@@ -343,6 +355,28 @@ export namespace Checkers {
     export const checkType = (obj: any, type: any): void => {
         if (!is(obj, type)) {
             throw validationError(`Invalid parameter type: ${obj}. Expected type: ${type}`)
+        }
+    }
+
+    /**
+     * Checks for an object to be of the integer number type; if not throws an Error.
+     */
+    export const checkIntNumber = (obj: any): void => {
+        checkType(obj, 'number')
+
+        if (!isIntNumber(obj)) {
+            throw validationError(`invalid integer number: ${obj}`)
+        }
+    }
+
+    /**
+     * Checks for an object to be of the float number type; if not throws an Error.
+     */
+    export const checkFloatNumber = (obj: any): void => {
+        checkType(obj, 'number')
+
+        if (!isFloat(obj)) {
+            throw validationError(`invalid float number: ${obj}`)
         }
     }
 

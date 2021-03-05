@@ -7,6 +7,7 @@ import { BiProcessor, Processor, StringProcessor, Supplier } from '../typings/fu
 import { Maths } from './maths'
 import { Numbers } from './numbers'
 import { Comparators } from './comparators'
+import { Utils } from './utils'
 
 export namespace Strings {
     import isString = Checkers.isString
@@ -20,6 +21,42 @@ export namespace Strings {
     import random = Numbers.random
     import Comparator = Comparators.Comparator
     import randomBy = Numbers.randomBy
+    import isFunction = Checkers.isFunction
+    import Commons = Utils.Commons
+
+    export const props = (() => {
+        const props = {
+            proto: {
+                replaceByRegex: 'replaceByRegex',
+                replaceWith: 'replaceWith',
+            },
+        }
+
+        const replaceWith_ = (self: any, regex: string | RegExp, replacement: string): string =>
+            self.replace(regex, replacement)
+
+        const replaceByRegex_ = (
+            self: any,
+            regex: string | RegExp,
+            replacer: (substring: string, ...args: any[]) => string,
+        ): string => self.replace(regex, replacer)
+
+        if (!isFunction(String.prototype[props.proto.replaceWith])) {
+            Commons.defineProperty(String.prototype, props.proto.replaceWith, {
+                value(regex: string | RegExp, replacement: string) {
+                    return replaceWith_(this, regex, replacement)
+                },
+            })
+        }
+
+        if (!isFunction(String.prototype[props.proto.replaceByRegex])) {
+            Commons.defineProperty(String.prototype, props.proto.replaceByRegex, {
+                value(regex: string | RegExp, replacer: (substring: string, ...args: any[]) => string) {
+                    return replaceByRegex_(this, regex, replacer)
+                },
+            })
+        }
+    })()
 
     export const combinations = (value: string): string[] => {
         let str = ''
@@ -385,7 +422,8 @@ export namespace Strings {
         return value.replace(/-\w/g, match => match[1].toUpperCase())
     }
 
-    export const capFirstLetter = (value: string): string => value.charAt(0).toUpperCase() + value.slice(1)
+    export const capitalFirstLetter = (value: string): string =>
+        value.charAt(0).toUpperCase() + value.slice(1)
 
     export const parseJson = (value: string, defaultValue: any = undefined): string | undefined => {
         try {
@@ -414,6 +452,7 @@ export namespace Strings {
     export const capitalize = (input: string): string => {
         const inputArray = input.split(' ')
         const output: string[] = []
+
         for (const inputArrayItem of inputArray) {
             output.push(inputArrayItem.charAt(0).toUpperCase() + inputArrayItem.slice(1))
         }

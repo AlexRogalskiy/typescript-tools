@@ -2,7 +2,6 @@ import { Checkers, Errors } from '../src'
 
 import checkNumber = Checkers.checkNumber
 import valueError = Errors.valueError
-import isNumber = Checkers.isNumber
 
 export class Vector {
     private readonly subscribers = {}
@@ -17,6 +16,12 @@ export class Vector {
 
     static fromVector(value: Vector): Vector {
         return new Vector(value.x, value.y, value.z)
+    }
+
+    static checkVector(value: Vector): void {
+        if (!Vector.isVector(value)) {
+            throw valueError(`not vector instance: [ ${value} ]`)
+        }
     }
 
     /**
@@ -54,9 +59,7 @@ export class Vector {
     }
 
     add(vector: Vector): Vector {
-        if (!Vector.isVector(vector)) {
-            throw valueError(`not Vector instance: < ${vector} >`)
-        }
+        Vector.checkVector(vector)
 
         this.x += vector.getCoordX()
         this.y += vector.getCoordY()
@@ -66,9 +69,7 @@ export class Vector {
     }
 
     sub(vector: Vector): Vector {
-        if (!Vector.isVector(vector)) {
-            throw valueError(`not Vector instance: < ${vector} >`)
-        }
+        Vector.checkVector(vector)
 
         this.x -= vector.getCoordX()
         this.y -= vector.getCoordY()
@@ -108,9 +109,7 @@ export class Vector {
     }
 
     rotate(angle: number): Vector {
-        if (!isNumber(angle)) {
-            throw valueError(`incorrect input value: angle < ${angle} >`)
-        }
+        checkNumber(angle)
 
         const phi = Math.acos(this.z / this.length())
         const xy = this.x === 0 && this.y >= 0 ? Math.PI / 2 : (3 * Math.PI) / 2
@@ -191,9 +190,7 @@ export class Vector {
     }
 
     vectorMultiply(vector: Vector): Vector {
-        if (!Vector.isVector(vector)) {
-            throw valueError(`not Vector instance: < ${vector} >`)
-        }
+        Vector.checkVector(vector)
 
         const vxx = this.x * vector.getCoordZ() - this.z * vector.getCoordY()
         const vyy = this.z * vector.getCoordX() - this.x * vector.getCoordZ()
@@ -203,17 +200,13 @@ export class Vector {
     }
 
     scalarMultiply(vector: Vector): number {
-        if (!Vector.isVector(vector)) {
-            throw valueError(`not Vector instance: < ${vector} >`)
-        }
+        Vector.checkVector(vector)
 
         return this.x * vector.getCoordX() + this.y * vector.getCoordY() + this.z * vector.getCoordZ()
     }
 
     distance(vector: Vector): number {
-        if (!Vector.isVector(vector)) {
-            throw valueError(`not Vector instance: < ${vector} >`)
-        }
+        Vector.checkVector(vector)
 
         const resX = (this.x - vector.getCoordX()) * (this.x - vector.getCoordX())
         const resY = (this.y - vector.getCoordY()) * (this.y - vector.getCoordY())
@@ -224,17 +217,13 @@ export class Vector {
     }
 
     angle(vector: Vector): number {
-        if (!Vector.isVector(vector)) {
-            throw valueError(`not Vector instance: < ${vector} >`)
-        }
+        Vector.checkVector(vector)
 
         return Math.acos(this.scalarMultiply(vector) / (this.length() * vector.length()))
     }
 
     equals(vector: Vector): boolean {
-        if (!Vector.isVector(vector)) {
-            throw valueError(`not Vector instance: < ${vector} >`)
-        }
+        Vector.checkVector(vector)
 
         return this.x === vector.getCoordX() && this.y === vector.getCoordY() && this.z === vector.getCoordZ()
     }
@@ -294,17 +283,17 @@ export class Vector {
         return Vector.from(this.x, this.y, this.z)
     }
 
-    on(eventName: string, cb: any): void {
-        const list: any[] = this.subscribers[eventName]
+    on(event: string, cb: any): void {
+        const list: any[] = this.subscribers[event]
         if (list && list.indexOf(cb) === 0) {
             list.push(cb)
         } else {
-            this.subscribers[eventName] = [cb]
+            this.subscribers[event] = [cb]
         }
     }
 
-    notify(eventName: string): void {
-        const list: any[] = this.subscribers[eventName]
+    notify(event: string): void {
+        const list: any[] = this.subscribers[event]
         if (list) {
             for (const cb of list) {
                 cb()

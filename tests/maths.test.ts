@@ -110,6 +110,18 @@ export namespace Maths_Test {
             })
         }
 
+        export namespace Helpers_Test {
+            import sum = Maths.Helpers.sum;
+
+            describe('Check sum calculation by input values', () => {
+                it('it should calculate valid sum', () => {
+                    expect(sum(3, 7)).toEqual(10)
+                    expect(sum(6, 14, 15, 45)).toEqual(80)
+                    expect(sum(6, 1, 4, 1, 5, 4, 5)).toEqual(26)
+                })
+            })
+        }
+
         export namespace Numerals_Test {
             import Numerals = Maths.Numerals;
 

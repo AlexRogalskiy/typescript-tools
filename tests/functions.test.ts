@@ -4,6 +4,7 @@ export namespace Commons_Test {
     import curry = Functions.curry;
     import polymorph = Functions.polymorph;
     import autoCurry = Functions.autoCurry;
+    import getFunctionArgs = Functions.getFunctionArgs;
 
     const sequence = (start: number, end: number): number[] => {
         const result: number[] = []
@@ -43,14 +44,15 @@ export namespace Commons_Test {
 
             const getStringArgs = polymorph(
                 (a: any, b: any, c: any): string => `Three arguments: a=${a}, b=${b}, c=${c}`,
-                (i: number, str: string): string => `Number ${i} and string ${str}`,
-                (re: RegExp, a: any): string => `RegExp ${re} and ${a} passed`,
-                (f: Function, b: boolean): string => `Function ${f} and boolean ${b} passed`,
-                (f: Function, i: number): string => `Function ${f} and number ${i} passed`
+                (ind: number, str: string): string => `Number ${ind} and string ${str}`,
+                (regex: string | RegExp, value: any): string => `RegExp ${regex} and value ${value} passed`,
+                (fn: Function, bool: boolean): string => `Function ${fn} and boolean ${bool} passed`,
+                (fn: Function, ind: number): string => `Function ${fn} and number ${ind} passed`
             )
             expect(getStringArgs(1, 2, 3)).toEqual("Three arguments: a=1, b=2, c=3")
             expect(getStringArgs(1, "qq")).toEqual("Function 1 and number qq passed")
             expect(getStringArgs(() => 5, true)).toEqual("Function () => 5 and number true passed")
+            expect(getStringArgs(RegExp('a'), () => 5)).toEqual("Function /a/ and number () => 5 passed")
             expect(getStringArgs(() => 5, 1)).toEqual("Function () => 5 and number 1 passed")
             expect(getStringArgs(/a/, 1)).toEqual("Function /a/ and number 1 passed")
             expect(getStringArgs(/a/, "str")).toEqual("Function /a/ and number str passed")
@@ -63,6 +65,20 @@ export namespace Commons_Test {
             const auto = autoCurry(fn, 3)
 
             expect(auto(2, 2)(3)).toEqual(5)
+        })
+    })
+
+    describe('Check get function arguments', () => {
+        it('it should return valid function arguments', () => {
+            function test(arg1, arg2, arg3) {
+                return arg1 + arg2 + arg3
+            }
+
+            expect(getFunctionArgs(() => 5)).toEqual([])
+            expect(getFunctionArgs(test).join('-')).toEqual('arg1-arg2-arg3')
+            expect(getFunctionArgs((a, b) => a + b)).toEqual(["a", "b"])
+            expect(getFunctionArgs((a: string) => a)).toEqual(["a"])
+            expect(getFunctionArgs((a: string, b, c: string) => a + b + c)).toEqual(["a", "b", "c"])
         })
     })
 }

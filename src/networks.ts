@@ -23,12 +23,12 @@ export namespace Networks {
         return url + (url.includes('?') ? '&' : '?') + param
     }
 
-    export const getQueryParams = (object: { [index: string]: string }): string => {
+    export const getQueryParams = (obj: { [index: string]: string }): string => {
         let parameters = ''
 
         // eslint-disable-next-line github/array-foreach
-        Object.keys(object).forEach((key, i) => {
-            const value: string = object[key]
+        Object.keys(obj).forEach((key, i) => {
+            const value: string = obj[key]
             const prefix = i === 0 ? '?' : '&'
             parameters += `${prefix}${key}=${value}`
         })

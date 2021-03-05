@@ -1,9 +1,10 @@
 import { Checkers, Errors } from '../src'
-
 import checkNumber = Checkers.checkNumber
 import valueError = Errors.valueError
+import isFunction = Checkers.isFunction
 
 export class Point {
+    private readonly operands = []
     private readonly subscribers = {}
 
     static isPoint(value: any): boolean {
@@ -18,6 +19,12 @@ export class Point {
         return new Point(value.x, value.y)
     }
 
+    static checkPoint(value: Point): void {
+        if (!Point.isPoint(value)) {
+            throw valueError(`not valid point instance: [ ${value} ]`)
+        }
+    }
+
     /**
      * Default {@link Point} constructor by input parameters
      * @param x initial input {@link Number} x
@@ -26,6 +33,23 @@ export class Point {
     constructor(private x: number, private y: number) {
         this.x = x
         this.y = y
+
+        if (!isFunction(Point.prototype['_'])) {
+            Object.defineProperty(Point.prototype, '_', {
+                set(value) {
+                    const ops = this.operands
+                    let operator
+                    if (ops.length >= 2 && value === 3 * ops.length) {
+                        operator = this.addBy
+                    } else if (ops.length === 2 && value === 0) {
+                        operator = this.subtractBy
+                    }
+                    this.operands.splice(0, this.operands.length)
+
+                    return operator.apply(this, ops)
+                },
+            })
+        }
     }
 
     /**
@@ -35,9 +59,7 @@ export class Point {
      * @chainable
      */
     add(point: Point): Point {
-        if (!Point.isPoint(point)) {
-            throw valueError(`not valid point instance: < ${point} >`)
-        }
+        Point.checkPoint(point)
 
         this.x += point.x
         this.y += point.y
@@ -52,9 +74,7 @@ export class Point {
      * @chainable
      */
     subtract(point: Point): Point {
-        if (!Point.isPoint(point)) {
-            throw valueError(`not valid point instance: < ${point} >`)
-        }
+        Point.checkPoint(point)
 
         this.x -= point.x
         this.y -= point.y
@@ -242,6 +262,8 @@ export class Point {
      * @param point
      */
     setFromPoint(point: Point): Point {
+        Point.checkPoint(point)
+
         this.x = point.x
         this.y = point.y
 
@@ -253,6 +275,8 @@ export class Point {
      * @param point
      */
     swap(point: Point): void {
+        Point.checkPoint(point)
+
         const x = this.x
         const y = this.y
 
@@ -277,24 +301,62 @@ export class Point {
      * @param obj
      */
     equal(obj: any): boolean {
-        if (!Point.isPoint(obj)) {
-            throw valueError(`not point instance: < ${obj} >`)
-        }
+        Point.checkPoint(obj)
 
         return this.x === obj.x && this.y === obj.y
     }
 
-    on(eventName: string, cb: any): void {
-        const list: any[] = this.subscribers[eventName]
+    multiplyBy(...args: Point[]): Point {
+        for (const item of args) {
+            this.x *= item.x
+            this.y *= item.y
+        }
+
+        return this
+    }
+
+    divideBy(...args: Point[]): Point {
+        for (const item of args) {
+            this.x /= item.x
+            this.y /= item.y
+        }
+
+        return this
+    }
+
+    addBy(...args: Point[]): Point {
+        for (const item of args) {
+            this.x += item.x
+            this.y += item.y
+        }
+
+        return this
+    }
+
+    subtractBy(...args: Point[]): Point {
+        for (const item of args) {
+            this.x -= item.x
+            this.y -= item.y
+        }
+
+        return this
+    }
+
+    getOperands(): any[] {
+        return this.operands
+    }
+
+    on(event: string, cb: any): void {
+        const list: any[] = this.subscribers[event]
         if (list && list.indexOf(cb) === 0) {
             list.push(cb)
         } else {
-            this.subscribers[eventName] = [cb]
+            this.subscribers[event] = [cb]
         }
     }
 
-    notify(eventName: string): void {
-        const list: any[] = this.subscribers[eventName]
+    notify(event: string): void {
+        const list: any[] = this.subscribers[event]
         if (list) {
             for (const cb of list) {
                 cb()
