@@ -24,6 +24,7 @@ export namespace Strings_Test {
     import matcher = Strings.matcher;
     import lowerCase = Strings.lowerCase;
     import trimmer = Strings.trimmer;
+    import longestSequence = Strings.longestSequence;
 
     describe('Check emoji replacer', () => {
         it('it should kill emojis in a string', () => {
@@ -153,6 +154,14 @@ export namespace Strings_Test {
             expect(encoder('rhinocerous')).toEqual('rikqshkyw~}')
             expect(encoder('test')).toEqual('tfuw')
             expect(encoder('gender')).toEqual('gfpgiw')
+        })
+    })
+
+    describe('Check longest string sequence', () => {
+        it('it should return valid longest string sequence', () => {
+            expect(JSON.stringify(longestSequence((a, b) => a === b, 'skiing'))).toEqual("{\"member\":\"i\",\"count\":2}")
+            expect(JSON.stringify(longestSequence((a, b) => a === b, 'test'))).toEqual("{\"member\":null,\"count\":0}")
+            expect(JSON.stringify(longestSequence((a, b) => a === b, ''))).toEqual("{\"member\":null,\"count\":0}")
         })
     })
 

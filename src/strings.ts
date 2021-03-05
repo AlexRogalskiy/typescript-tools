@@ -999,4 +999,23 @@ export namespace Strings {
     export const trimmer = (...args: string[]): string[] => {
         return [].map.call(args, v => ''.trim.apply(v))
     }
+
+    export const longestSequence = (
+        compareFunc,
+        myEnum: string,
+    ): { member: StringOrUndef; count: number } => {
+        let result: { member: string | null; count: number } = { member: null, count: 0 }
+        let thisCount = 1
+        for (let i = 1; i < myEnum.length; ++i) {
+            if (myEnum[i] !== ' ' && compareFunc(myEnum[i - 1], myEnum[i])) {
+                if (++thisCount >= result.count) {
+                    result = { member: myEnum[i], count: thisCount }
+                }
+            } else {
+                thisCount = 1
+            }
+        }
+
+        return { member: result.member, count: result.count }
+    }
 }
