@@ -935,8 +935,8 @@ export namespace Strings {
         return unescape(value.replace(/<.*?>/g, '')).replace(/&amp;/, '&')
     }
 
-    export const joinList = (list: any[]): string => {
-        return `(?:${list.join('|')})`
+    export const joinList = (list: any[], joiner = '|'): string => {
+        return `(?:${list.join(joiner)})`
     }
 
     export const quote = (str: any, allowVars = false): string => {

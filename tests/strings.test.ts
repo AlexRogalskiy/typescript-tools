@@ -26,6 +26,11 @@ export namespace Strings_Test {
     import longestSequence = Strings.longestSequence;
     import replaceBy = Strings.replaceBy;
     import repeat = Strings.repeat;
+    import delim = Strings.delim;
+    import generateSymbol = Strings.generateSymbol;
+    import doubleQuote = Strings.doubleQuote;
+    import joinList = Strings.joinList;
+    import htmlText = Strings.htmlText;
 
     describe('Check emoji string replacer', () => {
         it('it should replace emojis in a string', () => {
@@ -35,6 +40,44 @@ export namespace Strings_Test {
             expect(replaceBy(EMOJI_REGEX, '🎉 Party 🚩 Flags! 🚀 Rockets!', 'X')).toEqual(
                 'X Party X Flags! X Rockets!',
             )
+        })
+    })
+
+    describe('Check convert html to text string', () => {
+        it('it should return valid replaced html string', () => {
+            expect(htmlText('<div>test</div>')).toEqual('test')
+            expect(htmlText('<br/>')).toEqual('')
+        })
+    })
+
+    describe('Check joining list to string', () => {
+        it('it should return valid joined list string', () => {
+            expect(joinList(['test', 'test2'])).toEqual('(?:test|test2)')
+            expect(joinList([null, undefined, 1])).toEqual('(?:||1)')
+            expect(joinList([])).toEqual('(?:)')
+        })
+    })
+
+    describe('Check double quoted string', () => {
+        it('it should return valid double quoted string', () => {
+            expect(doubleQuote("test")).toEqual("\"test\"")
+            expect(doubleQuote("test'test")).toEqual("\"test'test\"")
+        })
+    })
+
+    describe('Check generate symbol', () => {
+        it('it should return valid string symbol', () => {
+            expect(typeof generateSymbol()).toEqual('string')
+        })
+    })
+
+    describe('Check string delimiter', () => {
+        it('it should return valid string delimiter', () => {
+            expect(delim('w', 5)).toEqual('wwwww')
+            expect(delim('wz', 5)).toEqual('wzwzwzwzwz')
+            expect(delim('', 1)).toEqual('')
+            expect(delim('abc', 3)).toEqual('abcabcabc')
+            expect(delim('abc', 0)).toEqual('')
         })
     })
 
