@@ -3,8 +3,8 @@ import { Pair } from '../typings/general-types'
 
 export namespace Commons_Test {
     import extend = Objects.extend;
-    import is = Checkers.is;
     import hash = Commons.hash;
+    import isObject = Checkers.isObject;
 
     describe('Check objects extension', () => {
         const obj: Pair<string, string> = { left: '1', right: '3' }
@@ -14,7 +14,7 @@ export namespace Commons_Test {
                 return hash(this.left, this.right);
             },
             __equals__: function (obj) {
-                return is(obj, Object) && Object['__equals__'](this.left, obj.left) && Object['__equals__'](this.right, obj.right)
+                return isObject(obj) && Object['__equals__'](this.left, obj.left) && Object['__equals__'](this.right, obj.right)
             },
         })
 

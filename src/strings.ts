@@ -931,6 +931,15 @@ export namespace Strings {
         return value.toLowerCase()
     }
 
+    export const sequencer = <T extends string, U extends string>(
+        map: (value: T, index: number, array: T[]) => U,
+        str: string,
+    ): string => {
+        let exploded = str.split('')
+        exploded = exploded.map(map)
+        return exploded.join('')
+    }
+
     export const htmlText = (value: string): string => {
         return unescape(value.replace(/<.*?>/g, '')).replace(/&amp;/, '&')
     }

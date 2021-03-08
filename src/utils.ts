@@ -2,6 +2,7 @@ import { Iterator } from '../typings/function-types'
 import { Checkers } from './checkers'
 import { Numbers } from './numbers'
 import { Errors } from './errors'
+import { Arrays } from './arrays'
 
 export namespace Utils {
     export namespace Translation {
@@ -56,6 +57,32 @@ export namespace Utils {
             '#a700ff',
             '#d300e7',
         ]
+
+        export const randColor = (colors: any): any => {
+            const available = [
+                'underline',
+                'inverse',
+                'grey',
+                'yellow',
+                'red',
+                'green',
+                'blue',
+                'white',
+                'cyan',
+                'magenta',
+                'brightYellow',
+                'brightRed',
+                'brightGreen',
+                'brightBlue',
+                'brightWhite',
+                'brightCyan',
+                'brightMagenta',
+            ]
+
+            return (letter: string): string => {
+                return /^\s*$/.test(letter) ? letter : colors[Arrays.randomElement(available)](letter)
+            }
+        }
 
         /**
          * Returns color representation in RGB format

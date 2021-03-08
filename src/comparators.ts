@@ -2,11 +2,6 @@ import { Checkers } from './checkers'
 import { Errors } from './errors'
 
 export namespace Comparators {
-    import isNull = Checkers.isNull
-    import isString = Checkers.isString
-    import isObject = Checkers.isObject
-    import isFunction = Checkers.isFunction
-    import isArray = Checkers.isArray
     import valueError = Errors.valueError
 
     /**
@@ -140,8 +135,8 @@ export namespace Comparators {
             const a_ = a === null ? '' : `${a}`
             const b_ = b === null ? '' : `${b}`
 
-            locale = isString(locale) ? locale : locale_
-            options = isObject(options) ? options : options_
+            locale = Checkers.isString(locale) ? locale : locale_
+            options = Checkers.isObject(options) ? options : options_
 
             const localeCompareSupportsCollator = (): number | null => {
                 try {
@@ -162,9 +157,9 @@ export namespace Comparators {
             }
 
             let result = localeCompareSupportsCollator()
-            if (isNull(result)) {
+            if (Checkers.isNull(result)) {
                 result = localeCompareSupportsLocales()
-                if (isNull(result)) {
+                if (Checkers.isNull(result)) {
                     result = cmpByLocale(a_, b_)
                 }
             }
@@ -221,18 +216,18 @@ export namespace Comparators {
      */
     export const cmpBy = <T>(property: string, comparator: Comparator<T>): Comparator<T> => {
         return (a, p) => {
-            if (isObject(a) && isObject(p)) {
+            if (Checkers.isObject(a) && Checkers.isObject(p)) {
                 const a_ = a[property]
                 const b_ = p[property]
 
-                const cmp_ = isFunction(comparator) ? comparator : null
+                const cmp_ = Checkers.isFunction(comparator) ? comparator : null
 
                 if (cmp_) {
                     return cmp_(a, p)
                 }
 
                 if (typeof a_ === typeof b_) {
-                    if (isObject(a_) || isArray(a_)) {
+                    if (Checkers.isObject(a_) || Checkers.isArray(a_)) {
                         return a_.equals(b_)
                     }
                     return cmpByLocaleLang(a_, b_, 'en', {})

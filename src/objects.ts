@@ -39,6 +39,22 @@ export namespace Objects {
         }
     })()
 
+    export const formatOptions = (options: any, defaultOptions: any): any => {
+        if (!options) {
+            return defaultOptions
+        }
+
+        for (const prop in defaultOptions) {
+            if (Object.prototype.hasOwnProperty.call(defaultOptions, prop)) {
+                if (typeof options[prop] === 'undefined') {
+                    options[prop] = defaultOptions[prop]
+                }
+            }
+        }
+
+        return options
+    }
+
     export const randomEnum = <T>(enumType: T): T[keyof T] => {
         const values = (Object.values(enumType) as unknown) as T[keyof T][]
         const index = Numbers.random(values.length)
