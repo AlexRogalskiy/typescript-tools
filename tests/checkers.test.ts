@@ -60,6 +60,8 @@ export namespace Checkers_Test {
     import validationError = Errors.validationError;
     import checkIntNumber = Checkers.checkIntNumber;
     import checkFloatNumber = Checkers.checkFloatNumber;
+    import isSafeInt = Checkers.isSafeInt;
+    import getClass = Checkers.getClass;
 
     describe('Check value is in range', () => {
         it('it should return true when value is in range without bounds', () => {
@@ -78,6 +80,19 @@ export namespace Checkers_Test {
             expect(isInRange(7, 0, 8, true)).toBeTruthy()
             expect(isInRange(5.6, 0, 7, true)).toBeTruthy()
             expect(isInRange(0, 0, 7, true)).toBeTruthy()
+        })
+    })
+
+    describe('Check object class', () => {
+        it('it should return valid object class', () => {
+            expect(getClass(1)).toEqual('number')
+            expect(getClass(1.1)).toEqual('number')
+            expect(getClass('1')).toEqual('string')
+            expect(getClass('test')).toEqual('string')
+            expect(getClass([])).toEqual('array')
+            expect(getClass(true)).toEqual('boolean')
+            expect(getClass(null)).toEqual('null')
+            expect(getClass(undefined)).toEqual('undefined')
         })
     })
 
@@ -125,6 +140,24 @@ export namespace Checkers_Test {
             expect(isIntNumber(true)).toBeFalsy()
             expect(isIntNumber(null)).toBeFalsy()
             expect(isIntNumber(undefined)).toBeFalsy()
+        })
+    })
+
+    describe('Check value is safe integer', () => {
+        it('it should return true when value is safe integer', () => {
+            expect(isSafeInt(1)).toBeTruthy()
+            expect(isSafeInt(Number.MAX_SAFE_INTEGER)).toBeTruthy()
+            expect(isSafeInt(Number.MIN_SAFE_INTEGER)).toBeTruthy()
+            expect(isSafeInt(Number.MAX_VALUE)).toBeTruthy()
+            expect(isSafeInt(Number.MIN_VALUE)).toBeTruthy()
+
+            expect(isSafeInt(1.1)).toBeFalsy()
+            expect(isSafeInt('1')).toBeFalsy()
+            expect(isSafeInt('test')).toBeFalsy()
+            expect(isSafeInt([])).toBeFalsy()
+            expect(isSafeInt(true)).toBeFalsy()
+            expect(isSafeInt(null)).toBeFalsy()
+            expect(isSafeInt(undefined)).toBeFalsy()
         })
     })
 

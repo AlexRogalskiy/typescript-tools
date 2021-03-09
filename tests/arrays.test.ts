@@ -8,6 +8,28 @@ export namespace Arrays_Test {
     import findArray = Arrays.findArray;
     import insert = Arrays.insert;
 
+    describe('Check iteration on array of elements', () => {
+        it('it should perform valid array iteration', () => {
+            let array: any[] = []
+            let result = 0
+            array['forEachParallel'](v => result += v)
+            expect(result).toEqual(0)
+
+            array = [1, 2, 3]
+            array['forEachParallel'](v => result += v)
+            expect(result).toEqual(6)
+
+            array = []
+            result = 0
+            array['forEachSequential'](v => result += v)
+            expect(result).toEqual(0)
+
+            array = [1, 2, 3]
+            array['forEachSequential'](v => result += v)
+            expect(result).toEqual(6)
+        })
+    })
+
     describe('Check list values from array', () => {
         it('it should perform valid array sequence', () => {
             expect(list(1, 2, 3).join("-")).toEqual('1-2-3')

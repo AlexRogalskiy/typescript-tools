@@ -31,6 +31,10 @@ export namespace Strings_Test {
     import doubleQuote = Strings.doubleQuote;
     import joinList = Strings.joinList;
     import htmlText = Strings.htmlText;
+    import getProjectId = Strings.getProjectId;
+    import padLeft = Strings.padLeft;
+    import htmlEncode = Strings.htmlEncode;
+    import toUTF16 = Strings.toUTF16;
 
     describe('Check emoji string replacer', () => {
         it('it should replace emojis in a string', () => {
@@ -47,6 +51,43 @@ export namespace Strings_Test {
         it('it should return valid replaced html string', () => {
             expect(htmlText('<div>test</div>')).toEqual('test')
             expect(htmlText('<br/>')).toEqual('')
+        })
+    })
+
+    describe('Check create project id', () => {
+        it('it should return valid project id', () => {
+            expect(getProjectId('test')).toEqual('test')
+            expect(getProjectId('test.test2')).toEqual('testtest2')
+            expect(getProjectId('test\'')).toEqual('test')
+            expect(getProjectId('')).toEqual('')
+        })
+    })
+
+    describe('Check create padding left', () => {
+        it('it should return valid padded left string', () => {
+            expect(padLeft('test', 6)).toEqual('  test')
+            expect(padLeft('test', 1)).toEqual('test')
+            expect(padLeft('test', 0)).toEqual('test')
+            expect(padLeft('test', -1)).toEqual('test')
+            expect(padLeft('', 1)).toEqual(' ')
+        })
+    })
+
+    describe('Check html encoded string', () => {
+        it('it should return valid html encoded string', () => {
+            expect(htmlEncode('<div>test</div>')).toEqual('&lt;div&gt;test&lt;/div&gt;')
+            expect(htmlEncode('©')).toEqual('(c)')
+            expect(htmlEncode('test')).toEqual('test')
+            expect(htmlEncode('')).toEqual('')
+        })
+    })
+
+    describe('Check UTF16 conversion', () => {
+        it('it should return valid UTF16 string', () => {
+            expect(toUTF16(55)).toEqual('\\u37')
+            expect(toUTF16(0)).toEqual('\\u0')
+            expect(toUTF16(Number.MIN_VALUE)).toEqual('\\u0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004')
+            expect(toUTF16(1)).toEqual('\\u1')
         })
     })
 

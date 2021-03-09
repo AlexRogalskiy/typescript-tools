@@ -38,6 +38,14 @@ export const isPrimitive = (val: any): val is Primitive => {
     )
 }
 // -------------------------------------------------------------------------------------------------
+// type declaration
+export interface Array<T> {
+    forEachParallel(func: (item: T) => Promise<void>): Promise<void>
+
+    forEachSequential(func: (item: T) => Promise<void>): Promise<void>
+}
+
+// -------------------------------------------------------------------------------------------------
 /**
  * StringOrUndef
  * @desc Type representing [`Primitive`](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) types in TypeScript: `string | null | undefined`

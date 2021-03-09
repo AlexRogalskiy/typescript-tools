@@ -349,10 +349,10 @@ export namespace Strings {
     }
 
     export const getProjectId = (value: any): string => {
-        return slugify(value.name, { lower: true, remove: /[.'/]/g })
+        return slugify(value, { lower: true, remove: /[.'/]/g })
     }
 
-    export const padL = (value: string, length: number): string => {
+    export const padLeft = (value: string, length: number): string => {
         while (value.length < length) {
             value = ` ${value}`
         }
@@ -382,6 +382,25 @@ export namespace Strings {
         value = value.replace(/[\u02DC|\u00A0]/g, ' ')
 
         return value
+    }
+
+    export const toUTF16 = (codePoint: number): string => {
+        const TEN_BITS = parseInt('1111111111', 2)
+        const codeUnit_ = (codeUnit: number): string => {
+            return `\\u${codeUnit.toString(16).toUpperCase()}`
+        }
+
+        if (codePoint <= 0xffff) {
+            return codeUnit_(codePoint)
+        }
+
+        codePoint -= 0x10000
+        // Shift right to get to most significant 10 bits
+        const leadSurrogate = 0xd800 + (codePoint >> 10)
+        // Mask to get least significant 10 bits
+        const tailSurrogate = 0xdc00 + (codePoint & TEN_BITS)
+
+        return codeUnit_(leadSurrogate) + codeUnit_(tailSurrogate)
     }
 
     export const substantiveLineCount = (value: string): number =>

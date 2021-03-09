@@ -22,6 +22,42 @@ export namespace Arrays {
     import checkArray = Checkers.checkArray
     import Commons = Utils.Commons
     import swap = Sorting.swap
+    import defineProperty = Utils.Commons.defineProperty
+
+    export const init = (() => {
+        const props = {
+            proto: {
+                forEachParallel: 'forEachParallel',
+                forEachSequential: 'forEachSequential',
+            },
+        }
+
+        const iterateAsync_ = async <T>(obj: any, func: (item: T) => Promise<void>): Promise<void> => {
+            await Promise.all(obj.map(async (item: T) => await func(item)))
+        }
+
+        const iterateSync_ = async <T>(obj: any, func: (item: T) => void): Promise<void> => {
+            for (const item of obj) {
+                func(item)
+            }
+        }
+
+        if (!isFunction(Array.prototype[props.proto.forEachParallel])) {
+            defineProperty(Array.prototype, props.proto.forEachParallel, {
+                async value(func: (item: any) => Promise<void>): Promise<void> {
+                    return await iterateAsync_(this, func)
+                },
+            })
+        }
+
+        if (!isFunction(Array.prototype[props.proto.forEachSequential])) {
+            defineProperty(Array.prototype, props.proto.forEachSequential, {
+                async value(func: (item: any) => Promise<void>): Promise<void> {
+                    return await iterateSync_(this, func)
+                },
+            })
+        }
+    })()
 
     export const list = (...args: any[]): any[] => {
         // const unboundSlice = Array.prototype.slice

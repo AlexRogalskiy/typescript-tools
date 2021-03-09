@@ -307,4 +307,15 @@ export namespace Objects {
             },
         }
     }
+
+    export const newOperator = (obj: any, ...args: any[]): any => {
+        const that = Object.create(obj.prototype)
+        const result = obj.apply(that, args)
+
+        if (typeof result === 'object' && result !== null) {
+            return result
+        }
+
+        return that
+    }
 }

@@ -14,6 +14,13 @@ export namespace Checkers {
     import valueError = Errors.valueError
     import validationError = Errors.validationError
 
+    export const getClass = (obj: any): string | null => {
+        const str = Object.prototype.toString.call(obj)
+        const value = /^\[object (.*)]$/.exec(str)
+
+        return value ? value[1] : null
+    }
+
     export const getType = (obj: any): string => {
         return (
             {}.toString
@@ -102,6 +109,15 @@ export namespace Checkers {
         // Math.round(x) === x;
         // return (/^-?\d+$/.test(str));
         return isNumber(value) && value % 1 === 0 && Number.isSafeInteger(value)
+    }
+
+    export const isSafeInt = (value: any): boolean => {
+        return (
+            typeof value === 'number' &&
+            Math.round(value) === value &&
+            Number.MIN_SAFE_INTEGER <= value &&
+            value <= Number.MAX_SAFE_INTEGER
+        )
     }
 
     export const isFloat = (value: any): boolean => {
