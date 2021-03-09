@@ -74,6 +74,24 @@ export namespace Functions {
         }
     }
 
+    export const workerTs = (file: string, wkOpts: WorkerOptions): any => {
+        wkOpts['eval'] = true
+        if (!wkOpts['workerData']) {
+            wkOpts['workerData'] = {}
+        }
+        wkOpts['workerData'].__filename = file
+        return new Worker(
+            `
+            const wk = require('worker_threads');
+            require('ts-node').register();
+            let file = wk.workerData.__filename;
+            delete wk.workerData.__filename;
+            require(file);
+        `,
+            wkOpts,
+        )
+    }
+
     export const composeAsync = async (...funcArgs) => async value =>
         // eslint-disable-next-line github/no-then
         await funcArgs.reduce((acc, val) => acc.then(val), Promise.resolve(value))
