@@ -16,6 +16,16 @@ export namespace Numbers_Test {
     import sortBy = Numbers.sortBy;
     import findLongest = Numbers.findLongest;
 
+    beforeAll(() => {
+        console.log("Numbers test suite started")
+        console.time("Execution time took")
+    })
+
+    afterAll(() => {
+        console.log("Numbers test suite finished")
+        console.timeEnd("Execution time took")
+    })
+
     describe('Check number of leading zeros in a number', () => {
         it('it should calculate valid number of leading zeros', () => {
             expect(countLeadingZeros(1)).toEqual(31)

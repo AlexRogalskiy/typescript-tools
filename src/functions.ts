@@ -63,6 +63,17 @@ export namespace Functions {
         subType.prototype = subProto
     }
 
+    export const makeBackgroundable = <T extends (...args: any[]) => any>(
+        pool: any,
+        func: T,
+    ): ((...funcArgs: Parameters<T>) => Promise<ReturnType<T>>) => {
+        const funcName = func.name
+
+        return (...args: Parameters<T>): ReturnType<T> => {
+            return pool.exec(funcName, args)
+        }
+    }
+
     export const composeAsync = async (...funcArgs) => async value =>
         // eslint-disable-next-line github/no-then
         await funcArgs.reduce((acc, val) => acc.then(val), Promise.resolve(value))

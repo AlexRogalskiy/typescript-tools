@@ -40,6 +40,7 @@
         "@typescript-eslint/eslint-plugin": "^4.15.0",
         "@typescript-eslint/parser": "^4.15.0",
         "axios": "^0.21.1",
+        "crypto": "^1.0.1",
         "dateformat": "^4.5.1",
         "dayjs": "^1.10.4",
         "dayjs-precise-range": "^1.0.1",

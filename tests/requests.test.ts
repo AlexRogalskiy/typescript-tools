@@ -7,6 +7,16 @@ export namespace Requests_Test {
 
     require('https').globalAgent.options.rejectUnauthorized = false
 
+    beforeAll(() => {
+        console.log("Requests test suite started")
+        console.time("Execution time took")
+    })
+
+    afterAll(() => {
+        console.log("Requests test suite finished")
+        console.timeEnd("Execution time took")
+    })
+
     describe("Convert image URL to base64 string", () => {
         test('it should be a string base64',
             async () => {

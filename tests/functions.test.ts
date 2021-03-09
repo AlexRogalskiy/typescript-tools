@@ -6,6 +6,16 @@ export namespace Commons_Test {
     import autoCurry = Functions.autoCurry;
     import getFunctionArgs = Functions.getFunctionArgs;
 
+    beforeAll(() => {
+        console.log("Functions test suite started")
+        console.time("Execution time took")
+    })
+
+    afterAll(() => {
+        console.log("Functions test suite finished")
+        console.timeEnd("Execution time took")
+    })
+
     const sequence = (start: number, end: number): number[] => {
         const result: number[] = []
 

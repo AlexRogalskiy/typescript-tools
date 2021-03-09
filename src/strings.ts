@@ -58,6 +58,12 @@ export namespace Strings {
         }
     })()
 
+    export const uniqueId = (): string => {
+        return Math.random()
+            .toString(36)
+            .substring(Number(2 + new Date().getTime().toString(36)))
+    }
+
     export const combinations = (value: string): string[] => {
         let str = ''
         const res: string[] = []

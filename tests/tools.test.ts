@@ -6,6 +6,16 @@ import { Point } from '../tools/point'
 export namespace Tools_Test {
 
     export namespace StringBuilder_Test {
+        beforeAll(() => {
+            console.log("StringBuilder test suite started")
+            console.time("Execution time took")
+        })
+
+        afterAll(() => {
+            console.log("StringBuilder test suite finished")
+            console.timeEnd("Execution time took")
+        })
+
         describe("Test string builder methods", () => {
             test('it should be a valid result string', () => {
                 const sb = new StringBuilder()
@@ -34,6 +44,16 @@ export namespace Tools_Test {
     }
 
     export namespace Point_Test {
+        beforeAll(() => {
+            console.log("Point test suite started")
+            console.time("Execution time took")
+        })
+
+        afterAll(() => {
+            console.log("Point test suite finished")
+            console.timeEnd("Execution time took")
+        })
+
         describe("Test point methods", () => {
             test('it should be a valid point coordinates', () => {
                 const point = new Point(1, 2)

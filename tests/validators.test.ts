@@ -3,6 +3,15 @@ import { describe, test } from '@jest/globals'
 import { Validators } from '../src'
 
 export namespace Validators_Test {
+    beforeAll(() => {
+        console.log("Validators test suite started")
+        console.time("Translation time took")
+    })
+
+    afterAll(() => {
+        console.log("Validators test suite finished")
+        console.timeEnd("Execution time took")
+    })
 
     describe("Test string validators", () => {
         test('it should be a valid zip/code property',

@@ -7,6 +7,16 @@ export namespace Maths_Test {
         export namespace Geometry_Test {
             import Calculations = Maths.Calculations;
 
+            beforeAll(() => {
+                console.log("Geometry test suite started")
+                console.time("Execution time took")
+            })
+
+            afterAll(() => {
+                console.log("Geometry test suite finished")
+                console.timeEnd("Execution time took")
+            })
+
             describe('Check rectangular area calculation', () => {
                 const rect = [{ 'x1': 0, 'x2': 2, 'y1': 14, 'y2': 15 }, {
                     'x1': 1,
@@ -59,6 +69,16 @@ export namespace Maths_Test {
         export namespace Algebra_Test {
             import Calculations = Maths.Calculations;
 
+            beforeAll(() => {
+                console.log("Algebra test suite started")
+                console.time("Execution time took")
+            })
+
+            afterAll(() => {
+                console.log("Algebra test suite finished")
+                console.timeEnd("Execution time took")
+            })
+
             describe('Check greatest common divisor calculation', () => {
                 it('it should return valid GCD', () => {
                     expect(Calculations.Algebra.gcd(7, 10)).toEqual(1)
@@ -91,6 +111,16 @@ export namespace Maths_Test {
         export namespace Trigonometry_Test {
             import Calculations = Maths.Calculations;
 
+            beforeAll(() => {
+                console.log("Trigonometry test suite started")
+                console.time("Execution time took")
+            })
+
+            afterAll(() => {
+                console.log("Trigonometry test suite finished")
+                console.timeEnd("Execution time took")
+            })
+
             describe('Check triangle square calculation', () => {
                 it('it should return valid triangle square', () => {
                     expect(Calculations.Trigonometry.log10(100)).toEqual(2)
@@ -101,6 +131,16 @@ export namespace Maths_Test {
 
         export namespace Areas_Test {
             import Calculations = Maths.Calculations;
+
+            beforeAll(() => {
+                console.log("Areas test suite started")
+                console.time("Execution time took")
+            })
+
+            afterAll(() => {
+                console.log("Areas test suite finished")
+                console.timeEnd("Execution time took")
+            })
 
             describe('Check triangle square calculation', () => {
                 it('it should return valid triangle square', () => {
@@ -113,6 +153,16 @@ export namespace Maths_Test {
         export namespace Helpers_Test {
             import sum = Maths.Helpers.sum;
 
+            beforeAll(() => {
+                console.log("Helpers test suite started")
+                console.time("Execution time took")
+            })
+
+            afterAll(() => {
+                console.log("Helpers test suite finished")
+                console.timeEnd("Execution time took")
+            })
+
             describe('Check sum calculation by input values', () => {
                 it('it should calculate valid sum', () => {
                     expect(sum(3, 7)).toEqual(10)
@@ -124,6 +174,16 @@ export namespace Maths_Test {
 
         export namespace Numerals_Test {
             import Numerals = Maths.Numerals;
+
+            beforeAll(() => {
+                console.log("Numerals test suite started")
+                console.time("Execution time took")
+            })
+
+            afterAll(() => {
+                console.log("Numerals test suite finished")
+                console.timeEnd("Execution time took")
+            })
 
             describe('Check fibonacci calculation', () => {
                 it('it should return a valid fibonacci number', () => {

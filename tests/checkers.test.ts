@@ -63,6 +63,16 @@ export namespace Checkers_Test {
     import isSafeInt = Checkers.isSafeInt;
     import getClass = Checkers.getClass;
 
+    beforeAll(() => {
+        console.log("Checkers test suite started")
+        console.time("Execution time took")
+    })
+
+    afterAll(() => {
+        console.log("Checkers test suite finished")
+        console.timeEnd("Execution time took")
+    })
+
     describe('Check value is in range', () => {
         it('it should return true when value is in range without bounds', () => {
             expect(isInRange(1, 0, 6)).toBeTruthy()
@@ -148,8 +158,8 @@ export namespace Checkers_Test {
             expect(isSafeInt(1)).toBeTruthy()
             expect(isSafeInt(Number.MAX_SAFE_INTEGER)).toBeTruthy()
             expect(isSafeInt(Number.MIN_SAFE_INTEGER)).toBeTruthy()
-            expect(isSafeInt(Number.MAX_VALUE)).toBeTruthy()
-            expect(isSafeInt(Number.MIN_VALUE)).toBeTruthy()
+            expect(isSafeInt(Number.MAX_VALUE)).toBeFalsy()
+            expect(isSafeInt(Number.MIN_VALUE)).toBeFalsy()
 
             expect(isSafeInt(1.1)).toBeFalsy()
             expect(isSafeInt('1')).toBeFalsy()

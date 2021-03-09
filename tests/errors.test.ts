@@ -12,17 +12,17 @@ export namespace Errors_Test {
     class SubTestError extends TestError {
     }
 
+    beforeAll(() => {
+        console.log("Errors test suite started")
+        console.time("Execution time took")
+    })
+
+    afterAll(() => {
+        console.log("Errors test suite finished")
+        console.timeEnd("Execution time took")
+    })
+
     describe('Test extendable error type', () => {
-        beforeAll(() => {
-            console.log("Test suite started")
-            console.time("Execution time took")
-        });
-
-        afterAll(() => {
-            console.log("Test suite finished")
-            console.timeEnd("Execution time took")
-        });
-
         it('it should be a valid error instance of', () => {
             const err = new ExtendableError(ErrorType.value_error, 'Value error')
             expect(err).toBeInstanceOf(Error)

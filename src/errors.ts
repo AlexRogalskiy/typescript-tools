@@ -1,4 +1,5 @@
 import { ErrorData, ErrorType } from '../typings/domain-types'
+
 import { Logging } from './logging'
 import { Utils } from './utils'
 import { Checkers } from './checkers'
@@ -142,6 +143,23 @@ export namespace Errors {
          */
         constructor(readonly lang: string, ...args: any[]) {
             super(ErrorType.general_error, `Unsupported language: ${lang}`, args)
+        }
+    }
+
+    /**
+     * QueryParseError
+     * @desc Class representing query parse error
+     */
+    export class QueryParseError extends GeneralError {
+        /**
+         * Unsupported language error constructor by input parameters
+         * @param message initial input {@link string} message
+         * @param start initial input {@link number} start position
+         * @param end initial input {@link number} end position
+         * @param args initial input {@link Array} of arguments
+         */
+        constructor(readonly message: string, readonly start: string, readonly end: string, ...args: any[]) {
+            super(ErrorType.parser_error, message, args)
         }
     }
 

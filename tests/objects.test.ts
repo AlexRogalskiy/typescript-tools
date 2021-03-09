@@ -1,10 +1,20 @@
 import { Checkers, Commons, Objects } from '../src'
 import { Pair } from '../typings/general-types'
 
-export namespace Commons_Test {
+export namespace Objects_Test {
     import extend = Objects.extend;
     import hash = Commons.hash;
     import isObject = Checkers.isObject;
+
+    beforeAll(() => {
+        console.log("Objects test suite started")
+        console.time("Execution time took")
+    })
+
+    afterAll(() => {
+        console.log("Objects test suite finished")
+        console.timeEnd("Execution time took")
+    })
 
     describe('Check objects extension', () => {
         const obj: Pair<string, string> = { left: '1', right: '3' }

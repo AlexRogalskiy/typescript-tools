@@ -4,6 +4,7 @@
  */
 export enum ErrorType {
     general_error = 'GeneralError',
+    parser_error = 'ParserError',
     validation_error = 'ValidationError',
     type_error = 'TypeError',
     value_error = 'ValueError',

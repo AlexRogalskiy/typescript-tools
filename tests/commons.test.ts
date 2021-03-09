@@ -8,6 +8,16 @@ export namespace Commons_Test {
     import toPrimitive = Commons.toPrimitive;
     import hasProperty = Checkers.hasProperty;
 
+    beforeAll(() => {
+        console.log("Commons test suite started")
+        console.time("Execution time took")
+    })
+
+    afterAll(() => {
+        console.log("Commons test suite finished")
+        console.timeEnd("Execution time took")
+    })
+
     describe('Check isEmpty by input object', () => {
         it('it should return true when value is null', () => {
             expect(isEmpty(null)).toEqual(true)

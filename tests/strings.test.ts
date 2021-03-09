@@ -36,6 +36,16 @@ export namespace Strings_Test {
     import htmlEncode = Strings.htmlEncode;
     import toUTF16 = Strings.toUTF16;
 
+    beforeAll(() => {
+        console.log("Strings test suite started")
+        console.time("Execution time took")
+    })
+
+    afterAll(() => {
+        console.log("Strings test suite finished")
+        console.timeEnd("Execution time took")
+    })
+
     describe('Check emoji string replacer', () => {
         it('it should replace emojis in a string', () => {
             expect(replaceBy(EMOJI_REGEX, '🎉Party 🚩Flags! 🚀Rockets!')).toEqual('Party Flags! Rockets!')

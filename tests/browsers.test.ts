@@ -8,6 +8,16 @@ export namespace Browsers_Test {
     import windowWidth = Browsers.windowWidth;
     import windowHeight = Browsers.windowHeight;
 
+    beforeAll(() => {
+        console.log("Browsers test suite started")
+        console.time("Execution time took")
+    })
+
+    afterAll(() => {
+        console.log("Browsers test suite finished")
+        console.timeEnd("Execution time took")
+    })
+
     describe('Check DOM element matches', () => {
         it('it should return true when DOM elements matches', () => {
             const div = document.createElement('div')

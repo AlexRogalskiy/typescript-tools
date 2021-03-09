@@ -8,6 +8,16 @@ export namespace Arrays_Test {
     import findArray = Arrays.findArray;
     import insert = Arrays.insert;
 
+    beforeAll(() => {
+        console.log("Arrays test suite started")
+        console.time("Execution time took")
+    })
+
+    afterAll(() => {
+        console.log("Arrays test suite finished")
+        console.timeEnd("Execution time took")
+    })
+
     describe('Check iteration on array of elements', () => {
         it('it should perform valid array iteration', () => {
             let array: any[] = []

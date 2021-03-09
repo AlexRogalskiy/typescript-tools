@@ -7,11 +7,16 @@ import {
     rmdirSync,
     statSync,
     unlinkSync,
+    writeFileSync,
 } from 'fs'
 import path, { join } from 'path'
+import { randomBytes } from 'crypto'
 import { execSync } from 'child_process'
+import { Strings } from './strings'
 
 export namespace Files {
+    import uniqueId = Strings.uniqueId
+
     export const createFilePath = (locations: { path; name; extension }): string => {
         const date = new Date()
         const timestamp = `${date.getFullYear()}_${
@@ -35,6 +40,15 @@ export namespace Files {
         } catch (error) {
             return false
         }
+    }
+
+    export const createRandomDataFile = (numBytes: number): string => {
+        const path = join(process.cwd(), uniqueId())
+        const buffer = randomBytes(numBytes)
+
+        writeFileSync(path, buffer)
+
+        return path
     }
 
     export const checkFilesExist = async (fileList: string[]): Promise<boolean> => {
