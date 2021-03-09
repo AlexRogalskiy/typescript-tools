@@ -92,6 +92,11 @@ export namespace Functions {
         )
     }
 
+    export const run = (fn, args): any => {
+        const f = new Function(`return (${fn}).apply(null, arguments);`)
+        return f.apply(f, args)
+    }
+
     export const composeAsync = async (...funcArgs) => async value =>
         // eslint-disable-next-line github/no-then
         await funcArgs.reduce((acc, val) => acc.then(val), Promise.resolve(value))

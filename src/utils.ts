@@ -1379,6 +1379,15 @@ export namespace Utils {
             })
         }
 
+        export const convertError = (error: any): any => {
+            return Object.getOwnPropertyNames(error).reduce((product, name): any => {
+                defineProperty(product, name, {
+                    value: error[name],
+                    enumerable: true,
+                })
+            }, {})
+        }
+
         export const defineProperty = (
             obj: any,
             prop: PropertyKey,
