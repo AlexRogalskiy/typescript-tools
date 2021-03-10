@@ -48,7 +48,7 @@ export namespace Functions {
         }
     })()
 
-    export const extend = (target, source): any => {
+    export const extend = (target: any, source: any): any => {
         for (const item of Object.getOwnPropertyNames(source)) {
             defineProperty(target, item, Object.getOwnPropertyDescriptor(source, item))
         }
@@ -101,9 +101,10 @@ export namespace Functions {
         // eslint-disable-next-line github/no-then
         await funcArgs.reduce((acc, val) => acc.then(val), Promise.resolve(value))
 
-    export const mergeProps = <T>(...obj: any[]): T => {
-        return _.mergeWith({}, ...obj, (o, s) => (_.isNull(s) ? o : s))
-    }
+    export const mergeProps = <T>(...obj: unknown[]): T =>
+        _.mergeWith({}, ...obj, (o, s) => {
+            return _.isArray(s) && _.isArray(o) ? _.union(o, s) : _.isNull(s) ? o : s
+        })
 
     export const wait = async (ms = 1000, ...args: any[]): Promise<void> => {
         return new Promise(resolve => setTimeout(resolve, ms, args))

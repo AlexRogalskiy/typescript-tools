@@ -36,6 +36,7 @@ export namespace Strings_Test {
     import htmlEncode = Strings.htmlEncode;
     import toUTF16 = Strings.toUTF16;
     import removeChars = Strings.removeChars;
+    import cjk = Strings.cjk;
 
     beforeAll(() => {
         console.log("Strings test suite started")
@@ -62,6 +63,13 @@ export namespace Strings_Test {
         it('it should return valid replaced html string', () => {
             expect(htmlText('<div>test</div>')).toEqual('test')
             expect(htmlText('<br/>')).toEqual('')
+        })
+    })
+
+    describe('Check CJK string', () => {
+        it('it should return valid CJK string', () => {
+            expect(cjk('单词')).toEqual(["单", "词"])
+            expect(cjk('一个单词')).toEqual(["一", "个", "单", "词"])
         })
     })
 

@@ -7,6 +7,10 @@ export namespace Arrays_Test {
     import rangeBy = Arrays.rangeBy;
     import findArray = Arrays.findArray;
     import insert = Arrays.insert;
+    import range = Arrays.range;
+    import randomElement = Arrays.randomElement;
+    import sortByNumber = Arrays.sortByNumber;
+    import sortByString = Arrays.sortByString;
 
     beforeAll(() => {
         console.log("Arrays test suite started")
@@ -46,6 +50,39 @@ export namespace Arrays_Test {
         })
     })
 
+    describe('Check unique values from array', () => {
+        it('it should return valid array with unique elements', () => {
+            expect([1, 2, 3]['unique']()).toEqual([1, 2, 3])
+            expect([1, 2, 3, 4, 3]['unique']()).toEqual([1, 2, 3, 4])
+            expect([]['unique']()).toEqual([])
+            expect([1, 'a', 'c', null, undefined, null, '1', 1]['unique']()).toEqual([1, 'a', 'c', null, undefined, '1'])
+        })
+    })
+
+    describe('Check array by range values generator', () => {
+        it('it should return valid array with generated elements', () => {
+            expect(range(1, 10, 2)).toEqual([1, 3, 5, 7, 9])
+            expect(range(5, 10, 1)).toEqual([5, 6, 7, 8, 9, 10])
+            expect(range(1, 10, -2)).toEqual([])
+            expect(range(1, 0, 2)).toEqual([])
+        })
+    })
+
+    describe('Check random element from array', () => {
+        it('it should return random element from array', () => {
+            expect(randomElement([1])).toEqual(1)
+            expect(randomElement([])).toEqual(undefined)
+
+            let array = [1, 10, 2]
+            let elem = randomElement(array)
+            expect(array).toContain(elem)
+
+            array = [5, 10, 1]
+            elem = randomElement(array)
+            expect(array).toContain(elem)
+        })
+    })
+
     describe('Check find subarray index in sequence of elements', () => {
         it('it should perform valid subarray index', () => {
             expect(findArray([1, 2, 3, 4, 5], [4, 5])).toEqual(3)
@@ -65,6 +102,30 @@ export namespace Arrays_Test {
             expect(rangeBy(1, 5, 2).join("-")).toEqual('1-3-5')
             expect(rangeBy(1).join("-")).toEqual('1')
             expect(rangeBy(1, 5).join("-")).toEqual('1-2-3-4-5')
+        })
+    })
+
+    describe('Check object array sort by property number value', () => {
+        it('it should perform valid object sort order by string property', () => {
+            expect(sortByNumber([{ a: 1 }, { a: 3 }, { a: 0 }, { a: 10 }], 'a')).toEqual([{ "a": 0 }, { "a": 1 }, { "a": 3 }, { "a": 10 }])
+            expect(sortByNumber([{ b: 1, c: 2 }], 'a')).toEqual([{ "b": 1, "c": 2 }])
+            expect(sortByNumber([{ c: 5 }, { c: 0 }], 'c')).toEqual([{ "c": 0 }, { "c": 5 }])
+            expect(sortByNumber([{ c: 5 }, { c: 0 }], 'cc')).toEqual([{ "c": 5 }, { "c": 0 }])
+            expect(sortByNumber([], 'c')).toEqual([])
+        })
+    })
+
+    describe('Check object array sort by property string value', () => {
+        it('it should perform valid object sort order by number property', () => {
+            expect(sortByString([{ a: 'fddf' }, { a: 'daasdf' }, { a: 'dfdf' }, { a: 'ddf' }], 'a')).toEqual([{ "a": "daasdf" }, { "a": "ddf" }, { "a": "dfdf" }, { "a": "fddf" }])
+            expect(sortByString([{ b: 'dfa', c: 'dfadd' }], 'a')).toEqual([{
+                "b": "dfa",
+                "c": "dfadd"
+            }])
+            expect(sortByString([{ c: 'ddf' }, { c: 'ddfa' }], 'c')).toEqual([{ "c": "ddf" }, { "c": "ddfa" }])
+            expect(sortByString([], 'ccddf')).toEqual([])
+
+            expect(() => sortByString([{ c: 'ddf' }, { c: 'ddfa' }], 'cc')).toThrow(TypeError)
         })
     })
 

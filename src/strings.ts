@@ -322,6 +322,11 @@ export namespace Strings {
         return value !== undefined && value !== null && value.length > 0
     }
 
+    export const cjk = (value: string): string[] => {
+        // eslint-disable-next-line no-control-regex
+        return value.replace(new RegExp(/[\x00-\x7F]/g), '').split('')
+    }
+
     export const isBlankString = (value: string): boolean => {
         return !value || /^\s*$/.test(value)
     }

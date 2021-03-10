@@ -5,6 +5,8 @@ export namespace Commons_Test {
     import polymorph = Functions.polymorph;
     import autoCurry = Functions.autoCurry;
     import getFunctionArgs = Functions.getFunctionArgs;
+    import mergeProps = Functions.mergeProps;
+    import extend = Functions.extend;
 
     beforeAll(() => {
         console.log("Functions test suite started")
@@ -75,6 +77,53 @@ export namespace Commons_Test {
             const auto = autoCurry(fn, 3)
 
             expect(auto(2, 2)(3)).toEqual(5)
+        })
+    })
+
+    describe('Check auto curry operation', () => {
+        it('it should perform valid auto curry operation', () => {
+            const fn = (a, b) => a + b
+            const auto = autoCurry(fn, 3)
+
+            expect(auto(2, 2)(3)).toEqual(5)
+        })
+    })
+
+    describe('Check object properties extension', () => {
+        it('it should return valid object with source/target properties', () => {
+            expect(extend({ a: 4, b: 5 }, { a: 4, b: 6 })).toEqual({ "a": 4, "b": 6 })
+            expect(extend({ a: 4, b: 5, c: [] }, { a: 4, b: 6, c: [1, 2, 3] })).toEqual({
+                "a": 4,
+                "b": 6,
+                "c": [1, 2, 3]
+            })
+            expect(extend({ a: 4, b: 5, c: [1, 2, 4, null] }, {
+                a: 4,
+                b: 6,
+                c: [undefined, 1, 2, 3]
+            })).toEqual({ "a": 4, "b": 6, "c": [undefined, 1, 2, 3] })
+            expect(extend({}, {})).toEqual({})
+        })
+    })
+
+    describe('Check objects merge operation', () => {
+        it('it should return valid object with merge properties', () => {
+            expect(mergeProps({ a: 4, b: 5 }, { a: 4, b: 6 })).toEqual({ a: 4, b: 6 })
+            expect(mergeProps({ a: 4, b: 5, c: [] }, { a: 4, b: 6, c: [1, 2, 3] })).toEqual({
+                a: 4,
+                b: 6,
+                c: [1, 2, 3]
+            })
+            expect(mergeProps({ a: 4, b: 5, c: [1, 2, 4, null] }, {
+                a: 4,
+                b: 6,
+                c: [undefined, 1, 2, 3]
+            })).toEqual({
+                a: 4,
+                b: 6,
+                c: [1, 2, 4, null, undefined, 3]
+            })
+            expect(mergeProps({}, {})).toEqual({})
         })
     })
 

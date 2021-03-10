@@ -6,6 +6,7 @@ export const URL_REGEX = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|
 export const URL_REGEX2 = /^https?:\/\/([a-z0-9-]+\.)+[a-z0-9]{2,4}.*$/
 export const URL_REGEX3 = /(\w+):\/\/([\w. ]+)\/(\S*)/
 export const URL_REGEX4 = /((http|https|ftp):\/\/[\w?=&.\\/-;#~%-]+(?![\w\s?&.\\/;#~%=-]*>))/g
+export const URL_REGEX5 = /\.(html|css|js|png|jpg|jpeg|gif|ico|xml|rss|txt|eot|svg|ttf|woff|woff2|cur)(\?((r|v|rel|rev)=[-.\w]*)?)?$/
 /**
  * Phone regex patterns
  * @type {RegExp}

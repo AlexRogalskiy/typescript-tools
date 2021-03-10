@@ -27,9 +27,23 @@ export namespace Arrays {
     export const init = (() => {
         const props = {
             proto: {
+                unique: 'unique',
                 forEachParallel: 'forEachParallel',
                 forEachSequential: 'forEachSequential',
             },
+        }
+
+        const unique_ = (obj: any): any => {
+            const res = obj.concat()
+            for (let i = 0; i < res.length; ++i) {
+                for (let j = i + 1; j < res.length; ++j) {
+                    if (res[i] === res[j]) {
+                        res.splice(j--, 1)
+                    }
+                }
+            }
+
+            return res
         }
 
         const iterateAsync_ = async <T>(obj: any, func: (item: T) => Promise<void>): Promise<void> => {
@@ -40,6 +54,14 @@ export namespace Arrays {
             for (const item of obj) {
                 func(item)
             }
+        }
+
+        if (!isFunction(Array.prototype[props.proto.unique])) {
+            defineProperty(Array.prototype, props.proto.unique, {
+                value(): any[] {
+                    return unique_(this)
+                },
+            })
         }
 
         if (!isFunction(Array.prototype[props.proto.forEachParallel])) {
