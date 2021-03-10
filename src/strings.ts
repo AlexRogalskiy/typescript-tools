@@ -111,44 +111,24 @@ export namespace Strings {
         return res
     }
 
-    export const strToInt = (str: string): number => {
-        let i = 0,
-            num = 0,
-            isNeg = false
-        const len = str.length
-
-        if (str.startsWith('-')) {
-            isNeg = true
-            i = 1
-        }
-        while (i < len) {
-            num *= 10
-            num += str.codePointAt(i++) || 0 - ('0'.codePointAt(0) || 0)
-        }
-        if (isNeg) {
-            num = -num
-        }
-
-        return num
-    }
-
     export const removeChars = (str: string, remove: string): string => {
         const s = str.split('')
         const r = remove.split('')
-        let dst = 0
         const flags: boolean[] = []
 
         for (const item of r) {
             flags[item.charCodeAt(0)] = true
         }
 
+        let dst = 0
+        const res: string[] = []
         for (const item of s) {
             if (!flags[item.charCodeAt(0)]) {
-                s[dst++] = item
+                res[dst++] = item
             }
         }
 
-        return s.join()
+        return res.join('')
     }
 
     export const sortBy = (

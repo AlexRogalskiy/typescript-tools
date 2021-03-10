@@ -35,6 +35,7 @@ export namespace Strings_Test {
     import padLeft = Strings.padLeft;
     import htmlEncode = Strings.htmlEncode;
     import toUTF16 = Strings.toUTF16;
+    import removeChars = Strings.removeChars;
 
     beforeAll(() => {
         console.log("Strings test suite started")
@@ -61,6 +62,18 @@ export namespace Strings_Test {
         it('it should return valid replaced html string', () => {
             expect(htmlText('<div>test</div>')).toEqual('test')
             expect(htmlText('<br/>')).toEqual('')
+        })
+    })
+
+    describe('Check removing characters from string', () => {
+        it('it should return valid string value', () => {
+            expect(removeChars('5test', '5')).toEqual('test')
+            expect(removeChars('55test', 'test')).toEqual('55')
+            expect(removeChars('', '')).toEqual('')
+            expect(removeChars('5atest', 'a')).toEqual('5test')
+            expect(removeChars('abc5test', 'abc')).toEqual('5test')
+            expect(removeChars('-1test', '-1')).toEqual('test')
+            expect(removeChars('0', '0')).toEqual('')
         })
     })
 
