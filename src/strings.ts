@@ -2,7 +2,7 @@ import slugify from 'slugify'
 
 import { Errors } from './errors'
 import { Checkers } from './checkers'
-import { NumberOrUndef, StringOrUndef } from '../typings/standard-types'
+import { OptionalNumber, OptionalString } from '../typings/standard-types'
 import { BiProcessor, Processor, StringProcessor, Supplier } from '../typings/function-types'
 import { Maths } from './maths'
 import { Numbers } from './numbers'
@@ -829,7 +829,10 @@ export namespace Strings {
     // let seqer = serialMaker();
     // let unique = seqer.gensym();
     // document.writeln(unique);
-    export const serialMaker = (prefix: StringOrUndef, seq: NumberOrUndef): { gensym: Supplier<string> } => {
+    export const serialMaker = (
+        prefix: OptionalString,
+        seq: OptionalNumber,
+    ): { gensym: Supplier<string> } => {
         const prefixValue = prefix == null ? '' : isString(prefix) ? prefix : null
         if (isNull(prefixValue)) {
             throw valueError(`incorrect prefix value: < ${prefixValue} >`)
@@ -1076,7 +1079,7 @@ export namespace Strings {
     export const longestSequence = (
         compareFunc,
         myEnum: string,
-    ): { member: StringOrUndef; count: number } => {
+    ): { member: OptionalString; count: number } => {
         let result: { member: string | null; count: number } = { member: null, count: 0 }
         let thisCount = 1
         for (let i = 1; i < myEnum.length; ++i) {

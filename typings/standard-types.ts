@@ -47,28 +47,29 @@ export interface Array<T> {
 
 // -------------------------------------------------------------------------------------------------
 /**
- * StringOrUndef
- * @desc Type representing [`Primitive`](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) types in TypeScript: `string | null | undefined`
+ * Optional
+ * @desc Type representing [`Optional`] in TypeScript: `T | null | undefined`
  */
-export type StringOrUndef = string | null | undefined
+export type Optional<T> = T | null | undefined
 
 /**
- * NumberOrUndef
- * @desc Type representing [`Primitive`](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) types in TypeScript: `number | null | undefined`
+ * OptionalString
+ * @desc Type representing [`OptionalString`] type in TypeScript: `string | null | undefined`
  */
-export type NumberOrUndef = number | bigint | null | undefined
+export type OptionalString = Optional<string>
 
 /**
- * BooleanOrUndef
- * @desc Type representing [`Primitive`](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) types in TypeScript: `boolean | null | undefined`
+ * OptionalNumber
+ * @desc Type representing [`OptionalNumber`] type in TypeScript: `number | null | undefined`
  */
-export type BooleanOrUndef = boolean | null | undefined
+export type OptionalNumber = number | bigint | null | undefined
 
 /**
- * ValueOrUndef
- * @desc Type representing [`Primitive`](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) types in TypeScript: `boolean | null | undefined`
+ * OptionalBoolean
+ * @desc Type representing [`OptionalBoolean`] type in TypeScript: `boolean | null | undefined`
  */
-export type ValueOrUndef<T> = T | null | undefined
+export type OptionalBoolean = boolean | null | undefined
+
 // -------------------------------------------------------------------------------------------------
 /**
  * ExtendableError

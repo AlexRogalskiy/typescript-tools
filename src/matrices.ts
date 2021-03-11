@@ -1,7 +1,7 @@
 import { Errors } from './errors'
 import { Checkers } from './checkers'
 import { Comparators } from './comparators'
-import { ValueOrUndef } from '../typings/standard-types'
+import { Optional } from '../typings/standard-types'
 import { Maths } from './maths'
 
 export namespace Matrices {
@@ -967,12 +967,12 @@ export namespace Matrices {
         }
 
         const partitionAndSearch = <T>(
-            data: ValueOrUndef<T>[][],
+            data: Optional<T>[][],
             origin: Coordinate,
             dest: Coordinate,
             pivot: Coordinate,
             elem: T,
-            cmp: Comparator<ValueOrUndef<T>>,
+            cmp: Comparator<Optional<T>>,
         ): Coordinate | null => {
             const lowerLeftOrigin = coordinate(pivot.row, origin.column)
             const lowerLeftDest = coordinate(dest.row, pivot.column - 1)
@@ -988,11 +988,11 @@ export namespace Matrices {
         }
 
         const findElemement_ = <T>(
-            data: ValueOrUndef<T>[][],
+            data: Optional<T>[][],
             origin: Coordinate,
             dest: Coordinate,
             elem: T,
-            cmp: Comparator<ValueOrUndef<T>>,
+            cmp: Comparator<Optional<T>>,
         ): Coordinate | null => {
             if (!origin.inbounds(data) || !dest.inbounds(data)) {
                 return null
@@ -1023,7 +1023,7 @@ export namespace Matrices {
             return partitionAndSearch(data, origin, dest, start, elem, cmp)
         }
 
-        return <T>(data: ValueOrUndef<T>[][], elem: T): Coordinate | null => {
+        return <T>(data: Optional<T>[][], elem: T): Coordinate | null => {
             if (!isNumber(elem)) {
                 throw valueError(`incorrect input parameter: elem < ${elem} >`)
             }
@@ -1076,7 +1076,7 @@ export namespace Matrices {
         }
     }
 
-    export const rotate = <T>(matrix: ValueOrUndef<T>[][], n: number): void => {
+    export const rotate = <T>(matrix: Optional<T>[][], n: number): void => {
         if (!isArray(matrix)) {
             throw valueError(`incorrect input parameter: array < ${matrix} >`)
         }
@@ -1102,7 +1102,7 @@ export namespace Matrices {
         }
     }
 
-    export const vectorToMatrix = <T>(vec: ValueOrUndef<T>[], rang: number): ValueOrUndef<T>[][] => {
+    export const vectorToMatrix = <T>(vec: Optional<T>[], rang: number): Optional<T>[][] => {
         if (!isArray(vec)) {
             throw typeError(`incorrect input argument: {array} not an array < ${vec} >`)
         }
@@ -1113,7 +1113,7 @@ export namespace Matrices {
         if (rang <= 0 || rang >= vec.length) {
             throw valueError(`incorrect input argument: {rang} is out of bounds {1, ${vec.length}}`)
         }
-        const mat: ValueOrUndef<T>[][] = Helpers.matrix(rang, rang, null)
+        const mat: Optional<T>[][] = Helpers.matrix(rang, rang, null)
         for (let k = 0, i, j; k < vec.length; k++) {
             i = Math.floor(k / rang)
             j = k - Math.floor(k / rang) * rang
@@ -1123,7 +1123,7 @@ export namespace Matrices {
         return mat
     }
 
-    export const matrixToVector = <T>(mat: ValueOrUndef<T>[][]): ValueOrUndef<T>[] => {
+    export const matrixToVector = <T>(mat: Optional<T>[][]): Optional<T>[] => {
         if (!isArray(mat)) {
             throw typeError(`incorrect input argument: {mat} not a matrix < ${mat} >`)
         }
@@ -1134,7 +1134,7 @@ export namespace Matrices {
             throw valueError(`incorrect matrix size: rows < ${n} >, columns < ${nn} >`)
         }
 
-        const vec: ValueOrUndef<T>[] = Helpers.vector(n * nn, null)
+        const vec: Optional<T>[] = Helpers.vector(n * nn, null)
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < nn; j++) {
                 vec[i * nn + j] = mat[i][j]
@@ -1144,7 +1144,7 @@ export namespace Matrices {
         return vec
     }
 
-    export const matrixToVector2 = <T>(mat: ValueOrUndef<T>[][]): ValueOrUndef<T>[] => {
+    export const matrixToVector2 = <T>(mat: Optional<T>[][]): Optional<T>[] => {
         if (!isArray(mat)) {
             throw typeError(`incorrect input argument: {mat} not a matrix < ${mat} >`)
         }
@@ -1157,7 +1157,7 @@ export namespace Matrices {
         }
 
         let k = 0
-        const vec: ValueOrUndef<T>[] = Helpers.vector((n * (n + 1)) / 2, null)
+        const vec: Optional<T>[] = Helpers.vector((n * (n + 1)) / 2, null)
         for (let i = 0; i < n; i++) {
             for (let j = 0; j <= i; j++) {
                 vec[k++] = mat[i][j]
@@ -1192,7 +1192,7 @@ export namespace Matrices {
         return norm
     }
 
-    export const spiral = <T>(matrix: T[][]): ValueOrUndef<T>[] => {
+    export const spiral = <T>(matrix: T[][]): Optional<T>[] => {
         if (!isArray(matrix)) {
             throw typeError(`incorrect input argument: not array < ${matrix} >`)
         }
@@ -1203,7 +1203,7 @@ export namespace Matrices {
             throw valueError(`incorrect matrix size: rows < ${rows} >, columns < ${cols} >`)
         }
 
-        const res: ValueOrUndef<T>[] = Helpers.vector(0, null)
+        const res: Optional<T>[] = Helpers.vector(0, null)
         for (let sh = rows; sh > 1; sh--) {
             let j, i
             for (j = rows - sh; j < sh; j++) {
@@ -1515,12 +1515,12 @@ export namespace Matrices {
         return res
     }
 
-    export const createMagicSquareTerraces = (n: number): ValueOrUndef<number>[][] => {
+    export const createMagicSquareTerraces = (n: number): Optional<number>[][] => {
         if (!isInteger(n) || n < 0 || n % 2 === 0) {
             throw typeError(`incorrect input argument: dimension {n} is not odd number < ${n} >`)
         }
 
-        const res: ValueOrUndef<number>[][] = Helpers.matrix(n, n, null)
+        const res: Optional<number>[][] = Helpers.matrix(n, n, null)
 
         let num = 1
         let glob_i = Math.round(n / 2)
