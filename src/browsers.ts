@@ -55,6 +55,12 @@ export namespace Browsers {
         }
     })()
 
+    export const clearAllChildren = (elem: Node): void => {
+        while (elem.firstChild) {
+            elem.removeChild(elem.firstChild)
+        }
+    }
+
     /**
      * let supportsSlider = supportsInputOfType('range');
      * let supportsColorpicker = supportsInputOfType('color');

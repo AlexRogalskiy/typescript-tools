@@ -50,11 +50,11 @@ export namespace DataTimes {
         return new Date(value).toLocaleDateString()
     }
 
-    export const diffDatesAsString = (timestamp: dayjs.ConfigType): string[] => {
-        const joined = dayjs(timestamp)
-        const now = dayjs()
+    export const diffDatesAsString = (startDate: dayjs.ConfigType, endDate: dayjs.ConfigType): string[] => {
+        const start = dayjs(startDate)
+        const end = dayjs(endDate)
 
-        const diff = dayjs['preciseDiff'](joined, now, true)
+        const diff = dayjs['preciseDiff'](start, end, true)
 
         let count = 0
         const timeParts: string[] = []
