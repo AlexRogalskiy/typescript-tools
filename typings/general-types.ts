@@ -176,6 +176,12 @@ export type NumberPair = Pair<number, number>
  * @desc String pair type with left and right values
  */
 export type StringPair = Pair<string, string>
+
+/**
+ * StringRegexPair
+ * @desc String regex pair type with left and right values
+ */
+export type StringRegexPair = Pair<string, RegExp>
 // -------------------------------------------------------------------------------------------------
 /**
  * NameValue

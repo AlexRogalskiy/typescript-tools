@@ -1388,6 +1388,12 @@ export namespace Utils {
             }, {})
         }
 
+        export const rgisterProperty = (obj: any, key: PropertyKey, fn): any => {
+            return Object.defineProperty(obj, key, {
+                get: fn,
+            })
+        }
+
         export const defineProperty = (
             obj: any,
             prop: PropertyKey,

@@ -1,3 +1,6 @@
+// -------------------------------------------------------------------------------------------------
+import { Pair } from '../typings/general-types'
+
 /**
  * Url regex patterns
  * @type {RegExp}
@@ -12,6 +15,11 @@ export const URL_REGEX5 = /\.(html|css|js|png|jpg|jpeg|gif|ico|xml|rss|txt|eot|s
  * @type {RegExp}
  */
 export const PHONE_REGEX = /(\d{3}).*(\d{3}).*(\d{4})/
+/**
+ * Vowel regex patterns
+ * @type {RegExp}
+ */
+export const VOWEL_REGEX = /[aeiouy]*/
 /**
  * Date regex patterns
  * @type {RegExp}
@@ -59,7 +67,19 @@ export const EMAIL_REGEX2 = new RegExp(
  * @type {RegExp}
  */
 export const ALPHA_REGEX = /^[a-zA-Z]+$/
+// -------------------------------------------------------------------------------------------------
+const regex = (str: string): RegExp => {
+    return new RegExp(str, 'g')
+}
 
+const replace = (str: string, ...regexp: Pair<string, RegExp>[]): string => {
+    for (let i = 0; i < /** @type {Array} */ regexp.length; i += 1) {
+        str = str.replace(regexp[i].right, regexp[i].left)
+    }
+
+    return str
+}
+// -------------------------------------------------------------------------------------------------
 /**
  * Returns {@link RegExp} pattern by input array of {@link T} values
  * @param arr initial input array of {@link T} values
@@ -73,3 +93,42 @@ export const regexp = (value: string): RegExp => {
 
     return new RegExp(pattern, flags)
 }
+
+export const regexChars = (() => {
+    const regex_whitespace = regex('\\s+'),
+        regex_strip = regex('[^a-z0-9 ]'),
+        regex_space = regex('[-/]'),
+        regex_a = regex('[àáâãäå]'),
+        regex_e = regex('[èéêë]'),
+        regex_i = regex('[ìíîï]'),
+        regex_o = regex('[òóôõöő]'),
+        regex_u = regex('[ùúûüű]'),
+        regex_y = regex('[ýŷÿ]'),
+        regex_n = regex('ñ'),
+        regex_c = regex('[çc]'),
+        regex_s = regex('ß'),
+        regex_and = regex(' & ')
+
+    /** @const {Array} */
+    const regex_pairs = [
+        { left: 'a', right: regex_a },
+        { left: 'e', right: regex_e },
+        { left: 'i', right: regex_i },
+        { left: 'o', right: regex_o },
+        { left: 'u', right: regex_u },
+        { left: 'y', right: regex_y },
+        { left: 'n', right: regex_n },
+        { left: 'k', right: regex_c },
+        { left: 's', right: regex_s },
+        { left: ' and ', right: regex_and },
+        { left: ' ', right: regex_space },
+        { left: '', right: regex_strip },
+        { left: ' ', right: regex_whitespace },
+    ]
+
+    return (str: string): string => {
+        str = replace(str.toLowerCase(), ...regex_pairs)
+
+        return str === ' ' ? '' : str
+    }
+})()
