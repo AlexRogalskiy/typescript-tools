@@ -756,4 +756,22 @@ export namespace Arrays {
     export const toArray = (arr: any[], from = 0): any[] => {
         return Array.prototype.slice.call(arr, from)
     }
+
+    /**
+     * https://jsperf.com/comparison-object-index-type
+     * @param {number} count
+     * @returns {Object|Array<Object>}
+     */
+    export const createObjectArray = (count: number): any[] => {
+        const array = new Array(count)
+        for (let i = 0; i < count; i++) {
+            array[i] = createObject()
+        }
+
+        return array
+    }
+
+    export const createObject = (): any => {
+        return Object.create(null)
+    }
 }

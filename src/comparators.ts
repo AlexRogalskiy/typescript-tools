@@ -9,31 +9,41 @@ export namespace Comparators {
      */
     export type Comparator<T> = (a: T, b: T) => number
 
+    const hasProperty = (obj, prop): boolean => {
+        const proto = obj.__proto__ || obj.constructor.prototype
+
+        //return (prop in obj) && (!(prop in proto) || proto[prop] !== obj[prop]);
+        return prop in obj || prop in proto || proto[prop] === obj[prop]
+    }
+
     /**
-     * @private
+     * @public
      * @module sorting
      * @param column initial input {@link String} or {@link Number} column name
      * @return {@link Number} -1 - lower, 0 - equals, 1 - greater
      */
     export const comparator = <T>(column: PropertyKey): Comparator<T> => {
-        return (a: T, b: T) => cmpByDefault(a[column], b[column])
+        return (a: T, b: T) => {
+            if (!hasProperty(a, column)) {
+                throw valueError(`Property=${String(column)} not exists on object=${a}`)
+            }
+
+            if (!hasProperty(b, column)) {
+                throw valueError(`Property=${String(column)} not exists on object=${b}`)
+            }
+
+            return cmpByDefault(a[column], b[column])
+        }
     }
 
     /**
-     * @private
+     * @public
      * @module sorting
      * @param {String} a Input value.
      * @param {String} b Input value to compare with.
      * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
     export const cmpByDefault = (a: any, b: any): number => {
-        const hasProperty = (obj, prop): boolean => {
-            const proto = obj.__proto__ || obj.constructor.prototype
-
-            //return (prop in obj) && (!(prop in proto) || proto[prop] !== obj[prop]);
-            return prop in obj || prop in proto || proto[prop] === obj[prop]
-        }
-
         if (a === b) {
             return 0
         }
@@ -51,7 +61,7 @@ export namespace Comparators {
     }
 
     /**
-     * @private
+     * @public
      * @module sorting
      * @param {String} a Input string.
      * @param {String} b Input string to compare with.
@@ -64,7 +74,7 @@ export namespace Comparators {
     }
 
     /**
-     * @private
+     * @public
      * @module sorting
      * @param {String} a Input string.
      * @param {String} b Input string to compare with.
@@ -81,13 +91,18 @@ export namespace Comparators {
         const a_ = a.toLowerCase()
         const b_ = b.toLowerCase()
 
-        if (a_ < b_) return -1
-        if (a_ > b_) return 1
+        if (a_ < b_) {
+            return -1
+        }
+        if (a_ > b_) {
+            return 1
+        }
+
         return 0
     }
 
     /**
-     * @private
+     * @public
      * @module sorting
      * @param {String} a Input string.
      * @param {String} b Input string to compare with.
@@ -101,7 +116,7 @@ export namespace Comparators {
     }
 
     /**
-     * @private
+     * @public
      * @module sorting
      * @param {String} a Input string.
      * @param {String} b Input string to compare with.
@@ -115,7 +130,57 @@ export namespace Comparators {
     }
 
     /**
-     * @private
+     * @public
+     * @module ascending sorting
+     * @param {String} a Input string.
+     * @param {String} b Input string to compare with.
+     * @return {number} -1 - lower, 0 - equals, 1 - greater
+     */
+    export const cmpByLengthAsc = <T extends string>(a: T, b: T): number => {
+        const diff = a.length - b.length
+
+        return diff < 0 ? -1 : diff ? 1 : 0
+    }
+
+    /**
+     * @public
+     * @module descending sorting
+     * @param {String} a Input string.
+     * @param {String} b Input string to compare with.
+     * @return {number} -1 - lower, 0 - equals, 1 - greater
+     */
+    export const cmpByLengthDesc = <T extends string>(a: T, b: T): number => {
+        const diff = a.length - b.length
+
+        return diff < 0 ? 1 : diff ? -1 : 0
+    }
+
+    /**
+     * @public
+     * @module ascending sorting by field
+     * @param {String} a Input string.
+     * @param {String} b Input string to compare with.
+     * @param {PropertyKey} prop property to sort by
+     * @return {number} -1 - lower, 0 - equals, 1 - greater
+     */
+    export const cmpByFieldAsc = <T>(a: T, b: T, prop: PropertyKey): number => {
+        a = a[prop]
+        b = b[prop]
+
+        return a < b ? -1 : a > b ? 1 : 0
+    }
+
+    export const cmpDeepByFieldAsc = <T>(a: T, b: T, prop: PropertyKey[]): number => {
+        for (const item of prop) {
+            a = a[item]
+            b = b[item]
+        }
+
+        return a < b ? -1 : a > b ? 1 : 0
+    }
+
+    /**
+     * @public
      * @module sorting
      * @param {String} a Input string.
      * @param {String} b Input string to compare with.
@@ -169,7 +234,7 @@ export namespace Comparators {
     })()
 
     /**
-     * @private
+     * @public
      * @module sorting
      * @param {String} a Input string.
      * @param {String} b Input string to compare with.
@@ -181,7 +246,7 @@ export namespace Comparators {
     }
 
     /**
-     * @private
+     * @public
      * @module sorting
      * @param {String} a Input string.
      * @param {String} b Input string to compare with.
@@ -205,7 +270,7 @@ export namespace Comparators {
     })(['NFC', 'NFD', 'NFKC', 'NFKD'])
 
     /**
-     * @private
+     * @public
      * @module sorting
      * @param {String} property Input string.
      * @param {String} comparator Input string to compare with.

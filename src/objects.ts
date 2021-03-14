@@ -318,4 +318,12 @@ export namespace Objects {
 
         return that
     }
+
+    /**
+     * @param {!Object} obj
+     * @returns {Array<string>}
+     */
+    export const get_keys = (obj: any): string[] => {
+        return Object.keys(obj)
+    }
 }
