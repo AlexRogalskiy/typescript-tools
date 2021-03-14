@@ -3,7 +3,7 @@ import { Checkers } from './checkers'
 import { Errors } from './errors'
 import { Maths } from './maths'
 import { Comparators } from './comparators'
-import { Predicate, Processor } from '../typings/function-types'
+import { Consumer, Predicate, Processor } from '../typings/function-types'
 import { Utils } from './utils'
 import { Sorting } from './sorting'
 
@@ -197,6 +197,11 @@ export namespace Arrays {
             const diff = a[property] - b[property]
             return diff * (direction === 'desc' ? -1 : 1)
         })
+    }
+
+    export const filterBy = (property: PropertyKey): Consumer<any> => {
+        const set = new Set()
+        return obj => !(set.has(obj[property]) || !set.add(obj[property]))
     }
 
     export const sortByString = <T>(items: T[], property: string, direction = 'asc'): T[] => {
