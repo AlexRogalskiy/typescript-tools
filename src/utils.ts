@@ -1,4 +1,4 @@
-import { Iterator } from '../typings/function-types'
+import { Iterator, IteratorStep } from '../typings/function-types'
 import { Checkers } from './checkers'
 import { Numbers } from './numbers'
 import { Errors } from './errors'
@@ -1357,15 +1357,13 @@ export namespace Utils {
         // Build a destructive iterator for the value list
         export const iteratorFor = <T>(items: T[]): Iterator<T> => {
             const iterator = {
-                next: () => {
+                next: (): IteratorStep<T> => {
                     const value = items.shift()
                     return { value, done: value === undefined }
                 },
             }
 
-            iterator[Symbol.iterator] = () => {
-                return iterator
-            }
+            iterator[Symbol.iterator] = () => iterator
 
             return iterator
         }
@@ -1388,7 +1386,7 @@ export namespace Utils {
             }, {})
         }
 
-        export const rgisterProperty = (obj: any, key: PropertyKey, fn): any => {
+        export const registerProperty = (obj: any, key: PropertyKey, fn): any => {
             return Object.defineProperty(obj, key, {
                 get: fn,
             })

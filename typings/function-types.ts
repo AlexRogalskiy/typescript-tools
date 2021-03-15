@@ -1,4 +1,5 @@
-// -------------------------------------------------------------------------------------------------
+import { Optional } from './standard-types'
+
 /**
  * Callback
  * @desc Type representing callback function type in TypeScript
@@ -13,7 +14,7 @@ export type Callback = (...args: any[]) => void
  * @example
  *   type IteratorStep = { value: T, done: true }
  */
-export type IteratorStep<T> = { value: T | undefined; done: boolean }
+export type IteratorStep<T> = { value: Optional<T>; done: boolean }
 
 /**
  * Iterator
