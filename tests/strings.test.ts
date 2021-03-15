@@ -37,6 +37,7 @@ export namespace Strings_Test {
     import toUTF16 = Strings.toUTF16;
     import removeChars = Strings.removeChars;
     import cjk = Strings.cjk;
+    import hashCode = Strings.hashCode;
 
     beforeAll(() => {
         console.log("Strings test suite started")
@@ -238,6 +239,15 @@ export namespace Strings_Test {
             expect(formatNumber(111222333444, 1)).toEqual('111.2 G')
             expect(formatNumber(111222333444, 3)).toEqual('111.222 G')
             expect(formatNumber(111222333444, 0)).toEqual('111 G')
+        })
+    })
+
+    describe('Check hashCode string', () => {
+        it('it should return valid hashCode string', () => {
+            expect(hashCode('')).toEqual('0')
+            expect(hashCode('test')).toEqual('364492')
+            expect(hashCode('valid format')).toEqual('454be365')
+            expect(hashCode('valid format string')).toEqual('-7f58a8ca')
         })
     })
 

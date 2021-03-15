@@ -459,6 +459,24 @@ export namespace Strings {
         )
     }
 
+    export const hashCode = (str: string): string => {
+        let hash = 0,
+            i,
+            chr
+        if (str.length === 0) {
+            return String(hash)
+        }
+
+        for (i = 0; i < str.length; i++) {
+            chr = str.charCodeAt(i)
+            hash = (hash << 5) - hash + chr
+        }
+
+        hash = Math.abs(hash) >> 0
+
+        return hash.toString(16)
+    }
+
     export const capitalize = (input: string): string => {
         const inputArray = input.split(' ')
         const output: string[] = []
