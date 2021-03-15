@@ -10,6 +10,10 @@ export namespace Comparators {
      * Comparator types
      */
     export type Comparator<T> = (a: T, b: T) => number
+    export type PropertyComparator<T> = (a: T, b: T, value: string) => number
+    /**
+     * Comparator modes
+     */
     export type ComparatorMode = 'asc' | 'desc'
 
     /**
@@ -43,7 +47,6 @@ export namespace Comparators {
                 return a.compareTo(b)
             }
 
-            // a.localCompare(b)
             return a < b ? -1 : 1
         }
 
@@ -71,11 +74,15 @@ export namespace Comparators {
      * @param {ComparatorMode} mode comparator mode (ascending / descending)
      * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
-    export const compareByLocale2 = <T extends string>(a: T, b: T, mode: ComparatorMode = 'asc'): number => {
-        const a_ = a === null ? '' : `${a}`
-        const b_ = b === null ? '' : `${b}`
+    export const compareByLocale = <T extends string>(a: T, b: T, mode: ComparatorMode = 'asc'): number => {
+        let a_ = a === null ? '' : `${a}`
+        let b_ = b === null ? '' : `${b}`
 
-        return mode === 'asc' ? a_.localeCompare(b_) : b_.localeCompare(a_)
+        if (mode !== 'asc') {
+            b_ = [a_, (a_ = b_)][0]
+        }
+
+        return a_.localeCompare(b_)
     }
 
     /**
@@ -86,15 +93,15 @@ export namespace Comparators {
      * @param {ComparatorMode} mode comparator mode (ascending / descending)
      * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
-    export const compareByIgnoreCase = <T extends string>(
-        a: T,
-        b: T,
-        mode: ComparatorMode = 'asc',
-    ): number => {
-        const a_ = a.toLowerCase()
-        const b_ = b.toLowerCase()
+    export const compareIgnoreCase = <T extends string>(a: T, b: T, mode: ComparatorMode = 'asc'): number => {
+        let a_ = a.toLowerCase()
+        let b_ = b.toLowerCase()
 
-        return mode === 'asc' ? (a_ < b_ ? -1 : a_ > b_ ? 1 : 0) : a_ > b_ ? 1 : a_ < b_ ? -1 : 0
+        if (mode !== 'asc') {
+            b_ = [a_, (a_ = b_)][0]
+        }
+
+        return a_ < b_ ? -1 : a_ > b_ ? 1 : 0
     }
 
     /**
@@ -110,12 +117,14 @@ export namespace Comparators {
         b: T,
         mode: ComparatorMode = 'asc',
     ): number => {
-        const a_ = a === null ? '' : `${a}`
-        const b_ = b === null ? '' : `${b}`
+        let a_: string = a === null ? '' : `${a}`
+        let b_: string = b === null ? '' : `${b}`
 
-        return mode === 'asc'
-            ? a_.toLowerCase().localeCompare(b_.toLowerCase())
-            : b_.toLowerCase().localeCompare(a_.toLowerCase())
+        if (mode !== 'asc') {
+            b_ = [a_, (a_ = b_)][0]
+        }
+
+        return a_.toLowerCase().localeCompare(b_.toLowerCase())
     }
 
     /**
@@ -127,70 +136,71 @@ export namespace Comparators {
      * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
     export const compareByLength = <T extends string>(a: T, b: T, mode: ComparatorMode = 'asc'): number => {
-        const a_ = a === null ? '' : `${a}`
-        const b_ = b === null ? '' : `${b}`
+        let a_ = a === null ? '' : `${a}`
+        let b_ = b === null ? '' : `${b}`
+
+        if (mode !== 'asc') {
+            b_ = [a_, (a_ = b_)][0]
+        }
 
         const diff = a_.length - b_.length
 
-        return mode === 'asc' ? (diff < 0 ? -1 : diff ? 1 : 0) : diff < 0 ? 1 : diff ? -1 : 0
+        return diff < 0 ? -1 : diff ? 1 : 0
     }
 
     /**
      * @public
      * @module comparators
-     * @param column initial input {@link String} or {@link Number} column name
-     * @return {@link Number} -1 - lower, 0 - equals, 1 - greater
-     */
-    export const compareByProperty = <T>(column: PropertyKey): Comparator<T> => {
-        return (a: T, b: T) => {
-            if (!hasProperty(a, column)) {
-                throw valueError(`Property=${String(column)} not exists on object=${a}`)
-            }
-
-            if (!hasProperty(b, column)) {
-                throw valueError(`Property=${String(column)} not exists on object=${b}`)
-            }
-
-            return compareByOrder(a[column], b[column])
-        }
-    }
-
-    /**
-     * @public
-     * @module comparators
-     * @param {String} property Input string.
+     * @param {String} prop Input string.
      * @param {String} comparator Input string to compare with.
      * @return {Function} -1 - lower, 0 - equals, 1 - greater
      *
      * @example
-     * s.sort(cmpBy_('last', cmpBy_('first')));
+     * s.sort(compareByPropertyKey('last', compareByPropertyKey('first')));
      */
-    export const compareByProperty2 = <T>(
-        property: PropertyKey,
-        comparator: Comparator<T>,
-    ): Comparator<T> => {
+    export const compareByPropertyKey = <T>(prop: PropertyKey, comparator: Comparator<T>): Comparator<T> => {
         return (a, b) => {
             if (Checkers.isObject(a) && Checkers.isObject(b)) {
-                const a_ = a[property]
-                const b_ = b[property]
+                const a_ = a[prop]
+                const b_ = b[prop]
 
-                const cmp_ = Checkers.isFunction(comparator) ? comparator : null
+                const comparator_ = Checkers.isFunction(comparator) ? comparator : null
 
-                if (cmp_) {
-                    return cmp_(a_, b_)
+                if (comparator_) {
+                    return comparator_(a_, b_)
                 }
 
                 if (typeof a_ === typeof b_) {
                     if (Checkers.isObject(a_) || Checkers.isArray(a_)) {
                         return a_.equals(b_)
                     }
-                    return compareByLocale(a_, b_)
+                    return compareByLocaleOptions(a_, b_)
                 }
 
                 return typeof a_ < typeof b_ ? -1 : 1
             }
 
-            throw valueError(`Expected an object when sorting by < ${String(property)} >`)
+            throw valueError(`Expected object with a valid property < ${String(prop)} >`)
+        }
+    }
+
+    /**
+     * @public
+     * @module comparators
+     * @param prop initial input {@link String} or {@link Number} column name
+     * @return {@link Number} -1 - lower, 0 - equals, 1 - greater
+     */
+    export const compareByPropertyDefault = <T>(prop: PropertyKey): Comparator<T> => {
+        return (a: T, b: T) => {
+            if (!hasProperty(a, prop)) {
+                throw valueError(`Property=${String(prop)} not exists on object=${a}`)
+            }
+
+            if (!hasProperty(b, prop)) {
+                throw valueError(`Property=${String(prop)} not exists on object=${b}`)
+            }
+
+            return compareByOrder(a[prop], b[prop])
         }
     }
 
@@ -202,33 +212,65 @@ export namespace Comparators {
      * @param {String} value Property name.
      * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
-    export const compareByProperty3 = <T>(a: T, b: T, value: PropertyKey): number => {
+    export const compareByProperty = <T>(a: T, b: T, value: PropertyKey): number => {
         return +(a[value] > b[value]) || +(a[value] === b[value]) - 1
     }
 
     /**
      * @public
-     * @module ascending sorting by field
+     * @module comparators
      * @param {String} a Input string.
      * @param {String} b Input string to compare with.
-     * @param {PropertyKey} prop property to sort by
+     * @param {PropertyKey} prop property to compare by
      * @param {ComparatorMode} mode comparator mode (ascending/descending)
      * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
-    export const compareByProperty4 = <T>(
+    export const compareByPropertyOrder = <T>(
         a: T,
         b: T,
         prop: PropertyKey,
         mode: ComparatorMode = 'asc',
     ): number => {
-        const a_ = a === null ? null : `${a[prop]}`
-        const b_ = b === null ? null : `${b[prop]}`
+        let a_ = a === null ? '' : `${a[prop]}`
+        let b_ = b === null ? '' : `${b[prop]}`
 
-        if (a_ === b_) return 0
+        if (a_ === b_) {
+            return 0
+        }
 
-        return mode === 'asc' ? (a < b ? -1 : a > b ? 1 : 0) : a > b ? 1 : a < b ? -1 : 0
+        if (mode !== 'asc') {
+            b_ = [a_, (a_ = b_)][0]
+        }
+
+        return a_ < b_ ? -1 : a_ > b_ ? 1 : 0
     }
 
+    /**
+     * @public
+     * @param {Comparator} comparators collection to operate by
+     */
+    export const compareBy = <T>(...comparators: Comparator<T>[]): Comparator<T> => {
+        return (a, b): number => {
+            for (const comparator of comparators) {
+                const value = comparator(a, b)
+                if (value !== 0) {
+                    return value
+                }
+            }
+
+            return 0
+        }
+    }
+
+    /**
+     * @public
+     * @module comparators
+     * @param {String} a Input string.
+     * @param {String} b Input string to compare with.
+     * @param {ComparatorMode} mode comparator mode (ascending/descending)
+     * @param {PropertyKey} props property collection to compare by
+     * @return {number} -1 - lower, 0 - equals, 1 - greater
+     */
     export const compareByProperties = <T>(
         a: T,
         b: T,
@@ -240,7 +282,11 @@ export namespace Comparators {
             b = b[item]
         }
 
-        return mode === 'asc' ? (a < b ? -1 : a > b ? 1 : 0) : a > b ? 1 : a < b ? -1 : 0
+        if (mode !== 'asc') {
+            b = [a, (a = b)][0]
+        }
+
+        return a < b ? -1 : a > b ? 1 : 0
     }
 
     /**
@@ -256,40 +302,50 @@ export namespace Comparators {
      * options = { sensitivity: 'base' }
      * locale = 'sv'
      */
-    export const compareByLocale = (() => {
+    export const compareByLocaleOptions = (() => {
         const DEFAULT_OPTIONS = { sensitivity: 'base' }
         const DEFAULT_LOCALE = 'en'
 
-        return <T extends string>(a: T, b: T, locale?: string, options?: any): number => {
-            const a_ = a === null ? '' : `${a}`
-            const b_ = b === null ? '' : `${b}`
+        return <T extends string>(
+            a: T,
+            b: T,
+            mode: ComparatorMode = 'asc',
+            locale?: string,
+            options?: any,
+        ): number => {
+            let a_ = a === null ? '' : `${a}`
+            let b_ = b === null ? '' : `${b}`
+
+            if (mode !== 'asc') {
+                b_ = [a_, (a_ = b_)][0]
+            }
 
             const locale_ = Checkers.isString(locale) ? locale : DEFAULT_LOCALE
             const options_ = Checkers.isObject(options) ? options : DEFAULT_OPTIONS
 
-            const localeCompareSupportsCollator = (): Optional<number> => {
+            const localeCompareSupportsCollator = <T extends string>(a: T, b: T): Optional<number> => {
                 try {
-                    return new Intl.Collator(locale_, options_).compare(a_, b_)
+                    return new Intl.Collator(locale_, options_).compare(a, b)
                 } catch (e) {
-                    console.log(`ERROR: localeCompareSupportsCollator < ${e.name} >`)
+                    console.log(`ERROR: invalid locale supports collator < ${e.message} >`)
                     return null
                 }
             }
 
-            const localeCompareSupportsLocales = (): Optional<number> => {
+            const localeCompareSupportsLocales = <T extends string>(a: T, b: T): Optional<number> => {
                 try {
-                    return new Intl.Collator(locale_, options_).compare(a_, b_)
+                    return new Intl.Collator(locale_, options_).compare(a, b)
                 } catch (e) {
-                    console.log(`ERROR: localeCompareSupportsLocales < ${e.name} >`)
+                    console.log(`ERROR: invalid supports locales < ${e.message} >`)
                     return null
                 }
             }
 
-            let result = localeCompareSupportsCollator()
-            if (Checkers.isNull(result)) {
-                result = localeCompareSupportsLocales()
-                if (Checkers.isNull(result)) {
-                    return compareByLocale2(a_, b_)
+            let result = localeCompareSupportsCollator(a_, b_)
+            if (Checkers.isNullOrUndefined(result)) {
+                result = localeCompareSupportsLocales(a_, b_)
+                if (Checkers.isNullOrUndefined(result)) {
+                    return compareByLocale(a_, b_)
                 }
             }
 

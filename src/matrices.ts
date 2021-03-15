@@ -9,7 +9,7 @@ export namespace Matrices {
     import isArray = Checkers.isArray
     import valueError = Errors.valueError
     import isIntNumber = Checkers.isIntNumber
-    import comparator = Comparators.compareByProperty
+    import comparator = Comparators.compareByPropertyDefault
     import isNumber = Checkers.isNumber
     import Comparator = Comparators.Comparator
     import Helpers = Maths.Helpers
