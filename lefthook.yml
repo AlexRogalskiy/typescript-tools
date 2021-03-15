@@ -1,10 +1,14 @@
 pre-commit:
   parallel: true
   commands:
+    prettier:
+      files: git diff --name-only @{push}
+      glob: "*.{js,ts}"
+      run: npx prettier --single-quote --write
     linter:
       files: git diff --name-only @{push}
       glob: "*.{js,ts}"
-      run: npx eslint {files}
+      run: npx eslint --cache --fix --quiet --format codeframe --ext js,ts {files}
     tests:
       files: git diff --name-only @{push}
       glob: "*.{js,ts}"
