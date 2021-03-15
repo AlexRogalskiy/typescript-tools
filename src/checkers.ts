@@ -240,7 +240,7 @@ export namespace Checkers {
      * returns true if value is null or undefined, false - otherwise
      */
     export const isNullOrUndefined = (value: any): boolean => {
-        return isNull(value) || typeof value === 'undefined'
+        return isNull(value) || isUndefined(value) || typeof value === 'undefined'
     }
 
     export const isRegExp = (value: any): boolean => {

@@ -110,6 +110,16 @@ export namespace Functions {
         return new Promise(resolve => setTimeout(resolve, ms, args))
     }
 
+    export const wait2 = async (milliseconds: number): Promise<string> => {
+        return new Promise(resolve => {
+            if (isNaN(milliseconds)) {
+                throw new Error('milliseconds not a number')
+            }
+
+            setTimeout(() => resolve('done!'), milliseconds)
+        })
+    }
+
     export const curry = (fn, ...args: any[]): any => {
         args = Array.prototype.slice.call(args, 0)
         return (...args2: any[]) => {

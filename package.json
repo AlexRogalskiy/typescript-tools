@@ -19,6 +19,8 @@
         "reinstall": "del-cli ./node_modules ./package-lock.json ./yarn.lock",
         "version": "git add -A dist",
         "postversion": "git push && git push --tags",
+        "yaspeller": "yaspeller .",
+        "markdown": "markdown-link-check ./README.md ./SECURITY.md",
         "lint": "eslint --cache --fix --quiet --format codeframe --ext js,ts .",
         "lint:report": "tsdx lint src tools --report-file report.json",
         "semantic-release": "semantic-release",
@@ -63,6 +65,7 @@
         "jest-circus": "^26.6.3",
         "jsdom": "16.4.0",
         "jsdom-global": "3.0.2",
+        "markdown-link-check": "^3.8.6",
         "object-hash": "^2.1.1",
         "prettier": "^2.1.2",
         "randomcolor": "^0.5.4",
@@ -79,7 +82,8 @@
         "typescript-object-utils": "^0.4.1",
         "utility-types": "^3.10.0",
         "vague-time": "^2.4.2",
-        "ws": "^7.4.3"
+        "ws": "^7.4.3",
+        "yaspeller": "^7.0.0"
     },
     "repository": {
         "type": "git",

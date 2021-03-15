@@ -2,3 +2,7 @@ pre-push:
   commands:
     packages-audit:
       skip: true
+    spelling:
+      skip: true
+    check-links:
+      skip: true

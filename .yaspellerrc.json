@@ -1,0 +1,26 @@
+{
+    "excludeFiles": [
+        ".git",
+        "libs",
+        "node_modules",
+        "yaspeller",
+        "**/*.md"
+    ],
+    "format": "html",
+    "lang": "en",
+    "fileExtensions": [
+        ".md",
+        ".css"
+    ],
+    "report": [
+        "console",
+        "html"
+    ],
+    "ignoreTags": [
+        "code",
+        "script"
+    ],
+    "ignoreUrls": true,
+    "findRepeatWords": true,
+    "maxRequests": 5
+}

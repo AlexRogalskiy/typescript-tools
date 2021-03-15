@@ -15,7 +15,16 @@ pre-commit:
       run: jest --findRelatedTests {files}
 
 pre-push:
+  parallel: true
   commands:
     packages-audit:
       tags: packages security
       run: npm run audit
+    spelling:
+      files: git diff --name-only HEAD @{push}
+      glob: "*.md"
+      run: npx yaspeller {files}
+    check-links:
+      files: git diff --name-only HEAD @{push}
+      glob: "*.md"
+      run: npx markdown-link-check {files}

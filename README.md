@@ -4,7 +4,7 @@
 ![GitHub Release Date](https://img.shields.io/github/release-date/AlexRogalskiy/typescript-tools)
 ![Lines of code](https://tokei.rs/b1/github/AlexRogalskiy/typescript-tools?category=lines)
 ![GitHub closed issues](https://img.shields.io/github/issues-closed/AlexRogalskiy/typescript-tools)
-![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/AlexRogalskiy/typescript-tools)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-clocsed/AlexRogalskiy/typescript-tools)
 ![GitHub repo size](https://img.shields.io/github/repo-size/AlexRogalskiy/typescript-tools)
 ![GitHub last commit](https://img.shields.io/github/last-commit/AlexRogalskiy/typescript-tools)
 ![GitHub](https://img.shields.io/github/license/AlexRogalskiy/typescript-tools)
@@ -23,7 +23,7 @@
 [![Forks](https://img.shields.io/github/forks/alexrogalskiy/typescript-tools)](https://img.shields.io/github/forks/alexrogalskiy/typescript-tools)
 [![Stars](https://img.shields.io/github/stars/alexrogalskiy/typescript-tools)](https://img.shields.io/github/stars/alexrogalskiy/typescript-tools)
 ![Code Style](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)
-[![Maintainability](https://api.codeclimate.com/v1/badges/ed7702f8cf28917829fa/maintainability)](https://codeclimate.com/github/AlexRogalskiy/typescript-tools/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/ed7702f8cf28917829fa/maintainability)](https://codeclimate.com/github/AlexRogalskiy/typescript-tools/)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/AlexRogalskiy/typescript-tools.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AlexRogalskiy/typescript-tools/alerts/)
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/AlexRogalskiy/typescript-tools.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AlexRogalskiy/typescript-tools/context:javascript)
 

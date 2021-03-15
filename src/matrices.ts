@@ -9,11 +9,11 @@ export namespace Matrices {
     import isArray = Checkers.isArray
     import valueError = Errors.valueError
     import isIntNumber = Checkers.isIntNumber
-    import comparator = Comparators.comparator
+    import comparator = Comparators.compareByProperty
     import isNumber = Checkers.isNumber
     import Comparator = Comparators.Comparator
     import Helpers = Maths.Helpers
-    import cmpByDefault = Comparators.cmpByDefault
+    import compareByOrder = Comparators.compareByOrder
     import isInteger = Checkers.isInteger
 
     export type RowColumn = { row: number; column: number }
@@ -1041,7 +1041,7 @@ export namespace Matrices {
             const origin = coordinate(0, 0)
             const dest = coordinate(rows - 1, cols - 1)
 
-            return findElemement_(data, origin, dest, elem, cmpByDefault)
+            return findElemement_(data, origin, dest, elem, compareByOrder)
         }
     })()
 

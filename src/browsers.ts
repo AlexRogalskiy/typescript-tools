@@ -331,7 +331,7 @@ export namespace Browsers {
 
         const walkDom = (node: any, func): void => {
             func(node)
-            node = node?.firstChild
+            node = node && node.firstChild
 
             while (node) {
                 walkDom(node, func)
