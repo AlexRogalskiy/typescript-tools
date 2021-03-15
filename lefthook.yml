@@ -4,7 +4,7 @@ pre-commit:
     prettier:
       files: git diff --name-only @{push}
       glob: "*.{js,ts}"
-      run: npx prettier --single-quote --write
+      run: npx prettier --single-quote --write {files}
     linter:
       files: git diff --name-only @{push}
       glob: "*.{js,ts}"
