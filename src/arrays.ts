@@ -81,6 +81,48 @@ export namespace Arrays {
         }
     })()
 
+    /**
+     * Copies array and then pushes item into it.
+     * @param {array} arr Array to copy and into which to push
+     * @param {any} item Array item to add (to end)
+     * @returns {array} Copy of the original array
+     */
+    export const push = (arr: any[], item: any): any[] => {
+        arr = arr.slice()
+        arr.push(item)
+        return arr
+    }
+
+    /**
+     * Copies array and then unshifts item into it.
+     * @param {any} item Array item to add (to beginning)
+     * @param {array} arr Array to copy and into which to unshift
+     * @returns {array} Copy of the original array
+     */
+    export const unshift = (item: any, arr: any): any[] => {
+        arr = arr.slice()
+        arr.unshift(item)
+        return arr
+    }
+
+    /**
+     * Copy items out of one array into another.
+     * @param {array} source Array with items to copy
+     * @param {array} target Array to which to copy
+     * @param {function} conditionCb Callback passed the current item;
+     *     will move item if evaluates to `true`
+     * @returns {void}
+     */
+    export const moveToAnotherArray = (source: any[], target: any[], conditionCb): void => {
+        const il = source.length
+        for (let i = 0; i < il; i++) {
+            const item = source[i]
+            if (conditionCb(item)) {
+                target.push(source.splice(i--, 1)[0])
+            }
+        }
+    }
+
     export const list = (...args: any[]): any[] => {
         // const unboundSlice = Array.prototype.slice
         // const slice = Function.prototype.call.bind(unboundSlice)

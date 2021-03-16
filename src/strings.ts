@@ -459,6 +459,20 @@ export namespace Strings {
         )
     }
 
+    export const toPathString = (pathArr: string[]): string => {
+        const x = pathArr,
+            n = x.length
+        let p = '$'
+
+        for (let i = 1; i < n; i++) {
+            if (!/^(~|\^|@.*?\(\))$/u.test(x[i])) {
+                p += /^[0-9*]+$/u.test(x[i]) ? `[${x[i]}]` : `['${x[i]}']`
+            }
+        }
+
+        return p
+    }
+
     export const hashCode = (str: string): string => {
         let hash = 0,
             i,

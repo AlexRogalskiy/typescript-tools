@@ -16,6 +16,16 @@ export const URL_REGEX5 = /\.(html|css|js|png|jpg|jpeg|gif|ico|xml|rss|txt|eot|s
  */
 export const PHONE_REGEX = /(\d{3}).*(\d{3}).*(\d{4})/
 /**
+ * Primitive regex patterns
+ * @type {RegExp}
+ */
+export const PRIMITIVE_REGEX = /@(?:null|boolean|number|string|integer|undefined|nonFinite|scalar|array|object|function|other)\(\)/gu
+/**
+ * Ternary regex pattern
+ * @type {RegExp}
+ */
+export const TERNARY_REGEX = /^(-?\d*):(-?\d*):?(\d*)$/u
+/**
  * Vowel regex patterns
  * @type {RegExp}
  */
