@@ -9,7 +9,7 @@ export namespace Numbers {
     import typeError = Errors.typeError
     import isArray = Checkers.isArray
     import Comparator = Comparators.Comparator
-    import cmp = Comparators.cmp
+    import cmp = Comparators.compare
 
     export namespace NumberOperations {
         export const negate = (a: number): number => {
@@ -169,11 +169,11 @@ export namespace Numbers {
 
         return Math.abs(
             Math.floor(n / 7) +
-                Math.floor(n / 3) -
-                2 * Math.floor(n / 21) -
-                Math.floor((m - 1) / 7) -
-                Math.floor((m - 1) / 3) +
-                2 * Math.floor((m - 1) / 21),
+            Math.floor(n / 3) -
+            2 * Math.floor(n / 21) -
+            Math.floor((m - 1) / 7) -
+            Math.floor((m - 1) / 3) +
+            2 * Math.floor((m - 1) / 21),
         )
     }
 

@@ -10,7 +10,7 @@ export namespace Sorting {
     import isIntNumber = Checkers.isIntNumber
     import typeError = Errors.typeError
     import Comparator = Comparators.Comparator
-    import cmpByDefault = Comparators.cmpByDefault
+    import compareByOrder = Comparators.compareByOrder
 
     /**
      * @private
@@ -47,7 +47,7 @@ export namespace Sorting {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
         const n = array.length
         let swapped
 
@@ -78,7 +78,7 @@ export namespace Sorting {
         if (!isArray(array)) {
             throw valueError(`incorrect input parameter: not array < ${array} >`)
         }
-        cmp = isFunction(cmp) ? cmp : cmpByDefault
+        cmp = isFunction(cmp) ? cmp : compareByOrder
 
         if (array.length < 2) {
             return array
@@ -143,7 +143,7 @@ export namespace Sorting {
                 throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
-            const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+            const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
             for (const gap of steps) {
                 for (let i = gap; i < array.length; i += gap) {
                     const current = array[i]
@@ -179,7 +179,7 @@ export namespace Sorting {
         }
 
         const step_ = isIntNumber(step) && step > 0 ? step : array.length
-        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
 
         let isSorted
         for (let gap = Math.floor(step_ / 2); gap > 0; gap = Math.floor(gap / 2)) {
@@ -216,7 +216,7 @@ export namespace Sorting {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
 
         let temp,
             gap = 1
@@ -279,7 +279,7 @@ export namespace Sorting {
 
             const left_ = isIntNumber(left) && left > 0 ? left : 0
             const right_ = isIntNumber(right) && right > 0 ? right : array.length
-            const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+            const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
 
             hoora(array, left_, right_, cmp_)
 
@@ -312,7 +312,7 @@ export namespace Sorting {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
 
         let temp
         for (let i = 1; i < array.length; i++) {
@@ -362,7 +362,7 @@ export namespace Sorting {
                 throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
-            const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+            const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
             const start_ = isIntNumber(start) && start >= 0 && start < array.length - 1 ? start : 0
 
             if (start === null) return
@@ -431,7 +431,7 @@ export namespace Sorting {
                 throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
-            const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+            const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
 
             return mergeSortSimple(array, cmp_)
         }
@@ -478,7 +478,7 @@ export namespace Sorting {
                 throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
-            const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+            const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
 
             return mergeSort_(array, 0, array.length, cmp_)
         }
@@ -528,7 +528,7 @@ export namespace Sorting {
                 throw valueError(`incorrect input array: < ${array} >`)
             }
 
-            const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+            const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
             quicksort(array, 0, array.length - 1, cmp_)
         }
     })()
@@ -558,7 +558,7 @@ export namespace Sorting {
             throw valueError(`incorrect input array: < ${array} >`)
         }
 
-        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
 
         const leftStack: number[] = []
         const rightStack: number[] = []
@@ -670,7 +670,7 @@ export namespace Sorting {
                 throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
-            const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+            const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
             const n = array.length
             for (let j = Math.floor(n / 2); j > 0; j--) {
                 adjust(array, j, n, cmp_)
@@ -737,7 +737,7 @@ export namespace Sorting {
                 throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
-            const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+            const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
             const n = array.length
             for (let i = n - 1; i >= 0; i--) {
                 siftup(array, i, n, cmp_)
@@ -796,7 +796,7 @@ export namespace Sorting {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
         for (let i = 1; i < array.length; i++) {
             const temp = array[i]
             for (let j = i; j > 0 && cmp_(array[j - 1], temp) > 0; j--) {
@@ -823,7 +823,7 @@ export namespace Sorting {
 
         const min_ = isIntNumber(min) && min > 0 ? min : 0
         const max_ = isIntNumber(max) && max > 0 ? max : array.length - 1
-        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
 
         if (min_ > max_) {
             throw valueError(`incorrect min or max value: min < ${min} >, max < ${max} >`)
@@ -849,7 +849,7 @@ export namespace Sorting {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
         const n = array.length
 
         let i = 1
@@ -881,7 +881,7 @@ export namespace Sorting {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
 
         let j = array.length - 1
         let i = 0
@@ -923,7 +923,7 @@ export namespace Sorting {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
 
         const n = array.length
         const count = Maths.Helpers.vector(n, 0)
@@ -970,7 +970,7 @@ export namespace Sorting {
                 throw typeError(`incorrect input argument: not array < ${array} >`)
             }
 
-            const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+            const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
             const n = array.length
 
             let gap = n,

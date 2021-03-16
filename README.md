@@ -84,7 +84,9 @@ For the technical background, _**TypeScript Tools**_ is based oin Typescript dev
 _**TypeScript Tools**_ is distributed under LGPL version 3 or later, [[License](https://github.com/AlexRogalskiy/typescript-tools/blob/master/LICENSE)].
 LGPLv3 is additional permissions on top of GPLv3.
 
-![license](https://user-images.githubusercontent.com/19885116/48661948-6cf97e80-ea7a-11e8-97e7-b45332a13e49.png)
+[![Licenses badge](https://raw.githubusercontent.com/AlexRogalskiy/typescript-tools/master/license-badge.svg?sanitize=true)](https://github.com/brettz9/license-badger)
+
+![License](https://user-images.githubusercontent.com/19885116/48661948-6cf97e80-ea7a-11e8-97e7-b45332a13e49.png)
 
 ## _Authors_
 
@@ -120,6 +122,10 @@ See also the list of [contributors][contributors] who participated in this proje
 ## _Forks_
 
 [![Forkers repo roster for @AlexRogalskiy/typescript-tools](https://reporoster.com/forks/AlexRogalskiy/typescript-tools)][forkers]
+
+## _Issues_
+
+[![issuehunt-to-marktext](https://issuehunt.io/static/embed/issuehunt-button-v1.svg)](https://issuehunt.io/r/AlexRogalskiy/typescript-tools)
 
 ## _Visitors_
 
