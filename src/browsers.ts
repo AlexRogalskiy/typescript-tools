@@ -20,6 +20,8 @@ export namespace Browsers {
     import defineProperty = Utils.Commons.defineProperty
     import defineStaticProperty = Utils.Commons.defineStaticProperty
 
+    const { hasOwnProperty: hasOwnProp } = Object.prototype
+
     export const init = (() => {
         const _matchesStaticSymbol = '__matches__'
         const _matchesSymbol = 'matches'
@@ -379,7 +381,7 @@ export namespace Browsers {
             const type = isString(event) ? event : event.type
 
             let array, func, handler
-            if (Object.prototype.hasOwnProperty.call(registry, type)) {
+            if (hasOwnProp.call(registry, type)) {
                 array = registry[type]
                 for (const item of array) {
                     handler = item
@@ -400,7 +402,7 @@ export namespace Browsers {
                 parameters,
             }
 
-            if (Object.prototype.hasOwnProperty.call(registry, type)) {
+            if (hasOwnProp.call(registry, type)) {
                 registry[type].push(handler)
             } else {
                 registry[type] = [handler]
@@ -760,7 +762,7 @@ export namespace Browsers {
         const old = {}
         // Go through each of the properties
         for (const value in prop) {
-            if (Object.prototype.hasOwnProperty.call(prop, value)) {
+            if (hasOwnProp.call(prop, value)) {
                 old[value] = elem.style[value]
                 // And set the new value
                 elem.style[value] = prop[value]
@@ -896,7 +898,7 @@ export namespace Browsers {
     export const restoreCSS = (elem: any, prop: any): void => {
         // Reset all the properties back to their original values
         for (const value in prop) {
-            if (Object.prototype.hasOwnProperty.call(prop, value)) {
+            if (hasOwnProp.call(prop, value)) {
                 elem.style[value] = prop[value]
             }
         }

@@ -11,6 +11,7 @@ export namespace Commons {
     import isFunction = Checkers.isFunction
 
     const WINDOW_USER_SCRIPT_VARIABLE = '__USER__'
+    const { hasOwnProperty: hasOwnProp } = Object.prototype
 
     export const props = (() => {
         const props = {
@@ -313,7 +314,7 @@ export namespace Commons {
         const keys = Object.keys(obj)
 
         for (const key of keys) {
-            if (key !== toDiscard && Object.prototype.hasOwnProperty.call(obj, key)) {
+            if (key !== toDiscard && hasOwnProp.call(obj, key)) {
                 result[key] = obj[key]
             }
         }
@@ -325,7 +326,7 @@ export namespace Commons {
         const result = {}
         const keys = Object.keys(obj)
         for (const key of keys) {
-            if (-1 === toDiscard.indexOf(key) && Object.prototype.hasOwnProperty.call(obj, key)) {
+            if (-1 === toDiscard.indexOf(key) && hasOwnProp.call(obj, key)) {
                 result[key] = obj[key]
             }
         }

@@ -57,13 +57,15 @@ export namespace ByteFormats {
 }
 
 export namespace Formats {
+    const { hasOwnProperty: hasOwnProp } = Object.prototype
+
     const objToString = (obj): string => {
         let str = ''
         let i = 0
 
         const entries = Object.entries(obj)
         for (const [key, value] of entries) {
-            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            if (hasOwnProp.call(obj, key)) {
                 str += `${key} => ${typeof value === 'object' ? `[${objToString(value)}]` : `${value}, `}`
             }
             if (++i === entries.length) {

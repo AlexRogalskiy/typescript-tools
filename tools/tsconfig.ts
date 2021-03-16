@@ -1,6 +1,8 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
+const { hasOwnProperty: hasOwnProp } = Object.prototype
+
 const home = path.join(__dirname, '..', 'types')
 
 const fixTsconfig = (dir: string): void => {
@@ -13,7 +15,7 @@ const fixTsconfig = (dir: string): void => {
 const fix = (config: any): any => {
     const out: any = {}
     for (const key in config) {
-        if (Object.prototype.hasOwnProperty.call(config, key)) {
+        if (hasOwnProp.call(config, key)) {
             let value = config[key]
             if (key === 'compilerOptions') {
                 value = fixCompilerOptions(value)
@@ -27,7 +29,7 @@ const fix = (config: any): any => {
 const fixCompilerOptions = (config: any): any => {
     const out: any = {}
     for (const key in config) {
-        if (Object.prototype.hasOwnProperty.call(config, key)) {
+        if (hasOwnProp.call(config, key)) {
             out[key] = config[key]
         }
     }

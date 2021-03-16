@@ -3,6 +3,8 @@ import dateFormat from 'dateformat'
 import { BiConsumer, Consumer, Processor } from '../typings/function-types'
 
 export namespace Logging {
+    const { hasOwnProperty: hasOwnProp } = Object.prototype
+
     const DATETIME_FORMAT = 'dddd, mmmm dS, yyyy, hh:MM:ss TT'
 
     const COLORS = {
@@ -110,7 +112,7 @@ export namespace Logging {
         let out = ''
         if (obj && typeof obj === 'object') {
             for (const i in obj) {
-                if (Object.prototype.hasOwnProperty.call(obj, i)) {
+                if (hasOwnProp.call(obj, i)) {
                     out += `${i}: ${obj[i]}n`
                 }
             }

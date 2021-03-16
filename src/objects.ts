@@ -7,6 +7,8 @@ export namespace Objects {
     import Commons = Utils.Commons
     import isFunction = Checkers.isFunction
 
+    const { hasOwnProperty: hasOwnProp } = Object.prototype
+
     export const props = (() => {
         /**
          * Freezes an object, makes the object effectively immutable.
@@ -45,7 +47,7 @@ export namespace Objects {
         }
 
         for (const prop in defaultOptions) {
-            if (Object.prototype.hasOwnProperty.call(defaultOptions, prop)) {
+            if (hasOwnProp.call(defaultOptions, prop)) {
                 if (typeof options[prop] === 'undefined') {
                     options[prop] = defaultOptions[prop]
                 }
