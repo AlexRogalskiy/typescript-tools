@@ -47,6 +47,7 @@
       * [<em>Contribution</em>](#contribution)
       * [<em>Acknowledgement</em>](#acknowledgement)
       * [<em>Forks</em>](#forks)
+      * [<em>Issues</em>](#issues)
       * [<em>Visitors</em>](#visitors)
       * [<em>Development Support</em>](#development-support)
 <!--te-->
