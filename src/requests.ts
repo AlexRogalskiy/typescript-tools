@@ -28,7 +28,18 @@ export namespace Requests {
         return Promise.reject(error)
     }
 
-    export async function fetchJSON(url: string, options: RequestInit = {}): Promise<unknown> {
+    export const fetchCall = async (url: string, options: RequestInit = {}): Promise<any> => {
+        try {
+            const response = await fetch(url, options)
+
+            return await response.json()
+        } catch (e) {
+            console.error(`Cannot fetch request by url: ${url}, message: ${e.message}`)
+            throw e
+        }
+    }
+
+    export const fetchJSON = async (url: string, options: RequestInit = {}): Promise<any> => {
         const data = await fetch(url, options)
         const response = await checkStatus(data)
 
