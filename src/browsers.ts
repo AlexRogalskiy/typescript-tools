@@ -23,13 +23,13 @@ export namespace Browsers {
     const { hasOwnProperty: hasOwnProp } = Object.prototype
 
     export const $ = <K extends keyof HTMLElementTagNameMap>(
-        doc: Document = document,
         selector: K,
+        doc: Document = document,
     ): Optional<HTMLElementTagNameMap[K]> => doc.querySelector(selector)
 
     export const $$ = <K extends keyof HTMLElementTagNameMap>(
-        doc: Document = document,
         selector: K,
+        doc: Document = document,
     ): NodeListOf<HTMLElementTagNameMap[K]> => doc.querySelectorAll(selector)
 
     export const init = (() => {
@@ -37,7 +37,7 @@ export namespace Browsers {
         const _matchesSymbol = 'matches'
 
         const matches_ = <K extends keyof HTMLElementTagNameMap>(obj: any, selector: K): boolean => {
-            const matches = $$(obj.document || obj.ownerDocument, selector)
+            const matches = $$(selector, obj.document || obj.ownerDocument)
             let i = matches.length
             while (--i >= 0 && matches.item(i) !== obj) {
                 // empty
