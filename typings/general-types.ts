@@ -15,6 +15,13 @@ export type BufferEncoding =
     | 'hex'
 // -------------------------------------------------------------------------------------------------
 /**
+ * Supported process configuration options
+ */
+export type ProcessConfig = {
+    readonly env: 'dev' | 'prod' | 'test'
+}
+// -------------------------------------------------------------------------------------------------
+/**
  * Keys
  * @desc Get the union type of all the keys in an object type `T`
  * @see https://flow.org/en/docs/types/utilities/#toc-keys

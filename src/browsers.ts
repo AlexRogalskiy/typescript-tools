@@ -2,7 +2,7 @@ import 'jsdom-global/register'
 
 import { Checkers } from './checkers'
 import { Errors } from './errors'
-import { DomElement } from '../typings/standard-types'
+import { DomElement, Optional } from '../typings/standard-types'
 import { Commons } from './commons'
 import { Utils } from './utils'
 
@@ -22,12 +22,22 @@ export namespace Browsers {
 
     const { hasOwnProperty: hasOwnProp } = Object.prototype
 
+    export const $ = <K extends keyof HTMLElementTagNameMap>(
+        doc: Document = document,
+        selector: K,
+    ): Optional<HTMLElementTagNameMap[K]> => doc.querySelector(selector)
+
+    export const $$ = <K extends keyof HTMLElementTagNameMap>(
+        doc: Document = document,
+        selector: K,
+    ): NodeListOf<HTMLElementTagNameMap[K]> => doc.querySelectorAll(selector)
+
     export const init = (() => {
         const _matchesStaticSymbol = '__matches__'
         const _matchesSymbol = 'matches'
 
-        const matches_ = (obj: any, selector: string): boolean => {
-            const matches = (obj.document || obj.ownerDocument).querySelectorAll(selector)
+        const matches_ = <K extends keyof HTMLElementTagNameMap>(obj: any, selector: K): boolean => {
+            const matches = $$(obj.document || obj.ownerDocument, selector)
             let i = matches.length
             while (--i >= 0 && matches.item(i) !== obj) {
                 // empty

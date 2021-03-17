@@ -192,7 +192,6 @@ export namespace Objects {
                 obj.buffer || // typed-array
                 obj instanceof NodeList
             ) {
-                // NodeList: document.querySelectorAll
                 return true
             }
         }
