@@ -26,6 +26,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/ed7702f8cf28917829fa/maintainability)](https://codeclimate.com/github/AlexRogalskiy/typescript-tools/)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/AlexRogalskiy/typescript-tools.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AlexRogalskiy/typescript-tools/alerts/)
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/AlexRogalskiy/typescript-tools.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AlexRogalskiy/typescript-tools/context:javascript)
+[![DeepScan grade](https://deepscan.io/api/teams/11946/projects/16315/branches/347250/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=11946&pid=16315&bid=347250)
 
 [![Renovatebot](https://badgen.net/badge/renovate/enabled/green?cache=300)](https://renovatebot.com/)
 [![Dependabot](https://img.shields.io/badge/dependabot-enabled-1f8ceb.svg?style=flat-square)](https://dependabot.com/)

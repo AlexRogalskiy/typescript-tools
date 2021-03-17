@@ -27,7 +27,7 @@
         "license:badge-dev": "license-badger --corrections --filteredTypes=weaklyProtective,protective --textTemplate \"License types\n(all devDeps)\" --licenseTypeColor networkProtective=blue,s{white} --allDevelopment -l licenseInfo.json ./badges/licenses-badge-dev.svg",
         "license:badges": "npm run license:badge && npm run license:badge-dev",
         "remark": "remark -q -f .",
-        "build:docs": "typedoc --out docs/ts src tools --excludeExternals --tsconfig tsconfig.json",
+        "docs": "typedoc --out docs/ts src tools --excludeExternals --tsconfig tsconfig.json",
         "semantic-release": "semantic-release",
         "test:folio": "folio tests/spec/",
         "test": "TZ=utc jest",
@@ -50,6 +50,7 @@
         "@types/prettier": "^2.1.5",
         "@typescript-eslint/eslint-plugin": "^4.15.0",
         "@typescript-eslint/parser": "^4.15.0",
+        "semantic-release": ">=17.2.3",
         "axios": "^0.21.1",
         "crypto": "^1.0.1",
         "dateformat": "^4.5.1",
@@ -81,7 +82,6 @@
         "prettier": "^2.1.2",
         "randomcolor": "^0.5.4",
         "rimraf": "^3.0.2",
-        "semantic-release": ">=17.2.3",
         "slugify": "^1.4.6",
         "ts-jest": "^26.4.4",
         "ts-node": ">=9.0.0",
@@ -106,7 +106,9 @@
     },
     "keywords": [
         "typescript",
-        "utilities"
+        "tools",
+        "utilities",
+        "types"
     ],
     "maintainers": [
         {
