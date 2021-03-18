@@ -1,17 +1,16 @@
 import { Comparators } from '../src'
 
 export namespace Comparators_Test {
-
-    import compareByOrder = Comparators.compareByOrder;
-    import compare = Comparators.compare;
+    import compareByOrder = Comparators.compareByOrder
+    import compare = Comparators.compare
     beforeAll(() => {
-        console.log("Comparators test suite started")
-        console.time("Execution time took")
+        console.log('Comparators test suite started')
+        console.time('Execution time took')
     })
 
     afterAll(() => {
-        console.log("Comparators test suite finished")
-        console.timeEnd("Execution time took")
+        console.log('Comparators test suite finished')
+        console.timeEnd('Execution time took')
     })
 
     describe('Check compare by order result', () => {

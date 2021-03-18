@@ -1,76 +1,76 @@
 import { ALPHA_REGEX, ArrayBuffers, Checkers, Errors } from '../src'
-import checkRange = Checkers.checkRange;
+import checkRange = Checkers.checkRange
 
 export namespace Checkers_Test {
-    import isInRange = Checkers.isInRange;
-    import isIntNumber = Checkers.isIntNumber;
-    import isDate = Checkers.isDate;
-    import isBoolean = Checkers.isBoolean;
-    import isNumeric = Checkers.isNumeric;
-    import isFunction = Checkers.isFunction;
-    import isPowerOfTwo = Checkers.isPowerOfTwo;
-    import isString = Checkers.isString;
-    import isObject = Checkers.isObject;
-    import isArray = Checkers.isArray;
-    import isJSON = Checkers.isJSON;
-    import isRealNumber = Checkers.isRealNumber;
-    import isAlphaNumeric = Checkers.isAlphaNumeric;
-    import is = Checkers.is;
-    import isObjectLiteral = Checkers.isObjectLiteral;
-    import isHostObject = Checkers.isHostObject;
-    import isHostMethod = Checkers.isHostMethod;
-    import checkType = Checkers.checkType;
-    import ValidationError = Errors.ValidationError;
-    import checkNumber = Checkers.checkNumber;
-    import checkDate = Checkers.checkDate;
-    import checkObject = Checkers.checkObject;
-    import checkString = Checkers.checkString;
-    import checkBoolean = Checkers.checkBoolean;
-    import checkFunction = Checkers.checkFunction;
-    import checkNull = Checkers.checkNull;
-    import checkUndefined = Checkers.checkUndefined;
-    import checkArray = Checkers.checkArray;
-    import checkJson = Checkers.checkJson;
-    import isFloat = Checkers.isFloat;
-    import isInteger = Checkers.isInteger;
-    import isPositiveDecimal = Checkers.isPositiveDecimal;
-    import isIterable = Checkers.isIterable;
-    import areEqualNumbers = Checkers.areEqualNumbers;
-    import isArrayIndex = Checkers.isArrayIndex;
-    import isArrayBuffer = ArrayBuffers.isArrayBuffer;
-    import isArrayBuffer2 = Checkers.isArrayBuffer;
-    import isBuffer = Checkers.isBuffer;
-    import isValidSymbol = Checkers.isValidSymbol;
-    import isObjectWith = Checkers.isObjectWith;
-    import isNull = Checkers.isNull;
-    import isUndefined = Checkers.isUndefined;
-    import isArray2 = Checkers.isArray2;
-    import isPropertyInRange = Checkers.isPropertyInRange;
-    import isDomElement = Checkers.isDomElement;
-    import isRegExp = Checkers.isRegExp;
-    import isNullOrUndefined = Checkers.isNullOrUndefined;
-    import isDigit = Checkers.isDigit;
-    import isSet = Checkers.isSet;
-    import checkEmail = Checkers.checkEmail;
-    import checkUrl = Checkers.checkUrl;
-    import checkPhone = Checkers.checkPhone;
-    import checkDateBy = Checkers.checkDateBy;
-    import getType = Checkers.getType;
-    import checkTypes = Checkers.checkTypes;
-    import validationError = Errors.validationError;
-    import checkIntNumber = Checkers.checkIntNumber;
-    import checkFloatNumber = Checkers.checkFloatNumber;
-    import isSafeInt = Checkers.isSafeInt;
-    import getClass = Checkers.getClass;
+    import isInRange = Checkers.isInRange
+    import isIntNumber = Checkers.isIntNumber
+    import isDate = Checkers.isDate
+    import isBoolean = Checkers.isBoolean
+    import isNumeric = Checkers.isNumeric
+    import isFunction = Checkers.isFunction
+    import isPowerOfTwo = Checkers.isPowerOfTwo
+    import isString = Checkers.isString
+    import isObject = Checkers.isObject
+    import isArray = Checkers.isArray
+    import isJSON = Checkers.isJSON
+    import isRealNumber = Checkers.isRealNumber
+    import isAlphaNumeric = Checkers.isAlphaNumeric
+    import is = Checkers.is
+    import isObjectLiteral = Checkers.isObjectLiteral
+    import isHostObject = Checkers.isHostObject
+    import isHostMethod = Checkers.isHostMethod
+    import checkType = Checkers.checkType
+    import ValidationError = Errors.ValidationError
+    import checkNumber = Checkers.checkNumber
+    import checkDate = Checkers.checkDate
+    import checkObject = Checkers.checkObject
+    import checkString = Checkers.checkString
+    import checkBoolean = Checkers.checkBoolean
+    import checkFunction = Checkers.checkFunction
+    import checkNull = Checkers.checkNull
+    import checkUndefined = Checkers.checkUndefined
+    import checkArray = Checkers.checkArray
+    import checkJson = Checkers.checkJson
+    import isFloat = Checkers.isFloat
+    import isInteger = Checkers.isInteger
+    import isPositiveDecimal = Checkers.isPositiveDecimal
+    import isIterable = Checkers.isIterable
+    import areEqualNumbers = Checkers.areEqualNumbers
+    import isArrayIndex = Checkers.isArrayIndex
+    import isArrayBuffer = ArrayBuffers.isArrayBuffer
+    import isArrayBuffer2 = Checkers.isArrayBuffer
+    import isBuffer = Checkers.isBuffer
+    import isValidSymbol = Checkers.isValidSymbol
+    import isObjectWith = Checkers.isObjectWith
+    import isNull = Checkers.isNull
+    import isUndefined = Checkers.isUndefined
+    import isArray2 = Checkers.isArray2
+    import isPropertyInRange = Checkers.isPropertyInRange
+    import isDomElement = Checkers.isDomElement
+    import isRegExp = Checkers.isRegExp
+    import isNullOrUndefined = Checkers.isNullOrUndefined
+    import isDigit = Checkers.isDigit
+    import isSet = Checkers.isSet
+    import checkEmail = Checkers.checkEmail
+    import checkUrl = Checkers.checkUrl
+    import checkPhone = Checkers.checkPhone
+    import checkDateBy = Checkers.checkDateBy
+    import getType = Checkers.getType
+    import checkTypes = Checkers.checkTypes
+    import validationError = Errors.validationError
+    import checkIntNumber = Checkers.checkIntNumber
+    import checkFloatNumber = Checkers.checkFloatNumber
+    import isSafeInt = Checkers.isSafeInt
+    import getClass = Checkers.getClass
 
     beforeAll(() => {
-        console.log("Checkers test suite started")
-        console.time("Execution time took")
+        console.log('Checkers test suite started')
+        console.time('Execution time took')
     })
 
     afterAll(() => {
-        console.log("Checkers test suite finished")
-        console.timeEnd("Execution time took")
+        console.log('Checkers test suite finished')
+        console.timeEnd('Execution time took')
     })
 
     describe('Check value is in range', () => {
@@ -131,12 +131,20 @@ export namespace Checkers_Test {
             expect(checkTypes([])).toBeUndefined()
             expect(checkTypes(['string'], '')).toBeUndefined()
 
-            expect(() => checkTypes(['number'], '1')).toThrowError(validationError('param [0] must be of type [number]'))
-            expect(() => checkTypes(['string', 'number', 'boolean'], null, 1, true)).toThrowError(ValidationError)
+            expect(() => checkTypes(['number'], '1')).toThrowError(
+                validationError('param [0] must be of type [number]'),
+            )
+            expect(() => checkTypes(['string', 'number', 'boolean'], null, 1, true)).toThrowError(
+                ValidationError,
+            )
             expect(() => checkTypes(['undefined', 'boolean'], undefined, 1)).toThrowError(ValidationError)
             expect(() => checkTypes(['string', 'boolean'], undefined, true)).toThrowError(ValidationError)
-            expect(() => checkTypes(['null', 'string', 'boolean'], 1, 'undefined', true)).toThrowError(ValidationError)
-            expect(() => checkTypes(['null', 'string', 'null'], 1, 'undefined', true)).toThrowError(ValidationError)
+            expect(() => checkTypes(['null', 'string', 'boolean'], 1, 'undefined', true)).toThrowError(
+                ValidationError,
+            )
+            expect(() => checkTypes(['null', 'string', 'null'], 1, 'undefined', true)).toThrowError(
+                ValidationError,
+            )
         })
     })
 
@@ -500,7 +508,7 @@ export namespace Checkers_Test {
             expect(isJSON(Function())).toBeFalsy()
             expect(isJSON(new Function())).toBeFalsy()
             expect(isJSON(null)).toBeFalsy()
-            expect(isJSON("{\"a\": \"5\"}")).toBeFalsy()
+            expect(isJSON('{"a": "5"}')).toBeFalsy()
             expect(isJSON(JSON.stringify({ a: 5 }))).toBeFalsy()
         })
     })
@@ -533,12 +541,12 @@ export namespace Checkers_Test {
 
     describe('Check property is in range', () => {
         it('it should return true when property value is in range', () => {
-            expect(isPropertyInRange({ 'a': 5 }, 'a', 1, 6)).toBeUndefined()
-            expect(isPropertyInRange({ 'a': 0 }, 'a', 0, 1, true)).toBeUndefined()
-            expect(isPropertyInRange({ 'a': 1 }, 'a', 0, 1, true)).toBeUndefined()
+            expect(isPropertyInRange({ a: 5 }, 'a', 1, 6)).toBeUndefined()
+            expect(isPropertyInRange({ a: 0 }, 'a', 0, 1, true)).toBeUndefined()
+            expect(isPropertyInRange({ a: 1 }, 'a', 0, 1, true)).toBeUndefined()
 
-            expect(() => isPropertyInRange({ 'a': 5 }, 'b', 1, 4)).toThrowError(ValidationError)
-            expect(() => isPropertyInRange({ 'a': 5 }, 'a', 1, 4)).toThrowError(ValidationError)
+            expect(() => isPropertyInRange({ a: 5 }, 'b', 1, 4)).toThrowError(ValidationError)
+            expect(() => isPropertyInRange({ a: 5 }, 'a', 1, 4)).toThrowError(ValidationError)
             expect(() => isPropertyInRange({}, 'a', 1, 4)).toThrowError(ValidationError)
             expect(() => isPropertyInRange(null, 'a', 1, 4)).toThrowError(ValidationError)
             expect(() => isPropertyInRange(undefined, 'a', 1, 4)).toThrowError(ValidationError)
@@ -780,14 +788,16 @@ export namespace Checkers_Test {
             expect(checkType({}, 'object')).toBeUndefined()
             expect(checkType(true, 'boolean')).toBeUndefined()
             expect(checkType({ a: {} }, 'object')).toBeUndefined()
-            expect(checkType((v) => v, 'function')).toBeUndefined()
+            expect(checkType(v => v, 'function')).toBeUndefined()
             expect(checkType('a', 'string')).toBeUndefined()
             expect(checkType(null, 'null')).toBeUndefined()
             expect(checkType(undefined, 'undefined')).toBeUndefined()
             expect(checkType(Date(), 'string')).toBeUndefined()
             expect(checkType(new Date(), 'date')).toBeUndefined()
 
-            expect(() => checkType(new Date('2012-01-26T13:51:50.417Z'), 'test')).toThrowError(ValidationError)
+            expect(() => checkType(new Date('2012-01-26T13:51:50.417Z'), 'test')).toThrowError(
+                ValidationError,
+            )
             expect(() => checkType('1number', 'number')).toThrowError(ValidationError)
             expect(() => checkType({}, 'string')).toThrowError(ValidationError)
             expect(() => checkType({}, 'function')).toThrowError(ValidationError)
@@ -890,7 +900,7 @@ export namespace Checkers_Test {
     describe('Check value is a valid string', () => {
         it('it should throw error when value is not a valid string', () => {
             expect(checkString('')).toBeUndefined()
-            expect(checkString("null")).toBeUndefined()
+            expect(checkString('null')).toBeUndefined()
 
             expect(() => checkString(3)).toThrowError(ValidationError)
             expect(() => checkString({})).toThrowError(ValidationError)
