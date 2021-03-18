@@ -35,6 +35,7 @@
 [![Hits-of-Code](https://hitsofcode.com/github/AlexRogalskiy/typescript-tools)](https://hitsofcode.com/github/AlexRogalskiy/typescript-tools/view)
 [![ComVer](https://img.shields.io/badge/ComVer-compliant-brightgreen.svg)][tags]
 [![GitHub Super-Linter](https://github.com/AlexRogalskiy/typescript-tools/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
+[![BCH compliance](https://bettercodehub.com/edge/badge/AlexRogalskiy/typescript-tools?branch=master)](https://bettercodehub.com/)
 
 ## _Table of contents_
 
