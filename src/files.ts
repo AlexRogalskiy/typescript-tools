@@ -8,6 +8,7 @@ import {
     statSync,
     unlinkSync,
     writeFileSync,
+    readFile,
 } from 'fs'
 import path, { join } from 'path'
 import { randomBytes } from 'crypto'
@@ -16,6 +17,19 @@ import { Strings } from './strings'
 
 export namespace Files {
     import uniqueId = Strings.uniqueId
+
+    export const fsReadFileAsync = async (pathname: string, encoding: string): Promise<string> => {
+        return new Promise((resolve, reject): void => {
+            readFile(pathname, encoding, (error, contents): void => {
+                if (error) {
+                    reject(error)
+                    return
+                }
+
+                resolve(contents)
+            })
+        })
+    }
 
     export const createFilePath = (locations: { path; name; extension }): string => {
         const date = new Date()

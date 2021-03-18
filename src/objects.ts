@@ -57,6 +57,24 @@ export namespace Objects {
         return options
     }
 
+    export const getPropertyByPath = (
+        source: { [key: string]: unknown },
+        path: string | string[],
+    ): unknown => {
+        if (typeof path === 'string' && Object.prototype.hasOwnProperty.call(source, path)) {
+            return source[path]
+        }
+
+        const parsedPath = typeof path === 'string' ? path.split('.') : path
+
+        return parsedPath.reduce((previous: any, key): unknown => {
+            if (previous === undefined) {
+                return previous
+            }
+            return previous[key]
+        }, source)
+    }
+
     export const randomEnum = <T>(enumType: T): T[keyof T] => {
         const values = (Object.values(enumType) as unknown) as T[keyof T][]
         const index = Numbers.random(values.length)
