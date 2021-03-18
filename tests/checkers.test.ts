@@ -95,14 +95,14 @@ export namespace Checkers_Test {
 
     describe('Check object class', () => {
         it('it should return valid object class', () => {
-            expect(getClass(1)).toEqual('number')
-            expect(getClass(1.1)).toEqual('number')
-            expect(getClass('1')).toEqual('string')
-            expect(getClass('test')).toEqual('string')
-            expect(getClass([])).toEqual('array')
-            expect(getClass(true)).toEqual('boolean')
-            expect(getClass(null)).toEqual('null')
-            expect(getClass(undefined)).toEqual('undefined')
+            expect(getClass(1)).toEqual('Number')
+            expect(getClass(1.1)).toEqual('Number')
+            expect(getClass('1')).toEqual('String')
+            expect(getClass('test')).toEqual('String')
+            expect(getClass([])).toEqual('Array')
+            expect(getClass(true)).toEqual('Boolean')
+            expect(getClass(null)).toEqual('Null')
+            expect(getClass(undefined)).toEqual('Undefined')
         })
     })
 

@@ -2,6 +2,7 @@ import { Checkers } from './checkers'
 import { Errors } from './errors'
 import { Processor } from '../typings/function-types'
 import { Sorting } from './sorting'
+import { Utils } from './utils'
 
 export namespace Maths {
     import isIntNumber = Checkers.isIntNumber
@@ -14,6 +15,7 @@ export namespace Maths {
     import isRealNumber = Checkers.isRealNumber
     import typeError = Errors.typeError
     import isObject = Checkers.isObject
+    import Commons = Utils.Commons
 
     export const sqrt = Math.sqrt
     export const atan2 = Math.atan2
@@ -23,6 +25,20 @@ export namespace Maths {
     export const PiBy180Inv = 180 / Math.PI
     export const PiBy2 = Math.PI / 2
     export const invLog2 = 1 / Math.log(2)
+
+    export const init = (() => {
+        if (!isFunction(Math['sign'])) {
+            Commons.defineStaticProperty(Math, 'sign', {
+                value(value: number): number {
+                    value = +value // преобразуем в число
+                    if (value === 0 || isNaN(value)) {
+                        return value
+                    }
+                    return value > 0 ? 1 : -1
+                },
+            })
+        }
+    })()
 
     export namespace Helpers {
         import shellSort = Sorting.shellSort

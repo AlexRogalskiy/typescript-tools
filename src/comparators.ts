@@ -5,6 +5,7 @@ import { Errors } from './errors'
 
 export namespace Comparators {
     import valueError = Errors.valueError
+    import hasProperty = Checkers.hasProperty
 
     /**
      * Comparator types
@@ -15,20 +16,6 @@ export namespace Comparators {
      * Comparator modes
      */
     export type ComparatorMode = 'asc' | 'desc'
-
-    /**
-     * @private
-     * @module comparators
-     * @param obj initial input object to verify
-     * @param prop initial input {@link PropertyKey} to validate by
-     * @return {@link boolean} true - if property exists, false - otherwise
-     */
-    const hasProperty = (obj: any, prop: PropertyKey): boolean => {
-        const proto = obj.__proto__ || obj.constructor.prototype
-
-        //return (prop in obj) && (!(prop in proto) || proto[prop] !== obj[prop]);
-        return prop in obj || prop in proto || proto[prop] === obj[prop]
-    }
 
     /**
      * @public
@@ -44,6 +31,7 @@ export namespace Comparators {
 
         if (typeof a === typeof b) {
             if (hasProperty(a, 'compareTo')) {
+                console.log(a.compareTo)
                 return a.compareTo(b)
             }
 

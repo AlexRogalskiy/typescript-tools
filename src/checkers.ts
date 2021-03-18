@@ -14,6 +14,8 @@ export namespace Checkers {
     import valueError = Errors.valueError
     import validationError = Errors.validationError
 
+    const { hasOwnProperty: hasOwnProp } = Object.prototype
+
     export const getClass = (obj: any): string | null => {
         const str = Object.prototype.toString.call(obj)
         const value = /^\[object (.*)]$/.exec(str)
@@ -365,6 +367,21 @@ export namespace Checkers {
 
         return isFunction(obj.hasOwnProperty) ? obj.hasOwnProperty(prop) : prop in obj
     }
+
+    /**
+     * @private
+     * @module comparators
+     * @param obj initial input object to verify
+     * @param prop initial input {@link PropertyKey} to validate by
+     * @return {@link boolean} true - if property exists, false - otherwise
+     */
+    export const hasProperty2 = (obj: any, prop: PropertyKey): boolean => {
+        const proto = obj.__proto__ || obj.constructor.prototype
+
+        //return (prop in obj) && (!(prop in proto) || proto[prop] !== obj[prop]);
+        return hasOwnProp.call(obj, prop) || hasOwnProp.call(proto, prop) || proto[prop] === obj[prop]
+    }
+
     /**
      * Checks for an object to be of the specified type; if not throws an Error.
      */
