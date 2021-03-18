@@ -10,13 +10,41 @@ import {
     writeFileSync,
     readFile,
 } from 'fs'
-import path, { join } from 'path'
+import { isDirectory, isDirectorySync } from 'path-type'
+import { join, dirname, extname } from 'path'
 import { randomBytes } from 'crypto'
 import { execSync } from 'child_process'
+
 import { Strings } from './strings'
+
+import { Optional } from '../typings/standard-types'
 
 export namespace Files {
     import uniqueId = Strings.uniqueId
+
+    interface Options {
+        throwNotFound?: boolean
+    }
+
+    export const getDirectory = async (filepath: string): Promise<string> => {
+        const filePathIsDirectory = await isDirectory(filepath)
+
+        if (filePathIsDirectory) {
+            return filepath
+        }
+
+        return dirname(filepath)
+    }
+
+    export const getDirectorySync = (filepath: string): string => {
+        const filePathIsDirectory = isDirectorySync(filepath)
+
+        if (filePathIsDirectory) {
+            return filepath
+        }
+
+        return dirname(filepath)
+    }
 
     export const fsReadFileAsync = async (pathname: string, encoding: string): Promise<string> => {
         return new Promise((resolve, reject): void => {
@@ -31,6 +59,36 @@ export namespace Files {
         })
     }
 
+    export const readFileAsyncOrThrow = async (
+        filepath: string,
+        options: Options = {},
+    ): Promise<Optional<string>> => {
+        const throwNotFound = options.throwNotFound === true
+
+        try {
+            return await fsReadFileAsync(filepath, 'utf8')
+        } catch (error) {
+            if (!throwNotFound && error.code === 'ENOENT') {
+                return null
+            }
+
+            throw error
+        }
+    }
+
+    export const readFileAndSync = (filepath: string, options: Options = {}): Optional<string> => {
+        const throwNotFound = options.throwNotFound === true
+
+        try {
+            return readFileSync(filepath, 'utf8')
+        } catch (error) {
+            if (!throwNotFound && error.code === 'ENOENT') {
+                return null
+            }
+
+            throw error
+        }
+    }
     export const createFilePath = (locations: { path; name; extension }): string => {
         const date = new Date()
         const timestamp = `${date.getFullYear()}_${
@@ -84,8 +142,8 @@ export namespace Files {
     }
 
     export const pathSplit = (value: string): string[] => {
-        const d = path.dirname(value)
-        const e = path.extname(value)
+        const d = dirname(value)
+        const e = extname(value)
         const f = value.substring(d.length, value.length - e.length).replace(/^\//, '')
 
         return [d, f, e]
@@ -97,8 +155,8 @@ export namespace Files {
 
     // Get path to root package.
     export const packageRoot = (pth: string): any => {
-        while (!existsSync(path.join(pth, 'package.json'))) {
-            pth = path.dirname(pth)
+        while (!existsSync(join(pth, 'package.json'))) {
+            pth = dirname(pth)
         }
         return pth
     }
@@ -118,10 +176,10 @@ export namespace Files {
             return a
         }
 
-        const dir = path.dirname(pth)
+        const dir = dirname(pth)
         for (const p of reqs) {
             if (p.startsWith('.')) {
-                packageRequires(path.join(dir, p), a)
+                packageRequires(join(dir, p), a)
             }
         }
 

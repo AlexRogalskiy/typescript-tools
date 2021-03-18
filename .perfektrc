@@ -1,0 +1,12 @@
+{
+  "unreleasedFormat": "# Latest",
+  "releaseFormat": "# %version%",
+  "breakingFormat": "## BREAKING",
+  "groups": [
+    ["## Features", "feat", "feature"],
+    ["## Fixes", "fix"]
+  ],
+  "miscFormat": "## Misc",
+  "lineFormat": "- %message% [%hash%](https://github.com/AlexRogalskiy/stylegrams/commit/%HASH%)"
+  "ignoredScopes": ["changelog"]
+}

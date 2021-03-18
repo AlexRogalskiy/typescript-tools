@@ -26,7 +26,10 @@ overrides:
     options:
       proseWrap: 'always'
       printWidth: 80
-  - files: '**/.all-contributorsrc'
+  - files: '**/*.{yaml,yml}*'
+    options:
+      tabWidth: 2
+  - files: '**/.all-(contributorsrc|membersrc|sponsorsrc)'
     options:
       parser: 'json-stringify'
       singleQuote: false
