@@ -1,9 +1,9 @@
 import { Comparators } from '../src'
 
 export namespace Comparators_Test {
-    import compareByOrder = Comparators.compareByOrder;
-    import compare = Comparators.compare;
-    import compareByLocale = Comparators.compareByLocale;
+    import compareByOrder = Comparators.compareByOrder
+    import compare = Comparators.compare
+    import compareByLocale = Comparators.compareByLocale
     beforeAll(() => {
         console.log('Comparators test suite started')
         console.time('Execution time took')

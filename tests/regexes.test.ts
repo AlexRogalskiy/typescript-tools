@@ -2,13 +2,13 @@ import { isValidRegex } from '../src'
 
 export namespace Regexes_Test {
     beforeAll(() => {
-        console.log("Regexes test suite started")
-        console.time("Execution time took")
+        console.log('Regexes test suite started')
+        console.time('Execution time took')
     })
 
     afterAll(() => {
-        console.log("Regexes test suite finished")
-        console.timeEnd("Execution time took")
+        console.log('Regexes test suite finished')
+        console.timeEnd('Execution time took')
     })
 
     describe('Check regex expression by parameters', () => {
