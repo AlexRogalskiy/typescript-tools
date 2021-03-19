@@ -146,8 +146,11 @@ export namespace Comparators {
      * @example
      * s.sort(compareByPropertyKey('last', compareByPropertyKey('first')));
      */
-    export const compareByPropertyKey = <T>(prop: PropertyKey, comparator: Comparator<T>): Comparator<T> => {
-        return (a, b) => {
+    export const compareByPropertyKey = <T>(
+        prop: PropertyKey,
+        comparator: Comparator<T> = compareByOrder,
+    ): Comparator<T> => {
+        return <TT>(a: TT, b: TT) => {
             if (Checkers.isObject(a) && Checkers.isObject(b)) {
                 const a_ = a[prop]
                 const b_ = b[prop]
@@ -175,11 +178,15 @@ export namespace Comparators {
     /**
      * @public
      * @module comparators
-     * @param prop initial input {@link String} or {@link Number} column name
+     * @param prop initial input @link String} or {@link Number} column name
+     * @param comparator initial input {@link Comparator} to operate by
      * @return {@link Number} -1 - lower, 0 - equals, 1 - greater
      */
-    export const compareByPropertyDefault = <T>(prop: PropertyKey): Comparator<T> => {
-        return (a: T, b: T) => {
+    export const compareByPropertyDefault = <T>(
+        prop: PropertyKey,
+        comparator: Comparator<T> = compareByOrder,
+    ): Comparator<T> => {
+        return <TT>(a: TT, b: TT) => {
             if (!hasProperty(a, prop)) {
                 throw valueError(`Property=${String(prop)} not exists on object=${a}`)
             }
@@ -188,7 +195,13 @@ export namespace Comparators {
                 throw valueError(`Property=${String(prop)} not exists on object=${b}`)
             }
 
-            return compareByOrder(a[prop], b[prop])
+            const comparator_ = Checkers.isFunction(comparator) ? comparator : null
+
+            if (!comparator_) {
+                throw valueError(`Invalid comparator type: ${comparator_}, should be valid Comparator`)
+            }
+
+            return comparator_(a[prop], b[prop])
         }
     }
 
@@ -337,7 +350,7 @@ export namespace Comparators {
                 }
             }
 
-            return 0
+            return result ? result : 0
         }
     })()
 
@@ -347,7 +360,7 @@ export namespace Comparators {
      * @return {number} -1 - lower, 0 - equals, 1 - greater
      * @param list initial input {@link string} array of items to compare by
      */
-    export const normalizeAndCompare = (list: string[]): ((a: any, b: any, value: string) => number) => {
+    export const normalizeAndCompare = ((...list: string[]): PropertyComparator<any> => {
         return (a: any, b: any, value: string): number => {
             if (a === null || b === null) {
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -359,7 +372,7 @@ export namespace Comparators {
             const first = a.normalize(value_)
             const second = b.normalize(value_)
 
-            return +(first > second) || -(first < second) || 1
+            return +(first > second) || -(first < second) || 0
         }
-    }
+    })('NFC', 'NFD', 'NFKC', 'NFKD')
 }
