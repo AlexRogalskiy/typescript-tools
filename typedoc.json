@@ -1,0 +1,16 @@
+{
+    "entryPoints": [
+        "./src",
+        "./tools",
+        "./typings"
+    ],
+    "externalPattern": [
+        "./scripts"
+    ],
+    "exclude": [
+        "**/*+(.spec|.e2e).ts"
+    ],
+    "excludeExternals": true,
+    "highlightTheme": "dark-plus",
+    "out": "docs"
+}

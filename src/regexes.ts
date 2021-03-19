@@ -1,6 +1,9 @@
 // -------------------------------------------------------------------------------------------------
 import { Pair } from '../typings/general-types'
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/no-require-imports
+const isRegex = require('is-regex')
+
 /**
  * Url regex patterns
  * @type {RegExp}
@@ -142,3 +145,6 @@ export const regexChars = (() => {
         return str === ' ' ? '' : str
     }
 })()
+
+export const isValidRegex = (value: RegExp | string): boolean =>
+    isRegex(value) || (typeof value === 'string' && /^\/.*\/[gimsuy]*$/.test(value))
