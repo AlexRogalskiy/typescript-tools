@@ -1,20 +1,20 @@
 import { Comparators } from '../src'
 
 export namespace Comparators_Test {
-    import compareByOrder = Comparators.compareByOrder;
-    import compare = Comparators.compare;
-    import compareByLocale = Comparators.compareByLocale;
-    import compareIgnoreCase = Comparators.compareIgnoreCase;
-    import compareByLocaleIgnoreCase = Comparators.compareByLocaleIgnoreCase;
-    import compareByLength = Comparators.compareByLength;
-    import compareByPropertyKey = Comparators.compareByPropertyKey;
-    import compareByPropertyDefault = Comparators.compareByPropertyDefault;
-    import compareByProperty = Comparators.compareByProperty;
-    import compareByPropertyOrder = Comparators.compareByPropertyOrder;
-    import compareBy = Comparators.compareBy;
-    import compareByProperties = Comparators.compareByProperties;
-    import compareByLocaleOptions = Comparators.compareByLocaleOptions;
-    import normalizeAndCompare = Comparators.normalizeAndCompare;
+    import compareByOrder = Comparators.compareByOrder
+    import compare = Comparators.compare
+    import compareByLocale = Comparators.compareByLocale
+    import compareIgnoreCase = Comparators.compareIgnoreCase
+    import compareByLocaleIgnoreCase = Comparators.compareByLocaleIgnoreCase
+    import compareByLength = Comparators.compareByLength
+    import compareByPropertyKey = Comparators.compareByPropertyKey
+    import compareByPropertyDefault = Comparators.compareByPropertyDefault
+    import compareByProperty = Comparators.compareByProperty
+    import compareByPropertyOrder = Comparators.compareByPropertyOrder
+    import compareBy = Comparators.compareBy
+    import compareByProperties = Comparators.compareByProperties
+    import compareByLocaleOptions = Comparators.compareByLocaleOptions
+    import normalizeAndCompare = Comparators.normalizeAndCompare
     beforeAll(() => {
         console.log('Comparators test suite started')
         console.time('Execution time took')
@@ -111,8 +111,8 @@ export namespace Comparators_Test {
         })
 
         it('it should return valid result when comparing objects by property key', () => {
-            const a = { 'a': 'test' }
-            const b = { 'a': 'retest' }
+            const a = { a: 'test' }
+            const b = { a: 'retest' }
 
             expect(compareByPropertyKey('a')(a, a)).toEqual(0)
             expect(compareByPropertyKey('a', compareByOrder)(a, b)).toEqual(1)
@@ -124,8 +124,8 @@ export namespace Comparators_Test {
         })
 
         it('it should return valid result when comparing objects by property key with default comparator', () => {
-            const a = { 'a': 'test' }
-            const b = { 'a': 'retest' }
+            const a = { a: 'test' }
+            const b = { a: 'retest' }
 
             expect(compareByPropertyDefault('a')(a, a)).toEqual(0)
             expect(compareByPropertyDefault('a')(a, b)).toEqual(1)
@@ -138,8 +138,8 @@ export namespace Comparators_Test {
         })
 
         it('it should return valid result when comparing objects by property', () => {
-            const a = { 'a': 'test' }
-            const b = { 'a': 'retest' }
+            const a = { a: 'test' }
+            const b = { a: 'retest' }
 
             expect(compareByProperty(a, a, 'a')).toEqual(0)
             expect(compareByProperty(a, b, 'a')).toEqual(1)
@@ -152,19 +152,19 @@ export namespace Comparators_Test {
         })
 
         it('it should return valid result when comparing objects by property order', () => {
-            let a = { 'a': 'test' }
-            let b = { 'a': 'retest' }
+            let a = { a: 'test' }
+            let b = { a: 'retest' }
             expect(compareByPropertyOrder(a, a, 'a')).toEqual(0)
             expect(compareByPropertyOrder(a, b, 'a')).toEqual(1)
             expect(compareByPropertyOrder(a, b, 'a', 'desc')).toEqual(-1)
 
-            a = { 'a': 'hello' }
-            b = { 'a': 'world' }
+            a = { a: 'hello' }
+            b = { a: 'world' }
             expect(compareByPropertyOrder(a, b, 'a')).toEqual(-1)
             expect(compareByPropertyOrder(a, b, 'a', 'desc')).toEqual(1)
 
-            a = { 'a': '12345' }
-            b = { 'a': '54321' }
+            a = { a: '12345' }
+            b = { a: '54321' }
             expect(compareByPropertyOrder(a, b, 'a')).toEqual(-1)
             expect(compareByPropertyOrder(a, b, 'a', 'desc')).toEqual(1)
         })
@@ -186,8 +186,8 @@ export namespace Comparators_Test {
         })
 
         it('it should return valid result when comparing objects by properties and order mode', () => {
-            const a = { 'a': 'test', 'b': '12345' }
-            const b = { 'a': 'retest', 'b': '54321' }
+            const a = { a: 'test', b: '12345' }
+            const b = { a: 'retest', b: '54321' }
 
             expect(compareByProperties(a, a, 'asc', 'a')).toEqual(0)
             expect(compareByProperties(a, a, 'desc', 'a')).toEqual(0)
@@ -197,16 +197,18 @@ export namespace Comparators_Test {
             expect(compareByProperties(a, b, 'desc', 'b')).toEqual(1)
 
             const a2 = {
-                'a': {
-                    'c': '1',
-                    'd': Number.MIN_VALUE
-                }, 'b': '12345'
+                a: {
+                    c: '1',
+                    d: Number.MIN_VALUE,
+                },
+                b: '12345',
             }
             const b2 = {
-                'a': {
-                    'c': '',
-                    'd': 1
-                }, 'b': '54321'
+                a: {
+                    c: '',
+                    d: 1,
+                },
+                b: '54321',
             }
 
             expect(compareByProperties(a2, a2, 'asc', 'a', 'd')).toEqual(0)
