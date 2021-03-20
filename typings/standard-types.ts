@@ -7,14 +7,14 @@
  *    // Expect: object
  *   type Cleaned = Exclude<Various, Primitive>
  */
-export type Primitive = string | number | bigint | boolean | symbol | null | undefined
+export type Primitive = Optional<string | number | bigint | boolean | symbol>
 
 /**
  * Tests for one of the [`Primitive`](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) types using the JavaScript [`typeof`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof) operator
  *
  * Clarification: TypeScript overloads this operator to produce TypeScript types if used in context of types.
  *
- * @param val The value to be tested
+ * @param value The value to be tested
  * @returns If `val` is primitive. If used in the flow of the program typescript will infer type-information from this.
  *
  * @example
@@ -26,15 +26,15 @@ export type Primitive = string | number | bigint | boolean | symbol | null | und
  *       value.map((primitive) => consumer(primitive));
  *   };
  */
-export const isPrimitive = (val: any): val is Primitive => {
+export const isPrimitive = (value: any): value is Primitive => {
     return (
-        val === null ||
-        val === undefined ||
-        typeof val === 'string' ||
-        typeof val === 'number' ||
-        typeof val === 'bigint' ||
-        typeof val === 'boolean' ||
-        typeof val === 'symbol'
+        value === null ||
+        value === undefined ||
+        typeof value === 'string' ||
+        typeof value === 'number' ||
+        typeof value === 'bigint' ||
+        typeof value === 'boolean' ||
+        typeof value === 'symbol'
     )
 }
 // -------------------------------------------------------------------------------------------------
@@ -59,16 +59,22 @@ export type Optional<T> = T | null | undefined
 export type OptionalString = Optional<string>
 
 /**
+ * OptionalPropertyKey
+ * @desc Type representing [`OptionalPropertyKey`] type in TypeScript: `string | number | symbol | null | undefined`
+ */
+export type OptionalPropertyKey = Optional<PropertyKey>
+
+/**
  * OptionalNumber
  * @desc Type representing [`OptionalNumber`] type in TypeScript: `number | null | undefined`
  */
-export type OptionalNumber = number | bigint | null | undefined
+export type OptionalNumber = Optional<number> | Optional<bigint>
 
 /**
  * OptionalBoolean
  * @desc Type representing [`OptionalBoolean`] type in TypeScript: `boolean | null | undefined`
  */
-export type OptionalBoolean = boolean | null | undefined
+export type OptionalBoolean = Optional<boolean>
 
 // -------------------------------------------------------------------------------------------------
 /**
@@ -84,6 +90,12 @@ export default class ExtendableError extends Error {
  * @desc Type representing [`DomElement`]
  */
 export type DomElement = Element | Node | Document | HTMLElement
+
+/**
+ * OptionalDomElement
+ * @desc Type representing optional [`DomElement`]
+ */
+export type OptionalDomElement = Optional<DomElement>
 // -------------------------------------------------------------------------------------------------
 /**
  * Truthy
@@ -94,7 +106,7 @@ export type DomElement = Element | Node | Document | HTMLElement
  *   // Expect: "a" | "b"
  *   Exclude<Various, Truthy>;
  */
-export type Truthy = true | 1 | 'on' | null | undefined
+export type Truthy = Optional<true | 1 | 'on'>
 
 /**
  * Tests for Truthy value
@@ -110,7 +122,7 @@ export type Truthy = true | 1 | 'on' | null | undefined
  *     // do stuff
  *   };
  */
-export const isTruthy = (val: unknown): val is Truthy => !!val
+export const isTruthy = (value: unknown): value is Truthy => !!value
 // -------------------------------------------------------------------------------------------------
 /**
  * Falsy
@@ -121,7 +133,7 @@ export const isTruthy = (val: unknown): val is Truthy => !!val
  *   // Expect: "a" | "b"
  *   Exclude<Various, Falsy>;
  */
-export type Falsy = false | '' | 0 | 'off' | null | undefined
+export type Falsy = Optional<false | '' | 0 | 'off'>
 
 /**
  * Tests for Falsy by simply applying negation `!` to the tested `val`.
@@ -137,7 +149,7 @@ export type Falsy = false | '' | 0 | 'off' | null | undefined
  *     // do stuff
  *   };
  */
-export const isFalsy = (val: unknown): val is Falsy => !val
+export const isFalsy = (value: unknown): value is Falsy => !value
 // -------------------------------------------------------------------------------------------------
 /**
  * Nullish
@@ -162,7 +174,7 @@ export type Nullish = null | undefined
  *     return param.toString();
  *   };
  */
-export const isNullish = (val: unknown): val is Nullish => val == null
+export const isNullish = (value: unknown): value is Nullish => value == null
 // -------------------------------------------------------------------------------------------------
 /**
  * NullOrNotEmpty
@@ -173,5 +185,5 @@ export const isNullish = (val: unknown): val is Nullish => val == null
  *   // Expect: "a" | "b"
  *   Exclude<Various, NullOrNotEmpty>;
  */
-export type NullOrNotEmpty<T> = T | null | undefined
+export type NullOrNotEmpty<T> = Optional<T>
 // -------------------------------------------------------------------------------------------------

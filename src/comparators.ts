@@ -3,19 +3,11 @@ import { Optional } from '../typings/standard-types'
 import { Checkers } from './checkers'
 import { Errors } from './errors'
 
+import { Comparator, ComparatorMode, PropertyComparator } from '../typings/function-types'
+
 export namespace Comparators {
     import valueError = Errors.valueError
     import hasProperty = Checkers.hasProperty
-
-    /**
-     * Comparator types
-     */
-    export type Comparator<T> = (a: T, b: T) => number
-    export type PropertyComparator<T> = (a: T, b: T, value: string) => number
-    /**
-     * Comparator modes
-     */
-    export type ComparatorMode = 'asc' | 'desc'
 
     /**
      * @public
