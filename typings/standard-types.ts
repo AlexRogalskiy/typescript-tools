@@ -122,7 +122,7 @@ export type Truthy = Optional<true | 1 | 'on'>
  *     // do stuff
  *   };
  */
-export const isTruthy = (value: unknown): value is Truthy => !!value
+export const isTruthy = (value: unknown): value is Truthy => !!value || value === 'on'
 // -------------------------------------------------------------------------------------------------
 /**
  * Falsy
@@ -149,7 +149,7 @@ export type Falsy = Optional<false | '' | 0 | 'off'>
  *     // do stuff
  *   };
  */
-export const isFalsy = (value: unknown): value is Falsy => !value
+export const isFalsy = (value: unknown): value is Falsy => !value || value === 'off'
 // -------------------------------------------------------------------------------------------------
 /**
  * Nullish
@@ -174,16 +174,11 @@ export type Nullish = null | undefined
  *     return param.toString();
  *   };
  */
-export const isNullish = (value: unknown): value is Nullish => value == null
+export const isNullish = (value: unknown): value is Nullish => value === null || typeof value === 'undefined'
 // -------------------------------------------------------------------------------------------------
 /**
  * NullOrNotEmpty
- * @desc Type representing [nullish values][https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#nullish-coalescing] in TypeScript: `null | undefined`
- * @example
- *   type Various = 'a' | 'b' | undefined;
- *
- *   // Expect: "a" | "b"
- *   Exclude<Various, NullOrNotEmpty>;
+ * @desc Type representing null or not empty property key
  */
-export type NullOrNotEmpty<T> = Optional<T>
+export type NullOrNotEmpty = Optional<PropertyKey>
 // -------------------------------------------------------------------------------------------------

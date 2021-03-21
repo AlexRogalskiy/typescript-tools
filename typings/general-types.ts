@@ -1,3 +1,4 @@
+import { Optional } from './standard-types'
 // -------------------------------------------------------------------------------------------------
 /**
  * Supported buffer encoding types
@@ -17,8 +18,16 @@ export type BufferEncoding =
 /**
  * Supported process configuration options
  */
-export type ProcessConfig = {
-    readonly env: 'dev' | 'prod' | 'test'
+export type ProcessConfig<T = 'dev' | 'prod' | 'test'> = {
+    readonly env: T
+}
+// -------------------------------------------------------------------------------------------------
+export type SearchOptions = {
+    limit?: number
+    suggest?: boolean
+    where?: { [key: string]: string }
+    field?: string | string[]
+    bool?: 'and' | 'or' | 'not'
 }
 // -------------------------------------------------------------------------------------------------
 /**
@@ -163,70 +172,173 @@ export type NonNull<T> = NonNullable<T>
 /**
  * Pair
  * @desc Pair type with left and right values
- * @see https://flow.org/en/docs/types/utilities/#toc-nonmaybe
- * @example
- *   type NumberOrNull = number | null;
- *
- *   // Expect: number
- *   type Pair = Pair<NumberOrNull, NumberOrNull>;
  */
 export type Pair<T, V> = { left: T; right: V }
 
 /**
+ * OptionalPair
+ * @desc Optional pair type with left and right optional values
+ */
+export type OptionalPair<T, V> = Pair<Optional<T>, Optional<V>>
+
+/**
+ * RequiredPair
+ * @desc Required pair type with left and right required values
+ */
+export type RequiredPair<T, V> = Pair<Required<T>, Required<V>>
+
+/**
+ * PartialPair
+ * @desc Partial pair type with left and right partial values
+ */
+export type PartialPair<T, V> = Pair<Partial<T>, Partial<V>>
+
+/**
+ * NonNullablePair
+ * @desc Non-nullable pair type with left and right non-nullable values
+ */
+export type NonNullablePair<T, V> = Pair<NonNullable<T>, NonNullable<V>>
+
+/**
+ * OptionalLeft
+ * @desc Optional pair type with optional left value
+ */
+export type OptionalLeft<T, V> = Pair<Optional<T>, V>
+
+/**
+ * OptionalRight
+ * @desc Optional pair type with optional right value
+ */
+export type OptionalRight<T, V> = Pair<T, Optional<V>>
+
+/**
+ * PropertyKeyPair
+ * @desc Property key pair type with left and right property key values
+ */
+export type PropertyKeyPair = Pair<PropertyKey, PropertyKey>
+
+/**
  * NumberPair
- * @desc Number pair type with left and right values
+ * @desc Number pair type with left and right number values
  */
 export type NumberPair = Pair<number, number>
 
 /**
  * StringPair
- * @desc String pair type with left and right values
+ * @desc String pair type with left and right string values
  */
 export type StringPair = Pair<string, string>
 
 /**
+ * BooleanPair
+ * @desc Boolean pair type with left and right boolean values
+ */
+export type BooleanPair = Pair<boolean, boolean>
+
+/**
  * StringRegexPair
- * @desc String regex pair type with left and right values
+ * @desc String regex pair type with string left and regex right values
  */
 export type StringRegexPair = Pair<string, RegExp>
 // -------------------------------------------------------------------------------------------------
 /**
- * NameValue
- * @desc NameValue type with name and value properties
- * @see https://flow.org/en/docs/types/utilities/#toc-nonmaybe
- * @example
- *   type NumberOrNull = number | null;
- *
- *   // Expect: number
- *   type Pair = NameValue<NumberOrNull, NumberOrNull>;
+ * Pair2
+ * @desc Pair2 type with first and second values
  */
-export type NameValue<T, V> = { name: T; value: V }
+export type Pair2<T, V> = { first: T; second: V }
+/**
+ * Pair3
+ * @desc Pair3 type with first, second and third values
+ */
+export type Pair3<T, V, R> = { first: T; second: V; third: R }
+
+/**
+ * Pair4
+ * @desc Pair4 type with first, second, third and fourth values
+ */
+export type Pair4<T, V, R, S> = { first: T; second: V; third: R; fourth: S }
+
+/**
+ * Pair5
+ * @desc Pair5 type with first, second, third, fourth and fifth values
+ */
+export type Pair5<T, V, R, S, M> = { first: T; second: V; third: R; fourth: S; fifth: M }
+// -------------------------------------------------------------------------------------------------
+/**
+ * NameValue
+ * @desc NameValue type with string name and value properties
+ */
+export type NameValue<T extends PropertyKey, V> = { name: T; value: V }
+
+/**
+ * KeyValue
+ * @desc KeyValue type with string key and value properties
+ */
+export type KeyValue<T extends PropertyKey, V> = { key: T; value: V }
+
+/**
+ * OptionalNameValue
+ * @desc Optional name-value type with string name and optional value properties
+ */
+export type OptionalNameValue<V> = NameValue<PropertyKey, Optional<V>>
+
+/**
+ * NonNullableNameValue
+ * @desc Non-nullable name-value type with string name and non-nullable value properties
+ */
+export type NonNullableNameValue<V> = NameValue<PropertyKey, NonNullable<V>>
 
 /**
  * NumberNameValue
- * @desc Number name-value type with name and value properties
+ * @desc Number name-value type with string name and number value properties
  */
-export type NumberNameValue = NameValue<number, number>
+export type NumberNameValue = NameValue<PropertyKey, number>
 
 /**
  * StringNameValue
- * @desc String name-value type with name and value properties
+ * @desc String name-value type with string name and string value properties
  */
-export type StringNameValue = NameValue<string, string>
+export type StringNameValue = NameValue<PropertyKey, string>
+
+/**
+ * BooleanNameValue
+ * @desc Boolean name-value type with string name and boolean value properties
+ */
+export type BooleanNameValue = NameValue<PropertyKey, boolean>
+
+/**
+ * RegexNameValue
+ * @desc Regex name-value type with string name and regex value properties
+ */
+export type RegexNameValue = NameValue<PropertyKey, RegExp>
 // -------------------------------------------------------------------------------------------------
 /**
  * RangeValue
  * @desc RangeValue type with lower and upper bound properties
- * @see https://flow.org/en/docs/types/utilities/#toc-nonmaybe
- * @example
- *   type NumberOrNull = number | null;
- *
- *   // Expect: number
- *   type Pair = RangeValue<NumberOrNull, NumberOrNull>;
  */
-export type RangeValue<T> = { lower: T; upper: T }
-// -------------------------------------------------------------------------------------------------
-export type KeywordData = [string, number]
+export type Range<T> = { lower: T; upper: T }
 
-export type KeywordDict = Record<string, KeywordData>
+/**
+ * OptionalRange
+ * @desc OptionalRange type with optional lower and upper bound properties
+ */
+export type OptionalRange<T> = Range<Optional<T>>
+
+/**
+ * NumberRange
+ * @desc NumberRange type with number lower and upper bound properties
+ */
+export type NumberRange = Range<number>
+// -------------------------------------------------------------------------------------------------
+/**
+ * KeywordData
+ * @desc KeywordData type with double-sized string/number array values
+ */
+export type KeywordData<T extends PropertyKey> = [T, number]
+
+/**
+ * KeywordDict
+ * @desc KeywordDict record type with string keys and keyword data values
+ */
+export type KeywordDict<T extends PropertyKey> = Record<string, KeywordData<T>>
 // -------------------------------------------------------------------------------------------------

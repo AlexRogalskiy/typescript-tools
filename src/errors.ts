@@ -1,4 +1,4 @@
-import { ErrorData, ErrorType } from '../typings/domain-types'
+import { ErrorData, ErrorType } from '../typings/enum-types'
 
 import { Logging } from './logging'
 import { Utils } from './utils'

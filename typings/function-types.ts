@@ -39,6 +39,14 @@ export type Iterator<T> = { next: Supplier<IteratorStep<T>> }
  *   type OptionalIterator = { next: () => console.log("test") }
  */
 export type OptionalIterator<T> = Iterator<Optional<T>>
+
+/**
+ * NonNullableIterator
+ * @desc Type representing non-nullable iterator type in TypeScript
+ * @example
+ *   type NonNullableIterator = { next: () => console.log("test") }
+ */
+export type NonNullableIterator<T> = Iterator<NonNullable<T>>
 // -------------------------------------------------------------------------------------------------
 /**
  * Executor
@@ -63,6 +71,14 @@ export type Predicate<T> = (v: T) => boolean
  *   type OptionalPredicate = (v) => return 1 === v
  */
 export type OptionalPredicate<T> = Predicate<Optional<T>>
+
+/**
+ * NonNullablePredicate
+ * @desc Type representing non-nullable predicate function type in TypeScript
+ * @example
+ *   type NonNullablePredicate = (v) => return 1 === v
+ */
+export type NonNullablePredicate<T> = Predicate<NonNullable<T>>
 
 /**
  * NumberPredicate
@@ -113,6 +129,14 @@ export type BiPredicate<T, V> = (v1: T, v2: V) => boolean
 export type OptionalBiPredicate<T, V> = BiPredicate<Optional<T>, Optional<V>>
 
 /**
+ * NonNullableBiPredicate
+ * @desc Type representing non-nullable binary predicate function type in TypeScript
+ * @example
+ *   type NonNullableBiPredicate = (v1, v2) => return v1 === v2
+ */
+export type NonNullableBiPredicate<T, V> = BiPredicate<NonNullable<T>, NonNullable<V>>
+
+/**
  * NumberBiPredicate
  * @desc Type representing number binary predicate function type in TypeScript
  * @example
@@ -159,6 +183,14 @@ export type TriPredicate<T, V, S> = (v1: T, v2: V, v3: S) => boolean
  *   type OptionalTriPredicate = (v1, v2, v3) => return v1 === v2 === v3
  */
 export type OptionalTriPredicate<T, V, S> = TriPredicate<Optional<T>, Optional<V>, Optional<S>>
+
+/**
+ * NonNullableTriPredicate
+ * @desc Type representing non-nullable ternary predicate function type in TypeScript
+ * @example
+ *   type NonNullableTriPredicate = (v1, v2, v3) => return v1 === v2 === v3
+ */
+export type NonNullableTriPredicate<T, V, S> = TriPredicate<NonNullable<T>, NonNullable<V>, NonNullable<S>>
 
 /**
  * NumberTriPredicate
@@ -209,6 +241,14 @@ export type Supplier<T> = () => T
 export type OptionalSupplier<T> = Supplier<Optional<T>>
 
 /**
+ * NonNullableSupplier
+ * @desc Type representing non-nullable supplier function type in TypeScript
+ * @example
+ *   type NonNullableSupplier = () => return 1
+ */
+export type NonNullableSupplier<T> = Supplier<NonNullable<T>>
+
+/**
  * NumberSupplier
  * @desc Type representing number supplier function type in TypeScript
  * @example
@@ -255,6 +295,14 @@ export type BiSupplier<T, V> = () => { v1: T; v2: V }
  *   type OptionalBiSupplier = () => return {"v1": "first", "v2": "second"}
  */
 export type OptionalBiSupplier<T, V> = BiSupplier<Optional<T>, Optional<V>>
+
+/**
+ * NonNullableBiSupplier
+ * @desc Type representing non-nullable binary supplier function type in TypeScript
+ * @example
+ *   type NonNullableBiSupplier = () => return {"v1": "first", "v2": "second"}
+ */
+export type NonNullableBiSupplier<T, V> = BiSupplier<NonNullable<T>, NonNullable<V>>
 
 /**
  * NumberBiSupplier
@@ -305,6 +353,14 @@ export type TriSupplier<T, V, S> = () => { v1: T; v2: V; v3: S }
 export type OptionalTriSupplier<T, V, S> = TriSupplier<Optional<T>, Optional<V>, Optional<S>>
 
 /**
+ * NonNullableTriSupplier
+ * @desc Type representing non-nullable ternary supplier function type in TypeScript
+ * @example
+ *   type NonNullableTriSupplier = () => return {"v1": "first", "v2": "second", "v3": "third"}
+ */
+export type NonNullableTriSupplier<T, V, S> = TriSupplier<NonNullable<T>, NonNullable<V>, NonNullable<S>>
+
+/**
  * NumberTriSupplier
  * @desc Type representing number ternary supplier function type in TypeScript
  * @example
@@ -351,6 +407,14 @@ export type Consumer<T> = (v: T) => void
  *   type OptionalConsumer = (v) => console.log(v)
  */
 export type OptionalConsumer<T> = Consumer<Optional<T>>
+
+/**
+ * NonNullableConsumer
+ * @desc Type representing non-nullable consumer function type in TypeScript
+ * @example
+ *   type NonNullableConsumer = (v) => console.log(v)
+ */
+export type NonNullableConsumer<T> = Consumer<NonNullable<T>>
 
 /**
  * NumberConsumer
@@ -401,6 +465,14 @@ export type BiConsumer<T, V> = (v1: T, v2: V) => void
 export type OptionalBiConsumer<T, V> = BiConsumer<Optional<T>, Optional<V>>
 
 /**
+ * NonNullableBiConsumer
+ * @desc Type representing non-nullable binary consumer function type in TypeScript
+ * @example
+ *   type NonNullableBiConsumer = (v1, v2) => console.log(v1 + ":" + v2)
+ */
+export type NonNullableBiConsumer<T, V> = BiConsumer<NonNullable<T>, NonNullable<V>>
+
+/**
  * NumberBiConsumer
  * @desc Type representing number binary consumer function type in TypeScript
  * @example
@@ -447,6 +519,14 @@ export type TriConsumer<T, V, S> = (v1: T, v2: V, v3: S) => void
  *   type OptionalTriConsumer = (v1, v2, v3) => console.log(v1 + ":" + v2 + ":" + v3)
  */
 export type OptionalTriConsumer<T, V, S> = TriConsumer<Optional<T>, Optional<V>, Optional<S>>
+
+/**
+ * NonNullableTriConsumer
+ * @desc Type representing optional ternary consumer function type in TypeScript
+ * @example
+ *   type NonNullableTriConsumer = (v1, v2, v3) => console.log(v1 + ":" + v2 + ":" + v3)
+ */
+export type NonNullableTriConsumer<T, V, S> = TriConsumer<NonNullable<T>, NonNullable<V>, NonNullable<S>>
 
 /**
  * NumberTriConsumer
@@ -503,6 +583,14 @@ export type ReverseProcessor<T, V> = Processor<V, T>
  *   type OptionalProcessor = (v) => return new String(v)
  */
 export type OptionalProcessor<T, R> = Processor<Optional<T>, R>
+
+/**
+ * NonNullableProcessor
+ * @desc Type representing non-nullable processor function type in TypeScript
+ * @example
+ *   type NonNullableProcessor = (v) => return new String(v)
+ */
+export type NonNullableProcessor<T, R> = Processor<NonNullable<T>, R>
 
 /**
  * NumberProcessor
@@ -593,6 +681,14 @@ export type PropertyKeyToBooleanProcessor = Processor<PropertyKey, boolean>
 export type ToOptionalProcessor<T, V> = Processor<T, Optional<V>>
 
 /**
+ * ToNonNullableProcessor
+ * @desc Type representing processor function type with non-nullable result in TypeScript
+ * @example
+ *   type ToNonNullableProcessor = (v) => return v.length
+ */
+export type ToNonNullableProcessor<T, V> = Processor<T, NonNullable<V>>
+
+/**
  * ToNumberProcessor
  * @desc Type representing processor function type with number result in TypeScript
  * @example
@@ -641,6 +737,14 @@ export type BiProcessor<T, V, R> = (v1: T, v2: V) => R
 export type OptionalBiProcessor<T, V, R> = BiProcessor<Optional<T>, Optional<V>, R>
 
 /**
+ * NonNullableBiProcessor
+ * @desc Type representing non-nullable binary processor function type in TypeScript
+ * @example
+ *   type NonNullableBiProcessor = (v1, v2) => return v1 + v2
+ */
+export type NonNullableBiProcessor<T, V, R> = BiProcessor<NonNullable<T>, NonNullable<V>, R>
+
+/**
  * NumberBiProcessor
  * @desc Type representing number binary processor function type in TypeScript
  * @example
@@ -679,6 +783,14 @@ export type BooleanBiProcessor<R> = BiProcessor<boolean, boolean, R>
  *   type ToOptionalBiProcessor = (v1, v2) => return v1.length + v2.length
  */
 export type ToOptionalBiProcessor<T, V, R> = BiProcessor<T, V, Optional<R>>
+
+/**
+ * ToNonNullableBiProcessor
+ * @desc Type representing binary processor function type with non-nullable result in TypeScript
+ * @example
+ *   type ToNonNullableBiProcessor = (v1, v2) => return v1.length + v2.length
+ */
+export type ToNonNullableBiProcessor<T, V, R> = BiProcessor<T, V, NonNullable<R>>
 
 /**
  * ToNumberBiProcessor
@@ -729,6 +841,19 @@ export type TriProcessor<T, V, S, R> = (v1: T, v2: V, v3: S) => R
 export type OptionalTriProcessor<T, V, S, R> = TriProcessor<Optional<T>, Optional<V>, Optional<S>, R>
 
 /**
+ * NonNullableTriProcessor
+ * @desc Type representing non-nullable ternary processor function type in TypeScript
+ * @example
+ *   type NonNullableTriProcessor = (v1, v2, v3) => return v1 + v2 + v3
+ */
+export type NonNullableTriProcessor<T, V, S, R> = TriProcessor<
+    NonNullable<T>,
+    NonNullable<V>,
+    NonNullable<S>,
+    R
+>
+
+/**
  * NumberTriProcessor
  * @desc Type representing number ternary processor function type in TypeScript
  * @example
@@ -767,6 +892,14 @@ export type BooleanTriProcessor<R> = TriProcessor<boolean, boolean, boolean, R>
  *   type ToOptionalTriProcessor = (v1, v2, v3) => return v1 + v2 + v3
  */
 export type ToOptionalTriProcessor<T, V, S, R> = (v1: T, v2: V, v3: S) => Optional<R>
+
+/**
+ * ToNonNullableTriProcessor
+ * @desc Type representing ternary processor function type with non-nullable result in TypeScript
+ * @example
+ *   type ToNonNullableTriProcessor = (v1, v2, v3) => return v1 + v2 + v3
+ */
+export type ToNonNullableTriProcessor<T, V, S, R> = (v1: T, v2: V, v3: S) => NonNullable<R>
 
 /**
  * ToNumberTriProcessor
@@ -817,6 +950,14 @@ export type UnaryOperator<T> = (v: T) => T
 export type OptionalUnaryOperator<T> = UnaryOperator<Optional<T>>
 
 /**
+ * NonNullableUnaryOperator
+ * @desc Type representing number unary operator type in TypeScript
+ * @example
+ *   type NonNullableUnaryOperator = (v) => return v
+ */
+export type NonNullableUnaryOperator<T> = UnaryOperator<NonNullable<T>>
+
+/**
  * NumberUnaryOperator
  * @desc Type representing number unary operator type in TypeScript
  * @example
@@ -863,6 +1004,14 @@ export type BinaryOperator<T> = (v1: T, v2: T) => T
  *   type OptionalBinaryOperator = (v1, v2) => return v1 + v2
  */
 export type OptionalBinaryOperator<T> = BinaryOperator<Optional<T>>
+
+/**
+ * NonNullableBinaryOperator
+ * @desc Type representing non-nullable binary operator type in TypeScript
+ * @example
+ *   type NonNullableBinaryOperator = (v1, v2) => return v1 + v2
+ */
+export type NonNullableBinaryOperator<T> = BinaryOperator<NonNullable<T>>
 
 /**
  * NumberBinaryOperator
@@ -913,6 +1062,14 @@ export type TernaryOperator<T> = (v1: T, v2: T, v3: T) => T
 export type OptionalTernaryOperator<T> = TernaryOperator<Optional<T>>
 
 /**
+ * NonNullableTernaryOperator
+ * @desc Type representing non-nullable ternary operator type in TypeScript
+ * @example
+ *   type NonNullableTernaryOperator = (v1, v2, v3) => return v1 + v2 + v3
+ */
+export type NonNullableTernaryOperator<T> = TernaryOperator<NonNullable<T>>
+
+/**
  * NumberTernaryOperator
  * @desc Type representing number ternary operator type in TypeScript
  * @example
@@ -959,6 +1116,14 @@ export type Filter<T> = (filter: Predicate<T>) => T[]
  *   type OptionalFilter = (v1 => true) => return [v1, v1]
  */
 export type OptionalFilter<T> = Filter<Optional<T>>
+
+/**
+ * NonNullableFilter
+ * @desc Type representing non-nullable filter function type in TypeScript
+ * @example
+ *   type NonNullableFilter = (v1 => true) => return [v1, v1]
+ */
+export type NonNullableFilter<T> = Filter<NonNullable<T>>
 
 /**
  * NumberFilter
@@ -1054,12 +1219,28 @@ export type PropertyComparator<T> = TriProcessor<T, T, PropertyKey, number>
 export type OptionalComparator<T> = Comparator<Optional<T>>
 
 /**
+ * NonNullableComparator
+ * @desc Type representing non-nullable comparator function type in TypeScript
+ * @example
+ *   type NonNullableComparator = (v1, v2) => return 0
+ */
+export type NonNullableComparator<T> = Comparator<NonNullable<T>>
+
+/**
  * OptionalPropertyComparator
  * @desc Type representing optional property key comparator function type in TypeScript
  * @example
  *   type OptionalPropertyComparator = (v1, v2, 'propKey') => return 0
  */
 export type OptionalPropertyComparator<T> = PropertyComparator<Optional<T>>
+
+/**
+ * NonNullablePropertyComparator
+ * @desc Type representing non-nullable property key comparator function type in TypeScript
+ * @example
+ *   type NonNullablePropertyComparator = (v1, v2, 'propKey') => return 0
+ */
+export type NonNullablePropertyComparator<T> = PropertyComparator<NonNullable<T>>
 
 /**
  * NumberComparator
@@ -1110,6 +1291,14 @@ export type Wrapper<T> = () => Supplier<T>
 export type OptionalWrapper<T> = Wrapper<Optional<T>>
 
 /**
+ * NonNullableWrapper
+ * @desc Type representing non-nullable wrapper function type in TypeScript
+ * @example
+ *   type NonNullableWrapper = (v1, v2) => return 0
+ */
+export type NonNullableWrapper<T> = Wrapper<NonNullable<T>>
+
+/**
  * Factory
  * @desc Type representing factory function type in TypeScript
  * @example
@@ -1124,4 +1313,12 @@ export type Factory<T, V> = (v: T) => Supplier<V>
  *   type OptionalFactory = (v1, v2) => return 0
  */
 export type OptionalFactory<T, V> = (v: T) => Supplier<Optional<V>>
+
+/**
+ * NonNullableFactory
+ * @desc Type representing non-nullable factory function type in TypeScript
+ * @example
+ *   type NonNullableFactory = (v1, v2) => return 0
+ */
+export type NonNullableFactory<T, V> = (v: T) => Supplier<NonNullable<V>>
 // -------------------------------------------------------------------------------------------------

@@ -361,9 +361,7 @@ export namespace Checkers {
      * @returns {Boolean}
      */
     export const hasProperty = (obj: any, prop: PropertyKey): boolean => {
-        if (isNull(obj) || isUndefined(obj)) {
-            return false
-        }
+        if (isNullOrUndefined(obj)) return false
 
         return isFunction(obj.hasOwnProperty) ? obj.hasOwnProperty(prop) : prop in obj
     }

@@ -1,4 +1,7 @@
-import { Checkers, Comparators, Errors, Maths, Matrices } from '../src'
+import { Checkers, Errors, Maths, Matrices } from '../src'
+
+import { Comparator } from '../typings/function-types'
+
 import Helpers = Maths.Helpers
 import valueError = Errors.valueError
 import isArray = Checkers.isArray
@@ -8,7 +11,6 @@ import getSubMatrix = Matrices.getSubMatrix
 import calculateDeterminant = Matrices.calculateDeterminant
 import isFunction = Checkers.isFunction
 import isBoolean = Checkers.isBoolean
-import Comparator = Comparators.Comparator
 import checkNumber = Checkers.checkNumber
 import checkArray = Checkers.checkArray
 import checkIntNumber = Checkers.checkIntNumber

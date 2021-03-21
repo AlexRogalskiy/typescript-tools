@@ -1,8 +1,10 @@
 import { Errors } from './errors'
 import { Checkers } from './checkers'
 import { Comparators } from './comparators'
-import { Optional } from '../typings/standard-types'
 import { Maths } from './maths'
+
+import { Optional } from '../typings/standard-types'
+import { Comparator } from '../typings/function-types'
 
 export namespace Matrices {
     import typeError = Errors.typeError
@@ -11,7 +13,6 @@ export namespace Matrices {
     import isIntNumber = Checkers.isIntNumber
     import comparator = Comparators.compareByPropertyDefault
     import isNumber = Checkers.isNumber
-    import Comparator = Comparators.Comparator
     import Helpers = Maths.Helpers
     import compareByOrder = Comparators.compareByOrder
     import isInteger = Checkers.isInteger

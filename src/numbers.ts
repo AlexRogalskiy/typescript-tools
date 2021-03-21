@@ -2,13 +2,14 @@ import { Checkers } from './checkers'
 import { Errors } from './errors'
 import { Comparators } from './comparators'
 
+import { Comparator } from '../typings/function-types'
+
 export namespace Numbers {
     import isNumber = Checkers.isNumber
     import isIntNumber = Checkers.isIntNumber
     import valueError = Errors.valueError
     import typeError = Errors.typeError
     import isArray = Checkers.isArray
-    import Comparator = Comparators.Comparator
     import cmp = Comparators.compare
 
     export namespace NumberOperations {

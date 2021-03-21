@@ -2,8 +2,7 @@ import { Numbers } from './numbers'
 import { Checkers } from './checkers'
 import { Errors } from './errors'
 import { Maths } from './maths'
-import { Comparators } from './comparators'
-import { Consumer, Predicate, Processor } from '../typings/function-types'
+import { Consumer, Predicate, Processor, Comparator } from '../typings/function-types'
 import { Utils } from './utils'
 import { Sorting } from './sorting'
 
@@ -16,7 +15,6 @@ export namespace Arrays {
     import typeError = Errors.typeError
     import valueError = Errors.valueError
     import Helpers = Maths.Helpers
-    import Comparator = Comparators.Comparator
     import checkType = Checkers.checkType
     import isInRange = Checkers.isInRange
     import checkArray = Checkers.checkArray

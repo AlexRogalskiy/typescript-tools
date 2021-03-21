@@ -1,12 +1,12 @@
 import slugify from 'slugify'
 
+import { OptionalNumber, OptionalString } from '../typings/standard-types'
+import { BiProcessor, Comparator, Processor, StringProcessor, Supplier } from '../typings/function-types'
+
 import { Errors } from './errors'
 import { Checkers } from './checkers'
-import { OptionalNumber, OptionalString } from '../typings/standard-types'
-import { BiProcessor, Processor, StringProcessor, Supplier } from '../typings/function-types'
 import { Maths } from './maths'
 import { Numbers } from './numbers'
-import { Comparators } from './comparators'
 import { Utils } from './utils'
 
 export namespace Strings {
@@ -19,7 +19,6 @@ export namespace Strings {
     import isNumber = Checkers.isNumber
     import Helpers = Maths.Helpers
     import random = Numbers.random
-    import Comparator = Comparators.Comparator
     import randomBy = Numbers.randomBy
     import isFunction = Checkers.isFunction
     import Commons = Utils.Commons

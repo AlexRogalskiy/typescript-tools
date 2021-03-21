@@ -2,6 +2,7 @@ import { Checkers } from './checkers'
 import { Errors } from './errors'
 import { Maths } from './maths'
 import { Comparators } from './comparators'
+import { Comparator } from '../typings/function-types'
 
 export namespace Sorting {
     import isFunction = Checkers.isFunction
@@ -9,7 +10,6 @@ export namespace Sorting {
     import isArray = Checkers.isArray
     import isIntNumber = Checkers.isIntNumber
     import typeError = Errors.typeError
-    import Comparator = Comparators.Comparator
     import compareByOrder = Comparators.compareByOrder
 
     /**

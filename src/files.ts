@@ -1,17 +1,18 @@
 import {
     existsSync,
+    MakeDirectoryOptions,
     mkdirSync,
     promises,
     readdirSync,
+    readFile,
     readFileSync,
     rmdirSync,
     statSync,
     unlinkSync,
     writeFileSync,
-    readFile,
 } from 'fs'
 import { isDirectory, isDirectorySync } from 'path-type'
-import { join, dirname, extname } from 'path'
+import { dirname, extname, join } from 'path'
 import { randomBytes } from 'crypto'
 import { execSync } from 'child_process'
 
@@ -221,10 +222,11 @@ export namespace Files {
         return result
     }
 
-    export const ensureDirExists = (dir: string): void => {
-        if (!existsSync(dir)) {
-            mkdirSync(dir, { recursive: true })
-        }
+    export const ensureDirExists = (
+        dir: string,
+        options: MakeDirectoryOptions = { recursive: true },
+    ): void => {
+        existsSync(dir) || mkdirSync(dir, options)
     }
 
     export const getFileJson = (path: string): any => {
