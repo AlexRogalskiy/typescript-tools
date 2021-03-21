@@ -373,4 +373,21 @@ export namespace Functions {
 
         return autoCurry_
     })()
+
+    export const moduleProvider = (name: string, factory: any, root: any): void => {
+        let prop
+
+        if ((prop = root['define']) && prop['amd']) {
+            prop([], function () {
+                return factory
+            })
+        } else if ((prop = root['modules'])) {
+            prop[name.toLowerCase()] = factory
+        } else if (typeof exports === 'object') {
+            /** @export */
+            module.exports = factory
+        } else {
+            root[name] = factory
+        }
+    }
 }
