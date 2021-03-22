@@ -36,6 +36,18 @@ export namespace Arrays {
         )
     }
 
+    export const selectors = (keys: string[], selectors: string[]): { [k: string]: any } => {
+        return Object.keys(selectors)
+            .map(selector => {
+                if (keys.includes(selector)) {
+                    return [selector, selectors[selector]]
+                }
+
+                return null
+            })
+            .filter(x => x)
+    }
+
     export const trimNulls = <T>(arr: T[]): { deleted: number; result: T[] } => {
         const len = arr.length
 

@@ -344,6 +344,11 @@ export namespace Checkers {
         },
     }
 
+    export const sanitizeNumber = (value: string): number => {
+        value = value.replace(/[()&A-Za-z,%]/g, '')
+        return Number(value)
+    }
+
     export const isEmptyWithoutZero = (v: number | string): boolean => {
         return !v && v !== 0
     }
