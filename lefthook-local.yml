@@ -1,9 +1,5 @@
 pre-commit:
   commands:
-    prettier:
-      skip: true
-    linter:
-      skip: true
     tests:
       skip: true
 
