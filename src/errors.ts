@@ -147,6 +147,36 @@ export namespace Errors {
     }
 
     /**
+     * RequestError
+     * @desc Class representing request error
+     */
+    export class RequestError extends GeneralError {
+        /**
+         * Request error constructor by input parameters
+         * @param message initial input {@link string} message
+         * @param args initial input {@link Array} of arguments
+         */
+        constructor(readonly message: string, ...args: any[]) {
+            super(ErrorType.request_error, message, args)
+        }
+    }
+
+    /**
+     * ResponseError
+     * @desc Class representing request error
+     */
+    export class ResponseError extends GeneralError {
+        /**
+         * Response error constructor by input parameters
+         * @param message initial input {@link string} message
+         * @param args initial input {@link Array} of arguments
+         */
+        constructor(readonly message: string, ...args: any[]) {
+            super(ErrorType.response_error, message, args)
+        }
+    }
+
+    /**
      * UnsupportedParameterError
      * @desc Class representing unsupported parameter error
      */
@@ -192,6 +222,14 @@ export namespace Errors {
 
     export const validationError = (message: string, ...args: any[]): ValidationError => {
         return new ValidationError(message, args)
+    }
+
+    export const requestError = (param: string, ...args: any[]): RequestError => {
+        return new RequestError(param, args)
+    }
+
+    export const responseError = (param: string, ...args: any[]): ResponseError => {
+        return new ResponseError(param, args)
     }
 
     export const unsupportedParamError = (param: string, ...args: any[]): UnsupportedParameterError => {
