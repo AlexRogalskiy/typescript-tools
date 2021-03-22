@@ -549,4 +549,8 @@ export namespace Checkers {
 
         return obj && obj instanceof type
     }
+
+    export const isBlankString = (value: string): boolean => {
+        return !value || /^\s*$/.test(value)
+    }
 }

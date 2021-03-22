@@ -3,13 +3,35 @@ import { Checkers } from './checkers'
 import { Errors } from './errors'
 import { Utils } from './utils'
 
+import { ObjectMap } from '../typings/standard-types'
+
 export namespace Objects {
     import Commons = Utils.Commons
     import isFunction = Checkers.isFunction
+    import defineStaticProperty = Utils.Commons.defineStaticProperty
 
     const { hasOwnProperty: hasOwnProp } = Object.prototype
 
     export const props = (() => {
+        const props = {
+            static: {
+                extends: '__extends__',
+            },
+        }
+
+        const extends_ = (obj: any, dest: any, source: any): void => {
+            for (const p in source) if (source.hasOwnProperty(p)) dest[p] = source[p]
+
+            function __(): void {
+                obj.constructor = dest
+            }
+
+            dest.prototype =
+                source === null ? Object.create(source) : ((__.prototype = source.prototype), new __())
+
+            return dest
+        }
+
         /**
          * Freezes an object, makes the object effectively immutable.
          */
@@ -38,6 +60,14 @@ export namespace Objects {
                 F.prototype = o
                 return new F()
             }
+        }
+
+        if (!isFunction(Object[props.static.extends])) {
+            defineStaticProperty(Object, props.static.extends, {
+                value(target, source) {
+                    return extends_(this, target, source)
+                },
+            })
         }
     })()
 
@@ -344,5 +374,17 @@ export namespace Objects {
      */
     export const getKeys = (obj: any): string[] => {
         return Object.keys(obj)
+    }
+
+    export const values = <T>(objectMap: ObjectMap<T>): T[] => {
+        return Object.values(objectMap) as T[]
+    }
+
+    export const entries = <T>(objectMap: ObjectMap<T>): [string, T][] => {
+        return Object.entries(objectMap) as [string, T][]
+    }
+
+    export const keys = (objectMap: ObjectMap<any>): string[] => {
+        return Object.keys(objectMap)
     }
 }

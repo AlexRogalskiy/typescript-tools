@@ -7,7 +7,6 @@ import { Comparator, ComparatorMode, PropertyComparator } from '../typings/funct
 
 export namespace Comparators {
     import valueError = Errors.valueError
-    import hasProperty = Checkers.hasProperty
 
     /**
      * @public
@@ -22,7 +21,7 @@ export namespace Comparators {
         }
 
         if (typeof a === typeof b) {
-            if (hasProperty(a, 'compareTo')) {
+            if (Checkers.hasProperty(a, 'compareTo')) {
                 console.log(a.compareTo)
                 return a.compareTo(b)
             }
@@ -179,11 +178,11 @@ export namespace Comparators {
         comparator: Comparator<T> = compareByOrder,
     ): Comparator<T> => {
         return <TT>(a: TT, b: TT) => {
-            if (!hasProperty(a, prop)) {
+            if (!Checkers.hasProperty(a, prop)) {
                 throw valueError(`Property=${String(prop)} not exists on object=${a}`)
             }
 
-            if (!hasProperty(b, prop)) {
+            if (!Checkers.hasProperty(b, prop)) {
                 throw valueError(`Property=${String(prop)} not exists on object=${b}`)
             }
 

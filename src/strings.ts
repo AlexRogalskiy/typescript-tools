@@ -1,4 +1,5 @@
 import slugify from 'slugify'
+import { randomBytes } from 'crypto'
 
 import { OptionalNumber, OptionalString } from '../typings/standard-types'
 import { BiProcessor, Comparator, Processor, StringProcessor, Supplier } from '../typings/function-types'
@@ -22,6 +23,10 @@ export namespace Strings {
     import randomBy = Numbers.randomBy
     import isFunction = Checkers.isFunction
     import Commons = Utils.Commons
+
+    export const isBlankString = (value: string): boolean => {
+        return !value || /^\s*$/.test(value)
+    }
 
     export const numFormat = (value: number, fraction = 2): string => value.toFixed(fraction)
 
@@ -58,6 +63,15 @@ export namespace Strings {
             })
         }
     })()
+
+    export const extractAttachmentsFromString = (
+        content: string,
+        regex = /src="([0-9a-zA-Z-]*-[0-9a-zA-Z]{8,14}\.png)"/g,
+    ): string[] => {
+        const attachmentGroups = [...content.matchAll(regex)]
+
+        return [...new Set(attachmentGroups.filter(group => group.length > 0).map(group => group[1]))]
+    }
 
     export const uniqueId = (): string => {
         return Math.random()
@@ -328,10 +342,6 @@ export namespace Strings {
         return value.replace(new RegExp(/[\x00-\x7F]/g), '').split('')
     }
 
-    export const isBlankString = (value: string): boolean => {
-        return !value || /^\s*$/.test(value)
-    }
-
     export const notBlankOrElse = (value: string, defaultValue: string): string => {
         return isBlankString(value) ? defaultValue : value
     }
@@ -431,6 +441,25 @@ export namespace Strings {
 
     export const toParamName = (value: string): string => {
         return value.replace(/-\w/g, match => match[1].toUpperCase())
+    }
+
+    export const generateRandomHex = (): string => randomBytes(32).toString('hex')
+
+    export const escapeRegExp2 = (value: string): string => {
+        return value.replace(/[.*+?^${}()|\\[\]]/g, '\\$&')
+    }
+
+    export const isTagNameValid = (name: string): boolean => {
+        if (name.length === 0) return false
+
+        // eslint-disable-next-line no-control-regex
+        return !new RegExp(/[\s#<>:"\\/|?*\x00-\x1F]/g).test(name)
+    }
+
+    export const replaceAttachments = (content: string, sources: [string, string][]): string => {
+        return sources.reduce((content, [local, cloud]) => {
+            return content.replace(`](${local})`, `](${cloud})`)
+        }, content)
     }
 
     export const capitalFirstLetter = (value: string): string =>

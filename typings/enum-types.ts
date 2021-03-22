@@ -6,12 +6,24 @@
 export enum ErrorType {
     general_error = 'GeneralError',
     parser_error = 'ParserError',
+    db_error = 'DatabaseError',
     validation_error = 'ValidationError',
     request_error = 'RequestError',
     response_error = 'ResponseError',
     parameter_error = 'ParameterError',
     type_error = 'TypeError',
     value_error = 'ValueError',
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * DbClientErrorType
+ * @desc Type representing database client errors
+ */
+export enum DbClientErrorType {
+    UnprocessableEntity = 'UnprocessableEntity',
+    Conflict = 'Conflict',
+    NotFound = 'NotFound',
 }
 
 // -------------------------------------------------------------------------------------------------

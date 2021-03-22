@@ -1,20 +1,13 @@
 import { Checkers } from './checkers'
 import { Errors } from './errors'
-import { Processor } from '../typings/function-types'
 import { Sorting } from './sorting'
 import { Utils } from './utils'
 
+import { Processor } from '../typings/function-types'
+
 export namespace Maths {
-    import isIntNumber = Checkers.isIntNumber
-    import isNumber = Checkers.isNumber
-    import isString = Checkers.isString
-    import isNull = Checkers.isNull
     import valueError = Errors.valueError
-    import isFunction = Checkers.isFunction
-    import isArray = Checkers.isArray
-    import isRealNumber = Checkers.isRealNumber
     import typeError = Errors.typeError
-    import isObject = Checkers.isObject
     import Commons = Utils.Commons
 
     export const sqrt = Math.sqrt
@@ -27,7 +20,7 @@ export namespace Maths {
     export const invLog2 = 1 / Math.log(2)
 
     export const init = (() => {
-        if (!isFunction(Math['sign'])) {
+        if (!Checkers.isFunction(Math['sign'])) {
             Commons.defineStaticProperty(Math, 'sign', {
                 value(value: number): number {
                     value = +value // преобразуем в число
@@ -46,16 +39,16 @@ export namespace Maths {
             memo: number[],
             formula: (func: (num: number) => number, value: number) => number,
         ): ((num: number) => void) => {
-            if (!isArray(memo)) {
+            if (!Checkers.isArray(memo)) {
                 throw valueError(`incorrect input parameter: initial array < ${memo} >`)
             }
-            if (!isFunction(formula)) {
+            if (!Checkers.isFunction(formula)) {
                 throw valueError(`incorrect formula function: function < ${formula} >`)
             }
 
             const recur = (num: number): number => {
                 let result = memo[num]
-                if (!isNumber(result)) {
+                if (!Checkers.isNumber(result)) {
                     result = formula(recur, num)
                     memo[num] = result
                 }
@@ -84,7 +77,7 @@ export namespace Maths {
         }
 
         export const toRadians = (value: number): number => {
-            if (!isNumber(value)) {
+            if (!Checkers.isNumber(value)) {
                 throw typeError(`incorrect type of argument: degrees < ${value} >`)
             }
 
@@ -92,7 +85,7 @@ export namespace Maths {
         }
 
         export const toDegrees = (value: number): number => {
-            if (!isNumber(value)) {
+            if (!Checkers.isNumber(value)) {
                 throw typeError(`incorrect type of argument: radians < ${value} >`)
             }
 
@@ -100,7 +93,7 @@ export namespace Maths {
         }
 
         export const vector = <T>(dimension: number, initial: T): T[] => {
-            if (!isIntNumber(dimension) || dimension < 0) {
+            if (!Checkers.isIntNumber(dimension) || dimension < 0) {
                 throw valueError(`incorrect input values: array dimension < ${dimension} >`)
             }
 
@@ -113,7 +106,7 @@ export namespace Maths {
         }
 
         export const matrix = <T>(rows: number, columns: number, initial: T): T[][] => {
-            if (!isIntNumber(rows) || !isIntNumber(columns) || rows < 0 || columns < 0) {
+            if (!Checkers.isIntNumber(rows) || !Checkers.isIntNumber(columns) || rows < 0 || columns < 0) {
                 throw valueError(
                     `incorrect input values: number of rows < ${rows} >, number of columns < ${columns} >`,
                 )
@@ -133,7 +126,7 @@ export namespace Maths {
         }
 
         export const arcsech = (value: number): number => {
-            if (!isNumber(value) || value > 1 || value <= 0) {
+            if (!Checkers.isNumber(value) || value > 1 || value <= 0) {
                 throw valueError(`incorrect input value: x < ${value} >`)
             }
 
@@ -141,7 +134,12 @@ export namespace Maths {
         }
 
         export const summ = (x, n, m, ...args: number[]): number => {
-            if (!isNumber(x) || !isNumber(n) || !isNumber(m) || !isArray(args)) {
+            if (
+                !Checkers.isNumber(x) ||
+                !Checkers.isNumber(n) ||
+                !Checkers.isNumber(m) ||
+                !Checkers.isArray(args)
+            ) {
                 throw valueError(
                     `incorrect input values: x < ${x} >, power < ${n} >, step < ${m} >, array < ${args} >`,
                 )
@@ -160,7 +158,7 @@ export namespace Maths {
         }
 
         export const geomProgress = (a: number, n: number): number => {
-            if (!isNumber(a) || !isNumber(n) || a < 0 || a === 1 || n < 0) {
+            if (!Checkers.isNumber(a) || !Checkers.isNumber(n) || a < 0 || a === 1 || n < 0) {
                 throw valueError(`incorrect input values: ratio < ${a} >, n < ${n} >`)
             }
 
@@ -168,7 +166,7 @@ export namespace Maths {
         }
 
         export const residue = (a: number, d: number): number => {
-            if (!isNumber(a) || !isNumber(d)) {
+            if (!Checkers.isNumber(a) || !Checkers.isNumber(d)) {
                 throw valueError(`incorrect input values: numerator < ${a} >, denominator < ${d} >`)
             }
 
@@ -179,7 +177,7 @@ export namespace Maths {
         }
 
         export const maxn = (n: number, ...args: number[]): number | null => {
-            if (!isArray(args) || !isIntNumber(n) || n < 1 || n > args.length) {
+            if (!Checkers.isArray(args) || !Checkers.isIntNumber(n) || n < 1 || n > args.length) {
                 throw valueError(`incorrect input value: array < ${args} >, n-th maximum < ${n} >`)
             }
 
@@ -230,7 +228,7 @@ export namespace Maths {
             del: number,
             sub: number,
         ): number | null => {
-            if (!isString(a) || !isString(b)) {
+            if (!Checkers.isString(a) || !Checkers.isString(b)) {
                 throw valueError(`incorrect input values: string1 < ${a} >, string2 < ${b} >`)
             }
 
@@ -238,17 +236,17 @@ export namespace Maths {
                 return null
             }
 
-            const insValue = ins == null ? 2 : isNumber(ins) && ins >= 0 ? ins : null
+            const insValue = ins == null ? 2 : Checkers.isNumber(ins) && ins >= 0 ? ins : null
             if (insValue == null) {
                 throw valueError(`incorrect ins value: < ${insValue} >`)
             }
 
-            const delValue = del == null ? 2 : isNumber(del) && del >= 0 ? del : null
+            const delValue = del == null ? 2 : Checkers.isNumber(del) && del >= 0 ? del : null
             if (delValue == null) {
                 throw valueError(`incorrect del value: < ${delValue} >`)
             }
 
-            const subValue = sub == null ? 1 : isNumber(sub) && sub >= 0 ? sub : null
+            const subValue = sub == null ? 1 : Checkers.isNumber(sub) && sub >= 0 ? sub : null
             if (subValue == null) {
                 throw valueError(`incorrect sub value: < ${subValue} >`)
             }
@@ -280,7 +278,7 @@ export namespace Maths {
          * @return {number} Расстояние Левенштейна
          */
         export const levenshteinDistance3 = (s1: string, s2: string, costs: any): number => {
-            if (!isString(s1) || !isString(s2)) {
+            if (!Checkers.isString(s1) || !Checkers.isString(s2)) {
                 throw valueError(`incorrect input values: string1 < ${s1} >, string2 < ${s2} >`)
             }
 
@@ -324,7 +322,7 @@ export namespace Maths {
         }
 
         export const hammingDistance = (a: string, b: string): number => {
-            if (!isString(a) || !isString(b)) {
+            if (!Checkers.isString(a) || !Checkers.isString(b)) {
                 throw valueError(`incorrect input values: string1 < ${a} >, string2 < ${b} >`)
             }
 
@@ -346,7 +344,7 @@ export namespace Maths {
             seq2: string,
             weighter: { insert: (v) => number; delete: (v) => number; replace: (v1, v2) => number },
         ): number => {
-            if (!isString(seq1) || !isString(seq2)) {
+            if (!Checkers.isString(seq1) || !Checkers.isString(seq2)) {
                 throw valueError(`incorrect input values: string1 < ${seq1} >, string2 < ${seq2} >`)
             }
 
@@ -410,7 +408,7 @@ export namespace Maths {
         // let myLDistance = var levenshteinDistance("слон", "море");
         /* number of operations to get <b> from <a>*/
         export const levenshteinDistance = (a: string, b: string): number[][] => {
-            if (!isString(a) || !isString(b)) {
+            if (!Checkers.isString(a) || !Checkers.isString(b)) {
                 throw valueError(`incorrect input values: string1 < ${a} >, string2 < ${b} >`)
             }
 
@@ -450,7 +448,7 @@ export namespace Maths {
             import shellSort = Sorting.shellSort
 
             export const log10 = (value: number): number => {
-                if (!isNumber(value) || value <= 0) {
+                if (!Checkers.isNumber(value) || value <= 0) {
                     throw valueError(`incorrect input value: x < ${value} >`)
                 }
 
@@ -458,7 +456,7 @@ export namespace Maths {
             }
 
             export const log = (x: number, a: number): number => {
-                if (!isNumber(a) || !isNumber(x) || x <= 0 || a <= 0 || a === 1) {
+                if (!Checkers.isNumber(a) || !Checkers.isNumber(x) || x <= 0 || a <= 0 || a === 1) {
                     throw valueError(`incorrect input values: base < ${a} >, num < ${x} >`)
                 }
 
@@ -466,7 +464,7 @@ export namespace Maths {
             }
 
             export const pow = (base: number, exponent: number): number => {
-                if (!isNumber(base) || !isNumber(exponent)) {
+                if (!Checkers.isNumber(base) || !Checkers.isNumber(exponent)) {
                     throw valueError(`incorrect input values: base < ${base} >, exponent < ${exponent} >`)
                 }
 
@@ -490,7 +488,7 @@ export namespace Maths {
             }
 
             export const triangleSide = (a: number, b: number): number => {
-                if (!isNumber(a) || !isNumber(b)) {
+                if (!Checkers.isNumber(a) || !Checkers.isNumber(b)) {
                     throw valueError(`incorrect input values: a < ${a} >, b < ${b} >`)
                 }
 
@@ -503,7 +501,7 @@ export namespace Maths {
             }
 
             export const cosec = (x: number): number => {
-                if (!isNumber(x)) {
+                if (!Checkers.isNumber(x)) {
                     throw valueError(`incorrect input value: x < ${x} >`)
                 }
 
@@ -511,7 +509,7 @@ export namespace Maths {
             }
 
             export const sec = (value: number): number => {
-                if (!isNumber(value)) {
+                if (!Checkers.isNumber(value)) {
                     throw valueError(`incorrect input value: x < ${value} >`)
                 }
 
@@ -519,7 +517,7 @@ export namespace Maths {
             }
 
             export const sinh2 = (value: number): number => {
-                if (!isNumber(value)) {
+                if (!Checkers.isNumber(value)) {
                     throw valueError(`incorrect input value: x < ${value} >`)
                 }
 
@@ -527,7 +525,7 @@ export namespace Maths {
             }
 
             export const cosh2 = (value: number): number => {
-                if (!isNumber(value)) {
+                if (!Checkers.isNumber(value)) {
                     throw valueError(`incorrect input value: x < ${value} >`)
                 }
 
@@ -535,7 +533,7 @@ export namespace Maths {
             }
 
             export const tanh = (value: number): number => {
-                if (!isNumber(value)) {
+                if (!Checkers.isNumber(value)) {
                     throw valueError(`incorrect input value: x < ${value} >`)
                 }
 
@@ -543,7 +541,7 @@ export namespace Maths {
             }
 
             export const cotanh = (value: number): number => {
-                if (!isNumber(value)) {
+                if (!Checkers.isNumber(value)) {
                     throw valueError(`incorrect input value: x < ${value} >`)
                 }
 
@@ -551,7 +549,7 @@ export namespace Maths {
             }
 
             export const cosech = (value: number): number => {
-                if (!isNumber(value)) {
+                if (!Checkers.isNumber(value)) {
                     throw valueError(`incorrect input value: x < ${value} >`)
                 }
 
@@ -559,7 +557,7 @@ export namespace Maths {
             }
 
             export const sech = (value: number): number => {
-                if (!isNumber(value)) {
+                if (!Checkers.isNumber(value)) {
                     throw valueError(`incorrect input value: x < ${value} >`)
                 }
 
@@ -567,7 +565,7 @@ export namespace Maths {
             }
 
             export const arcsinh = (value: number): number => {
-                if (!isNumber(value)) {
+                if (!Checkers.isNumber(value)) {
                     throw valueError(`incorrect input value: x < ${value} >`)
                 }
 
@@ -575,7 +573,7 @@ export namespace Maths {
             }
 
             export const arccosh = (value: number): number => {
-                if (!isNumber(value) || value < 1) {
+                if (!Checkers.isNumber(value) || value < 1) {
                     throw valueError(`incorrect input value: x < ${value} >`)
                 }
 
@@ -583,7 +581,7 @@ export namespace Maths {
             }
 
             export const arctanh = (value: number): number => {
-                if (!isNumber(value) || Math.abs(value) >= 1 || Math.abs(value) < 0) {
+                if (!Checkers.isNumber(value) || Math.abs(value) >= 1 || Math.abs(value) < 0) {
                     throw valueError(`incorrect input value: x < ${value} >`)
                 }
 
@@ -591,7 +589,7 @@ export namespace Maths {
             }
 
             export const arcotanh = (value: number): number => {
-                if (!isNumber(value) || Math.abs(value) <= 1) {
+                if (!Checkers.isNumber(value) || Math.abs(value) <= 1) {
                     throw valueError(`incorrect input value: x < ${value} >`)
                 }
 
@@ -599,7 +597,7 @@ export namespace Maths {
             }
 
             export const arccosech = (x: number): number => {
-                if (!isNumber(x) || x === 0) {
+                if (!Checkers.isNumber(x) || x === 0) {
                     throw valueError(`incorrect input value: x < ${x} >`)
                 }
 
@@ -609,7 +607,7 @@ export namespace Maths {
             }
 
             export const inn = (n: number, ...args: number[]): number | null => {
-                if (!isArray(args) || !isIntNumber(n) || n < 1 || n > args.length) {
+                if (!Checkers.isArray(args) || !Checkers.isIntNumber(n) || n < 1 || n > args.length) {
                     throw valueError(`incorrect input value: array < ${args} >, n-th minimum < ${n} >`)
                 }
 
@@ -625,13 +623,18 @@ export namespace Maths {
             }
 
             export const sinus = (a: number, b: number, h: number, eps: number): number[] => {
-                if (!isNumber(a) || !isNumber(b) || !isNumber(h) || !isNumber(eps)) {
+                if (
+                    !Checkers.isNumber(a) ||
+                    !Checkers.isNumber(b) ||
+                    !Checkers.isNumber(h) ||
+                    !Checkers.isNumber(eps)
+                ) {
                     throw valueError(
                         `incorrect input values: lower border < ${a} >, upper border < ${b} >, step < ${h} >, precision < ${eps} >`,
                     )
                 }
 
-                const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
+                const precision = eps == null ? 0.0001 : Checkers.isNumber(eps) && eps > 0 ? eps : null
                 if (precision == null) {
                     throw valueError(`incorrect 'precision' value: < ${precision} >`)
                 }
@@ -659,11 +662,11 @@ export namespace Maths {
             }
 
             export const sin2 = (x: number, n: number): number => {
-                if (!isNumber(x)) {
+                if (!Checkers.isNumber(x)) {
                     throw valueError(`incorrect input values: x < ${x} >`)
                 }
 
-                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
+                const num = n == null ? 100 : Checkers.isIntNumber(n) && n > 0 ? n : null
                 if (num == null) {
                     throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
@@ -679,16 +682,16 @@ export namespace Maths {
             }
 
             export const sin3 = (x: number, e: number, n: number, eps: number): number | null => {
-                if (!isNumber(x) || !isRealNumber(e) || e <= 0 || e >= 1) {
+                if (!Checkers.isNumber(x) || !Checkers.isRealNumber(e) || e <= 0 || e >= 1) {
                     throw valueError(`incorrect input values: x < ${x} >, precision < ${e} >`)
                 }
 
-                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
+                const num = n == null ? 100 : Checkers.isIntNumber(n) && n > 0 ? n : null
                 if (num === null) {
                     throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
 
-                const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
+                const precision = eps == null ? 0.0001 : Checkers.isNumber(eps) && eps > 0 ? eps : null
                 if (precision === null) {
                     throw valueError(`incorrect 'precision' value: < ${precision} >`)
                 }
@@ -756,16 +759,16 @@ export namespace Maths {
             }
 
             export const cos2 = (x: number, e: number, n: number, eps: number): number | null => {
-                if (!isNumber(x) || !isRealNumber(e) || e <= 0 || e >= 1) {
+                if (!Checkers.isNumber(x) || !Checkers.isRealNumber(e) || e <= 0 || e >= 1) {
                     throw valueError(`incorrect input values: x < ${x} >, precision < ${e} >`)
                 }
 
-                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
+                const num = n == null ? 100 : Checkers.isIntNumber(n) && n > 0 ? n : null
                 if (num == null) {
                     throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
 
-                const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
+                const precision = eps == null ? 0.0001 : Checkers.isNumber(eps) && eps > 0 ? eps : null
                 if (precision == null) {
                     throw valueError(`incorrect 'precision' value: < ${precision} >`)
                 }
@@ -783,7 +786,7 @@ export namespace Maths {
             }
 
             export const quarterPI = (n: number): number => {
-                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
+                const num = n == null ? 100 : Checkers.isIntNumber(n) && n > 0 ? n : null
                 if (num == null) {
                     throw valueError(`incorrect 'number of iterations' value: < ${n} >`)
                 }
@@ -800,11 +803,11 @@ export namespace Maths {
             }
 
             export const geron = (a: number, eps: number): number => {
-                if (!isNumber(a) || a < 0) {
+                if (!Checkers.isNumber(a) || a < 0) {
                     throw valueError(`incorrect input value: expression < ${a} >`)
                 }
 
-                const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
+                const precision = eps == null ? 0.0001 : Checkers.isNumber(eps) && eps > 0 ? eps : null
                 if (precision == null) {
                     throw valueError(`incorrect 'precision' value: < ${precision} >`)
                 }
@@ -820,7 +823,7 @@ export namespace Maths {
             }
 
             export const sqrt32 = (a: number): number => {
-                if (!isNumber(a) || a < 0) {
+                if (!Checkers.isNumber(a) || a < 0) {
                     throw valueError(`incorrect input value: expression < ${a} >`)
                 }
                 let c = 0x8000,
@@ -840,14 +843,14 @@ export namespace Maths {
 
             // http://en.wikipedia.org/wiki/Hyperbolic_function
             export const sinh = (z: number, n: number): number => {
-                if (!isNumber(z)) {
+                if (!Checkers.isNumber(z)) {
                     throw valueError(`incorrect input value: z < ${z} >`)
                 }
 
                 let s = z,
                     g = z
 
-                const num = n == null ? 100 : isIntNumber(n) && n >= 1 ? n : null
+                const num = n == null ? 100 : Checkers.isIntNumber(n) && n >= 1 ? n : null
                 if (num == null) {
                     throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
@@ -862,14 +865,14 @@ export namespace Maths {
 
             // http://en.wikipedia.org/wiki/Hyperbolic_function
             export const cosh = (z: number, n: number): number => {
-                if (!isNumber(z)) {
+                if (!Checkers.isNumber(z)) {
                     throw valueError(`incorrect input value: z < ${z} >`)
                 }
 
                 let s = 1,
                     g = 1
 
-                const num = n == null ? 100 : isIntNumber(n) && n >= 1 ? n : null
+                const num = n == null ? 100 : Checkers.isIntNumber(n) && n >= 1 ? n : null
                 if (num == null) {
                     throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
@@ -900,21 +903,21 @@ export namespace Maths {
                     return { x, y }
                 }
 
-                if (!isIntNumber(high) || num < 1) {
+                if (!Checkers.isIntNumber(high) || num < 1) {
                     throw typeError(
                         `incorrect input argument: {number of points} is not positive integer number < ${num} >`,
                     )
                 }
 
-                if (!isFunction(func)) {
+                if (!Checkers.isFunction(func)) {
                     throw typeError(`incorrect input argument: not a function < ${func} >`)
                 }
 
-                if (!isNumber(low)) {
+                if (!Checkers.isNumber(low)) {
                     throw typeError(`incorrect input argument: {low} is not number < ${low} >`)
                 }
 
-                if (!isNumber(high)) {
+                if (!Checkers.isNumber(high)) {
                     throw typeError(`incorrect input argument: {high} is not number < ${high} >`)
                 }
 
@@ -951,7 +954,7 @@ export namespace Maths {
             )
 
             export const circleArea = (radius: number): string => {
-                if (!isNumber(radius) || radius < 0) {
+                if (!Checkers.isNumber(radius) || radius < 0) {
                     throw valueError(`incorrect radius value: radius < ${radius} >`)
                 }
 
@@ -959,7 +962,7 @@ export namespace Maths {
             }
 
             export const squareArea = (a: number): string => {
-                if (!isNumber(a) || a < 0) {
+                if (!Checkers.isNumber(a) || a < 0) {
                     throw valueError(`incorrect side value: side < ${a} >`)
                 }
 
@@ -967,7 +970,7 @@ export namespace Maths {
             }
 
             export const rectangularArea = (a: number, b: number): string => {
-                if (!isNumber(a) || !isNumber(b) || a < 0 || b < 0) {
+                if (!Checkers.isNumber(a) || !Checkers.isNumber(b) || a < 0 || b < 0) {
                     throw valueError(`incorrect side values: a < ${a} >, b < ${b} >`)
                 }
 
@@ -975,7 +978,14 @@ export namespace Maths {
             }
 
             export const triangleArea = (a: number, b: number, c: number): string => {
-                if (!isNumber(a) || !isNumber(b) || !isNumber(c) || a < 0 || b < 0 || c < 0) {
+                if (
+                    !Checkers.isNumber(a) ||
+                    !Checkers.isNumber(b) ||
+                    !Checkers.isNumber(c) ||
+                    a < 0 ||
+                    b < 0 ||
+                    c < 0
+                ) {
                     throw valueError(`incorrect side values: a < ${a} >, b < ${b} >, c < ${c} >`)
                 }
 
@@ -984,7 +994,14 @@ export namespace Maths {
             }
 
             export const trapeziumArea = (a: number, b: number, h: number): string => {
-                if (!isNumber(a) || !isNumber(b) || !isNumber(h) || a < 0 || b < 0 || h < 0) {
+                if (
+                    !Checkers.isNumber(a) ||
+                    !Checkers.isNumber(b) ||
+                    !Checkers.isNumber(h) ||
+                    a < 0 ||
+                    b < 0 ||
+                    h < 0
+                ) {
                     throw valueError(`incorrect side values: a < ${a} >, b < ${b} >, height < ${h} >`)
                 }
 
@@ -1011,7 +1028,7 @@ export namespace Maths {
             }
 
             export const triangleSquare = (array: number[][]): number => {
-                if (!isArray(array) || !isArray(array[0])) {
+                if (!Checkers.isArray(array) || !Checkers.isArray(array[0])) {
                     throw valueError(`incorrect array value: array < ${array} >`)
                 }
 
@@ -1030,11 +1047,11 @@ export namespace Maths {
             // Метод касательных (метод Ньютона)
             export const newton = (x0: number, x: number, e: number, func1, func2): number => {
                 if (
-                    !isNumber(x0) ||
-                    !isNumber(x) ||
-                    !isNumber(e) ||
-                    !isFunction(func1) ||
-                    !isFunction(func2)
+                    !Checkers.isNumber(x0) ||
+                    !Checkers.isNumber(x) ||
+                    !Checkers.isNumber(e) ||
+                    !Checkers.isFunction(func1) ||
+                    !Checkers.isFunction(func2)
                 ) {
                     throw valueError(
                         `incorrect input values: x0 < ${x0} >, x < ${x} >, x < ${x} >, precision < ${e} >, function1 < ${func1} >, function2 < ${func2} >`,
@@ -1059,7 +1076,13 @@ export namespace Maths {
                 e: number,
                 func: Processor<number, number>,
             ): number | null => {
-                if (!isNumber(a) || !isNumber(b) || !isNumber(x) || !isNumber(e) || !isFunction(func)) {
+                if (
+                    !Checkers.isNumber(a) ||
+                    !Checkers.isNumber(b) ||
+                    !Checkers.isNumber(x) ||
+                    !Checkers.isNumber(e) ||
+                    !Checkers.isFunction(func)
+                ) {
                     throw valueError(
                         `incorrect input values: lower border < ${a} >, upper border < ${b} >, x < ${x} >, precision < ${e} >, function < ${func} >`,
                     )
@@ -1096,7 +1119,12 @@ export namespace Maths {
 
             // Метод простой итерации
             export const simple = (x0: number, x: number, e: number, func): number => {
-                if (!isNumber(x0) || !isNumber(x) || !isNumber(e) || !isFunction(func)) {
+                if (
+                    !Checkers.isNumber(x0) ||
+                    !Checkers.isNumber(x) ||
+                    !Checkers.isNumber(e) ||
+                    !Checkers.isFunction(func)
+                ) {
                     throw valueError(
                         `incorrect input values: x0 < ${x0} >, x < ${x} >, precision < ${e} >, function < ${func} >`,
                     )
@@ -1116,7 +1144,12 @@ export namespace Maths {
             // });
             // метод половинного деления
             export const hdiv = (a: number, b: number, e: number, func): number | null => {
-                if (!isNumber(a) || !isNumber(b) || !isNumber(e) || !isFunction(func)) {
+                if (
+                    !Checkers.isNumber(a) ||
+                    !Checkers.isNumber(b) ||
+                    !Checkers.isNumber(e) ||
+                    !Checkers.isFunction(func)
+                ) {
                     throw valueError(
                         `incorrect input values: lower border < ${a} >, upper border < ${b} >, precision < ${e} >, function < ${func} >`,
                     )
@@ -1149,13 +1182,13 @@ export namespace Maths {
             // }, 1e-7)
             // document.writeln("let getFuncMinimum: " + xx.xmin + ' ' + xx.ymin)
             export const getFuncMinimum = (a: number, b: number, func, eps: number): { xmin; ymin } => {
-                if (!isNumber(a) || !isNumber(b) || !isFunction(func)) {
+                if (!Checkers.isNumber(a) || !Checkers.isNumber(b) || !Checkers.isFunction(func)) {
                     throw valueError(
                         `incorrect input values: lower border < ${a} >, upper border < ${b} >, function < ${func} >`,
                     )
                 }
 
-                const precision = eps == null ? 0.0001 : isNumber(eps) && eps > 0 ? eps : null
+                const precision = eps == null ? 0.0001 : Checkers.isNumber(eps) && eps > 0 ? eps : null
                 if (precision == null) {
                     throw valueError(`incorrect 'precision' value: < ${precision} >`)
                 }
@@ -1194,7 +1227,7 @@ export namespace Maths {
             // var res = var interpolation(9, 0.1, arX, arY);
             // document.writeln("interpolation: " + res);
             export const interpolate = (arrayX: number[], arrayY: number[], x: number, n: number): number => {
-                if (!isArray(arrayX) || !isArray(arrayY) || !isNumber(x)) {
+                if (!Checkers.isArray(arrayX) || !Checkers.isArray(arrayY) || !Checkers.isNumber(x)) {
                     throw valueError(
                         `incorrect input values: arrayX < ${arrayX} >, arrayY < ${arrayY} >, x < ${x} >`,
                     )
@@ -1221,7 +1254,7 @@ export namespace Maths {
                     return s
                 }
 
-                const num = n == null ? 9 : isIntNumber(n) && n > 0 ? n : null
+                const num = n == null ? 9 : Checkers.isIntNumber(n) && n > 0 ? n : null
                 if (num == null) {
                     throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
@@ -1313,7 +1346,7 @@ export namespace Maths {
                     return sumCos(value) + sumSin(value)
                 }
 
-                if (!isNumber(value) || !isFunction(func)) {
+                if (!Checkers.isNumber(value) || !Checkers.isFunction(func)) {
                     throw valueError(`incorrect input values: x < ${value} >, function < ${func} >`)
                 }
 
@@ -1331,10 +1364,10 @@ export namespace Maths {
             import toDegrees = Helpers.toDegrees
 
             export const intersection = (obj1, obj2): boolean => {
-                if (!isObject(obj1)) {
+                if (!Checkers.isObject(obj1)) {
                     throw valueError(`incorrect input argument: {obj1} is not an object < ${obj1} >`)
                 }
-                if (!isObject(obj2)) {
+                if (!Checkers.isObject(obj2)) {
                     throw valueError(`incorrect input argument: {obj2} is not an object < ${obj2} >`)
                 }
 
@@ -1360,10 +1393,10 @@ export namespace Maths {
                 obj1,
                 obj2,
             ): { x: number; y: number; direction: { x: number; y: number } } | null => {
-                if (!isObject(obj1)) {
+                if (!Checkers.isObject(obj1)) {
                     throw valueError(`incorrect input argument: {obj1} is not an object < ${obj1} >`)
                 }
-                if (!isObject(obj2)) {
+                if (!Checkers.isObject(obj2)) {
                     throw valueError(`incorrect input argument: {obj2} is not an object < ${obj2} >`)
                 }
 
@@ -1378,10 +1411,10 @@ export namespace Maths {
             }
 
             export const direction = (obj1, obj2): { x: number; y: number } => {
-                if (!isObject(obj1)) {
+                if (!Checkers.isObject(obj1)) {
                     throw valueError(`incorrect input argument: {obj1} is not an object < ${obj1} >`)
                 }
-                if (!isObject(obj2)) {
+                if (!Checkers.isObject(obj2)) {
                     throw valueError(`incorrect input argument: {obj2} is not an object < ${obj2} >`)
                 }
 
@@ -1392,10 +1425,10 @@ export namespace Maths {
             }
 
             export const distance = (obj1, obj2): number => {
-                if (!isObject(obj1)) {
+                if (!Checkers.isObject(obj1)) {
                     throw valueError(`incorrect input argument: {obj1} is not an object < ${obj1} >`)
                 }
-                if (!isObject(obj2)) {
+                if (!Checkers.isObject(obj2)) {
                     throw valueError(`incorrect input argument: {obj2} is not an object < ${obj2} >`)
                 }
 
@@ -1412,19 +1445,20 @@ export namespace Maths {
                 lon2: number,
                 radius: number,
             ): number => {
-                if (!isNumber(lat1) || !isNumber(lon1)) {
+                if (!Checkers.isNumber(lat1) || !Checkers.isNumber(lon1)) {
                     throw valueError(
                         `incorrect input arguments: start point latitude < ${lat1} > and longitude < ${lon1} >`,
                     )
                 }
 
-                if (!isNumber(lat2) || !isNumber(lon2)) {
+                if (!Checkers.isNumber(lat2) || !Checkers.isNumber(lon2)) {
                     throw valueError(
                         `incorrect input arguments: start point latitude < ${lat2} > and longitude < ${lon2} >`,
                     )
                 }
 
-                const radius_ = radius == null ? 6378.135 : isNumber(radius) && radius > 0 ? radius : null
+                const radius_ =
+                    radius == null ? 6378.135 : Checkers.isNumber(radius) && radius > 0 ? radius : null
                 if (radius_ == null) {
                     throw valueError(`incorrect {radius} value: < ${radius_} >`)
                 }
@@ -1484,7 +1518,14 @@ export namespace Maths {
             }
 
             export const isTriangle = (a, b, c): boolean => {
-                if (!isNumber(a) || !isNumber(b) || !isNumber(c) || a < 0 || b < 0 || c < 0) {
+                if (
+                    !Checkers.isNumber(a) ||
+                    !Checkers.isNumber(b) ||
+                    !Checkers.isNumber(c) ||
+                    a < 0 ||
+                    b < 0 ||
+                    c < 0
+                ) {
                     throw valueError(`incorrect input parameters: a < ${a} >, b < ${b} >, c < ${c} >`)
                 }
 
@@ -1492,7 +1533,7 @@ export namespace Maths {
             }
 
             export const isTriangleSquared = (array: number[][]): boolean => {
-                if (!isArray(array) || !isArray(array[0])) {
+                if (!Checkers.isArray(array) || !Checkers.isArray(array[0])) {
                     throw valueError(`incorrect array value: array < ${array} >`)
                 }
 
@@ -1506,7 +1547,7 @@ export namespace Maths {
             }
 
             export const crossLines = (line1, line2): { x0: number; y0: number } | string => {
-                if (!isObject(line1) || !isObject(line2)) {
+                if (!Checkers.isObject(line1) || !Checkers.isObject(line2)) {
                     throw valueError(`incorrect input values: line1 < ${line1} >, line2 < ${line2} >`)
                 }
 
@@ -1609,15 +1650,15 @@ export namespace Maths {
                 polygon: { arrayX: number[]; arrayY: number[] },
                 point: { x: number; y: number },
             ): boolean => {
-                if (!isObject(polygon)) {
+                if (!Checkers.isObject(polygon)) {
                     throw valueError(`incorrect input value: {polygon} not an object < ${polygon} >`)
                 }
 
                 if (
                     !Object.prototype.hasOwnProperty.call(polygon, 'arrayX') ||
                     !Object.prototype.hasOwnProperty.call(polygon, 'arrayY') ||
-                    !isArray(polygon['arrayX']) ||
-                    !isArray(polygon['arrayY'])
+                    !Checkers.isArray(polygon['arrayX']) ||
+                    !Checkers.isArray(polygon['arrayY'])
                 ) {
                     throw valueError(
                         `incorrect input value: {polygon} is invalid {'arrayX': array, 'arrayY': array} < ${polygon} >`,
@@ -1630,15 +1671,15 @@ export namespace Maths {
                     )
                 }
 
-                if (!isObject(point)) {
+                if (!Checkers.isObject(point)) {
                     throw valueError(`incorrect input values: {point} is not object < ${point} >`)
                 }
 
                 if (
                     !Object.prototype.hasOwnProperty.call(point, 'x') ||
                     !Object.prototype.hasOwnProperty.call(point, 'y') ||
-                    !isNumber(point['x']) ||
-                    !isNumber(point['arrayY'])
+                    !Checkers.isNumber(point['x']) ||
+                    !Checkers.isNumber(point['arrayY'])
                 ) {
                     throw valueError(
                         `incorrect input value: {point} is invalid {'x': number, 'y': number} < ${point} >`,
@@ -1670,7 +1711,7 @@ export namespace Maths {
                 startCoords: { longitude: number; latitude: number },
                 destCoords: { longitude: number; latitude: number },
             ): number => {
-                if (!isObject(startCoords) || !isObject(destCoords)) {
+                if (!Checkers.isObject(startCoords) || !Checkers.isObject(destCoords)) {
                     throw valueError('incorrect initialization value: [not an object]')
                 }
                 if (
@@ -1708,7 +1749,7 @@ export namespace Maths {
                 coords: { longitude; latitude },
                 arrayOfCoords: { longitude; latitude }[],
             ): void => {
-                if (!isArray(arrayOfCoords)) {
+                if (!Checkers.isArray(arrayOfCoords)) {
                     throw valueError(`incorrect array value: < ${arrayOfCoords} >`)
                 }
 
@@ -1741,7 +1782,7 @@ export namespace Maths {
                 const n = (a - b) / (a + b) // Приплюснутость
 
                 return (point): { north: number; east: number } => {
-                    if (!isObject(point)) {
+                    if (!Checkers.isObject(point)) {
                         throw valueError(`incorrect input value: <point> not an object < ${point} >`)
                     }
 
@@ -1754,7 +1795,7 @@ export namespace Maths {
                         )
                     }
 
-                    if (!isNumber(point['lon']) || !isArray(point['lat'])) {
+                    if (!Checkers.isNumber(point['lon']) || !Checkers.isArray(point['lat'])) {
                         throw valueError(
                             `incorrect type value: not a number {'lon': ${point['lon']}, 'lat': ${point['lat']}}`,
                         )
@@ -1849,7 +1890,7 @@ export namespace Maths {
             }
 
             export const isArmStrongNumber = (num: number): boolean => {
-                if (!isNumber(num)) {
+                if (!Checkers.isNumber(num)) {
                     throw valueError(`incorrect input value: num < ${num} >`)
                 }
 
@@ -1869,12 +1910,12 @@ export namespace Maths {
             }
 
             export const isLatinSquare = (array: number[][]): boolean => {
-                if (!isArray(array)) {
+                if (!Checkers.isArray(array)) {
                     throw valueError(`incorrect array value: < ${array} >`)
                 }
 
                 const w = array.length ? array.length : 0,
-                    h = array[0] && isArray(array[0]) ? array[0].length : 0
+                    h = array[0] && Checkers.isArray(array[0]) ? array[0].length : 0
                 if (h === 0 || w === 0 || h !== w) {
                     throw valueError(`incorrect matrix size width=${w}, height=${h}`)
                 }
@@ -1910,7 +1951,7 @@ export namespace Maths {
             }
 
             export const denom = (num: number): number[] => {
-                if (!isIntNumber(num)) {
+                if (!Checkers.isIntNumber(num)) {
                     throw valueError(`incorrect input value: num < ${num} >`)
                 }
 
@@ -1929,7 +1970,7 @@ export namespace Maths {
             }
 
             export const denom2 = (num: number): number[] => {
-                if (!isIntNumber(num)) {
+                if (!Checkers.isIntNumber(num)) {
                     throw valueError(`incorrect input value: num < ${num} >`)
                 }
 
@@ -1946,7 +1987,7 @@ export namespace Maths {
             }
 
             export const sumNum = (num: number): number => {
-                if (!isNumber(num)) {
+                if (!Checkers.isNumber(num)) {
                     throw valueError(`incorrect input value: num < ${num} >`)
                 }
 
@@ -1961,7 +2002,7 @@ export namespace Maths {
             }
 
             export const prefixAverages = (array: number[]): number[] => {
-                if (!isArray(array)) {
+                if (!Checkers.isArray(array)) {
                     throw valueError(`incorrect array value: < ${array} >`)
                 }
 
@@ -1976,7 +2017,7 @@ export namespace Maths {
             }
 
             export const gcd = (i: number, j: number): number => {
-                if (!isNumber(i) || !isNumber(j)) {
+                if (!Checkers.isNumber(i) || !Checkers.isNumber(j)) {
                     throw valueError(`incorrect input values: x < ${i} >, y < ${j} >`)
                 }
 
@@ -1994,7 +2035,7 @@ export namespace Maths {
             }
 
             export const gcd2 = (i: number, j: number): number => {
-                if (!isNumber(i) || !isNumber(j)) {
+                if (!Checkers.isNumber(i) || !Checkers.isNumber(j)) {
                     throw valueError(`incorrect input values: x < ${i} >, y < ${j} >`)
                 }
 
@@ -2011,7 +2052,7 @@ export namespace Maths {
             }
 
             export const gcd3 = (x: number, y: number): number => {
-                if (!isNumber(x) || !isNumber(y)) {
+                if (!Checkers.isNumber(x) || !Checkers.isNumber(y)) {
                     throw valueError(`incorrect input values: x < ${x} >, y < ${y} >`)
                 }
 
@@ -2059,7 +2100,7 @@ export namespace Maths {
                         usedChars.pop()
                     }
                 }
-                if (!isArray(str)) {
+                if (!Checkers.isArray(str)) {
                     throw valueError(`incorrect input parameter: array < ${str} >`)
                 }
                 permute(str)
@@ -2068,13 +2109,13 @@ export namespace Maths {
             }
 
             export const exp = (value: number, n: number): number => {
-                if (!isNumber(value)) {
+                if (!Checkers.isNumber(value)) {
                     throw valueError(
                         `incorrect input values:  value< ${value} >, number of iterations < ${n} >`,
                     )
                 }
 
-                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
+                const num = n == null ? 100 : Checkers.isIntNumber(n) && n > 0 ? n : null
                 if (num == null) {
                     throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
@@ -2103,11 +2144,11 @@ export namespace Maths {
             // document.writeln("<p>" + res + "</p>");
             // Метод Ньютона-Рафсона
             export const polinom = (array: number[], init: number, n: number): number => {
-                if (!isArray(array) || !isNumber(init)) {
+                if (!Checkers.isArray(array) || !Checkers.isNumber(init)) {
                     throw valueError(`incorrect input values:  array < ${array} >, initial value < ${init} >`)
                 }
 
-                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
+                const num = n == null ? 100 : Checkers.isIntNumber(n) && n > 0 ? n : null
                 if (num == null) {
                     throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
@@ -2137,13 +2178,13 @@ export namespace Maths {
             //	return x * x - 9 * x + 14;
             // };
             export const polinom2 = (func: Processor<number, number>, init: number, n: number): number => {
-                if (!isNumber(init) || !isFunction(func)) {
+                if (!Checkers.isNumber(init) || !Checkers.isFunction(func)) {
                     throw valueError(
                         `incorrect input values:  initial value < ${init} >, function < ${func} >`,
                     )
                 }
 
-                const num = n == null ? 100 : isIntNumber(n) && n > 0 ? n : null
+                const num = n == null ? 100 : Checkers.isIntNumber(n) && n > 0 ? n : null
                 if (num == null) {
                     throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
@@ -2160,11 +2201,11 @@ export namespace Maths {
 
             // document.writeln("monteCarlo: " + monteCarlo(2, 5));
             export const monteCarlo = (r: number, h: number, N: number): number => {
-                if (!isNumber(r) || !isNumber(h)) {
+                if (!Checkers.isNumber(r) || !Checkers.isNumber(h)) {
                     throw valueError(`incorrect input values:  r < ${r} >, h < ${h} >`)
                 }
 
-                const num = N == null ? 150 : isIntNumber(N) && N > 0 ? N : null
+                const num = N == null ? 150 : Checkers.isIntNumber(N) && N > 0 ? N : null
                 if (num == null) {
                     throw valueError(`incorrect 'number of iterations' value: < ${num} >`)
                 }
@@ -2206,7 +2247,7 @@ export namespace Maths {
 
             const fib = (num: number): number => {
                 let result = memo[num]
-                if (!isNumber(result)) {
+                if (!Checkers.isNumber(result)) {
                     result = fib(num - 1) + fib(num - 2)
                     memo[num] = result
                 }
@@ -2217,7 +2258,7 @@ export namespace Maths {
         })()
 
         export const fibonacci3 = (num: number): number[] => {
-            if (!isIntNumber(num) || num < 0) {
+            if (!Checkers.isIntNumber(num) || num < 0) {
                 throw valueError(`incorrect input value: count < ${num} >`)
             }
 
@@ -2240,7 +2281,7 @@ export namespace Maths {
         }
 
         export const fibonacci4 = (num: number): number[] => {
-            if (!isIntNumber(num) || num < 0) {
+            if (!Checkers.isIntNumber(num) || num < 0) {
                 throw valueError(`incorrect input string: value < ${num} >`)
             }
 
@@ -2358,7 +2399,7 @@ export namespace Maths {
             ]
 
             return (n: number) => {
-                if (!isIntNumber(n)) {
+                if (!Checkers.isIntNumber(n)) {
                     throw valueError(`incorrect input argument: fibonacci sequence number < ${n} >`)
                 }
 
@@ -2377,7 +2418,7 @@ export namespace Maths {
         })
 
         export const factorial2 = (num: number): number => {
-            if (!isIntNumber(num) || num < 0) {
+            if (!Checkers.isIntNumber(num) || num < 0) {
                 throw valueError(`incorrect input parameter: factorial (n!) < ${num} >`)
             }
 
@@ -2390,7 +2431,7 @@ export namespace Maths {
         }
 
         export const factorial3 = (num: number): number[] => {
-            if (!isIntNumber(num) || num < 0) {
+            if (!Checkers.isIntNumber(num) || num < 0) {
                 throw valueError(`incorrect input parameters: max number < ${num} >`)
             }
 
@@ -2439,7 +2480,7 @@ export namespace Maths {
         }
 
         export const factfact = (value: number): number => {
-            if (!isIntNumber(value) || value < 0) {
+            if (!Checkers.isIntNumber(value) || value < 0) {
                 throw valueError(`incorrect input value: num < ${value} >`)
             }
 
@@ -2668,13 +2709,13 @@ export namespace Maths {
         export const rangeVector = (min: number, max: number, delta: number): number[] => {
             const res: number[] = []
 
-            const minValue = isNumber(min) ? min : null
-            if (isNull(minValue)) {
+            const minValue = Checkers.isNumber(min) ? min : null
+            if (Checkers.isNull(minValue)) {
                 throw valueError(`incorrect {min} value: < ${min} >`)
             }
 
-            const maxValue = isNumber(max) ? max : null
-            if (isNull(maxValue)) {
+            const maxValue = Checkers.isNumber(max) ? max : null
+            if (Checkers.isNull(maxValue)) {
                 throw valueError(`incorrect {max} value: < ${max} >`)
             }
 
@@ -2684,8 +2725,8 @@ export namespace Maths {
                 throw valueError(`incorrect range size: min < ${minValue} >, max < ${maxValue} >`)
             }
 
-            const deltaValue = delta == null ? 1 : isNumber(delta) && delta > 0 ? delta : null
-            if (isNull(deltaValue)) {
+            const deltaValue = delta == null ? 1 : Checkers.isNumber(delta) && delta > 0 ? delta : null
+            if (Checkers.isNull(deltaValue)) {
                 throw valueError(`incorrect {delta} value: < ${delta} >`)
             }
 

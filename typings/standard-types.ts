@@ -182,3 +182,32 @@ export const isNullish = (value: unknown): value is Nullish => value === null ||
  */
 export type NullOrNotEmpty = Optional<PropertyKey>
 // -------------------------------------------------------------------------------------------------
+/**
+ * ObjectMap
+ * @desc Type representing object key-value mappings
+ */
+export type ObjectMap<T> = {
+    [key: string]: Optional<T>
+}
+// -------------------------------------------------------------------------------------------------
+/**
+ * StringSet
+ * @desc Type representing string {@link Set}
+ */
+export type StringSet = Set<string>
+/**
+ * NumberSet
+ * @desc Type representing number {@link Set}
+ */
+export type NumberSet = Set<number>
+/**
+ * PropertyKeySet
+ * @desc Type representing property key {@link Set}
+ */
+export type PropertyKeySet = Set<PropertyKey>
+/**
+ * OptionalSet
+ * @desc Type representing optional {@link Set}
+ */
+export type OptionalSet<T> = Set<Optional<T>>
+// -------------------------------------------------------------------------------------------------

@@ -1,21 +1,22 @@
 import 'jsdom-global/register'
-import { Browsers } from "../src";
+import { Browsers, Strings } from '../src'
 
 export namespace Browsers_Test {
-    import replaceURLWithHTMLLinks = Browsers.replaceUrlWithHtmlLinks;
-    import createElement = Browsers.make;
-    import hasAttribute = Browsers.hasAttribute;
-    import windowWidth = Browsers.windowWidth;
-    import windowHeight = Browsers.windowHeight;
+    import replaceURLWithHTMLLinks = Browsers.replaceUrlWithHtmlLinks
+    import createElement = Browsers.make
+    import hasAttribute = Browsers.hasAttribute
+    import windowWidth = Browsers.windowWidth
+    import windowHeight = Browsers.windowHeight
+    import isTagNameValid = Strings.isTagNameValid
 
     beforeAll(() => {
-        console.log("Browsers test suite started")
-        console.time("Execution time took")
+        console.log('Browsers test suite started')
+        console.time('Execution time took')
     })
 
     afterAll(() => {
-        console.log("Browsers test suite finished")
-        console.timeEnd("Execution time took")
+        console.log('Browsers test suite finished')
+        console.timeEnd('Execution time took')
     })
 
     describe('Check DOM element matches', () => {
@@ -71,10 +72,14 @@ export namespace Browsers_Test {
 
     describe('Check replace url links with html tags', () => {
         it('it should return valid url link DOM element', () => {
-            expect(replaceURLWithHTMLLinks('https://www.google.com/')).toEqual("<a href='https://www.google.com/'>https://www.google.com/</a>")
-            expect(replaceURLWithHTMLLinks('https://www.google.com/', 'Google')).toEqual("<a href='https://www.google.com/'>Google</a>")
+            expect(replaceURLWithHTMLLinks('https://www.google.com/')).toEqual(
+                "<a href='https://www.google.com/'>https://www.google.com/</a>",
+            )
+            expect(replaceURLWithHTMLLinks('https://www.google.com/', 'Google')).toEqual(
+                "<a href='https://www.google.com/'>Google</a>",
+            )
             expect(replaceURLWithHTMLLinks('')).toEqual('')
-            expect(replaceURLWithHTMLLinks('', "Test")).toEqual('')
+            expect(replaceURLWithHTMLLinks('', 'Test')).toEqual('')
         })
     })
 
@@ -86,25 +91,45 @@ export namespace Browsers_Test {
             expect(document.querySelector('body').innerHTML).toEqual('<div></div>')
 
             const div2 = createElement('div', ['test'], {
-                'width': '100%',
-                'height': '100%'
+                width: '100%',
+                height: '100%',
             })
             document.body.replaceChild(div2, div)
             // @ts-ignore
-            expect(document.querySelector('body').innerHTML).toEqual('<div class=\"test\"></div>')
+            expect(document.querySelector('body').innerHTML).toEqual('<div class="test"></div>')
 
             const span = createElement('span', ['test'])
             document.body.replaceChild(span, div2)
             // @ts-ignore
-            expect(document.querySelector('body').innerHTML).toEqual('<span class=\"test\"></span>')
+            expect(document.querySelector('body').innerHTML).toEqual('<span class="test"></span>')
 
             const span2 = createElement('span', ['test', 'test2'], {
-                'width': '100%',
-                'height': '100%'
+                width: '100%',
+                height: '100%',
             })
             document.body.replaceChild(span2, span)
             // @ts-ignore
-            expect(document.querySelector('body').innerHTML).toEqual('<span class=\"test test2\"></span>')
+            expect(document.querySelector('body').innerHTML).toEqual('<span class="test test2"></span>')
+        })
+    })
+
+    describe('Check tag name supported symbols', () => {
+        it('returns false when invalid(including invalid characters)', () => {
+            const result = isTagNameValid('not valid')
+
+            expect(result).toBe(false)
+        })
+
+        it('returns false when invalid(empty)', () => {
+            const result = isTagNameValid('')
+
+            expect(result).toBe(false)
+        })
+
+        it('returns true when valid', () => {
+            const result = isTagNameValid('valid')
+
+            expect(result).toBe(true)
         })
     })
 }

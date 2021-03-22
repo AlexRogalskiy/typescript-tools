@@ -14,6 +14,10 @@ export namespace DataTimes {
         seconds: ['second', 'seconds'],
     }
 
+    export const getNow = (): string => {
+        return new Date().toISOString()
+    }
+
     export const formateDate = (date: Date | number | string, format: string): string => {
         let d: Date
         if (typeof date === 'number') {

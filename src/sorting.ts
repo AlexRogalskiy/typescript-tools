@@ -5,10 +5,7 @@ import { Comparators } from './comparators'
 import { Comparator } from '../typings/function-types'
 
 export namespace Sorting {
-    import isFunction = Checkers.isFunction
     import valueError = Errors.valueError
-    import isArray = Checkers.isArray
-    import isIntNumber = Checkers.isIntNumber
     import typeError = Errors.typeError
     import compareByOrder = Comparators.compareByOrder
 
@@ -43,11 +40,11 @@ export namespace Sorting {
      * stable: true
      */
     export const bubbleSort = <T>(array: T[], cmp?: Comparator<T>): T[] => {
-        if (!isArray(array)) {
+        if (!Checkers.isArray(array)) {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
+        const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
         const n = array.length
         let swapped
 
@@ -75,10 +72,10 @@ export namespace Sorting {
      *
      */
     export const bucketSort = (array: number[], cmp: Comparator<number>): number[] => {
-        if (!isArray(array)) {
+        if (!Checkers.isArray(array)) {
             throw valueError(`incorrect input parameter: not array < ${array} >`)
         }
-        cmp = isFunction(cmp) ? cmp : compareByOrder
+        cmp = Checkers.isFunction(cmp) ? cmp : compareByOrder
 
         if (array.length < 2) {
             return array
@@ -139,11 +136,11 @@ export namespace Sorting {
         const steps = [701, 301, 132, 57, 23, 10, 4, 1]
 
         return <T>(array: T[], cmp?: Comparator<T>): T[] => {
-            if (!isArray(array)) {
+            if (!Checkers.isArray(array)) {
                 throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
-            const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
+            const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
             for (const gap of steps) {
                 for (let i = gap; i < array.length; i += gap) {
                     const current = array[i]
@@ -174,12 +171,12 @@ export namespace Sorting {
      *
      */
     export const shellSort2 = <T>(array: T[], step: number, cmp?: Comparator<T>): T[] => {
-        if (!isArray(array)) {
+        if (!Checkers.isArray(array)) {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        const step_ = isIntNumber(step) && step > 0 ? step : array.length
-        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
+        const step_ = Checkers.isIntNumber(step) && step > 0 ? step : array.length
+        const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
 
         let isSorted
         for (let gap = Math.floor(step_ / 2); gap > 0; gap = Math.floor(gap / 2)) {
@@ -212,11 +209,11 @@ export namespace Sorting {
      *
      */
     export const shellsort3 = <T>(array: T[], cmp?: Comparator<T>): T[] => {
-        if (!isArray(array)) {
+        if (!Checkers.isArray(array)) {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
+        const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
 
         let temp,
             gap = 1
@@ -273,13 +270,13 @@ export namespace Sorting {
         }
 
         return <T>(array: T[], left: number, right: number, cmp?: Comparator<T>) => {
-            if (!isArray(array)) {
+            if (!Checkers.isArray(array)) {
                 throw valueError(`incorrect input parameters: array < ${array} >`)
             }
 
-            const left_ = isIntNumber(left) && left > 0 ? left : 0
-            const right_ = isIntNumber(right) && right > 0 ? right : array.length
-            const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
+            const left_ = Checkers.isIntNumber(left) && left > 0 ? left : 0
+            const right_ = Checkers.isIntNumber(right) && right > 0 ? right : array.length
+            const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
 
             hoora(array, left_, right_, cmp_)
 
@@ -308,11 +305,11 @@ export namespace Sorting {
      *
      */
     export const insertionSort2 = <T>(array: T[], cmp?: Comparator<T>): T[] => {
-        if (!isArray(array)) {
+        if (!Checkers.isArray(array)) {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
+        const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
 
         let temp
         for (let i = 1; i < array.length; i++) {
@@ -358,12 +355,12 @@ export namespace Sorting {
         }
 
         return <T>(array: T[], start: number, cmp?: Comparator<T>) => {
-            if (!isArray(array)) {
+            if (!Checkers.isArray(array)) {
                 throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
-            const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
-            const start_ = isIntNumber(start) && start >= 0 && start < array.length - 1 ? start : 0
+            const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
+            const start_ = Checkers.isIntNumber(start) && start >= 0 && start < array.length - 1 ? start : 0
 
             if (start === null) return
 
@@ -427,11 +424,11 @@ export namespace Sorting {
         }
 
         return <T>(array: T[], cmp?: Comparator<T>): T[] => {
-            if (!isArray(array)) {
+            if (!Checkers.isArray(array)) {
                 throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
-            const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
+            const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
 
             return mergeSortSimple(array, cmp_)
         }
@@ -474,11 +471,11 @@ export namespace Sorting {
         }
 
         return <T>(array: T[], cmp?: Comparator<T>) => {
-            if (!isArray(array)) {
+            if (!Checkers.isArray(array)) {
                 throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
-            const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
+            const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
 
             return mergeSort_(array, 0, array.length, cmp_)
         }
@@ -524,11 +521,11 @@ export namespace Sorting {
         }
 
         return <T>(array: T[], cmp?: Comparator<T>): void => {
-            if (!isArray(array)) {
+            if (!Checkers.isArray(array)) {
                 throw valueError(`incorrect input array: < ${array} >`)
             }
 
-            const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
+            const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
             quicksort(array, 0, array.length - 1, cmp_)
         }
     })()
@@ -554,11 +551,11 @@ export namespace Sorting {
      * stable: false
      */
     export const quickSort = <T>(array: T[], cmp?: Comparator<T>): T[] => {
-        if (!isArray(array)) {
+        if (!Checkers.isArray(array)) {
             throw valueError(`incorrect input array: < ${array} >`)
         }
 
-        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
+        const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
 
         const leftStack: number[] = []
         const rightStack: number[] = []
@@ -616,18 +613,18 @@ export namespace Sorting {
      * document.writeln('heapSort: ' + res);
      */
     // export const heapsort = <T>(array: T[], min: number, max: number, cmp?: Comparator<T>): T[] => {
-    //     if (!isArray(array)) {
+    //     if (!Checkers.isArray(array)) {
     //         throw valueError(`incorrect input parameter: array < ${array} >`)
     //     }
     //
-    //     min = isIntNumber(min) && min > 0 && min < array.length ? min : 0
-    //     max = isIntNumber(max) && max > 0 && max < array.length ? max : array.length - 1
+    //     min = Checkers.isIntNumber(min) && min > 0 && min < array.length ? min : 0
+    //     max = Checkers.isIntNumber(max) && max > 0 && max < array.length ? max : array.length - 1
     //
     //     if (min > max) {
     //         throw valueError(`incorrect min or max value: min < ${min} >, max < ${max} >`)
     //     }
     //
-    //     const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+    //     const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : cmpByDefault
     //
     //     const heap = maxHeap(array.slice(min, max + 1), cmp_),
     //         result = []
@@ -666,11 +663,11 @@ export namespace Sorting {
         }
 
         return <T>(array: T[], cmp?: Comparator<T>) => {
-            if (!isArray(array)) {
+            if (!Checkers.isArray(array)) {
                 throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
-            const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
+            const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
             const n = array.length
             for (let j = Math.floor(n / 2); j > 0; j--) {
                 adjust(array, j, n, cmp_)
@@ -733,11 +730,11 @@ export namespace Sorting {
         }
 
         return <T>(array: T[], cmp?: Comparator<T>): T[] => {
-            if (!isArray(array)) {
+            if (!Checkers.isArray(array)) {
                 throw valueError(`incorrect input parameter: array < ${array} >`)
             }
 
-            const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
+            const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
             const n = array.length
             for (let i = n - 1; i >= 0; i--) {
                 siftup(array, i, n, cmp_)
@@ -766,11 +763,11 @@ export namespace Sorting {
      * @return {Array} Current sorted array
      */
     // export const pqsort = <T>(array: T[], cmp?: Comparator<T>): T[] => {
-    //     if (!isArray(array)) {
+    //     if (!Checkers.isArray(array)) {
     //         throw valueError(`incorrect input parameter: array < ${array} >`)
     //     }
     //
-    //     const cmp_ = cmp && isFunction(cmp) ? cmp : cmpByDefault
+    //     const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : cmpByDefault
     //
     //     const pq = priqueue(array, cmp_)
     //     //for(var i=0; i<array.length; i++) {
@@ -792,11 +789,11 @@ export namespace Sorting {
      * zero, or positive value, depending on the arguments.
      */
     export const insertionSort = <T>(array: T[], cmp?: Comparator<T>): void => {
-        if (!isArray(array)) {
+        if (!Checkers.isArray(array)) {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
+        const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
         for (let i = 1; i < array.length; i++) {
             const temp = array[i]
             for (let j = i; j > 0 && cmp_(array[j - 1], temp) > 0; j--) {
@@ -817,13 +814,13 @@ export namespace Sorting {
      * zero, or positive value, depending on the arguments.
      */
     export const sort = <T>(array: T[], min: number, max: number, cmp?: Comparator<T>): void => {
-        if (!isArray(array)) {
+        if (!Checkers.isArray(array)) {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        const min_ = isIntNumber(min) && min > 0 ? min : 0
-        const max_ = isIntNumber(max) && max > 0 ? max : array.length - 1
-        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
+        const min_ = Checkers.isIntNumber(min) && min > 0 ? min : 0
+        const max_ = Checkers.isIntNumber(max) && max > 0 ? max : array.length - 1
+        const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
 
         if (min_ > max_) {
             throw valueError(`incorrect min or max value: min < ${min} >, max < ${max} >`)
@@ -845,11 +842,11 @@ export namespace Sorting {
      * zero, or positive value, depending on the arguments.
      */
     export const gnomeSort = <T>(array: T[], cmp?: Comparator<T>): void => {
-        if (!isArray(array)) {
+        if (!Checkers.isArray(array)) {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
+        const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
         const n = array.length
 
         let i = 1
@@ -877,11 +874,11 @@ export namespace Sorting {
      * zero, or positive value, depending on the arguments.
      */
     export const cocktailSort = <T>(array: T[], cmp?: Comparator<T>): void => {
-        if (!isArray(array)) {
+        if (!Checkers.isArray(array)) {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
+        const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
 
         let j = array.length - 1
         let i = 0
@@ -919,11 +916,11 @@ export namespace Sorting {
      * @return {Array} Sorted Array
      */
     export const simpleCountSort = <T>(array: T[], cmp?: Comparator<T>): T[] => {
-        if (!isArray(array)) {
+        if (!Checkers.isArray(array)) {
             throw valueError(`incorrect input parameter: array < ${array} >`)
         }
 
-        const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
+        const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
 
         const n = array.length
         const count = Maths.Helpers.vector(n, 0)
@@ -966,11 +963,11 @@ export namespace Sorting {
         }
 
         return <T>(array: T[], cmp?: Comparator<T>): void => {
-            if (!isArray(array)) {
+            if (!Checkers.isArray(array)) {
                 throw typeError(`incorrect input argument: not array < ${array} >`)
             }
 
-            const cmp_ = cmp && isFunction(cmp) ? cmp : compareByOrder
+            const cmp_ = cmp && Checkers.isFunction(cmp) ? cmp : compareByOrder
             const n = array.length
 
             let gap = n,

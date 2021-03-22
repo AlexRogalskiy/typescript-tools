@@ -1,4 +1,6 @@
 import {
+    accessSync,
+    constants,
     existsSync,
     MakeDirectoryOptions,
     mkdirSync,
@@ -22,6 +24,8 @@ import { Optional } from '../typings/standard-types'
 
 export namespace Files {
     import uniqueId = Strings.uniqueId
+    import escapeRegExp = Strings.escapeRegExp
+    import isBlankString = Strings.isBlankString
 
     interface Options {
         throwNotFound?: boolean
@@ -222,6 +226,107 @@ export namespace Files {
         return result
     }
 
+    export const convertItemListToArray = (itemList: DataTransferItemList): DataTransferItem[] => {
+        const items: DataTransferItem[] = []
+
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
+        for (let i = 0; i < itemList.length; i++) {
+            items.push(itemList[i])
+        }
+
+        return items
+    }
+
+    export const getFolderNameFromPathname = (pathname: string): string | null => {
+        if (pathname === '/') return null
+
+        return pathname.split('/').slice(-1)[0]
+    }
+
+    export const isFolderNameValid = (name: string): boolean => {
+        if (name.length === 0) return false
+        // eslint-disable-next-line no-control-regex
+        return !new RegExp(/[<>:"\\/|?*\x00-\x1F]/g).test(name)
+    }
+
+    export const isFolderPathnameValid = (pathname: string): boolean => {
+        if (pathname === '/') return true
+        if (!pathname.startsWith('/')) return false
+
+        const [, ...folderNames] = pathname.split('/')
+
+        return folderNames.every(isFolderNameValid)
+    }
+
+    export const isSubPathname = (rootPathname: string, targetPathname: string): boolean => {
+        return new RegExp(`^${escapeRegExp(rootPathname)}/.+`).test(targetPathname)
+    }
+
+    export const isDirectSubPathname = (rootPathname: string, targetPathname: string): boolean => {
+        return new RegExp(
+            `^${rootPathname === '/' ? '' : escapeRegExp(rootPathname)}/[^<>:"\\/|?*\x00-\x1F]+$`,
+        ).test(targetPathname)
+    }
+
+    export const filterByExtension = (fileNames: string[], extension = '.json'): string[] => {
+        return fileNames.filter(fileName => fileName.endsWith(extension))
+    }
+
+    export const appendFileProtocol = (pathname: string): string => {
+        return `file://${pathname.replace(/\\/g, '/')}`
+    }
+
+    export const readAsText = async (file: File): Promise<string> => {
+        return new Promise((res, rej) => {
+            const reader = new FileReader()
+            reader.onload = e => res(e.target?.result as string)
+            reader.onerror = () => {
+                reader.abort()
+                rej(new Error('Cannot read input file'))
+            }
+            reader.readAsText(file)
+        })
+    }
+
+    export const convertFileListToArray = (fileList: FileList): File[] => {
+        const files: File[] = []
+
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
+        for (let i = 0; i < fileList.length; i++) {
+            files.push(fileList[i])
+        }
+
+        return files
+    }
+
+    export const inspectDataTransfer = (dataTransfer: DataTransfer): any => {
+        if (process.env.NODE_ENV === 'production') {
+            return
+        }
+
+        const items = convertItemListToArray(dataTransfer.items).map(item => {
+            return {
+                type: item.type,
+                kind: item.kind,
+                file: item.getAsFile(),
+            }
+        })
+
+        const files = convertFileListToArray(dataTransfer.files).map(file => {
+            return {
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                lastModified: file.lastModified,
+            }
+        })
+
+        console.log({
+            items,
+            files,
+        })
+    }
+
     export const ensureDirExists = (
         dir: string,
         options: MakeDirectoryOptions = { recursive: true },
@@ -235,6 +340,20 @@ export namespace Files {
             return JSON.parse(rawContent)
         } catch (ex) {
             throw new Error(`An error occurred while parsing the contents of the file: ${path}. Error: ${ex}`)
+        }
+    }
+
+    export const isValidFile = (fileName: string, extension = '.json'): boolean => {
+        return !isBlankString(fileName) && fileName.endsWith(extension) && checkFileExists(fileName)
+    }
+
+    export const checkFileExists = (fileName: string, mode = constants.F_OK | constants.R_OK): boolean => {
+        try {
+            accessSync(fileName, mode)
+
+            return true
+        } catch (err) {
+            return false
         }
     }
 }

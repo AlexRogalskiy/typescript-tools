@@ -1,4 +1,4 @@
-import { ErrorData, ErrorType } from '../typings/enum-types'
+import { DbClientErrorType, ErrorData, ErrorType } from '../typings/enum-types'
 
 import { Logging } from './logging'
 import { Utils } from './utils'
@@ -209,6 +209,44 @@ export namespace Errors {
     }
 
     /**
+     * DbClientError
+     * @desc Class representing database client errors
+     */
+    export class DbClientError extends GeneralError {
+        readonly statusCode: number
+
+        constructor(readonly message: string, readonly code: DbClientErrorType, ...args: any[]) {
+            super(ErrorType.db_error, message, args)
+            this.code = code
+            this.statusCode = DbClientError.getStatusCodeFromCode(code)
+        }
+
+        static getStatusCodeFromCode(code: string): number {
+            if (code === DbClientErrorType.NotFound) {
+                return 404
+            } else if (code === DbClientErrorType.Conflict) {
+                return 409
+            } else if (code === DbClientErrorType.UnprocessableEntity) {
+                return 422
+            }
+
+            return 500
+        }
+    }
+
+    export const unprocessableEntityDbError = (message: string): DbClientError => {
+        return new DbClientError(message, DbClientErrorType.UnprocessableEntity)
+    }
+
+    export const notFoundDbError = (message: string): DbClientError => {
+        return new DbClientError(message, DbClientErrorType.NotFound)
+    }
+
+    export const conflictDbError = (message: string): DbClientError => {
+        return new DbClientError(message, DbClientErrorType.Conflict)
+    }
+
+    /**
      * Error constructor types
      * @desc Types representing error constructors
      */
@@ -221,6 +259,7 @@ export namespace Errors {
     export type ResponseErrorConstructor = typeof ResponseError
     export type UnsupportedParameterErrorConstructor = typeof UnsupportedParameterError
     export type QueryParseErrorConstructor = typeof QueryParseError
+    export type DbClientErrorConstructor = typeof DbClientError
 
     export const newError = (type: ErrorType, message: string): ErrorData => {
         return { type, message }

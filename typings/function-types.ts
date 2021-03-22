@@ -15,6 +15,14 @@ export type Callback = (...args: any[]) => void
  *   type GenericCallback = () => console.log("test")
  */
 export type GenericCallback<T> = (...args: T[]) => void
+
+/**
+ * GenericValueCallback
+ * @desc Type representing value callback function type in TypeScript
+ * @example
+ *   type GenericValueCallback = () => console.log("test")
+ */
+export type GenericValueCallback<T, U> = (...args: T[]) => U
 // -------------------------------------------------------------------------------------------------
 /**
  * IteratorStep

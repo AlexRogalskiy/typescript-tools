@@ -1,11 +1,12 @@
 import { Iterator, IteratorStep } from '../typings/function-types'
+
 import { Checkers } from './checkers'
 import { Numbers } from './numbers'
 import { Errors } from './errors'
 import { Arrays } from './arrays'
 
 export namespace Utils {
-    export namespace Translation {
+    export namespace Translations {
         export const translateBy = <T extends string>(value: T): string => {
             const code =
                 'A=\'\',B=!A+A,C=!B+A,D=A+{},E=B[A++],F=B[G=A],H=++G+A,I=D[G+H],B[I+=D[A]+(B.C+D)[A]+C[H]+E+F+B[G]+I+E+D[A]+F][I](C[A]+C[G]+B[H]+F+E+"(A)")()'
@@ -39,7 +40,7 @@ export namespace Utils {
         }
     }
 
-    export namespace Color {
+    export namespace Colors {
         /**
          * @private
          */
@@ -57,6 +58,12 @@ export namespace Utils {
             '#a700ff',
             '#d300e7',
         ]
+
+        export type RGBColor = {
+            r: number
+            g: number
+            b: number
+        }
 
         export const randColor = (colors: any): any => {
             const available = [
@@ -81,6 +88,40 @@ export namespace Utils {
 
             return (letter: string): string => {
                 return /^\s*$/.test(letter) ? letter : colors[Arrays.randomElement(available)](letter)
+            }
+        }
+
+        export const getColorBrightness = (color: RGBColor | string): number => {
+            if (color === '') {
+                return 0
+            }
+
+            if (typeof color === 'string') {
+                color = convertHexStringToRgbString(color)
+            }
+
+            return (color.r * 299 + color.g * 587 + color.b * 114) / 1000
+        }
+
+        export const isColorBright = (color: RGBColor | string, threshold = 110): boolean => {
+            return getColorBrightness(color) > threshold
+        }
+
+        export const convertHexStringToRgbString = (hex: string): RGBColor => {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+
+            if (result) {
+                return {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16),
+                }
+            }
+
+            return {
+                r: 255,
+                g: 255,
+                b: 255,
             }
         }
 
@@ -379,7 +420,7 @@ export namespace Utils {
         }
     }
 
-    export namespace Calculation {
+    export namespace Calculations {
         /*
             ------------------------------------------
             | rand:float - returns random float
@@ -569,7 +610,7 @@ export namespace Utils {
         }
     }
 
-    export namespace Easing {
+    export namespace Easings {
         /**
          * Cubic easing in and out
          */

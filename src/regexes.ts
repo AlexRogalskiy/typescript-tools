@@ -148,3 +148,14 @@ export const regexChars = (() => {
 
 export const isValidRegex = (value: RegExp | string): boolean =>
     isRegex(value) || (typeof value === 'string' && /^\/.*\/[gimsuy]*$/.test(value))
+
+export const excludeNoteIdPrefix = (prefix: string, noteId: string): string => {
+    return noteId.replace(new RegExp(`^${prefix}`), '')
+}
+
+export const prependNoteIdPrefix = (prefix: string, noteId: string): string => {
+    if (new RegExp(`^${prefix}`).test(noteId)) {
+        return `${prefix}${noteId}`
+    }
+    return noteId
+}

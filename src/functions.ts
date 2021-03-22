@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { Callback, Executor, Supplier } from '../typings/function-types'
+import { Callback, Executor, GenericValueCallback, Processor, Supplier } from '../typings/function-types'
 import { Checkers } from './checkers'
 import { Errors } from './errors'
 import { Utils } from './utils'
@@ -28,6 +28,7 @@ export namespace Functions {
                 value(obj, ...args) {
                     const slice = [].slice,
                         args_ = slice.call(args, 1),
+                        // eslint-disable-next-line @typescript-eslint/no-this-alias
                         self = this,
                         nop = (): void => {
                             // empty
@@ -389,5 +390,17 @@ export namespace Functions {
         } else {
             root[name] = factory
         }
+    }
+
+    export const tupleExists = <U, T>(val: [U, T | undefined]): val is [U, T] => {
+        return exists(val[1])
+    }
+
+    export const exists = <T>(val: T | undefined): val is T => {
+        return val != null
+    }
+
+    export const apply = <T, U>(...args: T[]): Processor<GenericValueCallback<T, U>, U> => {
+        return (fn: (...args: T[]) => U) => fn(...args)
     }
 }

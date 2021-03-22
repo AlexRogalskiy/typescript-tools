@@ -3,9 +3,8 @@ import { describe, test } from '@jest/globals'
 import { Utils } from '../src'
 
 export namespace Utils_Test {
-
     export namespace TranslationUtils_Test {
-        import translateBy = Utils.Translation.translateBy;
+        import translateBy = Utils.Translations.translateBy
 
         type TranslationPattern<T extends string, V> = { [K in T]: V }
 
@@ -48,34 +47,32 @@ export namespace Utils_Test {
         }
 
         beforeAll(() => {
-            console.log("Translation test suite started")
-            console.time("Translation time took")
+            console.log('Translation test suite started')
+            console.time('Translation time took')
         })
 
         afterAll(() => {
-            console.log("Translation test suite finished")
-            console.timeEnd("Execution time took")
+            console.log('Translation test suite finished')
+            console.timeEnd('Execution time took')
         })
 
-        describe("Test transliteration utils", () => {
-            test('it should be a valid transliterated string',
-                async () => {
-                    Object.keys(alphabets).forEach(name => {
-                        const alphabet = alphabets[name]
-                        const translation = translateBy(alphabet);
+        describe('Test transliteration utils', () => {
+            test('it should be a valid transliterated string', async () => {
+                Object.keys(alphabets).forEach(name => {
+                    const alphabet = alphabets[name]
+                    const translation = translateBy(alphabet)
 
-                        console.log(
-                            `
+                    console.log(
+                        `
                         <article>
                             <h3>${name}</h3>
                                 <div class="alphabet">//&nbsp;${alphabet}</div>
                             <div>${translation}</div>
                         </article>
-                        `
-                        )
-                    })
-                }
-            )
+                        `,
+                    )
+                })
+            }, 30000)
         })
     }
 }

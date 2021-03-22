@@ -1,8 +1,9 @@
 import 'jsdom-global/register'
 
+import { DomElement, Optional } from '../typings/standard-types'
+
 import { Checkers } from './checkers'
 import { Errors } from './errors'
-import { DomElement, Optional } from '../typings/standard-types'
 import { Commons } from './commons'
 import { Utils } from './utils'
 
@@ -19,8 +20,106 @@ export namespace Browsers {
     import isFunction = Checkers.isFunction
     import defineProperty = Utils.Commons.defineProperty
     import defineStaticProperty = Utils.Commons.defineStaticProperty
+    import Colors = Utils.Colors
 
     const { hasOwnProperty: hasOwnProp } = Object.prototype
+
+    export interface StyledProps {
+        theme: any
+    }
+
+    export interface TagStyleProps {
+        color: string
+    }
+
+    export type OsNameOptions = 'windows' | 'macos' | 'unix' | 'linux' | 'unknown'
+
+    export const borderColor = ({ theme }: StyledProps): string => `border-color: ${theme.borderColor};`
+
+    export const border = ({ theme }: StyledProps): string => `border: 1px solid ${theme.borderColor};`
+
+    export const borderBottom = ({ theme }: StyledProps): string =>
+        `border-bottom: 1px solid ${theme.borderColor};`
+
+    export const borderTop = ({ theme }: StyledProps): string => `border-top: 1px solid ${theme.borderColor};`
+
+    export const borderLeft = ({ theme }: StyledProps): string =>
+        `border-left: 1px solid ${theme.borderColor};`
+
+    export const borderRight = ({ theme }: StyledProps): string =>
+        `border-right: 1px solid ${theme.borderColor};`
+
+    export const noteListIconColor = ({ theme }: StyledProps): string => `
+                color: ${theme.noteListIconColor};
+                transition: 200ms color;
+                &:hover,
+                &:active,
+                &:focus {
+                  color: ${theme.noteListActiveIconColor};
+                }
+           `
+
+    export const noteDetailIconColor = ({ theme }: StyledProps): string => `
+                color: ${theme.noteDetailIconColor};
+                transition: 200ms color;
+                &:hover,
+                &:active,
+                &:focus {
+                  color: ${theme.noteDetailActiveIconColor};
+                }
+            `
+
+    export const closeIconColor = ({ theme }: StyledProps): string => `
+                color: ${theme.closeIconColor};
+                transition: 200ms color;
+                &:hover,
+                &:active,
+                &:focus {
+                  color: ${theme.closeActiveIconColor};
+                }
+            `
+
+    export const inputStyle = ({ theme }: StyledProps): string =>
+        `   background-color: ${theme.inputBackground};
+            border: 1px solid ${theme.borderColor};
+            border-radius: 2px;
+            color: ${theme.textColor};
+            &:focus {
+              box-shadow: 0 0 0 2px ${theme.primaryColor};
+            }
+            &::placeholder {
+              color: ${theme.uiTextColor};
+            }
+        `
+
+    export const tagBackgroundColor = ({ theme, color }: StyledProps & TagStyleProps): string => {
+        const value = Colors.isColorBright(color || theme.secondaryBackgroundColor) ? 85 : 115
+
+        return `
+                background-color: ${color || theme.secondaryBackgroundColor};
+                    &:hover {
+                        filter: brightness(${value}%);
+                        background-color: ${color || theme.secondaryBackgroundColor};
+                    }
+                }
+            `
+    }
+
+    export const textOverflow = (): string =>
+        `
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        `
+
+    export const flexCenter = (): string =>
+        `
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `
+
+    export const contextMenuShadow = ({ theme }: StyledProps): string => `box-shadow: ${theme.shadow};`
 
     export const $ = <K extends keyof HTMLElementTagNameMap>(
         selector: K,
@@ -946,7 +1045,79 @@ export namespace Browsers {
         return elem
     }
 
+    export const cssStyleLinkGenerator = (href: string): string => {
+        return `<link rel="stylesheet" href="${href}" type="text/css"/>`
+    }
+
+    export const cssStyleTagGenerator = (content: string): string => {
+        return `<style type="text/css">${content}</style>`
+    }
+
+    export const getPrintStyleForExports = (): string => {
+        return `
+                <style media="print">
+                    pre code {
+                      white-space: pre-wrap;
+                    }
+                </style>
+                `
+    }
+
+    export const getOsName = (): OsNameOptions => {
+        if (navigator.appVersion.includes('Win')) return 'windows'
+        if (navigator.appVersion.includes('Mac')) return 'macos'
+        if (navigator.appVersion.includes('X11')) return 'unix'
+        if (navigator.appVersion.includes('Linux')) return 'linux'
+
+        return 'unknown'
+    }
+
+    export const wrapContentInThemeHtml = (content: string, generalThemeName: string): string => {
+        return `
+                <div class="${generalThemeName}">
+                  ${content}
+                </div>
+                `
+    }
+
+    export const isInternalLink = (link: string): boolean => link.startsWith('#')
+
+    export const combineHtmlElementsIntoHtmlDocumentString = (
+        bodyContent: string,
+        css?: string,
+        htmlMeta?: string,
+    ): string => {
+        return `
+                    <!doctype html>
+                    <html lang="en">
+                    <head>
+                    ${htmlMeta ? htmlMeta : ''}
+                    ${css ? css : ''}
+                    </head>
+                    <body>
+                      ${bodyContent}
+                    </body>
+                    </html>
+                `
+    }
+
     export const autolink = (data: string): string => {
         return data.replace(URL_REGEX4, '<a target="_blank" href="$1">$1</a> ')
+    }
+
+    export const isChildNode = (parent?: Node | null, child?: Node | null | EventTarget): boolean => {
+        if (parent == null || child == null) {
+            return false
+        }
+
+        let target = child as Node | null
+        while (target != null) {
+            target = target.parentNode
+            if (parent === target) {
+                return true
+            }
+        }
+
+        return false
     }
 }

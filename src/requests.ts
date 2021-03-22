@@ -4,11 +4,50 @@ import { parse, stringify } from 'qs'
 import { Formats } from './formats'
 import { Strings } from './strings'
 import { Arrays } from './arrays'
+import { Optional } from '../typings/standard-types'
 
 export namespace Requests {
     import isBlankString = Strings.isBlankString
     import toInt = Formats.toInt
     import makeArray = Arrays.makeArray
+
+    export type InitHeaders = Headers | Record<string, string> | string[][]
+
+    export type AttachmentData = {
+        type: 'blob' | 'src'
+        blob: BlobPart
+        src: string
+    }
+
+    export const loadFile = async (data: AttachmentData, name: string): Promise<Optional<File>> => {
+        if (data.type === 'blob') {
+            return new File([data.blob], name)
+        } else if (data.type === 'src') {
+            const response = await fetch(data.src)
+            const blob = await response.blob()
+
+            return new File([blob], name)
+        }
+
+        return null
+    }
+
+    // (err.response instanceof Response && !isRetryable(err.response))
+    export const isRetryable = (response: Response): boolean => {
+        return response.status === 408 || response.status < 400 || 499 < response.status
+    }
+
+    export const setHeader = <T extends InitHeaders>(key: string, value: string, headers: T): T => {
+        if (Array.isArray(headers)) {
+            headers.push([key, value])
+        } else if (headers instanceof Headers) {
+            headers.set(key, value)
+        } else {
+            headers[key] = value
+        }
+
+        return headers
+    }
 
     export const BASE_URL = (lang: string): string => `https://${lang}.wikiquote.org/`
     export const USER_URL = (lang: string): string => `${BASE_URL(lang)}wiki/`
