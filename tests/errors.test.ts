@@ -2,10 +2,10 @@ import { describe } from '@jest/globals'
 
 import { Errors } from '../src'
 import { ErrorType } from '../typings/enum-types'
-import { introspect } from "../src/decorators";
+import { introspect } from '../src/decorators'
 
 export namespace Errors_Test {
-    import ExtendableError = Errors.ExtendableError;
+    import ExtendableError = Errors.ExtendableError
 
     class TestError extends ExtendableError {
         @introspect()
@@ -14,24 +14,23 @@ export namespace Errors_Test {
         }
     }
 
-    class SubTestError extends TestError {
-    }
+    class SubTestError extends TestError {}
 
     beforeAll(() => {
-        console.log("Errors test suite started")
-        console.time("Execution time took")
+        console.log('Errors test suite started')
+        console.time('Execution time took')
     })
 
     afterAll(() => {
-        console.log("Errors test suite finished")
-        console.timeEnd("Execution time took")
+        console.log('Errors test suite finished')
+        console.timeEnd('Execution time took')
     })
 
     describe('Test extendable error type', () => {
         it('it should be a valid error instance of', () => {
             const err = new ExtendableError(ErrorType.value_error, 'Value error')
             expect(err).toBeInstanceOf(Error)
-            expect(err).toBeInstanceOf(ExtendableError);
+            expect(err).toBeInstanceOf(ExtendableError)
 
             const err2 = new TestError(ErrorType.type_error, 'Type error')
             expect(err2).toBeInstanceOf(Error)
@@ -49,7 +48,7 @@ export namespace Errors_Test {
             const err = new ExtendableError(ErrorType.value_error, 'Value error')
             expect(err.name).toEqual('ExtendableError')
 
-            const err2 = new TestError(ErrorType.value_error, 'Validation error');
+            const err2 = new TestError(ErrorType.value_error, 'Validation error')
             expect(err2.name).toEqual('TestError')
 
             const err3 = new SubTestError(ErrorType.value_error, 'Type error')
