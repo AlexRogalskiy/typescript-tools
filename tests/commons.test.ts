@@ -1,21 +1,21 @@
 import { Checkers, Commons } from '../src'
 
 export namespace Commons_Test {
-    import isEmpty = Commons.isEmpty;
-    import equals = Commons.equals;
-    import hash = Commons.hash;
-    import getUniqueId = Commons.getUniqueId;
-    import toPrimitive = Commons.toPrimitive;
-    import hasProperty = Checkers.hasProperty;
+    import isEmpty = Commons.isEmpty
+    import equals = Commons.equals
+    import hash = Commons.hash
+    import getUniqueId = Commons.getUniqueId
+    import toPrimitive = Commons.toPrimitive
+    import hasProperty = Checkers.hasProperty
 
     beforeAll(() => {
-        console.log("Commons test suite started")
-        console.time("Execution time took")
+        console.log('Commons test suite started')
+        console.time('Execution time took')
     })
 
     afterAll(() => {
-        console.log("Commons test suite finished")
-        console.timeEnd("Execution time took")
+        console.log('Commons test suite finished')
+        console.timeEnd('Execution time took')
     })
 
     describe('Check isEmpty by input object', () => {
@@ -57,8 +57,8 @@ export namespace Commons_Test {
 
     describe('Check object equality', () => {
         it('it should return true when objects are equal', () => {
-            const left = new Date("2020-02-02T15:56:00")
-            const right = new Date("2020-03-02T15:56:00")
+            const left = new Date('2020-02-02T15:56:00')
+            const right = new Date('2020-03-02T15:56:00')
             expect(Date['__equals__'](left, right)).toBeFalsy()
             const now = new Date()
             expect(Date['__equals__'](now, now)).toBeTruthy()
@@ -82,7 +82,12 @@ export namespace Commons_Test {
             expect(Object['__equals__']({ a: 5, b: 7 }, { a: 5, b: 7 })).toBeTruthy()
 
             const dummy = () => 5
-            expect(Function['__equals__'](() => 5, () => 5)).toBeFalsy()
+            expect(
+                Function['__equals__'](
+                    () => 5,
+                    () => 5,
+                ),
+            ).toBeFalsy()
             expect(Function['__equals__'](dummy, () => 5)).toBeFalsy()
             expect(Function['__equals__'](dummy, dummy)).toBeTruthy()
 
@@ -90,7 +95,7 @@ export namespace Commons_Test {
             expect(now['eqTo'](now)).toBeTruthy()
 
             expect(Number(4)['eqTo'](Number(4))).toBeTruthy()
-            expect(4['eqTo'](Number(4))).toBeTruthy()
+            expect((4)['eqTo'](Number(4))).toBeTruthy()
 
             expect(true['eqTo'](true)).toBeTruthy()
             expect(true['eqTo'](false)).toBeFalsy()
@@ -108,8 +113,8 @@ export namespace Commons_Test {
 
     describe('Check objects comparison', () => {
         it('it should return true when object are equal', () => {
-            const left = new Date("2020-02-02T15:56:00")
-            const right = new Date("2020-03-02T15:56:00")
+            const left = new Date('2020-02-02T15:56:00')
+            const right = new Date('2020-03-02T15:56:00')
             expect(Date['__compare__'](left, right)).toEqual(-1)
             const now = new Date()
             expect(Date['__compare__'](now, now)).toEqual(0)
@@ -133,7 +138,12 @@ export namespace Commons_Test {
             expect(Object['__compare__']({ a: 5, b: 7 }, { a: 5, b: 7 })).toEqual(0)
 
             const dummy = () => 5
-            expect(Function['__compare__'](() => 5, () => 5)).toEqual(0)
+            expect(
+                Function['__compare__'](
+                    () => 5,
+                    () => 5,
+                ),
+            ).toEqual(0)
             expect(Function['__compare__'](dummy, () => 5)).toEqual(0)
             expect(Function['__compare__'](dummy, dummy)).toEqual(0)
 
@@ -141,7 +151,7 @@ export namespace Commons_Test {
             expect(now['cmpTo'](now)).toEqual(0)
 
             expect(Number(4)['cmpTo'](Number(4))).toEqual(0)
-            expect(4['cmpTo'](Number(4))).toEqual(0)
+            expect((4)['cmpTo'](Number(4))).toEqual(0)
 
             expect(true['cmpTo'](true)).toEqual(0)
             expect(true['cmpTo'](false)).toEqual(1)
@@ -200,8 +210,7 @@ export namespace Commons_Test {
             expect(() => toPrimitive(null)).toThrowError(TypeError)
             expect(toPrimitive(undefined)).toEqual(undefined)
 
-            expect(toPrimitive({})).toEqual('')
-            expect(toPrimitive({})).toEqual('')
+            expect(toPrimitive({})).toEqual('[object Object]')
             expect(toPrimitive(5)).toEqual(5)
             expect(toPrimitive(true)).toEqual(true)
             expect(toPrimitive('test')).toEqual('test')

@@ -1,43 +1,52 @@
 import { Maths } from '../src'
 
 export namespace Maths_Test {
-
     export namespace Calculations_Test {
-
         export namespace Geometry_Test {
-            import Calculations = Maths.Calculations;
+            import Calculations = Maths.Calculations
 
             beforeAll(() => {
-                console.log("Geometry test suite started")
-                console.time("Execution time took")
+                console.log('Geometry test suite started')
+                console.time('Execution time took')
             })
 
             afterAll(() => {
-                console.log("Geometry test suite finished")
-                console.timeEnd("Execution time took")
+                console.log('Geometry test suite finished')
+                console.timeEnd('Execution time took')
             })
 
             describe('Check rectangular area calculation', () => {
-                const rect = [{ 'x1': 0, 'x2': 2, 'y1': 14, 'y2': 15 }, {
-                    'x1': 1,
-                    'x2': 33,
-                    'y1': 1,
-                    'y2': 2
-                }]
+                const rect = [
+                    { x1: 0, x2: 2, y1: 14, y2: 15 },
+                    {
+                        x1: 1,
+                        x2: 33,
+                        y1: 1,
+                        y2: 2,
+                    },
+                ]
 
-                const rect2 = [{ 'x1': 0, 'x2': 2, 'y1': 1.5, 'y2': 2.5 }, {
-                    'x1': 1,
-                    'x2': 3,
-                    'y1': 1,
-                    'y2': 2
-                }, { 'x1': 1.5, 'x2': 3.5, 'y1': 1, 'y2': 2 }]
+                const rect2 = [
+                    { x1: 0, x2: 2, y1: 1.5, y2: 2.5 },
+                    {
+                        x1: 1,
+                        x2: 3,
+                        y1: 1,
+                        y2: 2,
+                    },
+                    { x1: 1.5, x2: 3.5, y1: 1, y2: 2 },
+                ]
 
-                const rect3 = [{ 'x1': 0, 'x2': 2, 'y1': 1.5, 'y2': 2.5 }, {
-                    'x1': 0,
-                    'x2': 2,
-                    'y1': 1.5,
-                    'y2': 2.5
-                }, { 'x1': 0, 'x2': 2, 'y1': 1.5, 'y2': 2.5 }]
+                const rect3 = [
+                    { x1: 0, x2: 2, y1: 1.5, y2: 2.5 },
+                    {
+                        x1: 0,
+                        x2: 2,
+                        y1: 1.5,
+                        y2: 2.5,
+                    },
+                    { x1: 0, x2: 2, y1: 1.5, y2: 2.5 },
+                ]
 
                 it('it should return valid rectangular area', () => {
                     expect(Calculations.Geometry.computeArea(rect)).toEqual(65)
@@ -48,8 +57,20 @@ export namespace Maths_Test {
 
             describe('Check if triangle is squared', () => {
                 it('it should return valid squared triangle', () => {
-                    expect(Calculations.Geometry.isTriangleSquared([[3, 7], [5, 9], [8, 6]])).toEqual(6)
-                    expect(Calculations.Geometry.isTriangleSquared([[6, 14], [10, 18], [16, 12]])).toEqual(24)
+                    expect(
+                        Calculations.Geometry.isTriangleSquared([
+                            [3, 7],
+                            [5, 9],
+                            [8, 6],
+                        ]),
+                    ).toBeTruthy()
+                    expect(
+                        Calculations.Geometry.isTriangleSquared([
+                            [6, 14],
+                            [10, 18],
+                            [16, 12],
+                        ]),
+                    ).toBeTruthy()
                 })
             })
 
@@ -67,16 +88,16 @@ export namespace Maths_Test {
         }
 
         export namespace Algebra_Test {
-            import Calculations = Maths.Calculations;
+            import Calculations = Maths.Calculations
 
             beforeAll(() => {
-                console.log("Algebra test suite started")
-                console.time("Execution time took")
+                console.log('Algebra test suite started')
+                console.time('Execution time took')
             })
 
             afterAll(() => {
-                console.log("Algebra test suite finished")
-                console.timeEnd("Execution time took")
+                console.log('Algebra test suite finished')
+                console.timeEnd('Execution time took')
             })
 
             describe('Check greatest common divisor calculation', () => {
@@ -109,16 +130,16 @@ export namespace Maths_Test {
         }
 
         export namespace Trigonometry_Test {
-            import Calculations = Maths.Calculations;
+            import Calculations = Maths.Calculations
 
             beforeAll(() => {
-                console.log("Trigonometry test suite started")
-                console.time("Execution time took")
+                console.log('Trigonometry test suite started')
+                console.time('Execution time took')
             })
 
             afterAll(() => {
-                console.log("Trigonometry test suite finished")
-                console.timeEnd("Execution time took")
+                console.log('Trigonometry test suite finished')
+                console.timeEnd('Execution time took')
             })
 
             describe('Check triangle square calculation', () => {
@@ -130,37 +151,49 @@ export namespace Maths_Test {
         }
 
         export namespace Areas_Test {
-            import Calculations = Maths.Calculations;
+            import Calculations = Maths.Calculations
 
             beforeAll(() => {
-                console.log("Areas test suite started")
-                console.time("Execution time took")
+                console.log('Areas test suite started')
+                console.time('Execution time took')
             })
 
             afterAll(() => {
-                console.log("Areas test suite finished")
-                console.timeEnd("Execution time took")
+                console.log('Areas test suite finished')
+                console.timeEnd('Execution time took')
             })
 
             describe('Check triangle square calculation', () => {
                 it('it should return valid triangle square', () => {
-                    expect(Calculations.Areas.triangleSquare([[3, 7], [5, 9], [8, 6]])).toEqual(6)
-                    expect(Calculations.Areas.triangleSquare([[6, 14], [10, 18], [16, 12]])).toEqual(24)
+                    expect(
+                        Calculations.Areas.triangleSquare([
+                            [3, 7],
+                            [5, 9],
+                            [8, 6],
+                        ]),
+                    ).toEqual(6)
+                    expect(
+                        Calculations.Areas.triangleSquare([
+                            [6, 14],
+                            [10, 18],
+                            [16, 12],
+                        ]),
+                    ).toEqual(24)
                 })
             })
         }
 
         export namespace Helpers_Test {
-            import sum = Maths.Helpers.sum;
+            import sum = Maths.Helpers.sum
 
             beforeAll(() => {
-                console.log("Helpers test suite started")
-                console.time("Execution time took")
+                console.log('Helpers test suite started')
+                console.time('Execution time took')
             })
 
             afterAll(() => {
-                console.log("Helpers test suite finished")
-                console.timeEnd("Execution time took")
+                console.log('Helpers test suite finished')
+                console.timeEnd('Execution time took')
             })
 
             describe('Check sum calculation by input values', () => {
@@ -173,16 +206,16 @@ export namespace Maths_Test {
         }
 
         export namespace Numerals_Test {
-            import Numerals = Maths.Numerals;
+            import Numerals = Maths.Numerals
 
             beforeAll(() => {
-                console.log("Numerals test suite started")
-                console.time("Execution time took")
+                console.log('Numerals test suite started')
+                console.time('Execution time took')
             })
 
             afterAll(() => {
-                console.log("Numerals test suite finished")
-                console.timeEnd("Execution time took")
+                console.log('Numerals test suite finished')
+                console.timeEnd('Execution time took')
             })
 
             describe('Check fibonacci calculation', () => {
@@ -193,11 +226,41 @@ export namespace Maths_Test {
 
                     expect(Numerals.fibonacci3(3)).toEqual([1, 2, 3])
                     expect(Numerals.fibonacci3(5)).toEqual([1, 2, 3, 5, 8])
-                    expect(Numerals.fibonacci3(14)).toEqual([1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610])
+                    expect(Numerals.fibonacci3(14)).toEqual([
+                        1,
+                        2,
+                        3,
+                        5,
+                        8,
+                        13,
+                        21,
+                        34,
+                        55,
+                        89,
+                        144,
+                        233,
+                        377,
+                        610,
+                    ])
 
                     expect(Numerals.fibonacci4(3)).toEqual([0, 1, 1])
                     expect(Numerals.fibonacci4(5)).toEqual([0, 1, 1, 2, 3])
-                    expect(Numerals.fibonacci4(14)).toEqual([0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233])
+                    expect(Numerals.fibonacci4(14)).toEqual([
+                        0,
+                        1,
+                        1,
+                        2,
+                        3,
+                        5,
+                        8,
+                        13,
+                        21,
+                        34,
+                        55,
+                        89,
+                        144,
+                        233,
+                    ])
                 })
             })
 
@@ -217,7 +280,21 @@ export namespace Maths_Test {
 
                     expect(Numerals.factorial3(3)).toEqual([6, 2, 1])
                     expect(Numerals.factorial3(5)).toEqual([120, 24, 6, 2, 1])
-                    expect(Numerals.factorial3(14)).toEqual([87178291200, 6227020800, 479001600, 39916800, 3628800, 362880, 40320, 5040, 720, 120, 24, 6, 2, 1
+                    expect(Numerals.factorial3(14)).toEqual([
+                        87178291200,
+                        6227020800,
+                        479001600,
+                        39916800,
+                        3628800,
+                        362880,
+                        40320,
+                        5040,
+                        720,
+                        120,
+                        24,
+                        6,
+                        2,
+                        1,
                     ])
 
                     expect(Numerals.factorial4(3)).toEqual(6)

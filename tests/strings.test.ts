@@ -1,52 +1,52 @@
 import { EMOJI_REGEX, Strings } from '../src'
 
 export namespace Strings_Test {
-    import pad = Strings.pad;
-    import parseJson = Strings.parseJson;
-    import capFirstLetter = Strings.capitalFirstLetter;
-    import formatNumber = Strings.formatNumber;
-    import combinations = Strings.combinations;
-    import permutations = Strings.permutations;
-    import sortBy = Strings.sortBy;
-    import format = Strings.format;
-    import shortest = Strings.shortest;
-    import getRomanNotation = Strings.getRomanNotation;
-    import shortenString = Strings.shortenString;
-    import stripComments = Strings.stripComments;
-    import capitalize = Strings.capitalize;
-    import quote = Strings.quote;
-    import escape2 = Strings.escape2;
-    import stringify = Strings.stringify;
-    import joiner = Strings.joiner;
-    import encoder = Strings.encoder;
-    import replacer = Strings.replacer;
-    import matcher = Strings.matcher;
-    import lowerCase = Strings.lowerCase;
-    import trimmer = Strings.trimmer;
-    import longestSequence = Strings.longestSequence;
-    import replaceBy = Strings.replaceBy;
-    import repeat = Strings.repeat;
-    import delim = Strings.delim;
-    import generateSymbol = Strings.generateSymbol;
-    import doubleQuote = Strings.doubleQuote;
-    import joinList = Strings.joinList;
-    import htmlText = Strings.htmlText;
-    import getProjectId = Strings.getProjectId;
-    import padLeft = Strings.padLeft;
-    import htmlEncode = Strings.htmlEncode;
-    import toUTF16 = Strings.toUTF16;
-    import removeChars = Strings.removeChars;
-    import cjk = Strings.cjk;
-    import hashCode = Strings.hashCode;
+    import pad = Strings.pad
+    import parseJson = Strings.parseJson
+    import capFirstLetter = Strings.capitalFirstLetter
+    import formatNumber = Strings.formatNumber
+    import combinations = Strings.combinations
+    import permutations = Strings.permutations
+    import sortBy = Strings.sortBy
+    import format = Strings.format
+    import shortest = Strings.shortest
+    import getRomanNotation = Strings.getRomanNotation
+    import shortenString = Strings.shortenString
+    import stripComments = Strings.stripComments
+    import capitalize = Strings.capitalize
+    import quote = Strings.quote
+    import escape2 = Strings.escape2
+    import stringify = Strings.stringify
+    import joiner = Strings.joiner
+    import encoder = Strings.encoder
+    import replacer = Strings.replacer
+    import matcher = Strings.matcher
+    import lowerCase = Strings.lowerCase
+    import trimmer = Strings.trimmer
+    import longestSequence = Strings.longestSequence
+    import replaceBy = Strings.replaceBy
+    import repeat = Strings.repeat
+    import delim = Strings.delim
+    import generateSymbol = Strings.generateSymbol
+    import doubleQuote = Strings.doubleQuote
+    import joinList = Strings.joinList
+    import htmlText = Strings.htmlText
+    import getProjectId = Strings.getProjectId
+    import padLeft = Strings.padLeft
+    import htmlEncode = Strings.htmlEncode
+    import toUTF16 = Strings.toUTF16
+    import removeChars = Strings.removeChars
+    import cjk = Strings.cjk
+    import hashCode = Strings.hashCode
 
     beforeAll(() => {
-        console.log("Strings test suite started")
-        console.time("Execution time took")
+        console.log('Strings test suite started')
+        console.time('Execution time took')
     })
 
     afterAll(() => {
-        console.log("Strings test suite finished")
-        console.timeEnd("Execution time took")
+        console.log('Strings test suite finished')
+        console.timeEnd('Execution time took')
     })
 
     describe('Check emoji string replacer', () => {
@@ -69,8 +69,8 @@ export namespace Strings_Test {
 
     describe('Check CJK string', () => {
         it('it should return valid CJK string', () => {
-            expect(cjk('单词')).toEqual(["单", "词"])
-            expect(cjk('一个单词')).toEqual(["一", "个", "单", "词"])
+            expect(cjk('单词')).toEqual(['单', '词'])
+            expect(cjk('一个单词')).toEqual(['一', '个', '单', '词'])
         })
     })
 
@@ -90,7 +90,7 @@ export namespace Strings_Test {
         it('it should return valid project id', () => {
             expect(getProjectId('test')).toEqual('test')
             expect(getProjectId('test.test2')).toEqual('testtest2')
-            expect(getProjectId('test\'')).toEqual('test')
+            expect(getProjectId("test'")).toEqual('test')
             expect(getProjectId('')).toEqual('')
         })
     })
@@ -118,7 +118,9 @@ export namespace Strings_Test {
         it('it should return valid UTF16 string', () => {
             expect(toUTF16(55)).toEqual('\\u37')
             expect(toUTF16(0)).toEqual('\\u0')
-            expect(toUTF16(Number.MIN_VALUE)).toEqual('\\u0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004')
+            expect(toUTF16(Number.MIN_VALUE)).toEqual(
+                '\\u0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004',
+            )
             expect(toUTF16(1)).toEqual('\\u1')
         })
     })
@@ -133,8 +135,8 @@ export namespace Strings_Test {
 
     describe('Check double quoted string', () => {
         it('it should return valid double quoted string', () => {
-            expect(doubleQuote("test")).toEqual("\"test\"")
-            expect(doubleQuote("test'test")).toEqual("\"test'test\"")
+            expect(doubleQuote('test')).toEqual('"test"')
+            expect(doubleQuote("test'test")).toEqual('"test\'test"')
         })
     })
 
@@ -203,12 +205,12 @@ export namespace Strings_Test {
     })
 
     describe('Check shortest path between items', () => {
-        const strings = ["or", "in", "at", "for", "after", "next", "before", "previous", "in"]
+        const strings = ['or', 'in', 'at', 'for', 'after', 'next', 'before', 'previous', 'in']
 
         it('it should return the shortest path', () => {
-            expect(shortest(strings, "in", "at")).toEqual(1)
-            expect(shortest(strings, "or", "at")).toEqual(2)
-            expect(shortest(strings, "or", "for")).toEqual(3)
+            expect(shortest(strings, 'in', 'at')).toEqual(1)
+            expect(shortest(strings, 'or', 'at')).toEqual(2)
+            expect(shortest(strings, 'or', 'for')).toEqual(3)
         })
     })
 
@@ -269,19 +271,19 @@ export namespace Strings_Test {
 
     describe('Check stringify object properties', () => {
         it('it should return valid json string', () => {
-            expect(stringify(new Date('2020-03-02T15:56:00'))).toEqual("\"2020-03-02T12:56:00.000Z\"")
+            expect(stringify(new Date('2020-03-02T15:56:00'))).toEqual('"2020-03-02T15:56:00.000Z"')
             expect(stringify(1)).toEqual('1')
-            expect(stringify({ a: 5, b: 6 }, 0)).toEqual("{\"a\":5,\"b\":6}")
-            expect(stringify(['a', 1, true, false], 0)).toEqual("[\"a\",1,true,false]")
+            expect(stringify({ a: 5, b: 6 }, 0)).toEqual('{"a":5,"b":6}')
+            expect(stringify(['a', 1, true, false], 0)).toEqual('["a",1,true,false]')
             expect(stringify(() => 5)).toEqual(undefined)
-            expect(stringify(['a', '&&', 'b', ';', 'c'], 0)).toEqual("[\"a\",\"&&\",\"b\",\";\",\"c\"]")
+            expect(stringify(['a', '&&', 'b', ';', 'c'], 0)).toEqual('["a","&&","b",";","c"]')
         })
     })
 
     describe('Check string joiner', () => {
         it('it should return valid joined string', () => {
-            expect(joiner('and', ['a', 1, true, false], 0)).toEqual('')
-            expect(joiner('and', ['a', '&&', 'b', ';', 'c'], 0)).toEqual('')
+            expect(joiner('and', ['a', 1, true, false], 0)).toEqual('a,1,true,false and 0')
+            expect(joiner('and', ['a', '&&', 'b', ';', 'c'], 0)).toEqual('a,&&,b,;,c and 0')
         })
     })
 
@@ -295,24 +297,45 @@ export namespace Strings_Test {
 
     describe('Check string replacement by pattern', () => {
         it('it should return valid string with replacement pattern', () => {
-            expect("Smith, Bob; Raman, Ravi; Jones, Mary"['replaceWith'](/([\w]+), ([\w]+)/g, "$2 $1")).toEqual('Bob Smith; Ravi Raman; Mary Jones')
-            expect(""['replaceWith'](/([\w]+), ([\w]+)/g, "$2 $1")).toEqual('')
-            expect("test1, test2"['replaceWith'](/([\w]+), ([\w]+)/g, "$2 $1")).toEqual('test2 test1')
-            expect("California, San Francisco, O'Rourke, Gerry"['replaceWith'](/([\w'\s]+), ([\w'\s]+), ([\w'\s]+), ([\w'\s]+)/, "$4 $3 lives in $2, $1")).toEqual('Gerry O\'Rourke lives in San Francisco, California')
+            expect(
+                'Smith, Bob; Raman, Ravi; Jones, Mary'['replaceWith'](/([\w]+), ([\w]+)/g, '$2 $1'),
+            ).toEqual('Bob Smith; Ravi Raman; Mary Jones')
+            expect(''['replaceWith'](/([\w]+), ([\w]+)/g, '$2 $1')).toEqual('')
+            expect('test1, test2'['replaceWith'](/([\w]+), ([\w]+)/g, '$2 $1')).toEqual('test2 test1')
+            expect(
+                "California, San Francisco, O'Rourke, Gerry"['replaceWith'](
+                    /([\w'\s]+), ([\w'\s]+), ([\w'\s]+), ([\w'\s]+)/,
+                    '$4 $3 lives in $2, $1',
+                ),
+            ).toEqual("Gerry O'Rourke lives in San Francisco, California")
         })
 
         it('it should return valid string with replacement functional pattern', () => {
-            expect("72 101 108 108 111  87 111 114 108 100 33"['replaceByRegex'](/(\d+)(\s?)/gi, (_, $1) => String.fromCharCode($1))).toEqual('Hello World!')
-            expect("hello, world!"['replaceByRegex'](/(\S+)(\s?)/gi, (_, $1) => $1.toUpperCase())).toEqual('HELLO,WORLD!')
-            expect("HELLO,WORLD!"['replaceByRegex'](/(\S+)(\s?)/gi, (_, $1) => $1.toLowerCase())).toEqual('hello,world!')
+            expect(
+                '72 101 108 108 111  87 111 114 108 100 33'['replaceByRegex'](/(\d+)(\s?)/gi, (_, $1) =>
+                    String.fromCharCode($1),
+                ),
+            ).toEqual('Hello World!')
+            expect('hello, world!'['replaceByRegex'](/(\S+)(\s?)/gi, (_, $1) => $1.toUpperCase())).toEqual(
+                'HELLO,WORLD!',
+            )
+            expect('HELLO,WORLD!'['replaceByRegex'](/(\S+)(\s?)/gi, (_, $1) => $1.toLowerCase())).toEqual(
+                'hello,world!',
+            )
         })
     })
 
     describe('Check longest string sequence', () => {
         it('it should return valid longest string sequence', () => {
-            expect(JSON.stringify(longestSequence((a, b) => a === b, 'skiing'))).toEqual("{\"member\":\"i\",\"count\":2}")
-            expect(JSON.stringify(longestSequence((a, b) => a === b, 'test'))).toEqual("{\"member\":null,\"count\":0}")
-            expect(JSON.stringify(longestSequence((a, b) => a === b, ''))).toEqual("{\"member\":null,\"count\":0}")
+            expect(JSON.stringify(longestSequence((a, b) => a === b, 'skiing'))).toEqual(
+                '{"member":"i","count":2}',
+            )
+            expect(JSON.stringify(longestSequence((a, b) => a === b, 'test'))).toEqual(
+                '{"member":null,"count":0}',
+            )
+            expect(JSON.stringify(longestSequence((a, b) => a === b, ''))).toEqual(
+                '{"member":null,"count":0}',
+            )
         })
     })
 
@@ -353,16 +376,16 @@ export namespace Strings_Test {
 
             expect(trimmer(' Gender13 ').join('-')).toEqual('Gender13')
             expect(trimmer(' a16', 'b44 ', 'b  bar').join('-')).toEqual('a16-b44-b  bar')
-            expect(trimmer("  d ", "  h ", " s").join('-')).toEqual('d-h-s')
-            expect(trimmer(" a", " b ").join('-')).toEqual('a-b')
+            expect(trimmer('  d ', '  h ', ' s').join('-')).toEqual('d-h-s')
+            expect(trimmer(' a', ' b ').join('-')).toEqual('a-b')
         })
     })
 
     describe('Check double quotes', () => {
         it('it should return valid string with double quotes', () => {
-            let cmd = quote(['echo', "hell'o1 ${HOME}"], true);
-            cmd = ['bash', '-c', quote(cmd)].join(' ');
-            expect(quote(cmd)).toEqual("\"bash -c \\\"echo \\\\\"hell'o1 \\\\${HOME}\\\\\"\\\"\"")
+            let cmd = quote(['echo', "hell'o1 ${HOME}"], true)
+            cmd = ['bash', '-c', quote(cmd)].join(' ')
+            expect(quote(cmd)).toEqual('"bash -c \\"echo \\\\"hell\'o1 \\\\${HOME}\\\\"\\""')
             expect(quote(['a', 'b', 'c d'])).toEqual("a b 'c d'")
             expect(quote(['a', 'b', 'it\'s a "neat thing"'])).toEqual('a b "it\'s a \\"neat thing\\""')
             expect(quote(['$', '`', "'"])).toEqual('\\$ \\` "\'"')

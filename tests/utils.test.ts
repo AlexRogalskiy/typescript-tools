@@ -3,7 +3,7 @@ import { describe, test } from '@jest/globals'
 import { Utils } from '../src'
 
 export namespace Utils_Test {
-    export namespace TranslationUtils_Test {
+    export namespace Translations_Test {
         import translateBy = Utils.Translations.translateBy
 
         type TranslationPattern<T extends string, V> = { [K in T]: V }
@@ -47,17 +47,17 @@ export namespace Utils_Test {
         }
 
         beforeAll(() => {
-            console.log('Translation test suite started')
+            console.log('Translations test suite started')
             console.time('Translation time took')
         })
 
         afterAll(() => {
-            console.log('Translation test suite finished')
+            console.log('Translations test suite finished')
             console.timeEnd('Execution time took')
         })
 
         describe('Test transliteration utils', () => {
-            test('it should be a valid transliterated string', async () => {
+            test.only('it should be a valid transliterated string', async () => {
                 Object.keys(alphabets).forEach(name => {
                     const alphabet = alphabets[name]
                     const translation = translateBy(alphabet)
@@ -72,7 +72,7 @@ export namespace Utils_Test {
                         `,
                     )
                 })
-            }, 30000)
+            })
         })
     }
 }
