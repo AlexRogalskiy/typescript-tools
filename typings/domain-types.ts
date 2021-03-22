@@ -27,6 +27,7 @@ export type WebRequestOptions = {
 export interface GenericObject {
     [key: string]: any
 }
+
 // -------------------------------------------------------------------------------------------------
 export interface Rectangular {
     x: number
@@ -38,6 +39,16 @@ export interface Rectangular {
 export interface Point {
     x: number
     y: number
+}
+
+export interface TextStyle {
+    font?: string
+    color?: string
+}
+
+export interface TickValueDescription {
+    value: number
+    color?: string
 }
 
 // -------------------------------------------------------------------------------------------------

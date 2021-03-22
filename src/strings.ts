@@ -1,7 +1,13 @@
 import slugify from 'slugify'
 
 import { OptionalNumber, OptionalString } from '../typings/standard-types'
-import { BiProcessor, Comparator, Processor, StringProcessor, Supplier } from '../typings/function-types'
+import {
+    BiProcessor,
+    Comparator,
+    Processor,
+    StringProcessor,
+    Supplier
+} from '../typings/function-types'
 
 import { Errors } from './errors'
 import { Checkers } from './checkers'
@@ -22,6 +28,8 @@ export namespace Strings {
     import randomBy = Numbers.randomBy
     import isFunction = Checkers.isFunction
     import Commons = Utils.Commons
+
+    export const numFormat = (value: number, fraction = 2): string => value.toFixed(fraction)
 
     export const props = (() => {
         const props = {

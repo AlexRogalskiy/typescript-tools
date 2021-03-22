@@ -846,12 +846,10 @@ export type OptionalTriProcessor<T, V, S, R> = TriProcessor<Optional<T>, Optiona
  * @example
  *   type NonNullableTriProcessor = (v1, v2, v3) => return v1 + v2 + v3
  */
-export type NonNullableTriProcessor<T, V, S, R> = TriProcessor<
-    NonNullable<T>,
+export type NonNullableTriProcessor<T, V, S, R> = TriProcessor<NonNullable<T>,
     NonNullable<V>,
     NonNullable<S>,
-    R
->
+    R>
 
 /**
  * NumberTriProcessor
@@ -1322,3 +1320,13 @@ export type OptionalFactory<T, V> = (v: T) => Supplier<Optional<V>>
  */
 export type NonNullableFactory<T, V> = (v: T) => Supplier<NonNullable<V>>
 // -------------------------------------------------------------------------------------------------
+/**
+ * Formatter
+ * @desc Type representing formatter function type in TypeScript
+ * @example
+ *   type Formatter = (v1, v2) => return '0'
+ */
+export type StringFormatter = (value: number, fraction: number) => string
+
+// -------------------------------------------------------------------------------------------------
+
