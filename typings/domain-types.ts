@@ -22,6 +22,24 @@ export type WebRequestOptions = {
     retriableStatusCodes?: number[]
     retryRequestTimedout?: boolean
 }
+
+// -------------------------------------------------------------------------------------------------
+export interface GenericObject {
+    [key: string]: any
+}
+// -------------------------------------------------------------------------------------------------
+export interface Rectangular {
+    x: number
+    y: number
+    width: number
+    height: number
+}
+
+export interface Point {
+    x: number
+    y: number
+}
+
 // -------------------------------------------------------------------------------------------------
 export type ProfileOptions<T> = {
     [K in Profile]: T

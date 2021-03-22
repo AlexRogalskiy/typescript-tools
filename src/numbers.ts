@@ -3,6 +3,7 @@ import { Errors } from './errors'
 import { Comparators } from './comparators'
 
 import { Comparator } from '../typings/function-types'
+import { Optional } from '../typings/standard-types'
 
 export namespace Numbers {
     import isNumber = Checkers.isNumber
@@ -23,6 +24,48 @@ export namespace Numbers {
             }
 
             return res
+        }
+
+        export const divide2 = (minValue: number, maxValue: number, length = 5): number[] => {
+            const step = (maxValue - minValue) / (length - 1)
+            const result = [minValue]
+
+            for (let i = 1; i < length - 1; i += 1) {
+                result.push(minValue + step * i)
+            }
+
+            result.push(maxValue)
+
+            return result
+        }
+
+        export const humanNumber = (number: any, p = 2, placeHolder = '--'): Optional<string> => {
+            if (typeof number === 'string') {
+                return number
+            }
+            if (Number.isNaN(number) || number === null || number === undefined) {
+                return placeHolder
+            }
+            const ds = [
+                [9, 6, 3, 0],
+                ['B', 'M', 'K', ''],
+            ]
+            const sign = number > 0 ? 1 : -1
+            const absNum = Math.abs(number)
+            const n = absNum.toString().split('.').shift() as string
+            const digit = n.split('').length
+            const pre = Number.parseInt(n, 10)
+            let i = 0
+            while (i <= ds[0].length) {
+                const f = ds[0][i] as number
+                if (digit / f > 1) {
+                    const v = ((pre / Math.pow(10, f)) * sign).toFixed(p)
+                    return `${v}${ds[1][i]}`
+                }
+                i += 1
+            }
+
+            return null
         }
 
         export const minus = (a: number, b: number): number => {

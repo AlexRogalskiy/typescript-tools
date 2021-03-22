@@ -9,6 +9,7 @@ export enum ErrorType {
     type_error = 'TypeError',
     value_error = 'ValueError',
 }
+
 // -------------------------------------------------------------------------------------------------
 /**
  * Error data type
@@ -32,6 +33,18 @@ export enum StatusCode {
     INTERNAL_SERVER_ERROR = 500,
     SERVICE_UNAVAILABLE = 503,
 }
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * State enumeration
+ */
+export enum InteractiveState {
+    None = 0,
+    ShowDetail = 1,
+    Dragging = 1 << 1,
+    Srolling = 1 << 2,
+}
+
 // -------------------------------------------------------------------------------------------------
 /**
  * Profile enumeration
@@ -40,4 +53,5 @@ export enum Profile {
     dev = 'dev',
     prod = 'prod',
 }
+
 // -------------------------------------------------------------------------------------------------

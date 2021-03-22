@@ -344,6 +344,10 @@ export namespace Checkers {
         },
     }
 
+    export const isEmptyWithoutZero = (v: number | string): boolean => {
+        return !v && v !== 0
+    }
+
     export const hasClass = (clazz: string, pattern: string): boolean => {
         return new RegExp(`(^|\\s)${pattern}(\\s|$)`).test(clazz)
     }

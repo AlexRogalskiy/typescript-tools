@@ -22,6 +22,34 @@ export namespace Arrays {
     import swap = Sorting.swap
     import defineProperty = Utils.Commons.defineProperty
 
+    export const findMinValue = (arr: number[]): number => {
+        return Math.min.apply(
+            null,
+            arr.filter(i => i !== undefined),
+        )
+    }
+
+    export const findMaxValue = (arr: number[]): number => {
+        return Math.max.apply(
+            null,
+            arr.filter(i => i !== undefined),
+        )
+    }
+
+    export const trimNulls = <T>(arr: T[]): { deleted: number; result: T[] } => {
+        const len = arr.length
+
+        let i = 0
+        while ((arr[i] === null || typeof arr[i] === 'undefined') && i < len) {
+            ++i
+        }
+
+        return {
+            deleted: i,
+            result: arr.slice(i),
+        }
+    }
+
     export const init = (() => {
         const props = {
             proto: {

@@ -11,6 +11,7 @@ export namespace Arrays_Test {
     import randomElement = Arrays.randomElement;
     import sortByNumber = Arrays.sortByNumber;
     import sortByString = Arrays.sortByString;
+    import trimNulls = Arrays.trimNulls;
 
     beforeAll(() => {
         console.log("Arrays test suite started")
@@ -44,9 +45,22 @@ export namespace Arrays_Test {
         })
     })
 
-    describe('Check list values from array', () => {
-        it('it should perform valid array sequence', () => {
+    describe('Check listing values from array', () => {
+        it('it should return valid array sequence', () => {
             expect(list(1, 2, 3).join("-")).toEqual('1-2-3')
+        })
+    })
+
+    describe('Check trimming null values from array', () => {
+        it('it should return valid array with non-nullable items', () => {
+            expect(trimNulls([null, null, 1, 2])).toEqual({
+                deleted: 2,
+                result: [1, 2],
+            },)
+            expect(trimNulls([1, 2])).toEqual({
+                deleted: 0,
+                result: [1, 2],
+            },)
         })
     })
 
