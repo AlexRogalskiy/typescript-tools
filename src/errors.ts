@@ -208,6 +208,20 @@ export namespace Errors {
         }
     }
 
+    /**
+     * Error constructor types
+     * @desc Types representing error constructors
+     */
+    export type ExtendableErrorConstructor = typeof ExtendableError
+    export type GeneralErrorConstructor = typeof GeneralError
+    export type TypeErrorConstructor = typeof TypeError
+    export type ValidationErrorConstructor = typeof ValidationError
+    export type UnsupportedLanguageErrorConstructor = typeof UnsupportedLanguageError
+    export type RequestErrorConstructor = typeof RequestError
+    export type ResponseErrorConstructor = typeof ResponseError
+    export type UnsupportedParameterErrorConstructor = typeof UnsupportedParameterError
+    export type QueryParseErrorConstructor = typeof QueryParseError
+
     export const newError = (type: ErrorType, message: string): ErrorData => {
         return { type, message }
     }

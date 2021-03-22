@@ -1,12 +1,17 @@
 import { describe } from '@jest/globals'
 
 import { Errors } from '../src'
-import { ErrorType } from '../typings/domain-types'
+import { ErrorType } from '../typings/enum-types'
+import { introspect } from "../src/decorators";
 
 export namespace Errors_Test {
     import ExtendableError = Errors.ExtendableError;
 
     class TestError extends ExtendableError {
+        @introspect()
+        testResult(value: number) {
+            console.log(`Running decorator on test result: ${value}`)
+        }
     }
 
     class SubTestError extends TestError {
@@ -98,5 +103,3 @@ export namespace Errors_Test {
         })
     })
 }
-
-
