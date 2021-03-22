@@ -147,6 +147,21 @@ export namespace Errors {
     }
 
     /**
+     * UnsupportedParameterError
+     * @desc Class representing unsupported parameter error
+     */
+    export class UnsupportedParameterError extends GeneralError {
+        /**
+         * Unsupported parameter error constructor by input parameters
+         * @param parameter: initial input {@link string} message
+         * @param args initial input {@link Array} of arguments
+         */
+        constructor(readonly parameter: string, ...args: any[]) {
+            super(ErrorType.parameter_error, `Unsupported parameter: ${parameter}`, args)
+        }
+    }
+
+    /**
      * QueryParseError
      * @desc Class representing query parse error
      */
@@ -177,5 +192,18 @@ export namespace Errors {
 
     export const validationError = (message: string, ...args: any[]): ValidationError => {
         return new ValidationError(message, args)
+    }
+
+    export const unsupportedParamError = (param: string, ...args: any[]): UnsupportedParameterError => {
+        return new UnsupportedParameterError(param, args)
+    }
+
+    export const queryParseError = (
+        message: string,
+        start: string,
+        end: string,
+        ...args: any[]
+    ): QueryParseError => {
+        return new QueryParseError(message, start, end, args)
     }
 }

@@ -1,13 +1,7 @@
 import slugify from 'slugify'
 
 import { OptionalNumber, OptionalString } from '../typings/standard-types'
-import {
-    BiProcessor,
-    Comparator,
-    Processor,
-    StringProcessor,
-    Supplier
-} from '../typings/function-types'
+import { BiProcessor, Comparator, Processor, StringProcessor, Supplier } from '../typings/function-types'
 
 import { Errors } from './errors'
 import { Checkers } from './checkers'

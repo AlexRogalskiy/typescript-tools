@@ -1,11 +1,13 @@
 // -------------------------------------------------------------------------------------------------
 /**
- * Error type enumeration
+ * ErrorType
+ * @desc Type representing errors
  */
 export enum ErrorType {
     general_error = 'GeneralError',
     parser_error = 'ParserError',
     validation_error = 'ValidationError',
+    parameter_error = 'ParameterError',
     type_error = 'TypeError',
     value_error = 'ValueError',
 }
@@ -36,7 +38,8 @@ export enum StatusCode {
 
 // -------------------------------------------------------------------------------------------------
 /**
- * State enumeration
+ * InteractiveState
+ * @desc Type representing supported interactive states
  */
 export enum InteractiveState {
     None = 0,
@@ -47,7 +50,8 @@ export enum InteractiveState {
 
 // -------------------------------------------------------------------------------------------------
 /**
- * Profile enumeration
+ * Profile
+ * @desc Type representing supported profiles
  */
 export enum Profile {
     dev = 'dev',
