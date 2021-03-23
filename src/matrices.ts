@@ -522,7 +522,7 @@ export namespace Matrices {
         const findSquareWithSize = (
             matrix: number[][],
             squareSize: number,
-        ): { row; col; squareSize } | null => {
+        ): Optional<{ row: number; col: number; squareSize: number }> => {
             const count = matrix.length - squareSize + 1
             for (let row = 0; row < count; row++) {
                 for (let col = 0; col < count; col++) {
@@ -551,7 +551,7 @@ export namespace Matrices {
             return true
         }
 
-        return (matrix: number[][]): { row; col; squareSize } | null => {
+        return (matrix: number[][]): Optional<{ row: number; col: number; squareSize: number }> => {
             if (!isArray(matrix)) {
                 throw valueError(`incorrect vertex order matrix < ${matrix} >`)
             }
@@ -595,7 +595,7 @@ export namespace Matrices {
         const findSquareWithSize = (
             processed: { zerosRight; zerosBelow }[][],
             squareSize: number,
-        ): { row; col; squareSize } | null => {
+        ): Optional<{ row: number; col: number; squareSize: number }> => {
             const count = processed.length - squareSize + 1
             for (let row = 0; row < count; row++) {
                 for (let col = 0; col < count; col++) {
@@ -633,7 +633,7 @@ export namespace Matrices {
 
         const processSquare = (data: number[][]): { zerosRight; zerosBelow }[][] => {
             const processed = Helpers.matrix(data.length, data.length, squareCell())
-            let previous: { zerosRight; zerosBelow } | null = null
+            let previous: Optional<{ zerosRight: number; zerosBelow: number }> = null
 
             for (let r = data.length - 1; r >= 0; r--) {
                 for (let c = data.length - 1; c >= 0; c--) {
@@ -659,7 +659,7 @@ export namespace Matrices {
             return processed
         }
 
-        return (matrix: number[][]): { row; col; squareSize } | null => {
+        return (matrix: number[][]): Optional<{ row: number; col: number; squareSize: number }> => {
             if (!isArray(matrix)) {
                 throw valueError(`incorrect vertex order matrix < ${matrix} >`)
             }
@@ -974,7 +974,7 @@ export namespace Matrices {
             pivot: Coordinate,
             elem: T,
             cmp: Comparator<Optional<T>>,
-        ): Coordinate | null => {
+        ): Optional<Coordinate> => {
             const lowerLeftOrigin = coordinate(pivot.row, origin.column)
             const lowerLeftDest = coordinate(dest.row, pivot.column - 1)
             const upperRightOrigin = coordinate(origin.row, pivot.column)
@@ -994,7 +994,7 @@ export namespace Matrices {
             dest: Coordinate,
             elem: T,
             cmp: Comparator<Optional<T>>,
-        ): Coordinate | null => {
+        ): Optional<Coordinate> => {
             if (!origin.inbounds(data) || !dest.inbounds(data)) {
                 return null
             }
@@ -1024,7 +1024,7 @@ export namespace Matrices {
             return partitionAndSearch(data, origin, dest, start, elem, cmp)
         }
 
-        return <T>(data: Optional<T>[][], elem: T): Coordinate | null => {
+        return <T>(data: Optional<T>[][], elem: T): Optional<Coordinate> => {
             if (!isNumber(elem)) {
                 throw valueError(`incorrect input parameter: elem < ${elem} >`)
             }

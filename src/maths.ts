@@ -4,6 +4,7 @@ import { Sorting } from './sorting'
 import { Utils } from './utils'
 
 import { Processor } from '../typings/function-types'
+import { Optional } from '../typings/standard-types'
 
 export namespace Maths {
     import valueError = Errors.valueError
@@ -176,7 +177,7 @@ export namespace Maths {
             return a - d * t
         }
 
-        export const maxn = (n: number, ...args: number[]): number | null => {
+        export const maxn = (n: number, ...args: number[]): Optional<number> => {
             if (!Checkers.isArray(args) || !Checkers.isIntNumber(n) || n < 1 || n > args.length) {
                 throw valueError(`incorrect input value: array < ${args} >, n-th maximum < ${n} >`)
             }
@@ -227,7 +228,7 @@ export namespace Maths {
             ins: number,
             del: number,
             sub: number,
-        ): number | null => {
+        ): Optional<number> => {
             if (!Checkers.isString(a) || !Checkers.isString(b)) {
                 throw valueError(`incorrect input values: string1 < ${a} >, string2 < ${b} >`)
             }
@@ -606,7 +607,7 @@ export namespace Maths {
                     : Math.log(1 / x + Math.sqrt(1 / (x * x) + 1))
             }
 
-            export const inn = (n: number, ...args: number[]): number | null => {
+            export const inn = (n: number, ...args: number[]): Optional<number> => {
                 if (!Checkers.isArray(args) || !Checkers.isIntNumber(n) || n < 1 || n > args.length) {
                     throw valueError(`incorrect input value: array < ${args} >, n-th minimum < ${n} >`)
                 }
@@ -681,7 +682,7 @@ export namespace Maths {
                 return s
             }
 
-            export const sin3 = (x: number, e: number, n: number, eps: number): number | null => {
+            export const sin3 = (x: number, e: number, n: number, eps: number): Optional<number> => {
                 if (!Checkers.isNumber(x) || !Checkers.isRealNumber(e) || e <= 0 || e >= 1) {
                     throw valueError(`incorrect input values: x < ${x} >, precision < ${e} >`)
                 }
@@ -758,7 +759,7 @@ export namespace Maths {
                 return Math.cos(angle)
             }
 
-            export const cos2 = (x: number, e: number, n: number, eps: number): number | null => {
+            export const cos2 = (x: number, e: number, n: number, eps: number): Optional<number> => {
                 if (!Checkers.isNumber(x) || !Checkers.isRealNumber(e) || e <= 0 || e >= 1) {
                     throw valueError(`incorrect input values: x < ${x} >, precision < ${e} >`)
                 }
@@ -1075,7 +1076,7 @@ export namespace Maths {
                 x: number,
                 e: number,
                 func: Processor<number, number>,
-            ): number | null => {
+            ): Optional<number> => {
                 if (
                     !Checkers.isNumber(a) ||
                     !Checkers.isNumber(b) ||
@@ -1143,7 +1144,7 @@ export namespace Maths {
             //	return v * v * v;
             // });
             // метод половинного деления
-            export const hdiv = (a: number, b: number, e: number, func): number | null => {
+            export const hdiv = (a: number, b: number, e: number, func): Optional<number> => {
                 if (
                     !Checkers.isNumber(a) ||
                     !Checkers.isNumber(b) ||
@@ -1392,7 +1393,7 @@ export namespace Maths {
             export const penetration = (
                 obj1,
                 obj2,
-            ): { x: number; y: number; direction: { x: number; y: number } } | null => {
+            ): Optional<{ x: number; y: number; direction: { x: number; y: number } }> => {
                 if (!Checkers.isObject(obj1)) {
                     throw valueError(`incorrect input argument: {obj1} is not an object < ${obj1} >`)
                 }

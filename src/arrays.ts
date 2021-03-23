@@ -21,6 +21,58 @@ export namespace Arrays {
     import Commons = Utils.Commons
     import swap = Sorting.swap
     import defineProperty = Utils.Commons.defineProperty
+    import defineStaticProperty = Utils.Commons.defineStaticProperty
+
+    export const props = (() => {
+        const props = {
+            proto: {
+                index: 'index',
+            },
+            static: {
+                index: '__index__',
+            },
+        }
+
+        const indexOf_ = (array: any[], searchElement: any, fromIndex = 0): number => {
+            let i,
+                pivot = fromIndex ? fromIndex : 0
+
+            if (!array) {
+                throw new TypeError()
+            }
+
+            const length = array.length
+            if (length === 0 || pivot >= length) {
+                return -1
+            }
+
+            if (pivot < 0) {
+                pivot = length - Math.abs(pivot)
+            }
+
+            for (i = pivot; i < length; i++) {
+                if (array[i] === searchElement) {
+                    return i
+                }
+            }
+
+            return -1
+        }
+
+        if (!isFunction(Array.prototype[props.proto.index])) {
+            defineProperty(Array.prototype, props.proto.index, {
+                value(searchElement, fromIndex) {
+                    return indexOf_(this as any[], searchElement, fromIndex)
+                },
+            })
+        }
+
+        if (!isFunction(Array[props.static.index])) {
+            defineStaticProperty(Array, props.static.index, {
+                value: (array, obj1, obj2) => indexOf_(array, obj1, obj2),
+            })
+        }
+    })()
 
     export const findMinValue = (arr: number[]): number => {
         return Math.min.apply(

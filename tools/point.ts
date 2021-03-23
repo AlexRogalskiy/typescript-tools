@@ -1,7 +1,11 @@
-import { Checkers, Errors } from '../src'
+import { Checkers, Errors, Numbers } from '../src'
+
+import { NumberProcessor } from '../typings/function-types'
+
 import checkNumber = Checkers.checkNumber
 import valueError = Errors.valueError
 import isFunction = Checkers.isFunction
+import NumberOperations = Numbers.NumberOperations
 
 export class Point {
     private static readonly operands: Point[] = []
@@ -117,6 +121,92 @@ export class Point {
     }
 
     /**
+     * Negate this point
+     * @return {Point} thisArg
+     * @chainable
+     */
+    negate(): Point {
+        this.x = -this.x
+        this.y = -this.y
+
+        return this
+    }
+
+    /**
+     * Computes the distance between this point and another point.
+     * @param {Point} point The point to compute the distance with.
+     * @returns {Number} The distance between the 2 points
+     */
+    distanceTo(point: Point): number {
+        Point.checkPoint(point)
+
+        return Math.sqrt(Math.pow(this.x - point.x, 2) + Math.pow(this.y - point.y, 2))
+    }
+
+    /**
+     * Computes the squared distance between this point and another point.
+     * Useful for optimizing things like comparing distances.
+     * @param {Point} point The point to compute the squared distance with.
+     * @returns {Number} The squared distance between the 2 points
+     */
+    squaredDistanceTo(point: Point): number {
+        Point.checkPoint(point)
+
+        return Math.pow(this.x - point.x, 2) + Math.pow(this.y - point.y, 2)
+    }
+
+    /**
+     * Rotates the point around the specified pivot
+     * From http://stackoverflow.com/questions/4465931/rotate-rectangle-around-a-point
+     * @function
+     * @param degrees degress to rotate around the pivot.
+     * @param {Point} [pivot=(0,0)] Point around which to rotate.
+     * Defaults to the origin.
+     * @returns {Point}. A new point representing the point rotated around the specified pivot
+     */
+    rotate(degrees: number, pivot: Point): Point {
+        pivot = pivot || new Point(0, 0)
+
+        let cos, sin
+        // Avoid float computations when possible
+        if (degrees % 90 === 0) {
+            const d = NumberOperations.positiveModulo(degrees, 360)
+            if (d === 0) {
+                cos = 1
+                sin = 0
+            } else if (d === 90) {
+                cos = 0
+                sin = 1
+            } else if (d === 180) {
+                cos = -1
+                sin = 0
+            } else if (d === 270) {
+                cos = 0
+                sin = -1
+            }
+        } else {
+            const angle = (degrees * Math.PI) / 180.0
+            cos = Math.cos(angle)
+            sin = Math.sin(angle)
+        }
+
+        const x = cos * (this.x - pivot.x) - sin * (this.y - pivot.y) + pivot.x
+        const y = sin * (this.x - pivot.x) + cos * (this.y - pivot.y) + pivot.y
+
+        return new Point(x, y)
+    }
+
+    /**
+     * Applies a function to each coordinate of this point and return a new point.
+     * @param {function} func The function to apply to each coordinate.
+     * @returns {Point} A new point with the coordinates computed
+     * by the specified function
+     */
+    apply(func: NumberProcessor<number>): Point {
+        return new Point(func(this.x), func(this.y))
+    }
+
+    /**
      * Divides this point by a value
      * @param {Number} value
      * @return {Point} thisArg
@@ -226,7 +316,7 @@ export class Point {
      * @return {String}
      */
     toString(): string {
-        return `(x: ${this.x}, y: ${this.y})`
+        return `(x: ${Math.round(this.x * 100) / 100}, y: ${Math.round(this.y * 100) / 100})`
     }
 
     /**

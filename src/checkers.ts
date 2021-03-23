@@ -10,13 +10,31 @@ import {
 import { Numbers } from './numbers'
 import { Errors } from './errors'
 
+import { Optional } from '../typings/standard-types'
+
 export namespace Checkers {
     import valueError = Errors.valueError
     import validationError = Errors.validationError
 
     const { hasOwnProperty: hasOwnProp } = Object.prototype
 
-    export const getClass = (obj: any): string | null => {
+    /**
+     * Taken from jquery 1.6.1
+     * [[Class]] -> type pairs
+     * @private
+     */
+    const class2type = {
+        '[object Boolean]': 'boolean',
+        '[object Number]': 'number',
+        '[object String]': 'string',
+        '[object Function]': 'function',
+        '[object Array]': 'array',
+        '[object Date]': 'date',
+        '[object RegExp]': 'regexp',
+        '[object Object]': 'object',
+    }
+
+    export const getClass = (obj: any): Optional<string> => {
         const str = Object.prototype.toString.call(obj)
         const value = /^\[object (.*)]$/.exec(str)
 
@@ -72,6 +90,58 @@ export namespace Checkers {
      */
     export const isValidSymbol = (symbol: any): boolean => {
         return typeof symbol === 'string' && ALPHA_REGEX.test(symbol)
+    }
+
+    /**
+     * A crude way of determining if an object is a window.
+     * Taken from jQuery 1.6.1
+     * @function isWindow
+     * @see {@link http://www.jquery.com/ jQuery}
+     */
+    export const isWindow = (obj: any): boolean => {
+        return obj && typeof obj === 'object' && 'setInterval' in obj
+    }
+
+    /**
+     * Taken from jQuery 1.6.1
+     * @function type
+     * @see {@link http://www.jquery.com/ jQuery}
+     */
+    export const type = (obj: any): string => {
+        return obj === null || obj === undefined ? String(obj) : class2type[toString.call(obj)] || 'object'
+    }
+
+    /**
+     * Taken from jQuery 1.6.1
+     * @function isPlainObject
+     * @see {@link http://www.jquery.com/ jQuery}
+     */
+    export const isPlainObject = (obj: any): boolean => {
+        // Must be an Object.
+        // Because of IE, we also have to check the presence of the constructor property.
+        // Make sure that DOM nodes and window objects don't pass through, as well
+        if (!obj || type(obj) !== 'object' || obj.nodeType || isWindow(obj)) {
+            return false
+        }
+
+        // Not own constructor property must be Object
+        if (
+            obj.constructor &&
+            !hasOwnProp.call(obj, 'constructor') &&
+            !hasOwnProp.call(obj.constructor.prototype, 'isPrototypeOf')
+        ) {
+            return false
+        }
+
+        // Own properties are enumerated firstly, so to speed up,
+        // if last one is own, then all properties are own.
+
+        let lastKey
+        for (const key in obj) {
+            lastKey = key
+        }
+
+        return lastKey === undefined || hasOwnProp.call(obj, lastKey)
     }
 
     export const isBuffer = (value: any): boolean => {

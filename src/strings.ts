@@ -1,7 +1,7 @@
 import slugify from 'slugify'
 import { randomBytes } from 'crypto'
 
-import { OptionalNumber, OptionalString } from '../typings/standard-types'
+import { Optional, OptionalNumber, OptionalString } from '../typings/standard-types'
 import { BiProcessor, Comparator, Processor, StringProcessor, Supplier } from '../typings/function-types'
 
 import { Errors } from './errors'
@@ -23,12 +23,6 @@ export namespace Strings {
     import randomBy = Numbers.randomBy
     import isFunction = Checkers.isFunction
     import Commons = Utils.Commons
-
-    export const isBlankString = (value: string): boolean => {
-        return !value || /^\s*$/.test(value)
-    }
-
-    export const numFormat = (value: number, fraction = 2): string => value.toFixed(fraction)
 
     export const props = (() => {
         const props = {
@@ -63,6 +57,12 @@ export namespace Strings {
             })
         }
     })()
+
+    export const isBlankString = (value: string): boolean => {
+        return !value || /^\s*$/.test(value)
+    }
+
+    export const numFormat = (value: number, fraction = 2): string => value.toFixed(fraction)
 
     export const extractAttachmentsFromString = (
         content: string,
@@ -147,7 +147,7 @@ export namespace Strings {
     }
 
     export const sortBy = (
-        comparator: Comparator<{ index: number; value: string }> | null,
+        comparator: Optional<Comparator<{ index: number; value: string }>>,
         ...args: string[]
     ): string[] => {
         const map = args.map((e, i) => {
@@ -285,7 +285,7 @@ export namespace Strings {
     }
 
     // UK Postcode validation - John Gardner - http://www.braemoor.co.uk/software/postcodes.shtml
-    export const getPostCode = (value: string): string | null => {
+    export const getPostCode = (value: string): Optional<string> => {
         const alpha1 = '[abcdefghijklmnoprstuwyz]',
             alpha2 = '[abcdefghklmnopqrstuvwxy]',
             alpha3 = '[abcdefghjkpmnrstuvwxy]',
@@ -465,7 +465,7 @@ export namespace Strings {
     export const capitalFirstLetter = (value: string): string =>
         value.charAt(0).toUpperCase() + value.slice(1)
 
-    export const parseJson = (value: string, defaultValue: any = undefined): string | undefined => {
+    export const parseJson = (value: string, defaultValue: any = undefined): Optional<string> => {
         try {
             return JSON.parse(value)
         } catch (e) {
@@ -584,7 +584,7 @@ export namespace Strings {
         }
     }
 
-    export const parseNumber = (value: string): RegExpExecArray | null => {
+    export const parseNumber = (value: string): Optional<RegExpExecArray> => {
         if (!isString(value)) {
             throw valueError(`incorrect input string: < ${value} >`)
         }
@@ -707,7 +707,7 @@ export namespace Strings {
             .toUpperCase()
     }
 
-    export const wordWrap = (value: string, width: number, brk: string, cut: boolean): string | undefined => {
+    export const wordWrap = (value: string, width: number, brk: string, cut: boolean): Optional<string> => {
         brk = brk || 'n'
         width = width || 75
         cut = cut || false
@@ -839,7 +839,7 @@ export namespace Strings {
             return p1 + ' '.repeat(p2.length * tab - (p1.length % tab))
         }
 
-        const chunkString = (value: string, length: number): RegExpMatchArray | null => {
+        const chunkString = (value: string, length: number): Optional<RegExpMatchArray> => {
             // str.match(/.{1,n}/g);
             // str.match(/(.|[\r\n]){1,n}/g);
             return value.match(new RegExp(`.{1,${length}}`, 'g'))
@@ -854,7 +854,7 @@ export namespace Strings {
             const line = lines[i].replace('/\\s*/', tabExpand_)
             const chunks = chunkString(line, tab)
 
-            if (chunks === null) {
+            if (chunks === null || chunks === undefined) {
                 throw valueError(`Invalid chunk string ${chunks}`)
             }
 
@@ -920,9 +920,9 @@ export namespace Strings {
 
     export const parseIni = (
         value: string,
-    ): { name: string | null; fields: { name: string; value: string }[] }[] | null => {
+    ): Optional<{ name: Optional<string>; fields: { name: string; value: string }[] }[]> => {
         // Start with an object to hold the top-level fields
-        const categories: { name: string | null; fields: { name: string; value: string }[] }[] = [
+        const categories: { name: Optional<string>; fields: { name: string; value: string }[] }[] = [
             { name: null, fields: [] },
         ]
 
@@ -955,7 +955,7 @@ export namespace Strings {
             .join('')
     }
 
-    export const checkPostCode = (toCheck: string): string | null => {
+    export const checkPostCode = (toCheck: string): Optional<string> => {
         const alpha1 = '[abcdefghijklmnoprstuwyz]',
             alpha2 = '[abcdefghklmnopqrstuvwxy]',
             alpha3 = '[abcdefghjkpmnrstuvwxy]',
@@ -1142,7 +1142,7 @@ export namespace Strings {
         compareFunc,
         myEnum: string,
     ): { member: OptionalString; count: number } => {
-        let result: { member: string | null; count: number } = { member: null, count: 0 }
+        let result: { member: Optional<string>; count: number } = { member: null, count: 0 }
         let thisCount = 1
         for (let i = 1; i < myEnum.length; ++i) {
             if (myEnum[i] !== ' ' && compareFunc(myEnum[i - 1], myEnum[i])) {

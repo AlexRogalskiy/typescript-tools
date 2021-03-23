@@ -237,7 +237,7 @@ export namespace Files {
         return items
     }
 
-    export const getFolderNameFromPathname = (pathname: string): string | null => {
+    export const getFolderNameFromPathname = (pathname: string): Optional<string> => {
         if (pathname === '/') return null
 
         return pathname.split('/').slice(-1)[0]

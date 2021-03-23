@@ -8,6 +8,7 @@ import { Commons } from './commons'
 import { Utils } from './utils'
 
 import { URL_REGEX4 } from './regexes'
+import { Strings } from './strings'
 
 export namespace Browsers {
     import isDomElement = Checkers.isDomElement
@@ -21,6 +22,7 @@ export namespace Browsers {
     import defineProperty = Utils.Commons.defineProperty
     import defineStaticProperty = Utils.Commons.defineStaticProperty
     import Colors = Utils.Colors
+    import capitalFirstLetter = Strings.capitalFirstLetter
 
     const { hasOwnProperty: hasOwnProp } = Object.prototype
 
@@ -229,8 +231,73 @@ export namespace Browsers {
         return classElements
     }
 
-    export const byId = <T extends DomElement>(elem: any): T | null => {
+    export const byId = <T extends DomElement>(elem: any): Optional<T> => {
         return isString(elem) ? document.getElementById(elem) : isDomElement(elem) ? elem : null
+    }
+
+    /**
+     * Returns the property with the correct vendor prefix appended.
+     * @param {String} property the property name
+     * @returns {String} the property with the correct prefix or null if not
+     * supported.
+     */
+    export const getCssPropertyWithVendorPrefix = (property: string): string => {
+        const memo = {}
+
+        const getCssPropertyWithVendorPrefix_ = (property: string): string => {
+            if (memo[property] !== undefined) {
+                return memo[property]
+            }
+
+            const style = document.createElement('div').style
+
+            let result = ''
+            if (style[property] !== undefined) {
+                result = property
+            } else {
+                const prefixes = ['Webkit', 'Moz', 'MS', 'O', 'webkit', 'moz', 'ms', 'o']
+                const suffix = capitalFirstLetter(property)
+                for (const item of prefixes) {
+                    const prop = item + suffix
+                    if (style[prop] !== undefined) {
+                        result = prop
+                        break
+                    }
+                }
+            }
+            memo[property] = result
+            return result
+        }
+
+        return getCssPropertyWithVendorPrefix_(property)
+    }
+
+    /**
+     * Gets the position of the mouse on the screen for a given event.
+     * @function
+     * @param {Event} [event]
+     */
+    export const getMousePosition = (event): { x: number; y: number } => {
+        let getMousePosition_
+        if (typeof event.pageX === 'number') {
+            getMousePosition_ = (event): any => {
+                return {
+                    x: event.pageX,
+                    y: event.pageY,
+                }
+            }
+        } else if (typeof event.clientX === 'number') {
+            getMousePosition_ = (event): any => {
+                return {
+                    x: event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft,
+                    y: event.clientY + document.body.scrollTop + document.documentElement.scrollTop,
+                }
+            }
+        } else {
+            throw new Error('Unknown event mouse position, no known technique.')
+        }
+
+        return getMousePosition_(event)
     }
 
     /**
@@ -393,7 +460,7 @@ export namespace Browsers {
             elem.style.display = 'none'
         }
 
-        const getRealDisplay = <T extends HTMLElement>(elem: T): string | null => {
+        const getRealDisplay = <T extends HTMLElement>(elem: T): Optional<string> => {
             if (elem.style) {
                 return elem.style.display
             } else if (window.getComputedStyle) {
@@ -700,10 +767,35 @@ export namespace Browsers {
         }
     }
 
+    /**
+     * Remove the specified CSS class from the element.
+     * @function
+     * @param elementId element id
+     * @param {String} className
+     */
+    export const removeClass2 = (elementId: string, className: string): void => {
+        const newClasses: string[] = []
+        const element = byId(elementId)
+
+        if (!element) {
+            throw valueError(`Element not found by id: ${elementId}`)
+        }
+
+        const oldClasses = element['className'].split(/\s+/)
+
+        for (const item of oldClasses) {
+            if (item && item !== className) {
+                newClasses.push(item)
+            }
+        }
+
+        element['className'] = newClasses.join(' ')
+    }
+
     export const findById = (() => {
         const cache = {}
 
-        return (id: string): HTMLElement | null => {
+        return (id: string): Optional<HTMLElement> => {
             if (cache[id] === undefined) {
                 cache[id] = document.getElementById(id) || null
             }
@@ -721,7 +813,7 @@ export namespace Browsers {
         return <K extends keyof HTMLElementTagNameMap>(
             id: string,
             el: K,
-        ): HTMLCollectionOf<HTMLElementTagNameMap[K]> | null => {
+        ): Optional<HTMLCollectionOf<HTMLElementTagNameMap[K]>> => {
             const a = id + el
             if (cache[a] === undefined) {
                 const obj = document.getElementById(id)
@@ -758,7 +850,7 @@ export namespace Browsers {
         return res
     }
 
-    export const attr = (elem, name: string, value: string): string | null => {
+    export const attr = (elem, name: string, value: string): Optional<string> => {
         // Make sure that a valid name was provided
         if (!name || name.constructor !== String) {
             return ''
@@ -786,7 +878,7 @@ export namespace Browsers {
             : document.createElement(elem)
     }
 
-    export const getStyle = (elem: any, name: string): string | null => {
+    export const getStyle = (elem: any, name: string): Optional<string> => {
         // If the property exists in style[], then it's been set
         // recently (and is current)
         if (elem.style[name]) {
@@ -832,13 +924,13 @@ export namespace Browsers {
     }
 
     // Find the left position of an element
-    export const posX = (elem: any): number | null => {
+    export const posX = (elem: any): Optional<number> => {
         const value = getStyle(elem, 'left')
         return value ? parseInt(value) : null
     }
 
     // Find the top position of an element
-    export const posY = (elem: any): number | null => {
+    export const posY = (elem: any): Optional<number> => {
         const value = getStyle(elem, 'top')
         return value ? parseInt(value) : null
     }
@@ -854,13 +946,13 @@ export namespace Browsers {
     }
 
     // Get the actual height (using the computed CSS) of an element
-    export const getHeight = (elem: any): number | null => {
+    export const getHeight = (elem: any): Optional<number> => {
         const value = getStyle(elem, 'height')
         return value ? parseInt(value) : null
     }
 
     // Get the actual width (using the computed CSS) of an element
-    export const getWidth = (elem: any): number | null => {
+    export const getWidth = (elem: any): Optional<number> => {
         // Gets the computed CSS value and parses out a usable number
         const value = getStyle(elem, 'width')
         return value ? parseInt(value) : null
@@ -1045,6 +1137,89 @@ export namespace Browsers {
         return elem
     }
 
+    /**
+     * True if the browser supports the HTML5 canvas element
+     * @member {Boolean} supportsCanvas
+     */
+    export const supportsCanvas = ((): boolean => {
+        const canvasElement = document.createElement('canvas')
+
+        return !!(isFunction(canvasElement.getContext) && canvasElement.getContext('2d'))
+    })()
+
+    /**
+     * True if the browser supports the EventTarget.addEventListener() method
+     * @member {Boolean} supportsAddEventListener
+     */
+    export const supportsAddEventListener = ((): boolean => {
+        return !!(document.documentElement.addEventListener && document.addEventListener)
+    })()
+
+    /**
+     * True if the browser supports the EventTarget.removeEventListener() method
+     * @member {Boolean} supportsRemoveEventListener
+     */
+    export const supportsRemoveEventListener = ((): boolean => {
+        return !!(document.documentElement.removeEventListener && document.removeEventListener)
+    })()
+
+    /**
+     * Test whether the submitted canvas is tainted or not.
+     * @argument {Canvas} canvas The canvas to test.
+     * @returns {Boolean} True if the canvas is tainted.
+     */
+    export const isCanvasTainted = (canvas): boolean => {
+        let isTainted = false
+        try {
+            // We test if the canvas is tainted by retrieving data from it.
+            // An exception will be raised if the canvas is tainted.
+            canvas.getContext('2d').getImageData(0, 0, 1, 1)
+        } catch (e) {
+            isTainted = true
+        }
+
+        return isTainted
+    }
+
+    /**
+     * A ratio comparing the device screen's pixel density to the canvas's backing store pixel density,
+     * clamped to a minimum of 1. Defaults to 1 if canvas isn't supported by the browser.
+     * @member {Number} pixelDensityRatio
+     * @memberof OpenSeadragon
+     */
+    export const pixelDensityRatio = ((): number => {
+        if (supportsCanvas) {
+            const context = document.createElement('canvas').getContext('2d')
+            const devicePixelRatio = window.devicePixelRatio || 1
+
+            if (!context) {
+                throw valueError('Invalid canvas context')
+            }
+
+            const backingStoreRatio =
+                context['webkitBackingStorePixelRatio'] ||
+                context['mozBackingStorePixelRatio'] ||
+                context['msBackingStorePixelRatio'] ||
+                context['oBackingStorePixelRatio'] ||
+                context['backingStorePixelRatio'] ||
+                1
+
+            return Math.max(devicePixelRatio, 1) / backingStoreRatio
+        }
+
+        return 1
+    })()
+
+    export const isIOSDevice = (): boolean => {
+        if (typeof navigator !== 'object') {
+            return false
+        }
+
+        const userAgent = navigator.userAgent
+
+        return userAgent.includes('iPhone') || userAgent.includes('iPad') || userAgent.includes('iPod')
+    }
+
     export const cssStyleLinkGenerator = (href: string): string => {
         return `<link rel="stylesheet" href="${href}" type="text/css"/>`
     }
@@ -1105,12 +1280,12 @@ export namespace Browsers {
         return data.replace(URL_REGEX4, '<a target="_blank" href="$1">$1</a> ')
     }
 
-    export const isChildNode = (parent?: Node | null, child?: Node | null | EventTarget): boolean => {
+    export const isChildNode = (parent?: Optional<Node>, child?: Optional<Node | EventTarget>): boolean => {
         if (parent == null || child == null) {
             return false
         }
 
-        let target = child as Node | null
+        let target = child as Optional<Node>
         while (target != null) {
             target = target.parentNode
             if (parent === target) {

@@ -403,4 +403,36 @@ export namespace Functions {
     export const apply = <T, U>(...args: T[]): Processor<GenericValueCallback<T, U>, U> => {
         return (fn: (...args: T[]) => U) => fn(...args)
     }
+
+    /**
+     * Similar to OpenSeadragon.delegate, but it does not immediately call
+     * the method on the object, returning a function which can be called
+     * repeatedly to delegate the method. It also allows additional arguments
+     * to be passed during construction which will be added during each
+     * invocation, and each invocation can add additional arguments as well.
+     *
+     * @function
+     * @param {Object} object
+     * @param {Function} method
+     * @param [args] any additional arguments are passed as arguments to the
+     *  created callback
+     * @returns {Function}
+     */
+    export const createCallback = (object, method, ...args: any[]): GenericValueCallback<any, any> => {
+        const initialArgs: any[] = []
+
+        for (const item of args) {
+            initialArgs.push(item)
+        }
+
+        return (...args: any[]): any => {
+            const args_ = initialArgs.concat([])
+
+            for (const item of args) {
+                args_.push(item)
+            }
+
+            return method.apply(object, args_)
+        }
+    }
 }

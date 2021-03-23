@@ -2,6 +2,8 @@ import { LOCALHOST_REGEX } from './regexes'
 import { Checkers } from './checkers'
 import { Errors } from './errors'
 
+import { Optional } from '../typings/standard-types'
+
 export namespace Networks {
     import isNotNull = Checkers.isNotNull
     import valueError = Errors.valueError
@@ -39,7 +41,7 @@ export namespace Networks {
     /**
      * Normalize a port into a number, string, or false.
      */
-    export const normalizePort = (value: string): number | undefined => {
+    export const normalizePort = (value: string): Optional<number> => {
         const port = parseInt(value, 10)
 
         return !isNaN(port) && port >= 0 ? port : undefined
@@ -68,7 +70,7 @@ export namespace Networks {
         return num
     }
 
-    export const getQueryParameter = (value: string): string | null => {
+    export const getQueryParameter = (value: string): Optional<string> => {
         const reg = new RegExp(`(^|&)${value}=([^&*])(&|$)`)
         const query = window.location.search.substr(1).match(reg)
 
@@ -77,7 +79,7 @@ export namespace Networks {
         return isNotNull(query) ? unescape(query[2]) : null
     }
 
-    export const getParameterByName = (value: string): string | null => {
+    export const getParameterByName = (value: string): Optional<string> => {
         if (!isString(value)) {
             throw valueError(`incorrect parameter value: < ${value} >`)
         }

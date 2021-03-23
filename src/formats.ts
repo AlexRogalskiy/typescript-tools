@@ -1,3 +1,5 @@
+import { Optional } from '../typings/standard-types'
+
 export namespace ByteFormats {
     /*
     Code from https://github.com/sindresorhus/pretty-bytes/blob/master/index.js
@@ -109,7 +111,7 @@ export namespace Formats {
         return decimalValue.toString(16).toUpperCase()
     }
 
-    export const toInt = (str: string, defaultValue?: number): number | undefined => {
+    export const toInt = (str: string, defaultValue?: number): Optional<number> => {
         try {
             return parseInt(str) || defaultValue
         } catch (e) {

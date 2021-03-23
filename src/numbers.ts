@@ -39,6 +39,35 @@ export namespace Numbers {
             return result
         }
 
+        export const transform = (stiffness: number, x: number): number => {
+            return (1.0 - Math.exp(stiffness * -x)) / (1.0 - Math.exp(-stiffness))
+        }
+
+        /**
+         * Compute the modulo of a number but makes sure to always return
+         * a positive value.
+         * @param {Number} number the number to computes the modulo of
+         * @param {Number} modulo the modulo
+         * @returns {Number} the result of the modulo of number
+         */
+        export const positiveModulo = (number: number, modulo: number): number => {
+            let result = number % modulo
+
+            if (result < 0) {
+                result += modulo
+            }
+
+            return result
+        }
+
+        export const isInAcceptableRange = (actual: number, expected: number, threshold = 0.001): boolean => {
+            return actual >= (1 - threshold) * expected && actual <= (1 + threshold) * expected
+        }
+
+        export const isInRange = (actual: number, min: number, max: number): boolean => {
+            return actual >= min && actual <= max
+        }
+
         export const humanNumber = (number: any, p = 2, placeHolder = '--'): Optional<string> => {
             if (typeof number === 'string') {
                 return number
@@ -211,14 +240,10 @@ export namespace Numbers {
             throw valueError(`incorrect input parameters: lower border < ${n} >, upper border < ${m} >`)
         }
 
-        return Math.abs(
-            Math.floor(n / 7) +
-                Math.floor(n / 3) -
-                2 * Math.floor(n / 21) -
-                Math.floor((m - 1) / 7) -
-                Math.floor((m - 1) / 3) +
-                2 * Math.floor((m - 1) / 21),
-        )
+        const left = Math.floor(n / 7) + Math.floor(n / 3) - 2 * Math.floor(n / 21)
+        const right = Math.floor((m - 1) / 7) - Math.floor((m - 1) / 3) + 2 * Math.floor((m - 1) / 21)
+
+        return Math.abs(left - right)
     }
 
     export const isSuperSimpleNumber = (num: number): boolean => {
@@ -338,7 +363,7 @@ export namespace Numbers {
         return b
     }
 
-    export const findKthSmallest = (k: number, arr1: number[], arr2: number[]): number | null => {
+    export const findKthSmallest = (k: number, arr1: number[], arr2: number[]): Optional<number> => {
         if (!isArray(arr1)) {
             throw valueError(`incorrect input value: array # 1 < ${arr1} >`)
         }
@@ -452,7 +477,7 @@ export namespace Numbers {
         return n
     }
 
-    export const average = (delta: number, numberOfDays: number): number | undefined => {
+    export const average = (delta: number, numberOfDays: number): Optional<number> => {
         if (delta === undefined) {
             return undefined
         }

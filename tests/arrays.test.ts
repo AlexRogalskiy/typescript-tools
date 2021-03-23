@@ -23,6 +23,20 @@ export namespace Arrays_Test {
         console.timeEnd('Execution time took')
     })
 
+    describe('Check index of element in array', () => {
+        it('it should return index of element in array', () => {
+            expect(Array['__index__']([0, 1, 2, 2, 3, 4, 6], 3)).toEqual(4)
+            expect(Array['__index__']([0, 1, 2, 2, 3, 4, 6], 4)).toEqual(5)
+            expect(Array['__index__']([0, 1, 2, 2, 3, 4, 6], 7)).toEqual(-1)
+            expect(Array['__index__']([], 7)).toEqual(-1)
+
+            expect([0, 1, 2, 2, 3, 4, 6]['index'](3)).toEqual(4)
+            expect([0, 1, 2, 2, 3, 4, 6]['index'](4)).toEqual(5)
+            expect([0, 1, 2, 2, 3, 4, 6]['index'](7)).toEqual(-1)
+            expect([]['index'](7)).toEqual(-1)
+        })
+    })
+
     describe('Check iteration on array of elements', () => {
         it('it should perform valid array iteration', () => {
             let array: any[] = []
