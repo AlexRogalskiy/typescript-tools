@@ -61,9 +61,11 @@ export namespace ByteFormats {
 export namespace Formats {
     const { hasOwnProperty: hasOwnProp } = Object.prototype
 
-    const objToString = (obj): string => {
+    const objToString = (obj: any, defaultValue = 'null'): string => {
         let str = ''
         let i = 0
+
+        if (!obj) return defaultValue
 
         const entries = Object.entries(obj)
         for (const [key, value] of entries) {
@@ -119,7 +121,7 @@ export namespace Formats {
         }
     }
 
-    export const toFormatString = (obj): string => {
+    export const toFormatString = (obj: any): string => {
         return `(${objToString(obj)})`
     }
 }
