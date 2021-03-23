@@ -19,6 +19,23 @@ export namespace Requests {
         src: string
     }
 
+    /**
+     * Retrieves the protocol used by the url. The url can either be absolute
+     * or relative.
+     * @function
+     * @private
+     * @param {String} url The url to retrieve the protocol from.
+     * @return {String} The protocol (http:, https:, file:, ftp: ...)
+     */
+    export const getUrlProtocol = (url: string): string => {
+        const match = url.match(/^([a-z]+:)\/\//i)
+        if (match === null) {
+            return window.location.protocol
+        }
+
+        return match[1].toLowerCase()
+    }
+
     export const loadFile = async (data: AttachmentData, name: string): Promise<Optional<File>> => {
         if (data.type === 'blob') {
             return new File([data.blob], name)

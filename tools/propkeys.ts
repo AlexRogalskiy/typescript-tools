@@ -26,7 +26,7 @@ const I18N = {
     },
 }
 
-export const propKeys = ((globals, i18n: any) => {
+export const propleys = ((globals, i18n: any) => {
     const getString = (prop: string, ...args: any[]): string => {
         const props = prop.split('.')
         let string = '',
