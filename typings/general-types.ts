@@ -177,16 +177,16 @@ export type ReversePair<T, V> = Pair<V, T>
 export type OptionalPair<T, V> = Pair<Optional<T>, Optional<V>>
 
 /**
- * RequiredPair
- * @desc Required pair type with left and right required values
- */
-export type RequiredPair<T, V> = Pair<Required<T>, Required<V>>
-
-/**
  * PartialPair
  * @desc Partial pair type with left and right partial values
  */
 export type PartialPair<T, V> = Pair<Partial<T>, Partial<V>>
+
+/**
+ * RequiredPair
+ * @desc Required pair type with left and right required values
+ */
+export type RequiredPair<T, V> = Pair<Required<T>, Required<V>>
 
 /**
  * NonNullPair
@@ -285,16 +285,16 @@ export type KeyValue<T, V> = { key: T; value: V }
 export type OptionalKeyValue<T, V> = KeyValue<T, Optional<V>>
 
 /**
- * RequiredKeyValue
- * @desc KeyValue type with key and required value properties
- */
-export type RequiredKeyValue<T, V> = KeyValue<T, Required<V>>
-
-/**
  * PartialKeyValue
  * @desc KeyValue type with key and partial value properties
  */
 export type PartialKeyValue<T, V> = KeyValue<T, Partial<V>>
+
+/**
+ * RequiredKeyValue
+ * @desc KeyValue type with key and required value properties
+ */
+export type RequiredKeyValue<T, V> = KeyValue<T, Required<V>>
 
 /**
  * NonNullKeyValue
@@ -315,16 +315,16 @@ export type NameValue<T extends PropertyKey, V> = { name: T; value: V }
 export type OptionalNameValue<V> = NameValue<PropertyKey, Optional<V>>
 
 /**
- * RequiredValue
- * @desc NameValue type with string name and required value properties
- */
-export type RequiredValue<V> = NameValue<PropertyKey, Required<V>>
-
-/**
  * PartialValue
  * @desc NameValue type with string name and partial value properties
  */
 export type PartialValue<V> = NameValue<PropertyKey, Partial<V>>
+
+/**
+ * RequiredValue
+ * @desc NameValue type with string name and required value properties
+ */
+export type RequiredValue<V> = NameValue<PropertyKey, Required<V>>
 
 /**
  * NonNullNameValue
@@ -369,16 +369,16 @@ export type Range<T> = { lower: T; upper: T }
 export type OptionalRange<T> = Range<Optional<T>>
 
 /**
- * RequiredRange
- * @desc OptionalRange type with required lower and upper bound properties
- */
-export type RequiredRange<T> = Range<Required<T>>
-
-/**
  * PartialRange
  * @desc OptionalRange type with partial lower and upper bound properties
  */
 export type PartialRange<T> = Range<Partial<T>>
+
+/**
+ * RequiredRange
+ * @desc OptionalRange type with required lower and upper bound properties
+ */
+export type RequiredRange<T> = Range<Required<T>>
 
 /**
  * NonNullRange

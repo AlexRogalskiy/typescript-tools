@@ -101,7 +101,7 @@ export namespace Strings {
         if (!isFunction(String[props.static.replaceWith])) {
             // Define "__replaceWith__" function for built-in types
             defineStaticProperty(String, props.static.replaceWith, {
-                value: (self, regex: string | RegExp, replacement: string) =>
+                value: (self: any, regex: string | RegExp, replacement: string) =>
                     replaceWith_(self, regex, replacement),
             })
         }
@@ -110,7 +110,7 @@ export namespace Strings {
             // Define "__replaceByRegex__" function for built-in types
             defineStaticProperty(String, props.static.replaceByRegex, {
                 value: (
-                    self,
+                    self: any,
                     regex: string | RegExp,
                     replacer: (substring: string, ...args: any[]) => string,
                 ) => replaceByRegex_(self, regex, replacer),

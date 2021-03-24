@@ -151,6 +151,7 @@ export namespace Commons {
         }
 
         if (!isFunction(Date.prototype[props.proto.equals])) {
+            // Define "eqTo" function for built-in types
             defineProperty(Date.prototype, props.proto.equals, {
                 value(obj) {
                     return computeDateEquals(this, obj)
@@ -159,6 +160,7 @@ export namespace Commons {
         }
 
         if (!isFunction(Date.prototype[props.proto.compare])) {
+            // Define "cmpTo" function for built-in types
             defineProperty(Date.prototype, props.proto.compare, {
                 value(obj) {
                     return computeCompare(this, obj)
@@ -167,6 +169,7 @@ export namespace Commons {
         }
 
         if (!isFunction(Number.prototype[props.proto.equals])) {
+            // Define "eqTo" function for built-in types
             defineProperty(Number.prototype, props.proto.equals, {
                 value(obj) {
                     return computePrimitiveEquals(this, obj)
@@ -175,6 +178,7 @@ export namespace Commons {
         }
 
         if (!isFunction(Number.prototype[props.proto.compare])) {
+            // Define "cmpTo" function for built-in types
             defineProperty(Number.prototype, props.proto.compare, {
                 value(obj) {
                     return computeCompare(this, obj)
@@ -183,6 +187,7 @@ export namespace Commons {
         }
 
         if (!isFunction(String.prototype[props.proto.equals])) {
+            // Define "eqTo" function for built-in types
             defineProperty(String.prototype, props.proto.equals, {
                 value(obj) {
                     return computePrimitiveEquals(this, obj)
@@ -191,6 +196,7 @@ export namespace Commons {
         }
 
         if (!isFunction(String.prototype[props.proto.compare])) {
+            // Define "cmpTo" function for built-in types
             defineProperty(String.prototype, props.proto.compare, {
                 value(obj) {
                     return computeCompare(this, obj)
@@ -199,6 +205,7 @@ export namespace Commons {
         }
 
         if (!isFunction(Boolean.prototype[props.proto.equals])) {
+            // Define "eqTo" function for built-in types
             defineProperty(Boolean.prototype, props.proto.equals, {
                 value(obj) {
                     return computePrimitiveEquals(this, obj)
@@ -207,6 +214,7 @@ export namespace Commons {
         }
 
         if (!isFunction(Boolean.prototype[props.proto.compare])) {
+            // Define "cmpTo" function for built-in types
             defineProperty(Boolean.prototype, props.proto.compare, {
                 value(obj) {
                     return computeCompare(this, obj)
@@ -215,6 +223,7 @@ export namespace Commons {
         }
 
         if (!isFunction(Object.prototype[props.proto.equals])) {
+            // Define "eqTo" function for built-in types
             defineProperty(Object.prototype, props.proto.equals, {
                 value(obj) {
                     return computeObjectEquals(this, obj)
@@ -223,6 +232,7 @@ export namespace Commons {
         }
 
         if (!isFunction(Object.prototype[props.proto.compare])) {
+            // Define "cmpTo" function for built-in types
             defineProperty(Object.prototype, props.proto.compare, {
                 value(obj) {
                     return computeCompare(this, obj)
@@ -238,67 +248,77 @@ export namespace Commons {
         }
 
         if (!isFunction(Date[props.static.compare])) {
-            // Define "__equals__" function for built-in types
+            // Define "__compare__" function for built-in types
             defineStaticProperty(Date, props.static.compare, {
                 value: (obj1, obj2) => computeCompare(obj1, obj2),
             })
         }
 
         if (!isFunction(Number[props.static.equals])) {
+            // Define "__equals__" function for built-in types
             defineStaticProperty(Number, props.static.equals, {
                 value: (obj1, obj2) => computePrimitiveEquals(obj1, obj2),
             })
         }
 
         if (!isFunction(Number[props.static.compare])) {
+            // Define "__compare__" function for built-in types
             defineStaticProperty(Number, props.static.compare, {
                 value: (obj1, obj2) => computeCompare(obj1, obj2),
             })
         }
 
         if (!isFunction(String[props.static.equals])) {
+            // Define "__equals__" function for built-in types
             defineStaticProperty(String, props.static.equals, {
                 value: (obj1, obj2) => computePrimitiveEquals(obj1, obj2),
             })
         }
 
         if (!isFunction(String[props.static.compare])) {
+            // Define "__compare__" function for built-in types
             defineStaticProperty(String, props.static.compare, {
                 value: (obj1, obj2) => computeCompare(obj1, obj2),
             })
         }
 
         if (!isFunction(Boolean[props.static.equals])) {
+            // Define "__equals__" function for built-in types
             defineStaticProperty(Boolean, props.static.equals, {
                 value: (obj1, obj2) => computePrimitiveEquals(obj1, obj2),
             })
         }
 
         if (!isFunction(Boolean[props.static.compare])) {
+            // Define "__compare__" function for built-in types
             defineStaticProperty(Boolean, props.static.compare, {
                 value: (obj1, obj2) => computeCompare(obj1, obj2),
             })
         }
 
         if (!isFunction(Object[props.static.equals])) {
+            // Define "__equals__" function for built-in types
             defineStaticProperty(Object, props.static.equals, {
                 value: (obj1, obj2) => computeObjectEquals(obj1, obj2),
             })
         }
 
         if (!isFunction(Object[props.static.compare])) {
+            // Define "__compare__" function for built-in types
             defineStaticProperty(Object, props.static.compare, {
                 value: (obj1, obj2) => computeCompare(obj1, obj2),
             })
         }
 
         if (!isFunction(Function[props.static.equals])) {
+            // Define "__equals__" function for built-in types
             defineStaticProperty(Function, props.static.equals, {
                 value: (obj1, obj2, override) => computeEquals(obj1, obj2, override),
             })
         }
 
         if (!isFunction(Function[props.static.compare])) {
+            // Define "__compare__" function for built-in types
             defineStaticProperty(Function, props.static.compare, {
                 value: (obj1, obj2) => computeCompare(obj1, obj2),
             })

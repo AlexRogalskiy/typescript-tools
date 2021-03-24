@@ -38,9 +38,9 @@ export namespace Strings_Test {
     import removeChars = Strings.removeChars
     import cjk = Strings.cjk
     import hashCode = Strings.hashCode
-    import escapeHtml = Strings.escapeHtml;
-    import escapeAscii = Strings.escapeAscii;
-    import escapeControl = Strings.escapeControl;
+    import escapeHtml = Strings.escapeHtml
+    import escapeAscii = Strings.escapeAscii
+    import escapeControl = Strings.escapeControl
 
     beforeAll(() => {
         console.log('Strings test suite started')
@@ -308,16 +308,24 @@ export namespace Strings_Test {
 
     describe('Check escaped HTML string', () => {
         it('it should return valid escaped HTML string', () => {
-            expect(escapeHtml('<p align="center" style="text-align:center;">Info data block</p>')).toEqual('&lt;p align=&quot;center&quot; style=&quot;text-align:center;&quot;&gt;Info data block&lt;/p&gt;')
-            expect(escapeHtml('<div style="text-align:center;"></div>')).toEqual('&lt;div style=&quot;text-align:center;&quot;&gt;&lt;/div&gt;')
+            expect(escapeHtml('<p align="center" style="text-align:center;">Info data block</p>')).toEqual(
+                '&lt;p align=&quot;center&quot; style=&quot;text-align:center;&quot;&gt;Info data block&lt;/p&gt;',
+            )
+            expect(escapeHtml('<div style="text-align:center;"></div>')).toEqual(
+                '&lt;div style=&quot;text-align:center;&quot;&gt;&lt;/div&gt;',
+            )
             expect(escapeHtml('<span>test</span>')).toEqual('&lt;span&gt;test&lt;/span&gt;')
         })
     })
 
     describe('Check escaped control string', () => {
         it('it should return valid escaped control string', () => {
-            expect(escapeControl('<!--views:info:marker:start-->\n')).toEqual('<!--views:info:marker:start-->\\n')
-            expect(escapeControl('\\n<!--views:info:marker:end-->')).toEqual('\\n<!--views:info:marker:end-->')
+            expect(escapeControl('<!--views:info:marker:start-->\n')).toEqual(
+                '<!--views:info:marker:start-->\\n',
+            )
+            expect(escapeControl('\\n<!--views:info:marker:end-->')).toEqual(
+                '\\n<!--views:info:marker:end-->',
+            )
             expect(escapeControl('HELLO,WORLD!')).toEqual('HELLO,WORLD!')
         })
     })
@@ -336,13 +344,20 @@ export namespace Strings_Test {
                 ),
             ).toEqual("Gerry O'Rourke lives in San Francisco, California")
 
-            expect(String['__replaceWith__']
-                ('Smith, Bob; Raman, Ravi; Jones, Mary', /([\w]+), ([\w]+)/g, '$2 $1'),
+            expect(
+                String['__replaceWith__'](
+                    'Smith, Bob; Raman, Ravi; Jones, Mary',
+                    /([\w]+), ([\w]+)/g,
+                    '$2 $1',
+                ),
             ).toEqual('Bob Smith; Ravi Raman; Mary Jones')
             expect(String['__replaceWith__']('', /([\w]+), ([\w]+)/g, '$2 $1')).toEqual('')
-            expect(String['__replaceWith__']('test1, test2', /([\w]+), ([\w]+)/g, '$2 $1')).toEqual('test2 test1')
+            expect(String['__replaceWith__']('test1, test2', /([\w]+), ([\w]+)/g, '$2 $1')).toEqual(
+                'test2 test1',
+            )
             expect(
-                String['__replaceWith__']("California, San Francisco, O'Rourke, Gerry",
+                String['__replaceWith__'](
+                    "California, San Francisco, O'Rourke, Gerry",
                     /([\w'\s]+), ([\w'\s]+), ([\w'\s]+), ([\w'\s]+)/,
                     '$4 $3 lives in $2, $1',
                 ),
@@ -365,27 +380,37 @@ export namespace Strings_Test {
             )
 
             expect(
-                String['__replaceByRegex__']('72 101 108 108 111  87 111 114 108 100 33', /(\d+)(\s?)/gi, (_, $1) =>
-                    String.fromCharCode($1),
+                String['__replaceByRegex__'](
+                    '72 101 108 108 111  87 111 114 108 100 33',
+                    /(\d+)(\s?)/gi,
+                    (_, $1) => String.fromCharCode($1),
                 ),
             ).toEqual('Hello World!')
-            expect(String['__replaceByRegex__']('hello, world!', /(\S+)(\s?)/gi, (_, $1) => $1.toUpperCase())).toEqual(
-                'HELLO,WORLD!',
-            )
-            expect(String['__replaceByRegex__']('HELLO,WORLD!', /(\S+)(\s?)/gi, (_, $1) => $1.toLowerCase())).toEqual(
-                'hello,world!',
-            )
+            expect(
+                String['__replaceByRegex__']('hello, world!', /(\S+)(\s?)/gi, (_, $1) => $1.toUpperCase()),
+            ).toEqual('HELLO,WORLD!')
+            expect(
+                String['__replaceByRegex__']('HELLO,WORLD!', /(\S+)(\s?)/gi, (_, $1) => $1.toLowerCase()),
+            ).toEqual('hello,world!')
         })
     })
 
     describe('Check string escaped symbols', () => {
         it('it should return valid string with escaped symbols', () => {
-            expect('<!--views:info:marker:start-->\n'['escapeSpecialChars']()).toEqual('<!--views:info:marker:start-->\\n')
-            expect('\\n<!--views:info:marker:end-->'['escapeSpecialChars']()).toEqual('\\n<!--views:info:marker:end-->')
+            expect('<!--views:info:marker:start-->\n'['escapeSpecialChars']()).toEqual(
+                '<!--views:info:marker:start-->\\n',
+            )
+            expect('\\n<!--views:info:marker:end-->'['escapeSpecialChars']()).toEqual(
+                '\\n<!--views:info:marker:end-->',
+            )
             expect('HELLO,WORLD!'['escapeSpecialChars']()).toEqual('HELLO,WORLD!')
 
-            expect(String['__escapeSpecialChars__']('<!--views:info:marker:start-->\n')).toEqual('<!--views:info:marker:start-->\\n')
-            expect(String['__escapeSpecialChars__']('\\n<!--views:info:marker:end-->')).toEqual('\\n<!--views:info:marker:end-->')
+            expect(String['__escapeSpecialChars__']('<!--views:info:marker:start-->\n')).toEqual(
+                '<!--views:info:marker:start-->\\n',
+            )
+            expect(String['__escapeSpecialChars__']('\\n<!--views:info:marker:end-->')).toEqual(
+                '\\n<!--views:info:marker:end-->',
+            )
             expect(String['__escapeSpecialChars__']('HELLO,WORLD!')).toEqual('HELLO,WORLD!')
         })
     })
