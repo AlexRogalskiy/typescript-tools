@@ -47,6 +47,19 @@ export interface Array<T> {
 
 // -------------------------------------------------------------------------------------------------
 /**
+ * NonNull
+ * @desc Excludes null and undefined from T
+ * @see https://flow.org/en/docs/types/utilities/#toc-nonmaybe
+ * @example
+ *   type StringOrNull = string | null;
+ *
+ *   // Expect: string
+ *   type Name = NonNull<StringOrNull>;
+ */
+export type NonNull<T> = NonNullable<T>
+
+// -------------------------------------------------------------------------------------------------
+/**
  * Optional
  * @desc Type representing [`Optional`] in TypeScript: `T | null | undefined`
  */
@@ -68,7 +81,7 @@ export type OptionalPropertyKey = Optional<PropertyKey>
  * OptionalNumber
  * @desc Type representing [`OptionalNumber`] type in TypeScript: `number | null | undefined`
  */
-export type OptionalNumber = Optional<number> | Optional<bigint>
+export type OptionalNumber = Optional<number | bigint>
 
 /**
  * OptionalBoolean
@@ -199,7 +212,7 @@ export type StringSet = Set<string>
  * NumberSet
  * @desc Type representing number {@link Set}
  */
-export type NumberSet = Set<number>
+export type NumberSet = Set<number | bigint>
 /**
  * PropertyKeySet
  * @desc Type representing property key {@link Set}
@@ -210,4 +223,16 @@ export type PropertyKeySet = Set<PropertyKey>
  * @desc Type representing optional {@link Set}
  */
 export type OptionalSet<T> = Set<Optional<T>>
+// -------------------------------------------------------------------------------------------------
+/**
+ * StringRecord
+ * @desc Type representing string {@link Record}
+ */
+export type StringRecord<T> = Record<string, T>
+
+/**
+ * PropertyKeyRecord
+ * @desc Type representing property key {@link Record}
+ */
+export type PropertyKeyRecord<T> = Record<PropertyKey, T>
 // -------------------------------------------------------------------------------------------------

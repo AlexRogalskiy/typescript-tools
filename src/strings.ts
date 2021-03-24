@@ -1,6 +1,7 @@
 import slugify from 'slugify'
 import { randomBytes } from 'crypto'
 
+import { RegexStringPair } from '../typings/general-types'
 import { Optional, OptionalNumber, OptionalString } from '../typings/standard-types'
 import { BiProcessor, Comparator, Processor, StringProcessor, Supplier } from '../typings/function-types'
 
@@ -9,6 +10,8 @@ import { Checkers } from './checkers'
 import { Maths } from './maths'
 import { Numbers } from './numbers'
 import { Utils } from './utils'
+
+import { REGEX_ENTITY_PAIRS, REGEX_CONTROL_PAIRS, REGEX_ASCII_PAIRS } from './constants'
 
 export namespace Strings {
     import isString = Checkers.isString
@@ -23,12 +26,29 @@ export namespace Strings {
     import randomBy = Numbers.randomBy
     import isFunction = Checkers.isFunction
     import Commons = Utils.Commons
+    import defineStaticProperty = Utils.Commons.defineStaticProperty
+
+    const fixedEncode = (value: string, ...pairs: RegexStringPair[]): string => {
+        let result = value
+
+        for (const pair of pairs) {
+            result = result.replace(pair.left, pair.right)
+        }
+
+        return result
+    }
 
     export const props = (() => {
         const props = {
             proto: {
                 replaceByRegex: 'replaceByRegex',
                 replaceWith: 'replaceWith',
+                escapeSpecialChars: 'escapeSpecialChars',
+            },
+            static: {
+                replaceByRegex: '__replaceByRegex__',
+                replaceWith: '__replaceWith__',
+                escapeSpecialChars: '__escapeSpecialChars__',
             },
         }
 
@@ -41,7 +61,18 @@ export namespace Strings {
             replacer: (substring: string, ...args: any[]) => string,
         ): string => self.replace(regex, replacer)
 
+        const escapeSpecialChars_ = (self: any, pairs: RegexStringPair[]): string => {
+            let result = self
+
+            for (const pair of pairs) {
+                result = result.replace(pair.left, pair.right)
+            }
+
+            return result
+        }
+
         if (!isFunction(String.prototype[props.proto.replaceWith])) {
+            // Define "replaceWith" function for built-in types
             Commons.defineProperty(String.prototype, props.proto.replaceWith, {
                 value(regex: string | RegExp, replacement: string) {
                     return replaceWith_(this, regex, replacement)
@@ -50,10 +81,46 @@ export namespace Strings {
         }
 
         if (!isFunction(String.prototype[props.proto.replaceByRegex])) {
+            // Define "replaceByRegex" function for built-in types
             Commons.defineProperty(String.prototype, props.proto.replaceByRegex, {
                 value(regex: string | RegExp, replacer: (substring: string, ...args: any[]) => string) {
                     return replaceByRegex_(this, regex, replacer)
                 },
+            })
+        }
+
+        if (!isFunction(String.prototype[props.proto.escapeSpecialChars])) {
+            // Define "escapeSpecialChars" function for built-in types
+            Commons.defineProperty(String.prototype, props.proto.escapeSpecialChars, {
+                value(pairs = REGEX_CONTROL_PAIRS) {
+                    return escapeSpecialChars_(this, pairs)
+                },
+            })
+        }
+
+        if (!isFunction(String[props.static.replaceWith])) {
+            // Define "__replaceWith__" function for built-in types
+            defineStaticProperty(String, props.static.replaceWith, {
+                value: (self, regex: string | RegExp, replacement: string) =>
+                    replaceWith_(self, regex, replacement),
+            })
+        }
+
+        if (!isFunction(String[props.static.replaceByRegex])) {
+            // Define "__replaceByRegex__" function for built-in types
+            defineStaticProperty(String, props.static.replaceByRegex, {
+                value: (
+                    self,
+                    regex: string | RegExp,
+                    replacer: (substring: string, ...args: any[]) => string,
+                ) => replaceByRegex_(self, regex, replacer),
+            })
+        }
+
+        if (!isFunction(String[props.static.escapeSpecialChars])) {
+            // Define "__escapeSpecialChars__" function for built-in types
+            defineStaticProperty(String, props.static.escapeSpecialChars, {
+                value: (self, pairs = REGEX_CONTROL_PAIRS) => escapeSpecialChars_(self, pairs),
             })
         }
     })()
@@ -428,7 +495,7 @@ export namespace Strings {
 
     // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
     export const escapeRegExp = (value: string): string => {
-        return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
+        return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
     }
 
     export const separator = (num: number, delim = '='): string => {
@@ -1155,5 +1222,17 @@ export namespace Strings {
         }
 
         return { member: result.member, count: result.count }
+    }
+
+    export const escapeAscii = (value: string): string => {
+        return fixedEncode(value, ...REGEX_ASCII_PAIRS)
+    }
+
+    export const escapeHtml = (value: string): string => {
+        return fixedEncode(value, ...REGEX_ENTITY_PAIRS)
+    }
+
+    export const escapeControl = (value: string): string => {
+        return fixedEncode(value, ...REGEX_CONTROL_PAIRS)
     }
 }

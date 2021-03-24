@@ -1,4 +1,5 @@
-import { Optional } from './standard-types'
+import { NonNull, Optional } from './standard-types'
+import { Profile } from './enum-types'
 // -------------------------------------------------------------------------------------------------
 /**
  * Supported buffer encoding types
@@ -18,7 +19,7 @@ export type BufferEncoding =
 /**
  * Supported process configuration options
  */
-export type ProcessConfig<T = 'dev' | 'prod' | 'test'> = {
+export type ProcessConfig<T = keyof Profile> = {
     readonly env: T
 }
 // -------------------------------------------------------------------------------------------------
@@ -158,22 +159,16 @@ export type Class<T> = new (...args: any[]) => T
 export type mixed = unknown
 // -------------------------------------------------------------------------------------------------
 /**
- * NonNull
- * @desc Excludes null and undefined from T
- * @see https://flow.org/en/docs/types/utilities/#toc-nonmaybe
- * @example
- *   type StringOrNull = string | null;
- *
- *   // Expect: string
- *   type Name = NonNull<StringOrNull>;
- */
-export type NonNull<T> = NonNullable<T>
-// -------------------------------------------------------------------------------------------------
-/**
  * Pair
  * @desc Pair type with left and right values
  */
 export type Pair<T, V> = { left: T; right: V }
+
+/**
+ * ReversePair
+ * @desc Revers pair type with left and right values
+ */
+export type ReversePair<T, V> = Pair<V, T>
 
 /**
  * OptionalPair
@@ -194,10 +189,10 @@ export type RequiredPair<T, V> = Pair<Required<T>, Required<V>>
 export type PartialPair<T, V> = Pair<Partial<T>, Partial<V>>
 
 /**
- * NonNullablePair
+ * NonNullPair
  * @desc Non-nullable pair type with left and right non-nullable values
  */
-export type NonNullablePair<T, V> = Pair<NonNullable<T>, NonNullable<V>>
+export type NonNullPair<T, V> = Pair<NonNull<T>, NonNull<V>>
 
 /**
  * OptionalLeft
@@ -221,7 +216,7 @@ export type PropertyKeyPair = Pair<PropertyKey, PropertyKey>
  * NumberPair
  * @desc Number pair type with left and right number values
  */
-export type NumberPair = Pair<number, number>
+export type NumberPair = Pair<number | bigint, number | bigint>
 
 /**
  * StringPair
@@ -240,12 +235,19 @@ export type BooleanPair = Pair<boolean, boolean>
  * @desc String regex pair type with string left and regex right values
  */
 export type StringRegexPair = Pair<string, RegExp>
+
+/**
+ * RegexStringPair
+ * @desc Regex string pair type with regex left and string right values
+ */
+export type RegexStringPair = Pair<RegExp, string>
 // -------------------------------------------------------------------------------------------------
 /**
  * Pair2
  * @desc Pair2 type with first and second values
  */
 export type Pair2<T, V> = { first: T; second: V }
+
 /**
  * Pair3
  * @desc Pair3 type with first, second and third values
@@ -263,6 +265,42 @@ export type Pair4<T, V, R, S> = { first: T; second: V; third: R; fourth: S }
  * @desc Pair5 type with first, second, third, fourth and fifth values
  */
 export type Pair5<T, V, R, S, M> = { first: T; second: V; third: R; fourth: S; fifth: M }
+
+/**
+ * Pair6
+ * @desc Pair6 type with first, second, third, fourth, fifth and sixth values
+ */
+export type Pair6<T, V, R, S, M, N> = { first: T; second: V; third: R; fourth: S; fifth: M; sixth: N }
+// -------------------------------------------------------------------------------------------------
+/**
+ * KeyValue
+ * @desc KeyValue type with key and value properties
+ */
+export type KeyValue<T, V> = { key: T; value: V }
+
+/**
+ * OptionalKeyValue
+ * @desc KeyValue type with key and optional value properties
+ */
+export type OptionalKeyValue<T, V> = KeyValue<T, Optional<V>>
+
+/**
+ * RequiredKeyValue
+ * @desc KeyValue type with key and required value properties
+ */
+export type RequiredKeyValue<T, V> = KeyValue<T, Required<V>>
+
+/**
+ * PartialKeyValue
+ * @desc KeyValue type with key and partial value properties
+ */
+export type PartialKeyValue<T, V> = KeyValue<T, Partial<V>>
+
+/**
+ * NonNullKeyValue
+ * @desc KeyValue type with key and non-nullable value properties
+ */
+export type NonNullKeyValue<T, V> = KeyValue<T, NonNull<V>>
 // -------------------------------------------------------------------------------------------------
 /**
  * NameValue
@@ -271,28 +309,34 @@ export type Pair5<T, V, R, S, M> = { first: T; second: V; third: R; fourth: S; f
 export type NameValue<T extends PropertyKey, V> = { name: T; value: V }
 
 /**
- * KeyValue
- * @desc KeyValue type with string key and value properties
- */
-export type KeyValue<T extends PropertyKey, V> = { key: T; value: V }
-
-/**
  * OptionalNameValue
  * @desc Optional name-value type with string name and optional value properties
  */
 export type OptionalNameValue<V> = NameValue<PropertyKey, Optional<V>>
 
 /**
- * NonNullableNameValue
+ * RequiredValue
+ * @desc NameValue type with string name and required value properties
+ */
+export type RequiredValue<V> = NameValue<PropertyKey, Required<V>>
+
+/**
+ * PartialValue
+ * @desc NameValue type with string name and partial value properties
+ */
+export type PartialValue<V> = NameValue<PropertyKey, Partial<V>>
+
+/**
+ * NonNullNameValue
  * @desc Non-nullable name-value type with string name and non-nullable value properties
  */
-export type NonNullableNameValue<V> = NameValue<PropertyKey, NonNullable<V>>
+export type NonNullNameValue<V> = NameValue<PropertyKey, NonNull<V>>
 
 /**
  * NumberNameValue
  * @desc Number name-value type with string name and number value properties
  */
-export type NumberNameValue = NameValue<PropertyKey, number>
+export type NumberNameValue = NameValue<PropertyKey, number | bigint>
 
 /**
  * StringNameValue
@@ -325,16 +369,34 @@ export type Range<T> = { lower: T; upper: T }
 export type OptionalRange<T> = Range<Optional<T>>
 
 /**
+ * RequiredRange
+ * @desc OptionalRange type with required lower and upper bound properties
+ */
+export type RequiredRange<T> = Range<Required<T>>
+
+/**
+ * PartialRange
+ * @desc OptionalRange type with partial lower and upper bound properties
+ */
+export type PartialRange<T> = Range<Partial<T>>
+
+/**
+ * NonNullRange
+ * @desc OptionalRange type with non-nullable lower and upper bound properties
+ */
+export type NonNullRange<T> = Range<NonNull<T>>
+
+/**
  * NumberRange
  * @desc NumberRange type with number lower and upper bound properties
  */
-export type NumberRange = Range<number>
+export type NumberRange = Range<number | bigint>
 // -------------------------------------------------------------------------------------------------
 /**
  * KeywordData
  * @desc KeywordData type with double-sized string/number array values
  */
-export type KeywordData<T extends PropertyKey> = [T, number]
+export type KeywordData<T extends PropertyKey> = [T, number | bigint]
 
 /**
  * KeywordDict

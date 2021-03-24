@@ -1,5 +1,5 @@
-import { Optional } from './standard-types'
-
+import { NonNull, Optional } from './standard-types'
+// -------------------------------------------------------------------------------------------------
 /**
  * Callback
  * @desc Type representing callback function type in TypeScript
@@ -10,7 +10,7 @@ export type Callback = (...args: any[]) => void
 
 /**
  * GenericCallback
- * @desc Type representing callback function type in TypeScript
+ * @desc Type representing generic callback function type in TypeScript
  * @example
  *   type GenericCallback = () => console.log("test")
  */
@@ -18,11 +18,43 @@ export type GenericCallback<T> = (...args: T[]) => void
 
 /**
  * GenericValueCallback
- * @desc Type representing value callback function type in TypeScript
+ * @desc Type representing generic value callback function type in TypeScript
  * @example
  *   type GenericValueCallback = () => console.log("test")
  */
 export type GenericValueCallback<T, U> = (...args: T[]) => U
+
+/**
+ * OptionalValueCallback
+ * @desc Type representing optional value callback function type in TypeScript
+ * @example
+ *   type OptionalValueCallback = () => console.log("test")
+ */
+export type OptionalValueCallback<T, U> = (...args: T[]) => Optional<U>
+
+/**
+ * PartialValueCallback
+ * @desc Type representing partial value callback function type in TypeScript
+ * @example
+ *   type PartialValueCallback = () => console.log("test")
+ */
+export type PartialValueCallback<T, U> = (...args: T[]) => Partial<U>
+
+/**
+ * RequiredValueCallback
+ * @desc Type representing required value callback function type in TypeScript
+ * @example
+ *   type RequiredValueCallback = () => console.log("test")
+ */
+export type RequiredValueCallback<T, U> = (...args: T[]) => Required<U>
+
+/**
+ * NonNullValueCallback
+ * @desc Type representing non-nullable value callback function type in TypeScript
+ * @example
+ *   type NonNullValueCallback = () => console.log("test")
+ */
+export type NonNullValueCallback<T, U> = (...args: T[]) => NonNull<U>
 // -------------------------------------------------------------------------------------------------
 /**
  * IteratorStep
@@ -49,12 +81,28 @@ export type Iterator<T> = { next: Supplier<IteratorStep<T>> }
 export type OptionalIterator<T> = Iterator<Optional<T>>
 
 /**
- * NonNullableIterator
+ * PartialIterator
+ * @desc Type representing partial iterator type in TypeScript
+ * @example
+ *   type PartialIterator = { next: () => console.log("test") }
+ */
+export type PartialIterator<T> = Iterator<Partial<T>>
+
+/**
+ * RequiredIterator
+ * @desc Type representing required iterator type in TypeScript
+ * @example
+ *   type RequiredIterator = { next: () => console.log("test") }
+ */
+export type RequiredIterator<T> = Iterator<Required<T>>
+
+/**
+ * NonNullIterator`
  * @desc Type representing non-nullable iterator type in TypeScript
  * @example
- *   type NonNullableIterator = { next: () => console.log("test") }
+ *   type NonNullIterator = { next: () => console.log("test") }
  */
-export type NonNullableIterator<T> = Iterator<NonNullable<T>>
+export type NonNullIterator<T> = Iterator<NonNull<T>>
 // -------------------------------------------------------------------------------------------------
 /**
  * Executor
@@ -81,12 +129,28 @@ export type Predicate<T> = (v: T) => boolean
 export type OptionalPredicate<T> = Predicate<Optional<T>>
 
 /**
- * NonNullablePredicate
+ * PartialPredicate
+ * @desc Type representing partial predicate function type in TypeScript
+ * @example
+ *   type PartialPredicate = (v) => return 1 === v
+ */
+export type PartialPredicate<T> = Predicate<Partial<T>>
+
+/**
+ * RequiredPredicate
+ * @desc Type representing required predicate function type in TypeScript
+ * @example
+ *   type RequiredPredicate = (v) => return 1 === v
+ */
+export type RequiredPredicate<T> = Predicate<Required<T>>
+
+/**
+ * NonNullPredicate
  * @desc Type representing non-nullable predicate function type in TypeScript
  * @example
- *   type NonNullablePredicate = (v) => return 1 === v
+ *   type NonNullPredicate = (v) => return 1 === v
  */
-export type NonNullablePredicate<T> = Predicate<NonNullable<T>>
+export type NonNullPredicate<T> = Predicate<NonNull<T>>
 
 /**
  * NumberPredicate
@@ -94,7 +158,7 @@ export type NonNullablePredicate<T> = Predicate<NonNullable<T>>
  * @example
  *   type NumberPredicate = (v) => return 1 === v
  */
-export type NumberPredicate = Predicate<number>
+export type NumberPredicate = Predicate<number | bigint>
 
 /**
  * StringPredicate
@@ -119,7 +183,7 @@ export type PropertyKeyPredicate = Predicate<PropertyKey>
  *   type BooleanPredicate = (v) => return true === v
  */
 export type BooleanPredicate = Predicate<boolean>
-
+// -------------------------------------------------------------------------------------------------
 /**
  * BiPredicate
  * @desc Type representing binary predicate function type in TypeScript
@@ -137,12 +201,28 @@ export type BiPredicate<T, V> = (v1: T, v2: V) => boolean
 export type OptionalBiPredicate<T, V> = BiPredicate<Optional<T>, Optional<V>>
 
 /**
- * NonNullableBiPredicate
+ * PartialBiPredicate
+ * @desc Type representing partial binary predicate function type in TypeScript
+ * @example
+ *   type PartialBiPredicate = (v1, v2) => return v1 === v2
+ */
+export type PartialBiPredicate<T, V> = BiPredicate<Partial<T>, Partial<V>>
+
+/**
+ * RequiredBiPredicate
+ * @desc Type representing required binary predicate function type in TypeScript
+ * @example
+ *   type RequiredBiPredicate = (v1, v2) => return v1 === v2
+ */
+export type RequiredBiPredicate<T, V> = BiPredicate<Required<T>, Required<V>>
+
+/**
+ * NonNullBiPredicate
  * @desc Type representing non-nullable binary predicate function type in TypeScript
  * @example
- *   type NonNullableBiPredicate = (v1, v2) => return v1 === v2
+ *   type NonNullBiPredicate = (v1, v2) => return v1 === v2
  */
-export type NonNullableBiPredicate<T, V> = BiPredicate<NonNullable<T>, NonNullable<V>>
+export type NonNullBiPredicate<T, V> = BiPredicate<NonNull<T>, NonNull<V>>
 
 /**
  * NumberBiPredicate
@@ -150,7 +230,7 @@ export type NonNullableBiPredicate<T, V> = BiPredicate<NonNullable<T>, NonNullab
  * @example
  *   type NumberBiPredicate = (v1, v2) => return v1 === v2
  */
-export type NumberBiPredicate = BiPredicate<number, number>
+export type NumberBiPredicate = BiPredicate<number | bigint, number | bigint>
 
 /**
  * StringBiPredicate
@@ -175,7 +255,7 @@ export type PropertyKeyBiPredicate = BiPredicate<PropertyKey, PropertyKey>
  *   type BooleanBiPredicate = (v1, v2) => return v1 === v2
  */
 export type BooleanBiPredicate = BiPredicate<boolean, boolean>
-
+// -------------------------------------------------------------------------------------------------
 /**
  * TriPredicate
  * @desc Type representing ternary predicate function type in TypeScript
@@ -193,12 +273,28 @@ export type TriPredicate<T, V, S> = (v1: T, v2: V, v3: S) => boolean
 export type OptionalTriPredicate<T, V, S> = TriPredicate<Optional<T>, Optional<V>, Optional<S>>
 
 /**
- * NonNullableTriPredicate
+ * PartialTriPredicate
+ * @desc Type representing partial ternary predicate function type in TypeScript
+ * @example
+ *   type PartialTriPredicate = (v1, v2, v3) => return v1 === v2 === v3
+ */
+export type PartialTriPredicate<T, V, S> = TriPredicate<Partial<T>, Partial<V>, Partial<S>>
+
+/**
+ * RequiredTriPredicate
+ * @desc Type representing required ternary predicate function type in TypeScript
+ * @example
+ *   type RequiredTriPredicate = (v1, v2, v3) => return v1 === v2 === v3
+ */
+export type RequiredTriPredicate<T, V, S> = TriPredicate<Required<T>, Required<V>, Required<S>>
+
+/**
+ * NonNullTriPredicate
  * @desc Type representing non-nullable ternary predicate function type in TypeScript
  * @example
- *   type NonNullableTriPredicate = (v1, v2, v3) => return v1 === v2 === v3
+ *   type NonNullTriPredicate = (v1, v2, v3) => return v1 === v2 === v3
  */
-export type NonNullableTriPredicate<T, V, S> = TriPredicate<NonNullable<T>, NonNullable<V>, NonNullable<S>>
+export type NonNullTriPredicate<T, V, S> = TriPredicate<NonNull<T>, NonNull<V>, NonNull<S>>
 
 /**
  * NumberTriPredicate
@@ -206,7 +302,7 @@ export type NonNullableTriPredicate<T, V, S> = TriPredicate<NonNullable<T>, NonN
  * @example
  *   type NumberTriPredicate = (v1, v2, v3) => return v1 === v2 === v3
  */
-export type NumberTriPredicate = TriPredicate<number, number, number>
+export type NumberTriPredicate = TriPredicate<number | bigint, number | bigint, number | bigint>
 
 /**
  * StringTriPredicate
@@ -249,12 +345,28 @@ export type Supplier<T> = () => T
 export type OptionalSupplier<T> = Supplier<Optional<T>>
 
 /**
- * NonNullableSupplier
+ * PartialSupplier
+ * @desc Type representing partial supplier function type in TypeScript
+ * @example
+ *   type PartialSupplier = () => return 1
+ */
+export type PartialSupplier<T> = Supplier<Partial<T>>
+
+/**
+ * RequiredSupplier
+ * @desc Type representing required supplier function type in TypeScript
+ * @example
+ *   type RequiredSupplier = () => return 1
+ */
+export type RequiredSupplier<T> = Supplier<Required<T>>
+
+/**
+ * NonNullSupplier
  * @desc Type representing non-nullable supplier function type in TypeScript
  * @example
- *   type NonNullableSupplier = () => return 1
+ *   type NonNullSupplier = () => return 1
  */
-export type NonNullableSupplier<T> = Supplier<NonNullable<T>>
+export type NonNullSupplier<T> = Supplier<NonNull<T>>
 
 /**
  * NumberSupplier
@@ -262,7 +374,7 @@ export type NonNullableSupplier<T> = Supplier<NonNullable<T>>
  * @example
  *   type NumberSupplier = () => return 1
  */
-export type NumberSupplier = Supplier<number>
+export type NumberSupplier = Supplier<number | bigint>
 
 /**
  * BooleanSupplier
@@ -287,7 +399,7 @@ export type StringSupplier = Supplier<string>
  *   type PropertyKeySupplier = () => return "1"
  */
 export type PropertyKeySupplier = Supplier<PropertyKey>
-
+// -------------------------------------------------------------------------------------------------
 /**
  * BiSupplier
  * @desc Type representing binary supplier function type in TypeScript
@@ -305,12 +417,28 @@ export type BiSupplier<T, V> = () => { v1: T; v2: V }
 export type OptionalBiSupplier<T, V> = BiSupplier<Optional<T>, Optional<V>>
 
 /**
- * NonNullableBiSupplier
+ * PartialBiSupplier
+ * @desc Type representing partial binary supplier function type in TypeScript
+ * @example
+ *   type PartialBiSupplier = () => return {"v1": "first", "v2": "second"}
+ */
+export type PartialBiSupplier<T, V> = BiSupplier<Partial<T>, Partial<V>>
+
+/**
+ * RequiredBiSupplier
+ * @desc Type representing required binary supplier function type in TypeScript
+ * @example
+ *   type RequiredBiSupplier = () => return {"v1": "first", "v2": "second"}
+ */
+export type RequiredBiSupplier<T, V> = BiSupplier<Required<T>, Required<V>>
+
+/**
+ * NonNullBiSupplier
  * @desc Type representing non-nullable binary supplier function type in TypeScript
  * @example
- *   type NonNullableBiSupplier = () => return {"v1": "first", "v2": "second"}
+ *   type NonNullBiSupplier = () => return {"v1": "first", "v2": "second"}
  */
-export type NonNullableBiSupplier<T, V> = BiSupplier<NonNullable<T>, NonNullable<V>>
+export type NonNullBiSupplier<T, V> = BiSupplier<NonNull<T>, NonNull<V>>
 
 /**
  * NumberBiSupplier
@@ -318,7 +446,7 @@ export type NonNullableBiSupplier<T, V> = BiSupplier<NonNullable<T>, NonNullable
  * @example
  *   type NumberBiSupplier = () => return {"v1": "first", "v2": "second"}
  */
-export type NumberBiSupplier = BiSupplier<number, number>
+export type NumberBiSupplier = BiSupplier<number | bigint, number | bigint>
 
 /**
  * StringBiSupplier
@@ -343,7 +471,7 @@ export type PropertyKeyBiSupplier = BiSupplier<PropertyKey, PropertyKey>
  *   type BooleanBiSupplier = () => return {"v1": true, "v2": false}
  */
 export type BooleanBiSupplier = BiSupplier<boolean, boolean>
-
+// -------------------------------------------------------------------------------------------------
 /**
  * TriSupplier
  * @desc Type representing ternary supplier function type in TypeScript
@@ -361,12 +489,28 @@ export type TriSupplier<T, V, S> = () => { v1: T; v2: V; v3: S }
 export type OptionalTriSupplier<T, V, S> = TriSupplier<Optional<T>, Optional<V>, Optional<S>>
 
 /**
- * NonNullableTriSupplier
+ * PartialTriSupplier
+ * @desc Type representing partial ternary supplier function type in TypeScript
+ * @example
+ *   type PartialTriSupplier = () => return {"v1": "first", "v2": "second", "v3": "third"}
+ */
+export type PartialTriSupplier<T, V, S> = TriSupplier<Partial<T>, Partial<V>, Partial<S>>
+
+/**
+ * RequiredTriSupplier
+ * @desc Type representing required ternary supplier function type in TypeScript
+ * @example
+ *   type RequiredTriSupplier = () => return {"v1": "first", "v2": "second", "v3": "third"}
+ */
+export type RequiredTriSupplier<T, V, S> = TriSupplier<Required<T>, Required<V>, Required<S>>
+
+/**
+ * NonNullTriSupplier
  * @desc Type representing non-nullable ternary supplier function type in TypeScript
  * @example
- *   type NonNullableTriSupplier = () => return {"v1": "first", "v2": "second", "v3": "third"}
+ *   type NonNullTriSupplier = () => return {"v1": "first", "v2": "second", "v3": "third"}
  */
-export type NonNullableTriSupplier<T, V, S> = TriSupplier<NonNullable<T>, NonNullable<V>, NonNullable<S>>
+export type NonNullTriSupplier<T, V, S> = TriSupplier<NonNull<T>, NonNull<V>, NonNull<S>>
 
 /**
  * NumberTriSupplier
@@ -374,7 +518,7 @@ export type NonNullableTriSupplier<T, V, S> = TriSupplier<NonNullable<T>, NonNul
  * @example
  *   type NumberTriSupplier = () => return {"v1": "first", "v2": "second", "v3": "third"}
  */
-export type NumberTriSupplier = TriSupplier<number, number, number>
+export type NumberTriSupplier = TriSupplier<number | bigint, number | bigint, number | bigint>
 
 /**
  * StringTriSupplier
@@ -417,12 +561,28 @@ export type Consumer<T> = (v: T) => void
 export type OptionalConsumer<T> = Consumer<Optional<T>>
 
 /**
- * NonNullableConsumer
+ * PartialConsumer
+ * @desc Type representing partial consumer function type in TypeScript
+ * @example
+ *   type PartialConsumer = (v) => console.log(v)
+ */
+export type PartialConsumer<T> = Consumer<Partial<T>>
+
+/**
+ * RequiredConsumer
+ * @desc Type representing required consumer function type in TypeScript
+ * @example
+ *   type RequiredConsumer = (v) => console.log(v)
+ */
+export type RequiredConsumer<T> = Consumer<Required<T>>
+
+/**
+ * NonNullConsumer
  * @desc Type representing non-nullable consumer function type in TypeScript
  * @example
- *   type NonNullableConsumer = (v) => console.log(v)
+ *   type NonNullConsumer = (v) => console.log(v)
  */
-export type NonNullableConsumer<T> = Consumer<NonNullable<T>>
+export type NonNullConsumer<T> = Consumer<NonNull<T>>
 
 /**
  * NumberConsumer
@@ -430,7 +590,7 @@ export type NonNullableConsumer<T> = Consumer<NonNullable<T>>
  * @example
  *   type NumberConsumer = (v) => console.log(v)
  */
-export type NumberConsumer = Consumer<number>
+export type NumberConsumer = Consumer<number | bigint>
 
 /**
  * StringConsumer
@@ -455,7 +615,7 @@ export type PropertyKeyConsumer = Consumer<PropertyKey>
  *   type BooleanConsumer = (v) => console.log(v)
  */
 export type BooleanConsumer = Consumer<boolean>
-
+// -------------------------------------------------------------------------------------------------
 /**
  * BiConsumer
  * @desc Type representing binary consumer function type in TypeScript
@@ -473,12 +633,28 @@ export type BiConsumer<T, V> = (v1: T, v2: V) => void
 export type OptionalBiConsumer<T, V> = BiConsumer<Optional<T>, Optional<V>>
 
 /**
- * NonNullableBiConsumer
+ * PartialBiConsumer
+ * @desc Type representing partial binary consumer function type in TypeScript
+ * @example
+ *   type PartialBiConsumer = (v1, v2) => console.log(v1 + ":" + v2)
+ */
+export type PartialBiConsumer<T, V> = BiConsumer<Partial<T>, Partial<V>>
+
+/**
+ * RequiredBiConsumer
+ * @desc Type representing required binary consumer function type in TypeScript
+ * @example
+ *   type RequiredBiConsumer = (v1, v2) => console.log(v1 + ":" + v2)
+ */
+export type RequiredBiConsumer<T, V> = BiConsumer<Required<T>, Required<V>>
+
+/**
+ * NonNullBiConsumer
  * @desc Type representing non-nullable binary consumer function type in TypeScript
  * @example
- *   type NonNullableBiConsumer = (v1, v2) => console.log(v1 + ":" + v2)
+ *   type NonNullBiConsumer = (v1, v2) => console.log(v1 + ":" + v2)
  */
-export type NonNullableBiConsumer<T, V> = BiConsumer<NonNullable<T>, NonNullable<V>>
+export type NonNullBiConsumer<T, V> = BiConsumer<NonNull<T>, NonNull<V>>
 
 /**
  * NumberBiConsumer
@@ -486,7 +662,7 @@ export type NonNullableBiConsumer<T, V> = BiConsumer<NonNullable<T>, NonNullable
  * @example
  *   type NumberBiConsumer = (v1, v2) => console.log(v1 + ":" + v2)
  */
-export type NumberBiConsumer = BiConsumer<number, number>
+export type NumberBiConsumer = BiConsumer<number | bigint, number | bigint>
 
 /**
  * StringBiConsumer
@@ -511,7 +687,7 @@ export type PropertyKeyBiConsumer = BiConsumer<PropertyKey, PropertyKey>
  *   type BooleanBiConsumer = (v1, v2) => console.log(v1 + ":" + v2)
  */
 export type BooleanBiConsumer = BiConsumer<boolean, boolean>
-
+// -------------------------------------------------------------------------------------------------
 /**
  * TriConsumer
  * @desc Type representing ternary consumer function type in TypeScript
@@ -529,12 +705,28 @@ export type TriConsumer<T, V, S> = (v1: T, v2: V, v3: S) => void
 export type OptionalTriConsumer<T, V, S> = TriConsumer<Optional<T>, Optional<V>, Optional<S>>
 
 /**
- * NonNullableTriConsumer
+ * PartialTriConsumer
+ * @desc Type representing partial ternary consumer function type in TypeScript
+ * @example
+ *   type PartialTriConsumer = (v1, v2, v3) => console.log(v1 + ":" + v2 + ":" + v3)
+ */
+export type PartialTriConsumer<T, V, S> = TriConsumer<Partial<T>, Partial<V>, Partial<S>>
+
+/**
+ * RequiredTriConsumer
+ * @desc Type representing required ternary consumer function type in TypeScript
+ * @example
+ *   type RequiredTriConsumer = (v1, v2, v3) => console.log(v1 + ":" + v2 + ":" + v3)
+ */
+export type RequiredTriConsumer<T, V, S> = TriConsumer<Required<T>, Required<V>, Required<S>>
+
+/**
+ * NonNullTriConsumer
  * @desc Type representing optional ternary consumer function type in TypeScript
  * @example
- *   type NonNullableTriConsumer = (v1, v2, v3) => console.log(v1 + ":" + v2 + ":" + v3)
+ *   type NonNullTriConsumer = (v1, v2, v3) => console.log(v1 + ":" + v2 + ":" + v3)
  */
-export type NonNullableTriConsumer<T, V, S> = TriConsumer<NonNullable<T>, NonNullable<V>, NonNullable<S>>
+export type NonNullTriConsumer<T, V, S> = TriConsumer<NonNull<T>, NonNull<V>, NonNull<S>>
 
 /**
  * NumberTriConsumer
@@ -542,7 +734,7 @@ export type NonNullableTriConsumer<T, V, S> = TriConsumer<NonNullable<T>, NonNul
  * @example
  *   type NumberTriConsumer = (v1, v2, v3) => console.log(v1 + ":" + v2 + ":" + v3)
  */
-export type NumberTriConsumer = TriConsumer<number, number, number>
+export type NumberTriConsumer = TriConsumer<number | bigint, number | bigint, number | bigint>
 
 /**
  * StringTriConsumer
@@ -593,12 +785,28 @@ export type ReverseProcessor<T, V> = Processor<V, T>
 export type OptionalProcessor<T, R> = Processor<Optional<T>, R>
 
 /**
- * NonNullableProcessor
+ * PartialProcessor
+ * @desc Type representing partial processor function type in TypeScript
+ * @example
+ *   type PartialProcessor = (v) => return new String(v)
+ */
+export type PartialProcessor<T, R> = Processor<Partial<T>, R>
+
+/**
+ * RequiredProcessor
+ * @desc Type representing required processor function type in TypeScript
+ * @example
+ *   type RequiredProcessor = (v) => return new String(v)
+ */
+export type RequiredProcessor<T, R> = Processor<Required<T>, R>
+
+/**
+ * NonNullProcessor
  * @desc Type representing non-nullable processor function type in TypeScript
  * @example
- *   type NonNullableProcessor = (v) => return new String(v)
+ *   type NonNullProcessor = (v) => return new String(v)
  */
-export type NonNullableProcessor<T, R> = Processor<NonNullable<T>, R>
+export type NonNullProcessor<T, R> = Processor<NonNull<T>, R>
 
 /**
  * NumberProcessor
@@ -606,7 +814,7 @@ export type NonNullableProcessor<T, R> = Processor<NonNullable<T>, R>
  * @example
  *   type NumberProcessor = (v) => return new String(v)
  */
-export type NumberProcessor<R> = Processor<number, R>
+export type NumberProcessor<R> = Processor<number | bigint, R>
 
 /**
  * StringProcessor
@@ -638,7 +846,7 @@ export type BooleanProcessor<R> = Processor<boolean, R>
  * @example
  *   type NumberToStringProcessor = (v) => return new String(v)
  */
-export type NumberToStringProcessor = Processor<number, string>
+export type NumberToStringProcessor = Processor<number | bigint, string>
 
 /**
  * StringToNumberProcessor
@@ -646,7 +854,7 @@ export type NumberToStringProcessor = Processor<number, string>
  * @example
  *   type StringToNumberProcessor = (v) => return parseInt(v)
  */
-export type StringToNumberProcessor = Processor<string, number>
+export type StringToNumberProcessor = Processor<string, number | bigint>
 
 /**
  * PropertyKeyToNumberProcessor
@@ -654,7 +862,7 @@ export type StringToNumberProcessor = Processor<string, number>
  * @example
  *   type PropertyKeyToNumberProcessor = (v) => return parseInt(v)
  */
-export type PropertyKeyToNumberProcessor = Processor<PropertyKey, number>
+export type PropertyKeyToNumberProcessor = Processor<PropertyKey, number | bigint>
 
 /**
  * BooleanToStringProcessor
@@ -679,7 +887,7 @@ export type StringToBooleanProcessor = Processor<string, boolean>
  *   type PropertyKeyToBooleanProcessor = (v) => return v == true
  */
 export type PropertyKeyToBooleanProcessor = Processor<PropertyKey, boolean>
-
+// -------------------------------------------------------------------------------------------------
 /**
  * ToOptionalProcessor
  * @desc Type representing processor function type with optional result in TypeScript
@@ -689,12 +897,28 @@ export type PropertyKeyToBooleanProcessor = Processor<PropertyKey, boolean>
 export type ToOptionalProcessor<T, V> = Processor<T, Optional<V>>
 
 /**
- * ToNonNullableProcessor
+ * ToPartialProcessor
+ * @desc Type representing processor function type with partial result in TypeScript
+ * @example
+ *   type ToPartialProcessor = (v) => return v.length
+ */
+export type ToPartialProcessor<T, V> = Processor<T, Partial<V>>
+
+/**
+ * ToRequiredProcessor
+ * @desc Type representing processor function type with required result in TypeScript
+ * @example
+ *   type ToRequiredProcessor = (v) => return v.length
+ */
+export type ToRequiredProcessor<T, V> = Processor<T, Required<V>>
+
+/**
+ * ToNonNullProcessor
  * @desc Type representing processor function type with non-nullable result in TypeScript
  * @example
- *   type ToNonNullableProcessor = (v) => return v.length
+ *   type ToNonNullProcessor = (v) => return v.length
  */
-export type ToNonNullableProcessor<T, V> = Processor<T, NonNullable<V>>
+export type ToNonNullProcessor<T, V> = Processor<T, NonNull<V>>
 
 /**
  * ToNumberProcessor
@@ -702,7 +926,7 @@ export type ToNonNullableProcessor<T, V> = Processor<T, NonNullable<V>>
  * @example
  *   type ToNumberProcessor = (v) => return v.length
  */
-export type ToNumberProcessor<T> = Processor<T, number>
+export type ToNumberProcessor<T> = Processor<T, number | bigint>
 
 /**
  * ToStringProcessor
@@ -745,12 +969,28 @@ export type BiProcessor<T, V, R> = (v1: T, v2: V) => R
 export type OptionalBiProcessor<T, V, R> = BiProcessor<Optional<T>, Optional<V>, R>
 
 /**
- * NonNullableBiProcessor
+ * PartialBiProcessor
+ * @desc Type representing partial binary processor function type in TypeScript
+ * @example
+ *   type PartialBiProcessor = (v1, v2) => return v1 + v2
+ */
+export type PartialBiProcessor<T, V, R> = BiProcessor<Partial<T>, Partial<V>, R>
+
+/**
+ * RequiredBiProcessor
+ * @desc Type representing required binary processor function type in TypeScript
+ * @example
+ *   type RequiredBiProcessor = (v1, v2) => return v1 + v2
+ */
+export type RequiredBiProcessor<T, V, R> = BiProcessor<Required<T>, Required<V>, R>
+
+/**
+ * NonNullBiProcessor
  * @desc Type representing non-nullable binary processor function type in TypeScript
  * @example
- *   type NonNullableBiProcessor = (v1, v2) => return v1 + v2
+ *   type NonNullBiProcessor = (v1, v2) => return v1 + v2
  */
-export type NonNullableBiProcessor<T, V, R> = BiProcessor<NonNullable<T>, NonNullable<V>, R>
+export type NonNullBiProcessor<T, V, R> = BiProcessor<NonNull<T>, NonNull<V>, R>
 
 /**
  * NumberBiProcessor
@@ -758,7 +998,7 @@ export type NonNullableBiProcessor<T, V, R> = BiProcessor<NonNullable<T>, NonNul
  * @example
  *   type NumberBiProcessor = (v1, v2) => return v1 + v2
  */
-export type NumberBiProcessor<R> = BiProcessor<number, number, R>
+export type NumberBiProcessor<R> = BiProcessor<number | bigint, number | bigint, R>
 
 /**
  * StringBiProcessor
@@ -783,7 +1023,7 @@ export type PropertyKeyBiProcessor<R> = BiProcessor<PropertyKey, PropertyKey, R>
  *   type BooleanBiProcessor = (v1, v2) => return v1 + v2
  */
 export type BooleanBiProcessor<R> = BiProcessor<boolean, boolean, R>
-
+// -------------------------------------------------------------------------------------------------
 /**
  * ToOptionalBiProcessor
  * @desc Type representing binary processor function type with optional result in TypeScript
@@ -793,12 +1033,28 @@ export type BooleanBiProcessor<R> = BiProcessor<boolean, boolean, R>
 export type ToOptionalBiProcessor<T, V, R> = BiProcessor<T, V, Optional<R>>
 
 /**
- * ToNonNullableBiProcessor
+ * ToPartialBiProcessor
+ * @desc Type representing binary processor function type with partial result in TypeScript
+ * @example
+ *   type ToPartialBiProcessor = (v1, v2) => return v1.length + v2.length
+ */
+export type ToPartialBiProcessor<T, V, R> = BiProcessor<T, V, Partial<R>>
+
+/**
+ * ToRequiredBiProcessor
+ * @desc Type representing binary processor function type with required result in TypeScript
+ * @example
+ *   type ToRequiredBiProcessor = (v1, v2) => return v1.length + v2.length
+ */
+export type ToRequiredBiProcessor<T, V, R> = BiProcessor<T, V, Required<R>>
+
+/**
+ * ToNonNullBiProcessor
  * @desc Type representing binary processor function type with non-nullable result in TypeScript
  * @example
- *   type ToNonNullableBiProcessor = (v1, v2) => return v1.length + v2.length
+ *   type ToNonNullBiProcessor = (v1, v2) => return v1.length + v2.length
  */
-export type ToNonNullableBiProcessor<T, V, R> = BiProcessor<T, V, NonNullable<R>>
+export type ToNonNullBiProcessor<T, V, R> = BiProcessor<T, V, NonNull<R>>
 
 /**
  * ToNumberBiProcessor
@@ -806,7 +1062,7 @@ export type ToNonNullableBiProcessor<T, V, R> = BiProcessor<T, V, NonNullable<R>
  * @example
  *   type ToNumberBiProcessor = (v1, v2) => return v1.length + v2.length
  */
-export type ToNumberBiProcessor<T, V> = BiProcessor<T, V, number>
+export type ToNumberBiProcessor<T, V> = BiProcessor<T, V, number | bigint>
 
 /**
  * ToStringBiProcessor
@@ -849,17 +1105,28 @@ export type TriProcessor<T, V, S, R> = (v1: T, v2: V, v3: S) => R
 export type OptionalTriProcessor<T, V, S, R> = TriProcessor<Optional<T>, Optional<V>, Optional<S>, R>
 
 /**
- * NonNullableTriProcessor
+ * PartialTriProcessor
+ * @desc Type representing partial ternary processor function type in TypeScript
+ * @example
+ *   type PartialTriProcessor = (v1, v2, v3) => return v1 + v2 + v3
+ */
+export type PartialTriProcessor<T, V, S, R> = TriProcessor<Partial<T>, Partial<V>, Partial<S>, R>
+
+/**
+ * RequiredTriProcessor
+ * @desc Type representing required ternary processor function type in TypeScript
+ * @example
+ *   type RequiredTriProcessor = (v1, v2, v3) => return v1 + v2 + v3
+ */
+export type RequiredTriProcessor<T, V, S, R> = TriProcessor<Required<T>, Required<V>, Required<S>, R>
+
+/**
+ * NonNullTriProcessor
  * @desc Type representing non-nullable ternary processor function type in TypeScript
  * @example
- *   type NonNullableTriProcessor = (v1, v2, v3) => return v1 + v2 + v3
+ *   type NonNullTriProcessor = (v1, v2, v3) => return v1 + v2 + v3
  */
-export type NonNullableTriProcessor<T, V, S, R> = TriProcessor<
-    NonNullable<T>,
-    NonNullable<V>,
-    NonNullable<S>,
-    R
->
+export type NonNullTriProcessor<T, V, S, R> = TriProcessor<NonNull<T>, NonNull<V>, NonNull<S>, R>
 
 /**
  * NumberTriProcessor
@@ -867,7 +1134,7 @@ export type NonNullableTriProcessor<T, V, S, R> = TriProcessor<
  * @example
  *   type NumberTriProcessor = (v1, v2, v3) => return v1 + v2 + v3
  */
-export type NumberTriProcessor<R> = TriProcessor<number, number, number, R>
+export type NumberTriProcessor<R> = TriProcessor<number | bigint, number | bigint, number | bigint, R>
 
 /**
  * StringTriProcessor
@@ -902,12 +1169,28 @@ export type BooleanTriProcessor<R> = TriProcessor<boolean, boolean, boolean, R>
 export type ToOptionalTriProcessor<T, V, S, R> = (v1: T, v2: V, v3: S) => Optional<R>
 
 /**
- * ToNonNullableTriProcessor
+ * ToPartialTriProcessor
+ * @desc Type representing ternary processor function type with partial result in TypeScript
+ * @example
+ *   type ToPartialTriProcessor = (v1, v2, v3) => return v1 + v2 + v3
+ */
+export type ToPartialTriProcessor<T, V, S, R> = (v1: T, v2: V, v3: S) => Partial<R>
+
+/**
+ * ToRequiredTriProcessor
+ * @desc Type representing ternary processor function type with required result in TypeScript
+ * @example
+ *   type ToRequiredTriProcessor = (v1, v2, v3) => return v1 + v2 + v3
+ */
+export type ToRequiredTriProcessor<T, V, S, R> = (v1: T, v2: V, v3: S) => Required<R>
+
+/**
+ * ToNonNullTriProcessor
  * @desc Type representing ternary processor function type with non-nullable result in TypeScript
  * @example
- *   type ToNonNullableTriProcessor = (v1, v2, v3) => return v1 + v2 + v3
+ *   type ToNonNullTriProcessor = (v1, v2, v3) => return v1 + v2 + v3
  */
-export type ToNonNullableTriProcessor<T, V, S, R> = (v1: T, v2: V, v3: S) => NonNullable<R>
+export type ToNonNullTriProcessor<T, V, S, R> = (v1: T, v2: V, v3: S) => NonNull<R>
 
 /**
  * ToNumberTriProcessor
@@ -951,19 +1234,35 @@ export type UnaryOperator<T> = (v: T) => T
 
 /**
  * OptionalUnaryOperator
- * @desc Type representing number unary operator type in TypeScript
+ * @desc Type representing optional unary operator type in TypeScript
  * @example
  *   type OptionalUnaryOperator = (v) => return v
  */
 export type OptionalUnaryOperator<T> = UnaryOperator<Optional<T>>
 
 /**
- * NonNullableUnaryOperator
- * @desc Type representing number unary operator type in TypeScript
+ * PartialUnaryOperator
+ * @desc Type representing partial unary operator type in TypeScript
  * @example
- *   type NonNullableUnaryOperator = (v) => return v
+ *   type PartialUnaryOperator = (v) => return v
  */
-export type NonNullableUnaryOperator<T> = UnaryOperator<NonNullable<T>>
+export type PartialUnaryOperator<T> = UnaryOperator<Partial<T>>
+
+/**
+ * RequiredUnaryOperator
+ * @desc Type representing required unary operator type in TypeScript
+ * @example
+ *   type RequiredUnaryOperator = (v) => return v
+ */
+export type RequiredUnaryOperator<T> = UnaryOperator<Required<T>>
+
+/**
+ * NonNullUnaryOperator
+ * @desc Type representing non-nullable unary operator type in TypeScript
+ * @example
+ *   type NonNullUnaryOperator = (v) => return v
+ */
+export type NonNullUnaryOperator<T> = UnaryOperator<NonNull<T>>
 
 /**
  * NumberUnaryOperator
@@ -971,7 +1270,7 @@ export type NonNullableUnaryOperator<T> = UnaryOperator<NonNullable<T>>
  * @example
  *   type NumberUnaryOperator = (v) => return v
  */
-export type NumberUnaryOperator = UnaryOperator<number>
+export type NumberUnaryOperator = UnaryOperator<number | bigint>
 
 /**
  * StringUnaryOperator
@@ -996,7 +1295,7 @@ export type PropertyKeyUnaryOperator = UnaryOperator<PropertyKey>
  *   type BooleanUnaryOperator = (v) => return v
  */
 export type BooleanUnaryOperator = UnaryOperator<boolean>
-
+// -------------------------------------------------------------------------------------------------
 /**
  * BinaryOperator
  * @desc Type representing binary operator type in TypeScript
@@ -1014,12 +1313,28 @@ export type BinaryOperator<T> = (v1: T, v2: T) => T
 export type OptionalBinaryOperator<T> = BinaryOperator<Optional<T>>
 
 /**
- * NonNullableBinaryOperator
+ * PartialBinaryOperator
+ * @desc Type representing partial binary operator type in TypeScript
+ * @example
+ *   type PartialBinaryOperator = (v1, v2) => return v1 + v2
+ */
+export type PartialBinaryOperator<T> = BinaryOperator<Partial<T>>
+
+/**
+ * RequiredBinaryOperator
+ * @desc Type representing required binary operator type in TypeScript
+ * @example
+ *   type RequiredBinaryOperator = (v1, v2) => return v1 + v2
+ */
+export type RequiredBinaryOperator<T> = BinaryOperator<Required<T>>
+
+/**
+ * NonNullBinaryOperator
  * @desc Type representing non-nullable binary operator type in TypeScript
  * @example
- *   type NonNullableBinaryOperator = (v1, v2) => return v1 + v2
+ *   type NonNullBinaryOperator = (v1, v2) => return v1 + v2
  */
-export type NonNullableBinaryOperator<T> = BinaryOperator<NonNullable<T>>
+export type NonNullBinaryOperator<T> = BinaryOperator<NonNull<T>>
 
 /**
  * NumberBinaryOperator
@@ -1027,7 +1342,7 @@ export type NonNullableBinaryOperator<T> = BinaryOperator<NonNullable<T>>
  * @example
  *   type NumberBinaryOperator = (v1, v2) => return v1 + v2
  */
-export type NumberBinaryOperator = BinaryOperator<number>
+export type NumberBinaryOperator = BinaryOperator<number | bigint>
 
 /**
  * StringBinaryOperator
@@ -1052,7 +1367,7 @@ export type PropertyKeyBinaryOperator = BinaryOperator<PropertyKey>
  *   type BooleanBinaryOperator = (v1, v2) => return v1 & v2
  */
 export type BooleanBinaryOperator = BinaryOperator<boolean>
-
+// -------------------------------------------------------------------------------------------------
 /**
  * TernaryOperator
  * @desc Type representing ternary operator type in TypeScript
@@ -1070,12 +1385,28 @@ export type TernaryOperator<T> = (v1: T, v2: T, v3: T) => T
 export type OptionalTernaryOperator<T> = TernaryOperator<Optional<T>>
 
 /**
- * NonNullableTernaryOperator
+ * PartialTernaryOperator
+ * @desc Type representing partial ternary operator type in TypeScript
+ * @example
+ *   type PartialTernaryOperator = (v1, v2, v3) => return v1 + v2 + v3
+ */
+export type PartialTernaryOperator<T> = TernaryOperator<Partial<T>>
+
+/**
+ * RequiredTernaryOperator
+ * @desc Type representing required ternary operator type in TypeScript
+ * @example
+ *   type RequiredTernaryOperator = (v1, v2, v3) => return v1 + v2 + v3
+ */
+export type RequiredTernaryOperator<T> = TernaryOperator<Required<T>>
+
+/**
+ * NonNullTernaryOperator
  * @desc Type representing non-nullable ternary operator type in TypeScript
  * @example
- *   type NonNullableTernaryOperator = (v1, v2, v3) => return v1 + v2 + v3
+ *   type NonNullTernaryOperator = (v1, v2, v3) => return v1 + v2 + v3
  */
-export type NonNullableTernaryOperator<T> = TernaryOperator<NonNullable<T>>
+export type NonNullTernaryOperator<T> = TernaryOperator<NonNull<T>>
 
 /**
  * NumberTernaryOperator
@@ -1083,7 +1414,7 @@ export type NonNullableTernaryOperator<T> = TernaryOperator<NonNullable<T>>
  * @example
  *   type NumberTernaryOperator = (v1, v2, v3) => return v1 + v2 + v3
  */
-export type NumberTernaryOperator = TernaryOperator<number>
+export type NumberTernaryOperator = TernaryOperator<number | bigint>
 
 /**
  * StringTernaryOperator
@@ -1126,12 +1457,28 @@ export type Filter<T> = (filter: Predicate<T>) => T[]
 export type OptionalFilter<T> = Filter<Optional<T>>
 
 /**
- * NonNullableFilter
+ * PartialFilter
+ * @desc Type representing partial filter function type in TypeScript
+ * @example
+ *   type PartialFilter = (v1 => true) => return [v1, v1]
+ */
+export type PartialFilter<T> = Filter<Partial<T>>
+
+/**
+ * RequiredFilter
+ * @desc Type representing required filter function type in TypeScript
+ * @example
+ *   type RequiredFilter = (v1 => true) => return [v1, v1]
+ */
+export type RequiredFilter<T> = Filter<Required<T>>
+
+/**
+ * NonNullFilter
  * @desc Type representing non-nullable filter function type in TypeScript
  * @example
- *   type NonNullableFilter = (v1 => true) => return [v1, v1]
+ *   type NonNullFilter = (v1 => true) => return [v1, v1]
  */
-export type NonNullableFilter<T> = Filter<NonNullable<T>>
+export type NonNullFilter<T> = Filter<NonNull<T>>
 
 /**
  * NumberFilter
@@ -1139,7 +1486,7 @@ export type NonNullableFilter<T> = Filter<NonNullable<T>>
  * @example
  *   type NumberFilter = (v1 => true) => return [v1, v1]
  */
-export type NumberFilter = Filter<number>
+export type NumberFilter = Filter<number | bigint>
 
 /**
  * StringFilter
@@ -1187,7 +1534,7 @@ export type ArraySetter<T> = BiConsumer<T[], T>
  * @example
  *   type NumberArrayGetter = (num) => (v1) => return v1[num]
  */
-export type NumberArrayGetter<T> = Processor<number, ArrayGetter<T>>
+export type NumberArrayGetter<T> = Processor<number | bigint, ArrayGetter<T>>
 
 /**
  * NumberArraySetter
@@ -1195,10 +1542,11 @@ export type NumberArrayGetter<T> = Processor<number, ArrayGetter<T>>
  * @example
  *   type NumberArraySetter = (num) => (v1, v) => v1[num] = v
  */
-export type NumberArraySetter<T> = Processor<number, ArraySetter<T>>
+export type NumberArraySetter<T> = Processor<number | bigint, ArraySetter<T>>
 // -------------------------------------------------------------------------------------------------
 /**
  * Comparator modes
+ * @desc Type representing comparator supported modes
  */
 export type ComparatorMode = 'asc' | 'desc'
 
@@ -1227,12 +1575,28 @@ export type PropertyComparator<T> = TriProcessor<T, T, PropertyKey, number>
 export type OptionalComparator<T> = Comparator<Optional<T>>
 
 /**
- * NonNullableComparator
+ * PartialComparator
+ * @desc Type representing partial comparator function type in TypeScript
+ * @example
+ *   type PartialComparator = (v1, v2) => return 0
+ */
+export type PartialComparator<T> = Comparator<Partial<T>>
+
+/**
+ * RequiredComparator
+ * @desc Type representing required comparator function type in TypeScript
+ * @example
+ *   type RequiredComparator = (v1, v2) => return 0
+ */
+export type RequiredComparator<T> = Comparator<Required<T>>
+
+/**
+ * NonNullComparator
  * @desc Type representing non-nullable comparator function type in TypeScript
  * @example
- *   type NonNullableComparator = (v1, v2) => return 0
+ *   type NonNullComparator = (v1, v2) => return 0
  */
-export type NonNullableComparator<T> = Comparator<NonNullable<T>>
+export type NonNullComparator<T> = Comparator<NonNull<T>>
 
 /**
  * OptionalPropertyComparator
@@ -1243,12 +1607,28 @@ export type NonNullableComparator<T> = Comparator<NonNullable<T>>
 export type OptionalPropertyComparator<T> = PropertyComparator<Optional<T>>
 
 /**
- * NonNullablePropertyComparator
+ * PartialPropertyComparator
+ * @desc Type representing partial property key comparator function type in TypeScript
+ * @example
+ *   type PartialPropertyComparator = (v1, v2, 'propKey') => return 0
+ */
+export type PartialPropertyComparator<T> = PropertyComparator<Partial<T>>
+
+/**
+ * RequiredPropertyComparator
+ * @desc Type representing required property key comparator function type in TypeScript
+ * @example
+ *   type RequiredPropertyComparator = (v1, v2, 'propKey') => return 0
+ */
+export type RequiredPropertyComparator<T> = PropertyComparator<Required<T>>
+
+/**
+ * NonNullPropertyComparator
  * @desc Type representing non-nullable property key comparator function type in TypeScript
  * @example
- *   type NonNullablePropertyComparator = (v1, v2, 'propKey') => return 0
+ *   type NonNullPropertyComparator = (v1, v2, 'propKey') => return 0
  */
-export type NonNullablePropertyComparator<T> = PropertyComparator<NonNullable<T>>
+export type NonNullPropertyComparator<T> = PropertyComparator<NonNull<T>>
 
 /**
  * NumberComparator
@@ -1256,7 +1636,7 @@ export type NonNullablePropertyComparator<T> = PropertyComparator<NonNullable<T>
  * @example
  *   type NumberComparator = (v1, v2) => return 0
  */
-export type NumberComparator = Comparator<number>
+export type NumberComparator = Comparator<number | bigint>
 
 /**
  * StringComparator
@@ -1288,7 +1668,7 @@ export type BooleanComparator = Comparator<boolean>
  * @example
  *   type Wrapper = (v1, v2) => return 0
  */
-export type Wrapper<T> = () => Supplier<T>
+export type Wrapper<T> = Supplier<Supplier<T>>
 
 /**
  * OptionalWrapper
@@ -1299,20 +1679,36 @@ export type Wrapper<T> = () => Supplier<T>
 export type OptionalWrapper<T> = Wrapper<Optional<T>>
 
 /**
- * NonNullableWrapper
+ * PartialWrapper
+ * @desc Type representing partial wrapper function type in TypeScript
+ * @example
+ *   type PartialWrapper = (v1, v2) => return 0
+ */
+export type PartialWrapper<T> = Wrapper<Partial<T>>
+
+/**
+ * RequiredWrapper
+ * @desc Type representing required wrapper function type in TypeScript
+ * @example
+ *   type RequiredWrapper = (v1, v2) => return 0
+ */
+export type RequiredWrapper<T> = Wrapper<Required<T>>
+
+/**
+ * NonNullWrapper
  * @desc Type representing non-nullable wrapper function type in TypeScript
  * @example
- *   type NonNullableWrapper = (v1, v2) => return 0
+ *   type NonNullWrapper = (v1, v2) => return 0
  */
-export type NonNullableWrapper<T> = Wrapper<NonNullable<T>>
-
+export type NonNullWrapper<T> = Wrapper<NonNull<T>>
+// -------------------------------------------------------------------------------------------------
 /**
  * Factory
  * @desc Type representing factory function type in TypeScript
  * @example
  *   type Factory = (v1, v2) => return 0
  */
-export type Factory<T, V> = (v: T) => Supplier<V>
+export type Factory<T, V> = Processor<T, Supplier<V>>
 
 /**
  * OptionalFactory
@@ -1320,15 +1716,31 @@ export type Factory<T, V> = (v: T) => Supplier<V>
  * @example
  *   type OptionalFactory = (v1, v2) => return 0
  */
-export type OptionalFactory<T, V> = (v: T) => Supplier<Optional<V>>
+export type OptionalFactory<T, V> = Factory<T, Optional<V>>
 
 /**
- * NonNullableFactory
+ * PartialFactory
+ * @desc Type representing partial factory function type in TypeScript
+ * @example
+ *   type PartialFactory = (v1, v2) => return 0
+ */
+export type PartialFactory<T, V> = Factory<T, Partial<V>>
+
+/**
+ * RequiredFactory
+ * @desc Type representing required factory function type in TypeScript
+ * @example
+ *   type RequiredFactory = (v1, v2) => return 0
+ */
+export type RequiredFactory<T, V> = Factory<T, Required<V>>
+
+/**
+ * NonNullFactory
  * @desc Type representing non-nullable factory function type in TypeScript
  * @example
- *   type NonNullableFactory = (v1, v2) => return 0
+ *   type NonNullFactory = (v1, v2) => return 0
  */
-export type NonNullableFactory<T, V> = (v: T) => Supplier<NonNullable<V>>
+export type NonNullFactory<T, V> = Factory<T, NonNull<V>>
 // -------------------------------------------------------------------------------------------------
 /**
  * Formatter
@@ -1337,5 +1749,4 @@ export type NonNullableFactory<T, V> = (v: T) => Supplier<NonNullable<V>>
  *   type Formatter = (v1, v2) => return '0'
  */
 export type StringFormatter = (value: number, fraction: number) => string
-
 // -------------------------------------------------------------------------------------------------

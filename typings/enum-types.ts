@@ -28,17 +28,18 @@ export enum DbClientErrorType {
 
 // -------------------------------------------------------------------------------------------------
 /**
- * Error data type
+ * ErrorData
  * @desc Type representing error data
  */
 export type ErrorData = {
     readonly type: ErrorType
     readonly message: string
 }
+
 // -------------------------------------------------------------------------------------------------
 /**
- * Status code type
- * @desc Type representing error data
+ * StatusCode
+ * @desc Type representing supported status codes
  */
 export enum StatusCode {
     OK = 200,
@@ -70,6 +71,7 @@ export enum InteractiveState {
 export enum Profile {
     dev = 'dev',
     prod = 'prod',
+    test = 'test',
 }
 
 // -------------------------------------------------------------------------------------------------
