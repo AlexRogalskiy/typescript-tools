@@ -23,9 +23,9 @@ import { Strings } from './strings'
 import { Optional } from '../typings/standard-types'
 
 export namespace Files {
-    import uniqueId = Strings.uniqueId;
-    import escapeRegExp = Strings.escapeRegExp;
-    import isBlankString = Strings.isBlankString;
+    import uniqueId = Strings.uniqueId
+    import escapeRegExp = Strings.escapeRegExp
+    import isBlankString = Strings.isBlankString
 
     interface Options {
         throwNotFound?: boolean
