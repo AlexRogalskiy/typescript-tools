@@ -37,8 +37,12 @@ export const isPrimitive = (value: any): value is Primitive => {
         typeof value === 'symbol'
     )
 }
+
 // -------------------------------------------------------------------------------------------------
-// type declaration
+/**
+ * Array
+ * @desc Type representing [`Array`] in TypeScript
+ */
 export interface Array<T> {
     forEachParallel(func: (item: T) => Promise<void>): Promise<void>
 
@@ -63,29 +67,35 @@ export type NonNull<T> = NonNullable<T>
  * Optional
  * @desc Type representing [`Optional`] in TypeScript: `T | null | undefined`
  */
-export type Optional<T> = T | null | undefined
+export type Optional<T> = T | Nullish
 
 /**
  * OptionalString
- * @desc Type representing [`OptionalString`] type in TypeScript: `string | null | undefined`
+ * @desc Type representing [`Optional`] string type in TypeScript: `string | null | undefined`
  */
 export type OptionalString = Optional<string>
 
 /**
+ * OptionalDate
+ * @desc Type representing [`Optional`] date type in TypeScript: `date | null | undefined`
+ */
+export type OptionalDate = Optional<Date>
+
+/**
  * OptionalPropertyKey
- * @desc Type representing [`OptionalPropertyKey`] type in TypeScript: `string | number | symbol | null | undefined`
+ * @desc Type representing [`Optional`] property key type in TypeScript: `PropertyKey | null | undefined`
  */
 export type OptionalPropertyKey = Optional<PropertyKey>
 
 /**
  * OptionalNumber
- * @desc Type representing [`OptionalNumber`] type in TypeScript: `number | null | undefined`
+ * @desc Type representing [`Optional`] number type in TypeScript: `number | bigint | null | undefined`
  */
 export type OptionalNumber = Optional<number | bigint>
 
 /**
  * OptionalBoolean
- * @desc Type representing [`OptionalBoolean`] type in TypeScript: `boolean | null | undefined`
+ * @desc Type representing [`Optional`] boolean type in TypeScript: `boolean | null | undefined`
  */
 export type OptionalBoolean = Optional<boolean>
 
@@ -112,14 +122,25 @@ export type OptionalDomElement = Optional<DomElement>
 // -------------------------------------------------------------------------------------------------
 /**
  * Truthy
- * @desc Type representing truthy values in TypeScript: `true | 1 | 'on' | null | undefined`
+ * @desc Type representing truthy values in TypeScript: `true | 1 | 'on'`
  * @example
  *   type Various = 'a' | 'b' | undefined | true;
  *
  *   // Expect: "a" | "b"
  *   Exclude<Various, Truthy>;
  */
-export type Truthy = Optional<true | 1 | 'on'>
+export type Truthy = true | 1 | 'on'
+
+/**
+ * Truthy
+ * @desc Type representing optional truthy values in TypeScript: `true | 1 | 'on' | null | undefined`
+ * @example
+ *   type Various = 'a' | 'b' | undefined | true;
+ *
+ *   // Expect: "a" | "b"
+ *   Exclude<Various, OptionalTruthy>;
+ */
+export type OptionalTruthy = Optional<Truthy>
 
 /**
  * Tests for Truthy value
@@ -139,14 +160,25 @@ export const isTruthy = (value: unknown): value is Truthy => !!value || value ==
 // -------------------------------------------------------------------------------------------------
 /**
  * Falsy
- * @desc Type representing falsy values in TypeScript: `false | "" | 0 | null | undefined`
+ * @desc Type representing falsy values in TypeScript: `false | "" | 0`
  * @example
  *   type Various = 'a' | 'b' | undefined | false;
  *
  *   // Expect: "a" | "b"
  *   Exclude<Various, Falsy>;
  */
-export type Falsy = Optional<false | '' | 0 | 'off'>
+export type Falsy = false | '' | 0 | 'off'
+
+/**
+ * Falsy
+ * @desc Type representing optional falsy values in TypeScript: `false | "" | 0 | null | undefined`
+ * @example
+ *   type Various = 'a' | 'b' | undefined | false;
+ *
+ *   // Expect: "a" | "b"
+ *   Exclude<Various, OptionalFalsy>;
+ */
+export type OptionalFalsy = Optional<Falsy>
 
 /**
  * Tests for Falsy by simply applying negation `!` to the tested `val`.
