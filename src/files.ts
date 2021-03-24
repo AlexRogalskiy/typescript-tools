@@ -23,9 +23,9 @@ import { Strings } from './strings'
 import { Optional } from '../typings/standard-types'
 
 export namespace Files {
-    import uniqueId = Strings.uniqueId
-    import escapeRegExp = Strings.escapeRegExp
-    import isBlankString = Strings.isBlankString
+    import uniqueId = Strings.uniqueId;
+    import escapeRegExp = Strings.escapeRegExp;
+    import isBlankString = Strings.isBlankString;
 
     interface Options {
         throwNotFound?: boolean
@@ -354,6 +354,19 @@ export namespace Files {
             return true
         } catch (err) {
             return false
+        }
+    }
+
+    /**
+     * @param {string} filePath
+     * @returns {any}
+     */
+    export const readJsonFile = (filePath: string): string => {
+        try {
+            return JSON.parse(readFileSync(filePath).toString())
+        } catch (error) {
+            console.error(`ParseError in file: ${filePath}`)
+            throw error
         }
     }
 }

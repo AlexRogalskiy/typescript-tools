@@ -1395,6 +1395,23 @@ export namespace Utils {
             return value
         }
 
+        /**
+         *
+         * @param {string[]} argv
+         * @param {string} flag
+         * @returns {boolean}
+         */
+        export const popFlag = (argv, flag): boolean => {
+            const flagIndex = argv.indexOf(flag)
+
+            if (flagIndex !== -1) {
+                argv.splice(flagIndex, 1)
+                return true
+            }
+
+            return false
+        }
+
         // Build a destructive iterator for the value list
         export const iteratorFor = <T>(items: T[]): Iterator<T> => {
             const iterator = {
