@@ -1,16 +1,20 @@
 {
+    "name": "TypeScript Tools TypeDoc",
     "entryPoints": [
         "./src",
         "./tools",
         "./typings"
     ],
     "externalPattern": [
-        "./scripts"
+        "./data"
     ],
     "exclude": [
+        "**/+(dev-packages|examples|scripts)/**/*",
         "**/*+(.spec|.e2e).ts"
     ],
     "excludeExternals": true,
+    "hideGenerator": true,
+    "readme": "README.md",
     "highlightTheme": "dark-plus",
     "out": "docs"
 }

@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>typings/domain-types | typescript-tools</title>
-	<meta name="description" content="Documentation for typescript-tools">
+	<title>typings/domain-types | TypeScript Tools TypeDoc</title>
+	<meta name="description" content="Documentation for TypeScript Tools TypeDoc">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">typescript-tools</a>
+					<a href="../index.html" class="title">TypeScript Tools TypeDoc</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">typescript-tools</a>
+					<a href="../modules.html">TypeScript Tools TypeDoc</a>
 				</li>
 				<li>
 					<a href="typings_domain_types.html">typings/domain-types</a>
@@ -70,12 +70,17 @@
 						<section class="tsd-index-section ">
 							<h3>Interfaces</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter"><a href="../interfaces/typings_domain_types.configoptions.html" class="tsd-kind-icon">Config<wbr>Options</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/typings_domain_types.genericobject.html" class="tsd-kind-icon">Generic<wbr>Object</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/typings_domain_types.point.html" class="tsd-kind-icon">Point</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/typings_domain_types.rectangular.html" class="tsd-kind-icon">Rectangular</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/typings_domain_types.textstyle.html" class="tsd-kind-icon">Text<wbr>Style</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/typings_domain_types.tickvaluedescription.html" class="tsd-kind-icon">Tick<wbr>Value<wbr>Description</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="typings_domain_types.html#configoptions" class="tsd-kind-icon">Config<wbr>Options</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="typings_domain_types.html#profileoptions" class="tsd-kind-icon">Profile<wbr>Options</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="typings_domain_types.html#webrequest" class="tsd-kind-icon">Web<wbr>Request</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="typings_domain_types.html#webrequestoptions" class="tsd-kind-icon">Web<wbr>Request<wbr>Options</a></li>
@@ -88,14 +93,63 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Type aliases</h2>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
+					<a name="configoptions" class="tsd-anchor"></a>
+					<h3>Config<wbr>Options</h3>
+					<div class="tsd-signature tsd-kind-icon">Config<wbr>Options&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>options<span class="tsd-signature-symbol">: </span><a href="typings_domain_types.html#profileoptions" class="tsd-signature-type" data-tsd-kind="Type alias">ProfileOptions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/typings/domain-types.ts#L100">typings/domain-types.ts:100</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>ConfigOptions</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>desc</dt>
+							<dd><p>Type representing configuration options</p>
+							</dd>
+						</dl>
+					</div>
+					<h4 class="tsd-type-parameters-title">Type parameters</h4>
+					<ul class="tsd-type-parameters">
+						<li>
+							<h4>T</h4>
+						</li>
+					</ul>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagReadonly">Readonly</span> options<span class="tsd-signature-symbol">: </span><a href="typings_domain_types.html#profileoptions" class="tsd-signature-type" data-tsd-kind="Type alias">ProfileOptions</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								<div class="tsd-comment tsd-typography">
+									<div class="lead">
+										<p>Configuration options.</p>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
 					<a name="profileoptions" class="tsd-anchor"></a>
 					<h3>Profile<wbr>Options</h3>
 					<div class="tsd-signature tsd-kind-icon">Profile<wbr>Options&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span><span class="tsd-signature-symbol">[ </span><span class="tsd-signature-type">K</span><span class="tsd-signature-symbol"> in </span><a href="../enums/typings_enum_types.profile.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Profile</a><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/typings/domain-types.ts#L26">typings/domain-types.ts:26</a></li>
+							<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/typings/domain-types.ts#L91">typings/domain-types.ts:91</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>ProfileOptions</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>desc</dt>
+							<dd><p>Type representing profile configuration options</p>
+							</dd>
+						</dl>
+					</div>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
 					<ul class="tsd-type-parameters">
 						<li>
@@ -109,9 +163,19 @@
 					<div class="tsd-signature tsd-kind-icon">Web<wbr>Request<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>body<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>headers<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>method<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>uri<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/typings/domain-types.ts#L3">typings/domain-types.ts:3</a></li>
+							<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/typings/domain-types.ts#L7">typings/domain-types.ts:7</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>WebRequest</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>desc</dt>
+							<dd><p>Interface representing web request options</p>
+							</dd>
+						</dl>
+					</div>
 					<div class="tsd-type-declaration">
 						<h4>Type declaration</h4>
 						<ul class="tsd-parameters">
@@ -136,9 +200,19 @@
 					<div class="tsd-signature tsd-kind-icon">Web<wbr>Request<wbr>Options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>retriableErrorCodes<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>retriableStatusCodes<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span>retryCount<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>retryIntervalInSeconds<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>retryRequestTimedout<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/typings/domain-types.ts#L18">typings/domain-types.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/typings/domain-types.ts#L30">typings/domain-types.ts:30</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>WebRequestOptions</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>desc</dt>
+							<dd><p>Interface representing web request options</p>
+							</dd>
+						</dl>
+					</div>
 					<div class="tsd-type-declaration">
 						<h4>Type declaration</h4>
 						<ul class="tsd-parameters">
@@ -166,9 +240,19 @@
 					<div class="tsd-signature tsd-kind-icon">Web<wbr>Response<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>body<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>headers<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>statusCode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>statusMessage<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/typings/domain-types.ts#L11">typings/domain-types.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/typings/domain-types.ts#L19">typings/domain-types.ts:19</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>WebResponse</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>desc</dt>
+							<dd><p>Interface representing web response options</p>
+							</dd>
+						</dl>
+					</div>
 					<div class="tsd-type-declaration">
 						<h4>Type declaration</h4>
 						<ul class="tsd-parameters">
@@ -202,8 +286,23 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter">
-						<a href="../interfaces/typings_domain_types.configoptions.html" class="tsd-kind-icon">Config<wbr>Options</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/typings_domain_types.genericobject.html" class="tsd-kind-icon">Generic<wbr>Object</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/typings_domain_types.point.html" class="tsd-kind-icon">Point</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/typings_domain_types.rectangular.html" class="tsd-kind-icon">Rectangular</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/typings_domain_types.textstyle.html" class="tsd-kind-icon">Text<wbr>Style</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/typings_domain_types.tickvaluedescription.html" class="tsd-kind-icon">Tick<wbr>Value<wbr>Description</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="typings_domain_types.html#configoptions" class="tsd-kind-icon">Config<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="typings_domain_types.html#profileoptions" class="tsd-kind-icon">Profile<wbr>Options</a>
@@ -222,7 +321,7 @@
 		</div>
 	</div>
 </div>
-<footer class="with-border-bottom">
+<footer>
 	<div class="container">
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
@@ -247,9 +346,6 @@
 		</div>
 	</div>
 </footer>
-<div class="container tsd-generator">
-	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
-</div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>
 </body>

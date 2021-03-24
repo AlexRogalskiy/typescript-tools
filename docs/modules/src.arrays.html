@@ -3,8 +3,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Arrays | typescript-tools</title>
-	<meta name="description" content="Documentation for typescript-tools">
+	<title>Arrays | TypeScript Tools TypeDoc</title>
+	<meta name="description" content="Documentation for TypeScript Tools TypeDoc">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 	<script async src="../assets/js/search.js" id="search-script"></script>
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="../index.html" class="title">typescript-tools</a>
+					<a href="../index.html" class="title">TypeScript Tools TypeDoc</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -50,7 +50,7 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../modules.html">typescript-tools</a>
+					<a href="../modules.html">TypeScript Tools TypeDoc</a>
 				</li>
 				<li>
 					<a href="src.html">src</a>
@@ -74,6 +74,7 @@
 							<h3>Variables</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-variable tsd-parent-kind-namespace"><a href="src.arrays.html#init" class="tsd-kind-icon">init</a></li>
+								<li class="tsd-kind-variable tsd-parent-kind-namespace"><a href="src.arrays.html#props" class="tsd-kind-icon">props</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -89,6 +90,8 @@
 								<li class="tsd-kind-function tsd-parent-kind-namespace tsd-has-type-parameter"><a href="src.arrays.html#exclusion" class="tsd-kind-icon">exclusion</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-namespace"><a href="src.arrays.html#filterby" class="tsd-kind-icon">filter<wbr>By</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-namespace"><a href="src.arrays.html#findarray" class="tsd-kind-icon">find<wbr>Array</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-namespace"><a href="src.arrays.html#findmaxvalue" class="tsd-kind-icon">find<wbr>Max<wbr>Value</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-namespace"><a href="src.arrays.html#findminvalue" class="tsd-kind-icon">find<wbr>Min<wbr>Value</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-namespace"><a href="src.arrays.html#flatten" class="tsd-kind-icon">flatten</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-namespace tsd-has-type-parameter"><a href="src.arrays.html#groupby" class="tsd-kind-icon">group<wbr>By</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-namespace"><a href="src.arrays.html#insert" class="tsd-kind-icon">insert</a></li>
@@ -108,6 +111,7 @@
 								<li class="tsd-kind-function tsd-parent-kind-namespace tsd-has-type-parameter"><a href="src.arrays.html#removeduplicates" class="tsd-kind-icon">remove<wbr>Duplicates</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-namespace"><a href="src.arrays.html#removevalues" class="tsd-kind-icon">remove<wbr>Values</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-namespace"><a href="src.arrays.html#search" class="tsd-kind-icon">search</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-namespace"><a href="src.arrays.html#selectors" class="tsd-kind-icon">selectors</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-namespace tsd-has-type-parameter"><a href="src.arrays.html#shuffle" class="tsd-kind-icon">shuffle</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-namespace"><a href="src.arrays.html#shuffle2" class="tsd-kind-icon">shuffle2</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-namespace"><a href="src.arrays.html#shuffle3" class="tsd-kind-icon">shuffle3</a></li>
@@ -118,6 +122,7 @@
 								<li class="tsd-kind-function tsd-parent-kind-namespace tsd-has-type-parameter"><a href="src.arrays.html#strtoenumfunc" class="tsd-kind-icon">str<wbr>ToEnum<wbr>Func</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-namespace tsd-has-type-parameter"><a href="src.arrays.html#subtract" class="tsd-kind-icon">subtract</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-namespace"><a href="src.arrays.html#toarray" class="tsd-kind-icon">to<wbr>Array</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-namespace tsd-has-type-parameter"><a href="src.arrays.html#trimnulls" class="tsd-kind-icon">trim<wbr>Nulls</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-namespace tsd-has-type-parameter"><a href="src.arrays.html#trueforall" class="tsd-kind-icon">true<wbr>For<wbr>All</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-namespace tsd-has-type-parameter"><a href="src.arrays.html#union" class="tsd-kind-icon">union</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-namespace"><a href="src.arrays.html#unshift" class="tsd-kind-icon">unshift</a></li>
@@ -139,7 +144,17 @@
 					<div class="tsd-signature tsd-kind-icon">init<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L25">src/arrays.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L117">src/arrays.ts:117</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-namespace">
+					<a name="props" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> props</h3>
+					<div class="tsd-signature tsd-kind-icon">props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> = ...</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L26">src/arrays.ts:26</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -156,7 +171,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L784">src/arrays.ts:784</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L876">src/arrays.ts:876</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -179,7 +194,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L294">src/arrays.ts:294</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L386">src/arrays.ts:386</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -202,7 +217,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L337">src/arrays.ts:337</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L429">src/arrays.ts:429</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -225,7 +240,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L350">src/arrays.ts:350</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L442">src/arrays.ts:442</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -254,7 +269,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L814">src/arrays.ts:814</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L906">src/arrays.ts:906</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
@@ -271,7 +286,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L805">src/arrays.ts:805</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L897">src/arrays.ts:897</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -299,7 +314,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L303">src/arrays.ts:303</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L395">src/arrays.ts:395</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -328,7 +343,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L482">src/arrays.ts:482</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L574">src/arrays.ts:574</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -363,7 +378,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L242">src/arrays.ts:242</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L334">src/arrays.ts:334</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -386,7 +401,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L616">src/arrays.ts:616</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L708">src/arrays.ts:708</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -403,6 +418,52 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-namespace">
+					<a name="findmaxvalue" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> find<wbr>Max<wbr>Value</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-namespace">
+						<li class="tsd-signature tsd-kind-icon">find<wbr>Max<wbr>Value<span class="tsd-signature-symbol">(</span>arr<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L84">src/arrays.ts:84</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>arr: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-namespace">
+					<a name="findminvalue" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> find<wbr>Min<wbr>Value</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-namespace">
+						<li class="tsd-signature tsd-kind-icon">find<wbr>Min<wbr>Value<span class="tsd-signature-symbol">(</span>arr<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L77">src/arrays.ts:77</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>arr: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-namespace">
 					<a name="flatten" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagConst">Const</span> flatten</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-namespace">
@@ -412,7 +473,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L735">src/arrays.ts:735</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L827">src/arrays.ts:827</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -435,7 +496,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L282">src/arrays.ts:282</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L374">src/arrays.ts:374</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -488,7 +549,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L692">src/arrays.ts:692</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L784">src/arrays.ts:784</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -530,7 +591,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L166">src/arrays.ts:166</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L258">src/arrays.ts:258</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -559,7 +620,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L521">src/arrays.ts:521</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L613">src/arrays.ts:613</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -594,7 +655,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L124">src/arrays.ts:124</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L216">src/arrays.ts:216</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -617,7 +678,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L296">src/arrays.ts:296</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L388">src/arrays.ts:388</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -646,7 +707,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L298">src/arrays.ts:298</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L390">src/arrays.ts:390</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -675,7 +736,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L114">src/arrays.ts:114</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L206">src/arrays.ts:206</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -719,7 +780,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L365">src/arrays.ts:365</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L457">src/arrays.ts:457</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -751,7 +812,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L88">src/arrays.ts:88</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L180">src/arrays.ts:180</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -789,7 +850,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L307">src/arrays.ts:307</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L399">src/arrays.ts:399</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -812,7 +873,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L209">src/arrays.ts:209</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L301">src/arrays.ts:301</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -841,7 +902,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L193">src/arrays.ts:193</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L285">src/arrays.ts:285</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -870,7 +931,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L141">src/arrays.ts:141</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L233">src/arrays.ts:233</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -909,7 +970,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L670">src/arrays.ts:670</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L762">src/arrays.ts:762</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -941,7 +1002,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L494">src/arrays.ts:494</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L586">src/arrays.ts:586</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -976,7 +1037,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L772">src/arrays.ts:772</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L864">src/arrays.ts:864</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1002,7 +1063,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L710">src/arrays.ts:710</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L802">src/arrays.ts:802</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1021,6 +1082,37 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-namespace">
+					<a name="selectors" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> selectors</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-namespace">
+						<li class="tsd-signature tsd-kind-icon">selectors<span class="tsd-signature-symbol">(</span>keys<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span>, selectors<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{}</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L91">src/arrays.ts:91</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>keys: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+								<li>
+									<h5>selectors: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{}</span></h4>
+							<ul class="tsd-parameters">
+								<li class="tsd-parameter-index-signature">
+									<h5><span class="tsd-signature-symbol">[</span>k: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-namespace tsd-has-type-parameter">
 					<a name="shuffle" class="tsd-anchor"></a>
 					<h3>shuffle</h3>
@@ -1031,7 +1123,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L176">src/arrays.ts:176</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L268">src/arrays.ts:268</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1060,7 +1152,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L741">src/arrays.ts:741</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L833">src/arrays.ts:833</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1083,7 +1175,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L757">src/arrays.ts:757</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L849">src/arrays.ts:849</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1106,7 +1198,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L235">src/arrays.ts:235</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L327">src/arrays.ts:327</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1141,7 +1233,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L247">src/arrays.ts:247</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L339">src/arrays.ts:339</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1176,7 +1268,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L261">src/arrays.ts:261</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L353">src/arrays.ts:353</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1214,7 +1306,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L216">src/arrays.ts:216</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L308">src/arrays.ts:308</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1277,7 +1369,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L228">src/arrays.ts:228</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L320">src/arrays.ts:320</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1340,7 +1432,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L574">src/arrays.ts:574</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L666">src/arrays.ts:666</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1375,7 +1467,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L796">src/arrays.ts:796</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L888">src/arrays.ts:888</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1392,6 +1484,43 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-namespace tsd-has-type-parameter">
+					<a name="trimnulls" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> trim<wbr>Nulls</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-namespace tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">trim<wbr>Nulls&lt;T&gt;<span class="tsd-signature-symbol">(</span>arr<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>deleted<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>result<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> }</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L103">src/arrays.ts:103</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>arr: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span>deleted<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>result<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> }</span></h4>
+							<ul class="tsd-parameters">
+								<li class="tsd-parameter">
+									<h5>deleted<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li class="tsd-parameter">
+									<h5>result<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-namespace tsd-has-type-parameter">
 					<a name="trueforall" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagConst">Const</span> true<wbr>For<wbr>All</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-namespace tsd-has-type-parameter">
@@ -1401,7 +1530,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L653">src/arrays.ts:653</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L745">src/arrays.ts:745</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1433,7 +1562,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L569">src/arrays.ts:569</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L661">src/arrays.ts:661</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1468,7 +1597,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L100">src/arrays.ts:100</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L192">src/arrays.ts:192</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1506,7 +1635,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L433">src/arrays.ts:433</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L525">src/arrays.ts:525</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1538,7 +1667,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L400">src/arrays.ts:400</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L492">src/arrays.ts:492</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1573,7 +1702,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L375">src/arrays.ts:375</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L467">src/arrays.ts:467</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1605,7 +1734,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L446">src/arrays.ts:446</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L538">src/arrays.ts:538</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1640,7 +1769,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/917d040/src/arrays.ts#L478">src/arrays.ts:478</a></li>
+									<li>Defined in <a href="https://github.com/AlexRogalskiy/typescript-tools/blob/1ddc9f0/src/arrays.ts#L570">src/arrays.ts:570</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1688,6 +1817,9 @@
 					<li class=" tsd-kind-variable tsd-parent-kind-namespace">
 						<a href="src.arrays.html#init" class="tsd-kind-icon">init</a>
 					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-namespace">
+						<a href="src.arrays.html#props" class="tsd-kind-icon">props</a>
+					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-namespace">
 						<a href="src.arrays.html#arrayshuffle" class="tsd-kind-icon">array<wbr>Shuffle</a>
 					</li>
@@ -1717,6 +1849,12 @@
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-namespace">
 						<a href="src.arrays.html#findarray" class="tsd-kind-icon">find<wbr>Array</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-namespace">
+						<a href="src.arrays.html#findmaxvalue" class="tsd-kind-icon">find<wbr>Max<wbr>Value</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-namespace">
+						<a href="src.arrays.html#findminvalue" class="tsd-kind-icon">find<wbr>Min<wbr>Value</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-namespace">
 						<a href="src.arrays.html#flatten" class="tsd-kind-icon">flatten</a>
@@ -1775,6 +1913,9 @@
 					<li class=" tsd-kind-function tsd-parent-kind-namespace">
 						<a href="src.arrays.html#search" class="tsd-kind-icon">search</a>
 					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-namespace">
+						<a href="src.arrays.html#selectors" class="tsd-kind-icon">selectors</a>
+					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-namespace tsd-has-type-parameter">
 						<a href="src.arrays.html#shuffle" class="tsd-kind-icon">shuffle</a>
 					</li>
@@ -1806,6 +1947,9 @@
 						<a href="src.arrays.html#toarray" class="tsd-kind-icon">to<wbr>Array</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-namespace tsd-has-type-parameter">
+						<a href="src.arrays.html#trimnulls" class="tsd-kind-icon">trim<wbr>Nulls</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-namespace tsd-has-type-parameter">
 						<a href="src.arrays.html#trueforall" class="tsd-kind-icon">true<wbr>For<wbr>All</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-namespace tsd-has-type-parameter">
@@ -1834,7 +1978,7 @@
 		</div>
 	</div>
 </div>
-<footer class="with-border-bottom">
+<footer>
 	<div class="container">
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
@@ -1859,9 +2003,6 @@
 		</div>
 	</div>
 </footer>
-<div class="container tsd-generator">
-	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
-</div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>
 </body>
