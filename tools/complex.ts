@@ -1,16 +1,37 @@
 import { Checkers, Errors } from '../src'
+
 import valueError = Errors.valueError
-import isNumber = Checkers.isNumber
+import checkNumber = Checkers.checkNumber
+
+/**
+ * AlgComplex
+ * @desc Type representing supported algebraic complex
+ */
+export type AlgComplex = {
+    x: number
+    y: number
+}
+
+/**
+ * TrigComplex
+ * @desc Type representing supported trigonometic complex
+ */
+export type TrigComplex = {
+    r: number
+    phi: number
+}
 
 export class Complex {
-    private static convertToAlg(r: number, phi: number): { x: number; y: number } {
+    private readonly subscribers = {}
+
+    static convertToAlg({ r, phi }: TrigComplex): AlgComplex {
         const x = r * Math.cos(phi)
         const y = r * Math.sin(phi)
 
         return { x, y }
     }
 
-    private static convertToTrig(x: number, y: number): { r: number; phi: number } {
+    static convertToTrig({ x, y }: AlgComplex): TrigComplex {
         const r = Math.sqrt(x * x + y * y)
         const phi = Math.atan2(y, x)
 
@@ -21,17 +42,28 @@ export class Complex {
         return value instanceof Complex
     }
 
-    static fromAlg(x: number, y: number): Complex {
+    static from(x, y): Complex {
         return new Complex(x, y)
     }
 
-    static fromTrig(r: number, phi: number): Complex {
-        const data = Complex.convertToAlg(r, phi)
+    static fromAlg(complex: AlgComplex): Complex {
+        return Complex.from(complex.x, complex.y)
+    }
+
+    static fromTrig(complex: TrigComplex): Complex {
+        const data = Complex.convertToAlg(complex)
+
         return new Complex(data.x, data.y)
     }
 
     static fromComplex(value: Complex): Complex {
         return new Complex(value.x, value.y)
+    }
+
+    static checkComplex(value: Complex): void {
+        if (!Complex.isComplex(value)) {
+            throw valueError(`not valid Complex instance: [ ${value} ]`)
+        }
     }
 
     /**
@@ -49,32 +81,27 @@ export class Complex {
     }
 
     toTrigonometricString(): string {
-        const data = Complex.convertToTrig(this.x, this.y)
+        const data = Complex.convertToTrig({ x: this.x, y: this.y })
+
         return `(${data.r.toFixed(3)} * exp(${data.phi.toFixed(3)} * i))`
     }
 
     add(complex: Complex): void {
-        if (!Complex.isComplex(complex)) {
-            throw valueError(`not complex number instance: < ${complex} >`)
-        }
+        Complex.isComplex(complex)
 
         this.x += complex.x
         this.y += complex.y
     }
 
     sub(complex: Complex): void {
-        if (!Complex.isComplex(complex)) {
-            throw valueError(`not complex number instance: < ${complex} >`)
-        }
+        Complex.isComplex(complex)
 
         this.x -= complex.x
         this.y -= complex.y
     }
 
     mult(complex: Complex): Complex {
-        if (!Complex.isComplex(complex)) {
-            throw valueError(`not complex number instance: < ${complex} >`)
-        }
+        Complex.isComplex(complex)
 
         const cxx = this.x * complex.x - this.y * complex.y
         const cyy = this.x * complex.y + this.y * complex.x
@@ -85,9 +112,7 @@ export class Complex {
     }
 
     div(complex: Complex): Complex {
-        if (!Complex.isComplex(complex)) {
-            throw valueError(`not complex number instance: < ${complex} >`)
-        }
+        Complex.isComplex(complex)
 
         const denom = complex.x * complex.x + complex.y * complex.y
         const cxx = (this.x * complex.x + this.y * complex.y) / denom
@@ -99,7 +124,9 @@ export class Complex {
     }
 
     scale(value: number): void {
-        if (!isNumber(value) || value === 0) {
+        checkNumber(value)
+
+        if (value === 0) {
             throw valueError(`incorrect input value: scale < ${value} >`)
         }
 
@@ -108,17 +135,13 @@ export class Complex {
     }
 
     addnum(value: number): void {
-        if (!isNumber(value)) {
-            throw valueError(`incorrect input value: number < ${value} >`)
-        }
+        checkNumber(value)
 
         this.x += value
     }
 
     subnum(value: number): void {
-        if (!isNumber(value)) {
-            throw valueError(`incorrect input value: number < ${value} >`)
-        }
+        checkNumber(value)
 
         this.x -= value
     }
@@ -130,13 +153,12 @@ export class Complex {
         return new Complex(cxx, cyy)
     }
 
-    power(num: number): Complex {
-        if (!isNumber(num)) {
-            throw valueError(`incorrect power value: < ${num} >`)
-        }
-        const data = Complex.convertToTrig(this.x, this.y)
-        const rr = Math.pow(data.r, num)
-        const rphi = num * data.phi
+    power(value: number): Complex {
+        checkNumber(value)
+
+        const data = Complex.convertToTrig({ x: this.x, y: this.y })
+        const rr = Math.pow(data.r, value)
+        const rphi = value * data.phi
 
         const cxx = rr * Math.cos(rphi)
         const cyy = rr * Math.sin(rphi)
@@ -145,7 +167,7 @@ export class Complex {
     }
 
     sqrt(): Complex[] {
-        const data = Complex.convertToTrig(this.x, this.y)
+        const data = Complex.convertToTrig({ x: this.x, y: this.y })
         const rr = Math.sqrt(data.r)
         const rphi = data.phi / 2
 
@@ -184,22 +206,22 @@ export class Complex {
     }
 
     ln(): Complex {
-        const data = Complex.convertToTrig(this.x, this.y)
+        const data = Complex.convertToTrig({ x: this.x, y: this.y })
         const rr = Math.log(data.r)
 
-        return Complex.fromTrig(rr, data.phi)
+        return Complex.fromTrig({ r: rr, phi: data.phi })
     }
 
     log10(): Complex {
-        const data = Complex.convertToTrig(this.x, this.y)
+        const data = Complex.convertToTrig({ x: this.x, y: this.y })
         const rr = (1 / Math.LN10) * Math.log(data.r) //Math.log(x) / Math.LN10
         const rphi = (1 / Math.LN10) * data.phi
 
-        return Complex.fromTrig(rr, rphi)
+        return Complex.fromTrig({ r: rr, phi: rphi })
     }
 
     log2(): Complex {
-        const data = Complex.convertToTrig(this.x, this.y)
+        const data = Complex.convertToTrig({ x: this.x, y: this.y })
         const rr = (1 / Math.LN2) * Math.log(data.r) //Math.log(x) / Math.LN2
         const rphi = (1 / Math.LN2) * data.phi
 
@@ -207,18 +229,34 @@ export class Complex {
     }
 
     equals(obj: any): boolean {
-        if (!Complex.isComplex(obj)) {
-            throw valueError(`not complex instance: < ${obj} >`)
-        }
+        Complex.checkComplex(obj)
 
         return this.x === obj.x && this.y === obj.x
     }
 
     clone(): Complex {
-        return Complex.fromAlg(this.x, this.y)
+        return Complex.fromAlg({ x: this.x, y: this.y })
     }
 
     complement(): Complex {
-        return Complex.fromAlg(this.x, -this.y)
+        return Complex.fromAlg({ x: this.x, y: -this.y })
+    }
+
+    on(event: string, cb: any): void {
+        const list: any[] = this.subscribers[event]
+        if (list && list.indexOf(cb) === 0) {
+            list.push(cb)
+        } else {
+            this.subscribers[event] = [cb]
+        }
+    }
+
+    notify(event: string): void {
+        const list: any[] = this.subscribers[event]
+        if (list) {
+            for (const cb of list) {
+                cb()
+            }
+        }
     }
 }

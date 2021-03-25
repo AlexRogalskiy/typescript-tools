@@ -1,4 +1,29 @@
 /**
+ * Nullish
+ * @desc Type representing [nullish values][https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#nullish-coalescing] in TypeScript: `null | undefined`
+ * @example
+ *   type Various = 'a' | 'b' | undefined;
+ *
+ *   // Expect: "a" | "b"
+ *   Exclude<Various, Nullish>;
+ */
+export type Nullish = null | undefined
+
+/**
+ * Tests for Nullish by simply comparing `val` for equality with `null`.
+ * @example
+ *   const consumer = (param: Nullish | string): string => {
+ *     if (isNullish(param)) {
+ *       // typeof param === Nullish
+ *       return String(param) + ' was Nullish';
+ *     }
+ *     // typeof param === string
+ *     return param.toString();
+ *   };
+ */
+export const isNullish = (value: unknown): value is Nullish => value === null || typeof value === 'undefined'
+// -------------------------------------------------------------------------------------------------
+/**
  * Primitive
  * @desc Type representing [`Primitive`](https://developer.mozilla.org/en-US/docs/Glossary/Primitive) types in TypeScript: `string | number | bigint | boolean |  symbol | null | undefined`
  * @example
@@ -101,14 +126,6 @@ export type OptionalBoolean = Optional<boolean>
 
 // -------------------------------------------------------------------------------------------------
 /**
- * ExtendableError
- * @desc Type representing extendable error
- */
-export default class ExtendableError extends Error {
-    // empty
-}
-// -------------------------------------------------------------------------------------------------
-/**
  * DomElement
  * @desc Type representing [`DomElement`]
  */
@@ -122,14 +139,14 @@ export type OptionalDomElement = Optional<DomElement>
 // -------------------------------------------------------------------------------------------------
 /**
  * Truthy
- * @desc Type representing truthy values in TypeScript: `true | 1 | 'on'`
+ * @desc Type representing truthy values in TypeScript: `true | 1 | 'on' | 'y' | 't'`
  * @example
  *   type Various = 'a' | 'b' | undefined | true;
  *
  *   // Expect: "a" | "b"
  *   Exclude<Various, Truthy>;
  */
-export type Truthy = true | 1 | 'on'
+export type Truthy = true | 1 | 'on' | 'y' | 't'
 
 /**
  * Truthy
@@ -156,18 +173,20 @@ export type OptionalTruthy = Optional<Truthy>
  *     // do stuff
  *   };
  */
-export const isTruthy = (value: unknown): value is Truthy => !!value || value === 'on'
+export const isTruthy = (value: unknown): value is Truthy => {
+    return !!value || value === 'on' || value === 'y' || value === 't'
+}
 // -------------------------------------------------------------------------------------------------
 /**
  * Falsy
- * @desc Type representing falsy values in TypeScript: `false | "" | 0`
+ * @desc Type representing falsy values in TypeScript: `false | "" | 0 | 'off' | 'n' | 'f'`
  * @example
  *   type Various = 'a' | 'b' | undefined | false;
  *
  *   // Expect: "a" | "b"
  *   Exclude<Various, Falsy>;
  */
-export type Falsy = false | '' | 0 | 'off'
+export type Falsy = false | '' | 0 | 'off' | 'n' | 'f'
 
 /**
  * Falsy
@@ -194,32 +213,9 @@ export type OptionalFalsy = Optional<Falsy>
  *     // do stuff
  *   };
  */
-export const isFalsy = (value: unknown): value is Falsy => !value || value === 'off'
-// -------------------------------------------------------------------------------------------------
-/**
- * Nullish
- * @desc Type representing [nullish values][https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#nullish-coalescing] in TypeScript: `null | undefined`
- * @example
- *   type Various = 'a' | 'b' | undefined;
- *
- *   // Expect: "a" | "b"
- *   Exclude<Various, Nullish>;
- */
-export type Nullish = null | undefined
-
-/**
- * Tests for Nullish by simply comparing `val` for equality with `null`.
- * @example
- *   const consumer = (param: Nullish | string): string => {
- *     if (isNullish(param)) {
- *       // typeof param === Nullish
- *       return String(param) + ' was Nullish';
- *     }
- *     // typeof param === string
- *     return param.toString();
- *   };
- */
-export const isNullish = (value: unknown): value is Nullish => value === null || typeof value === 'undefined'
+export const isFalsy = (value: unknown): value is Falsy => {
+    return !value || value === 'off' || value === 'n' || value === 'f'
+}
 // -------------------------------------------------------------------------------------------------
 /**
  * NullOrNotEmpty
@@ -240,21 +236,31 @@ export type ObjectMap<T> = {
  * @desc Type representing string {@link Set}
  */
 export type StringSet = Set<string>
+
 /**
  * NumberSet
  * @desc Type representing number {@link Set}
  */
 export type NumberSet = Set<number | bigint>
+
+/**
+ * DateSet
+ * @desc Type representing date {@link Set}
+ */
+export type DateSet = Set<Date>
+
 /**
  * PropertyKeySet
  * @desc Type representing property key {@link Set}
  */
 export type PropertyKeySet = Set<PropertyKey>
+
 /**
  * OptionalSet
  * @desc Type representing optional {@link Set}
  */
 export type OptionalSet<T> = Set<Optional<T>>
+
 // -------------------------------------------------------------------------------------------------
 /**
  * StringRecord

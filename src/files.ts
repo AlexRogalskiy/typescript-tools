@@ -16,7 +16,7 @@ import {
 import { isDirectory, isDirectorySync } from 'path-type'
 import { dirname, extname, join } from 'path'
 import { randomBytes } from 'crypto'
-import { execSync } from 'child_process'
+import { execSync, spawn, SpawnOptions } from 'child_process'
 
 import { Strings } from './strings'
 
@@ -26,6 +26,12 @@ export namespace Files {
     import uniqueId = Strings.uniqueId
     import escapeRegExp = Strings.escapeRegExp
     import isBlankString = Strings.isBlankString
+
+    interface ExecResult {
+        status: number
+        stdout: string
+        stderr: string
+    }
 
     interface Options {
         throwNotFound?: boolean
@@ -368,5 +374,43 @@ export namespace Files {
             console.error(`ParseError in file: ${filePath}`)
             throw error
         }
+    }
+
+    export const collectFileName = (dirName: string): string[] => {
+        let fileName: string[] = []
+
+        // eslint-disable-next-line github/array-foreach
+        readdirSync(dirName).forEach((name: string) => {
+            const newName = `${dirName}/${name}`
+            const stats = statSync(newName)
+            if (stats.isDirectory()) {
+                fileName = fileName.concat(collectFileName(newName))
+            } else if (stats.isFile()) {
+                fileName.push(newName)
+            }
+        })
+
+        return fileName
+    }
+
+    export const exec = async (cmd: string, args: string[], options: SpawnOptions): Promise<ExecResult> => {
+        const process = spawn(cmd, args, options)
+
+        let stdout = ''
+        let stderr = ''
+
+        process.stdout && process.stdout.on('data', (data: Buffer) => (stdout += data.toString()))
+        process.stderr && process.stderr.on('data', (data: Buffer) => (stderr += data.toString()))
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        return new Promise((resolve, _reject) => {
+            process.on('exit', (status: number) => {
+                resolve({
+                    status,
+                    stdout,
+                    stderr,
+                })
+            })
+        })
     }
 }

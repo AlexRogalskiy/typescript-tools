@@ -1,4 +1,45 @@
 import { Profile } from './enum-types'
+
+import { Camera } from '../tools/camera'
+import { Color } from '../tools/color'
+import { Vector } from '../tools/vector'
+
+// -------------------------------------------------------------------------------------------------
+export interface Ray {
+    start: Vector
+    dir: Vector
+}
+
+export interface Intersection {
+    thing: Thing
+    ray: Ray
+    dist: number
+}
+
+export interface Surface {
+    diffuse: (pos: Vector) => Color
+    specular: (pos: Vector) => Color
+    reflect: (pos: Vector) => number
+    roughness: number
+}
+
+export interface Thing {
+    intersect: (ray: Ray) => Intersection
+    normal: (pos: Vector) => Vector
+    surface: Surface
+}
+
+export interface Light {
+    pos: Vector
+    color: Color
+}
+
+export interface Scene {
+    things: Thing[]
+    lights: Light[]
+    camera: Camera
+}
+
 // -------------------------------------------------------------------------------------------------
 /**
  * WebRequest

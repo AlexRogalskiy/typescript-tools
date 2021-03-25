@@ -34,6 +34,18 @@ export namespace Checkers {
         '[object Object]': 'object',
     }
 
+    export const isTrue = (value: any): boolean => {
+        const lowercase = value.toLowerCase()
+        return (
+            lowercase === '1' ||
+            lowercase === 'on' ||
+            lowercase === 't' ||
+            lowercase === 'true' ||
+            lowercase === 'y' ||
+            lowercase === 'yes'
+        )
+    }
+
     export const getClass = (obj: any): Optional<string> => {
         const str = Object.prototype.toString.call(obj)
         const value = /^\[object (.*)]$/.exec(str)

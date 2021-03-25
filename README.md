@@ -53,6 +53,7 @@
 - [*Acknowledgement*](#acknowledgement)
 - [*Forks*](#forks)
 - [*Issues*](#issues)
+- [*Team Tools*](#team-tools)
 - [*Visitors*](#visitors)
 - [*Development Support*](#development-support)
 

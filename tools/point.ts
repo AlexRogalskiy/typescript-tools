@@ -398,7 +398,7 @@ export class Point {
      * @return {Boolean}
      * @param obj
      */
-    equal(obj: any): boolean {
+    equals(obj: any): boolean {
         Point.checkPoint(obj)
 
         return this.x === obj.x && this.y === obj.y

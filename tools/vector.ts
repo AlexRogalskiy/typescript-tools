@@ -24,13 +24,44 @@ export class Vector {
         }
     }
 
+    static minus(v1: Vector, v2: Vector): Vector {
+        return new Vector(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z)
+    }
+
+    static plus(v1: Vector, v2: Vector): Vector {
+        return new Vector(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z)
+    }
+
+    static dot(v1: Vector, v2: Vector): number {
+        return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
+    }
+
+    static mag(v: Vector): number {
+        return Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
+    }
+
+    static norm(v: Vector): Vector {
+        const mag = Vector.mag(v)
+        const div = mag === 0 ? Infinity : 1.0 / mag
+
+        return Vector.times(div, v)
+    }
+
+    static cross(v1: Vector, v2: Vector): Vector {
+        return new Vector(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x)
+    }
+
+    static times(k: number, v: Vector): Vector {
+        return new Vector(k * v.x, k * v.y, k * v.z)
+    }
+
     /**
      * Default {@link Point} constructor by input parameters
      * @param x initial input {@link Number} x
      * @param y initial input {@link Number} y
      * @param z initial input {@link Number} z
      */
-    constructor(private x: number, private y: number, private z: number) {
+    constructor(protected x: number, protected y: number, protected z: number) {
         this.x = x
         this.y = y
         this.z = z
@@ -61,9 +92,9 @@ export class Vector {
     add(vector: Vector): Vector {
         Vector.checkVector(vector)
 
-        this.x += vector.getCoordX()
-        this.y += vector.getCoordY()
-        this.z += vector.getCoordZ()
+        this.x += vector.getX()
+        this.y += vector.getY()
+        this.z += vector.getZ()
 
         return this
     }
@@ -71,9 +102,9 @@ export class Vector {
     sub(vector: Vector): Vector {
         Vector.checkVector(vector)
 
-        this.x -= vector.getCoordX()
-        this.y -= vector.getCoordY()
-        this.z -= vector.getCoordZ()
+        this.x -= vector.getX()
+        this.y -= vector.getY()
+        this.z -= vector.getZ()
 
         return this
     }
@@ -192,9 +223,9 @@ export class Vector {
     vectorMultiply(vector: Vector): Vector {
         Vector.checkVector(vector)
 
-        const vxx = this.x * vector.getCoordZ() - this.z * vector.getCoordY()
-        const vyy = this.z * vector.getCoordX() - this.x * vector.getCoordZ()
-        const vzz = this.x * vector.getCoordY() - this.y * vector.getCoordX()
+        const vxx = this.x * vector.getZ() - this.z * vector.getY()
+        const vyy = this.z * vector.getX() - this.x * vector.getZ()
+        const vzz = this.x * vector.getY() - this.y * vector.getX()
 
         return Vector.from(vxx, vyy, vzz)
     }
@@ -202,15 +233,15 @@ export class Vector {
     scalarMultiply(vector: Vector): number {
         Vector.checkVector(vector)
 
-        return this.x * vector.getCoordX() + this.y * vector.getCoordY() + this.z * vector.getCoordZ()
+        return this.x * vector.getX() + this.y * vector.getY() + this.z * vector.getZ()
     }
 
     distance(vector: Vector): number {
         Vector.checkVector(vector)
 
-        const resX = (this.x - vector.getCoordX()) * (this.x - vector.getCoordX())
-        const resY = (this.y - vector.getCoordY()) * (this.y - vector.getCoordY())
-        const resZ = (this.z - vector.getCoordZ()) * (this.z - vector.getCoordZ())
+        const resX = (this.x - vector.getX()) * (this.x - vector.getX())
+        const resY = (this.y - vector.getY()) * (this.y - vector.getY())
+        const resZ = (this.z - vector.getZ()) * (this.z - vector.getZ())
         const res = resX + resY + resZ
 
         return res > 0 ? Math.sqrt(res) : 0
@@ -225,7 +256,7 @@ export class Vector {
     equals(vector: Vector): boolean {
         Vector.checkVector(vector)
 
-        return this.x === vector.getCoordX() && this.y === vector.getCoordY() && this.z === vector.getCoordZ()
+        return this.x === vector.getX() && this.y === vector.getY() && this.z === vector.getZ()
     }
 
     toArray(): number[] {
@@ -239,23 +270,19 @@ export class Vector {
         return { r, psi, phi }
     }
 
-    getCoordX(): number {
+    getX(): number {
         return this.x
     }
 
-    getCoordY(): number {
+    getY(): number {
         return this.y
     }
 
-    getCoordZ(): number {
+    getZ(): number {
         return this.z
     }
 
-    equal(obj: any): boolean {
-        return this.x === obj.vx && this.y === obj.vy && this.z === obj.vz
-    }
-
-    setCoordX(value: number): Vector {
+    setX(value: number): Vector {
         checkNumber(value)
 
         this.x = value
@@ -263,7 +290,7 @@ export class Vector {
         return this
     }
 
-    setCoordY(value: number): Vector {
+    setY(value: number): Vector {
         checkNumber(value)
 
         this.y = value
@@ -271,7 +298,7 @@ export class Vector {
         return this
     }
 
-    setCoordZ(value: number): Vector {
+    setZ(value: number): Vector {
         checkNumber(value)
 
         this.z = value
