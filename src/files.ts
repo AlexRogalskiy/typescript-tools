@@ -14,13 +14,14 @@ import {
     writeFileSync,
 } from 'fs'
 import { isDirectory, isDirectorySync } from 'path-type'
-import { dirname, extname, join } from 'path'
+import { dirname, extname, join, resolve } from 'path'
 import { randomBytes } from 'crypto'
 import { execSync, spawn, SpawnOptions } from 'child_process'
 
 import { Strings } from './strings'
 
 import { Optional } from '../typings/standard-types'
+import { Options, Result, ResultMap } from '../typings/domain-types'
 
 export namespace Files {
     import uniqueId = Strings.uniqueId
@@ -33,8 +34,60 @@ export namespace Files {
         stderr: string
     }
 
-    interface Options {
-        throwNotFound?: boolean
+    export const getConfigFileName = (baseDir: string, configFileName: string): Optional<string> => {
+        const configFilePath = resolve(baseDir, configFileName)
+        if (existsSync(configFilePath)) {
+            return configFilePath
+        }
+
+        if (baseDir.length === dirname(baseDir).length) {
+            return null
+        }
+
+        return getConfigFileName(resolve(baseDir, '../'), configFileName)
+    }
+
+    export async function processFiles(files: string[], opts: Options): Promise<ResultMap> {
+        const resultMap: ResultMap = {}
+
+        const processString = (fileName: string, content: string, opts: Options): Result => {
+            return {
+                dest: '',
+                error: false,
+                fileName,
+                message: content,
+                settings: {
+                    verbose: opts.verbose,
+                    dryRun: opts.dryRun,
+                },
+                src: '',
+            }
+        }
+
+        const promises = files.map(fileName => {
+            if (!existsSync(fileName)) {
+                const result: Result = {
+                    fileName,
+                    settings: null,
+                    message: `${fileName} does not exist. process abort.\n`,
+                    error: true,
+                    src: '',
+                    dest: '',
+                }
+                return Promise.resolve(result)
+            }
+
+            const content = readFileSync(fileName).toString()
+            return processString(fileName, content, opts)
+        })
+
+        // eslint-disable-next-line github/no-then
+        return Promise.all<Result>(promises).then(resultList => {
+            for (const result of resultList) {
+                resultMap[result.fileName] = result
+            }
+            return resultMap
+        })
     }
 
     export const getDirectory = async (filepath: string): Promise<string> => {

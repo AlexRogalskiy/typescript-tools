@@ -5,7 +5,7 @@ import checkIntNumber = Checkers.checkIntNumber
 
 /**
  * ColorType
- * @desc Type representing supported color
+ * @desc Type representing color parameters
  */
 export type ColorType = {
     r: number
@@ -64,7 +64,7 @@ export class Color {
      * @param g initial green {@link Number} g
      * @param b initial blue {@link Number} b
      */
-    constructor(protected r: number, protected g: number, protected b: number) {
+    constructor(public r: number, public g: number, public b: number) {
         checkIntNumber(r)
         checkIntNumber(g)
         checkIntNumber(b)

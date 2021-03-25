@@ -1,3 +1,4 @@
+import { Optional } from './standard-types'
 import { Profile } from './enum-types'
 
 import { Camera } from '../tools/camera'
@@ -5,13 +6,38 @@ import { Color } from '../tools/color'
 import { Vector } from '../tools/vector'
 
 // -------------------------------------------------------------------------------------------------
+export type FormatCodeSettings = Record<string, any>
+
+export interface Result {
+    fileName: string
+    settings: Optional<FormatCodeSettings>
+    message: string
+    error: boolean
+    src: string
+    dest: string
+    throwNotFound?: boolean
+}
+
+export interface ResultMap {
+    [index: string]: Result
+}
+
+// -------------------------------------------------------------------------------------------------
+export interface Options {
+    dryRun?: boolean
+    verbose?: boolean
+    baseDir?: string
+    throwNotFound?: boolean
+}
+
+// -------------------------------------------------------------------------------------------------
 export interface Ray {
     start: Vector
     dir: Vector
 }
 
-export interface Intersection {
-    thing: Thing
+export interface Intersection<T extends Thing> {
+    thing: T
     ray: Ray
     dist: number
 }
@@ -24,7 +50,7 @@ export interface Surface {
 }
 
 export interface Thing {
-    intersect: (ray: Ray) => Intersection
+    intersect: (ray: Ray) => Optional<Intersection<Thing>>
     normal: (pos: Vector) => Vector
     surface: Surface
 }

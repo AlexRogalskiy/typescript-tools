@@ -6,24 +6,6 @@ import valueError = Errors.valueError
 export class Vector {
     private readonly subscribers = {}
 
-    static isVector(value: any): boolean {
-        return value instanceof Vector
-    }
-
-    static from(x: number, y: number, z: number): Vector {
-        return new Vector(x, y, z)
-    }
-
-    static fromVector(value: Vector): Vector {
-        return new Vector(value.x, value.y, value.z)
-    }
-
-    static checkVector(value: Vector): void {
-        if (!Vector.isVector(value)) {
-            throw valueError(`not vector instance: [ ${value} ]`)
-        }
-    }
-
     static minus(v1: Vector, v2: Vector): Vector {
         return new Vector(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z)
     }
@@ -53,6 +35,24 @@ export class Vector {
 
     static times(k: number, v: Vector): Vector {
         return new Vector(k * v.x, k * v.y, k * v.z)
+    }
+
+    static isVector(value: any): boolean {
+        return value instanceof Vector
+    }
+
+    static from(x: number, y: number, z: number): Vector {
+        return new Vector(x, y, z)
+    }
+
+    static fromVector(value: Vector): Vector {
+        return new Vector(value.x, value.y, value.z)
+    }
+
+    static checkVector(value: Vector): void {
+        if (!Vector.isVector(value)) {
+            throw valueError(`not vector instance: [ ${value} ]`)
+        }
     }
 
     /**
