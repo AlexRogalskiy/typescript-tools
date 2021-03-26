@@ -2,7 +2,8 @@ import { NonNull, Optional } from './standard-types'
 import { Profile } from './enum-types'
 // -------------------------------------------------------------------------------------------------
 /**
- * Supported buffer encoding types
+ * BufferEncoding
+ * @desc Type representing supported buffer encoding settings
  */
 export type BufferEncoding =
     | 'ascii'
@@ -17,12 +18,22 @@ export type BufferEncoding =
     | 'hex'
 // -------------------------------------------------------------------------------------------------
 /**
- * Supported process configuration options
+ * ProcessConfig
+ * @desc Type representing supported process configurations
  */
 export type ProcessConfig<T = keyof Profile> = {
     readonly env: T
 }
+
+export const dev: ProcessConfig<Profile.dev> = { env: Profile.dev }
+export const prod: ProcessConfig<Profile.prod> = { env: Profile.prod }
+export const test: ProcessConfig<Profile.test> = { env: Profile.test }
+
 // -------------------------------------------------------------------------------------------------
+/**
+ * SearchOptions
+ * @desc Type representing search options
+ */
 export type SearchOptions = {
     limit?: number
     suggest?: boolean

@@ -103,6 +103,59 @@ export type RequiredIterator<T> = Iterator<Required<T>>
  *   type NonNullIterator = { next: () => console.log("test") }
  */
 export type NonNullIterator<T> = Iterator<NonNull<T>>
+
+/**
+ * IteratorYieldResult
+ * @desc Type representing iterator yield result
+ */
+export interface IteratorYieldResult<T> {
+    done?: false
+    value: T
+}
+
+/**
+ * IteratorReturnResult
+ * @desc Type representing iterator return result
+ */
+interface IteratorReturnResult<R> {
+    done: true
+    value: R
+}
+
+/**
+ * IteratorResult
+ * @desc Type representing iterator result
+ */
+type IteratorResult<T, R = any> = IteratorYieldResult<T> | IteratorReturnResult<R>
+
+/**
+ * ItemIterator
+ * @desc Type representing item iterator
+ */
+export interface ItemIterator<T, TReturn = any, TNext = undefined> {
+    next(...args: [] | [TNext]): IteratorResult<T, TReturn>
+
+    return?(value?: TReturn): IteratorResult<T, TReturn>
+
+    throw?(e?: any): IteratorResult<T, TReturn>
+}
+
+/**
+ * Iterable
+ * @desc Type representing iterable
+ */
+export interface Iterable<T> {
+    [Symbol.iterator](): ItemIterator<T>
+}
+
+/**
+ * Iterable
+ * @desc Type representing iterable iterator
+ */
+export interface IterableIterator<T> extends ItemIterator<T> {
+    [Symbol.iterator](): IterableIterator<T>
+}
+
 // -------------------------------------------------------------------------------------------------
 /**
  * Executor

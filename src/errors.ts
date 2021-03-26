@@ -1,4 +1,4 @@
-import { DbClientErrorType, ErrorData, ErrorType } from '../typings/enum-types'
+import { DbErrorType, ErrorData, ErrorType } from '../typings/enum-types'
 
 import { Logging } from './logging'
 import { Utils } from './utils'
@@ -215,18 +215,18 @@ export namespace Errors {
     export class DbClientError extends GeneralError {
         readonly statusCode: number
 
-        constructor(readonly message: string, readonly code: DbClientErrorType, ...args: any[]) {
+        constructor(readonly message: string, readonly code: DbErrorType, ...args: any[]) {
             super(ErrorType.db_error, message, args)
             this.code = code
             this.statusCode = DbClientError.getStatusCodeFromCode(code)
         }
 
         static getStatusCodeFromCode(code: string): number {
-            if (code === DbClientErrorType.NotFound) {
+            if (code === DbErrorType.NotFound) {
                 return 404
-            } else if (code === DbClientErrorType.Conflict) {
+            } else if (code === DbErrorType.Conflict) {
                 return 409
-            } else if (code === DbClientErrorType.UnprocessableEntity) {
+            } else if (code === DbErrorType.UnprocessableEntity) {
                 return 422
             }
 
@@ -235,15 +235,15 @@ export namespace Errors {
     }
 
     export const unprocessableEntityDbError = (message: string): DbClientError => {
-        return new DbClientError(message, DbClientErrorType.UnprocessableEntity)
+        return new DbClientError(message, DbErrorType.UnprocessableEntity)
     }
 
     export const notFoundDbError = (message: string): DbClientError => {
-        return new DbClientError(message, DbClientErrorType.NotFound)
+        return new DbClientError(message, DbErrorType.NotFound)
     }
 
     export const conflictDbError = (message: string): DbClientError => {
-        return new DbClientError(message, DbClientErrorType.Conflict)
+        return new DbClientError(message, DbErrorType.Conflict)
     }
 
     /**

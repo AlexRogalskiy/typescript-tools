@@ -6,8 +6,16 @@ import { Color } from '../tools/color'
 import { Vector } from '../tools/vector'
 
 // -------------------------------------------------------------------------------------------------
+/**
+ * FormatCodeSettings
+ * @desc Type representing format code settings
+ */
 export type FormatCodeSettings = Record<string, any>
 
+/**
+ * Result
+ * @desc Type representing result options
+ */
 export interface Result {
     fileName: string
     settings: Optional<FormatCodeSettings>
@@ -18,11 +26,26 @@ export interface Result {
     throwNotFound?: boolean
 }
 
+/**
+ * ResultMap
+ * @desc Type representing result map
+ */
 export interface ResultMap {
     [index: string]: Result
 }
 
 // -------------------------------------------------------------------------------------------------
+/**
+ * Direction
+ * @desc Type representing direction
+ */
+export type Direction = -1 | 0 | 1
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * Options
+ * @desc Type representing direction
+ */
 export interface Options {
     dryRun?: boolean
     verbose?: boolean
@@ -31,17 +54,29 @@ export interface Options {
 }
 
 // -------------------------------------------------------------------------------------------------
+/**
+ * Ray
+ * @desc Type representing ray
+ */
 export interface Ray {
     start: Vector
     dir: Vector
 }
 
+/**
+ * Intersection
+ * @desc Type representing intersection
+ */
 export interface Intersection<T extends Thing> {
     thing: T
     ray: Ray
     dist: number
 }
 
+/**
+ * Surface
+ * @desc Type representing surface
+ */
 export interface Surface {
     diffuse: (pos: Vector) => Color
     specular: (pos: Vector) => Color
@@ -49,17 +84,29 @@ export interface Surface {
     roughness: number
 }
 
+/**
+ * Thing
+ * @desc Type representing thing
+ */
 export interface Thing {
     intersect: (ray: Ray) => Optional<Intersection<Thing>>
     normal: (pos: Vector) => Vector
     surface: Surface
 }
 
+/**
+ * Light
+ * @desc Type representing light
+ */
 export interface Light {
     pos: Vector
     color: Color
 }
 
+/**
+ * Scene
+ * @desc Type representing scene
+ */
 export interface Scene {
     things: Thing[]
     lights: Light[]
@@ -155,7 +202,7 @@ export interface TickValueDescription {
  * ProfileOptions
  * @desc Type representing profile configuration options
  */
-export type ProfileOptions<T> = {
+export type ProfileRecord<T> = {
     [K in Profile]: T
 }
 
@@ -168,7 +215,7 @@ export type ConfigOptions<T> = {
     /**
      * Configuration options.
      */
-    readonly options: ProfileOptions<T>
+    readonly options: ProfileRecord<T>
 }
 
 // -------------------------------------------------------------------------------------------------

@@ -15,6 +15,7 @@
 *.zip
 *.tar.gz
 *.rar
+*.map
 **/.DS_Store
 
 # License files
@@ -29,7 +30,7 @@ hs_err_pid*
 .reporting/
 bin/
 tmp/
-dist/
+dist/*
 build/*
 packages/
 coverage/

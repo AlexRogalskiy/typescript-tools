@@ -1,4 +1,8 @@
 declare module 'editorconfig' {
+    /**
+     * FileInfo
+     * @desc Type representing file information
+     */
     export interface FileInfo {
         indent_style?: string
         indent_size?: number
@@ -10,6 +14,10 @@ declare module 'editorconfig' {
         root?: string
     }
 
+    /**
+     * ParseOptions
+     * @desc Type representing parse options
+     */
     export interface ParseOptions {
         config: string
         version: any // string or Version

@@ -17,10 +17,10 @@ export enum ErrorType {
 
 // -------------------------------------------------------------------------------------------------
 /**
- * DbClientErrorType
- * @desc Type representing database client errors
+ * DbErrorType
+ * @desc Type representing database errors
  */
-export enum DbClientErrorType {
+export enum DbErrorType {
     UnprocessableEntity = 'UnprocessableEntity',
     Conflict = 'Conflict',
     NotFound = 'NotFound',
