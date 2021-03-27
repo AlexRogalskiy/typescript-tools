@@ -1,4 +1,4 @@
-name: test
+name: CI
 
 on:
   push:
@@ -38,8 +38,25 @@ jobs:
       - name: Install
         run: yarn install
 
-      - name: Jest
-        run: yarn test
-
       - name: Lint
-        run: yarn lint
+        run: yarn all
+
+      - name: Jest
+        run: yarn test:all
+
+      - name: Check
+        run: yarn check:all
+
+      - name: Circular dependency check
+        uses: gerrit0/circular-dependency-check@v1
+        with:
+          entry: dist/index.js
+
+      - name: coverage
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          name: actions ${{ matrix.node }}
+          file: ./coverage/coverage-final.json
+          fail_ci_if_error: true
+          verbose: true
