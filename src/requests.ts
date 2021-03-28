@@ -5,6 +5,7 @@ import { Formats } from './formats'
 import { Strings } from './strings'
 import { Arrays } from './arrays'
 import { Profiles } from './profiles'
+import { Logging } from './logging'
 
 import { Optional } from '../typings/standard-types'
 import { ConfigOptions } from '../typings/domain-types'
@@ -14,6 +15,7 @@ export namespace Requests {
     import toInt = Formats.toInt
     import makeArray = Arrays.makeArray
     import isDev = Profiles.isDev
+    import errorLogs = Logging.errorLogs
 
     export type InitHeaders = Headers | Record<string, string> | string[][]
 
@@ -98,7 +100,7 @@ export namespace Requests {
         return Promise.reject(error)
     }
 
-    export const fetchCall = async (url: string, options: RequestInit = {}): Promise<any> => {
+    export const fetchJson = async (url: string, options: RequestInit = {}): Promise<any> => {
         try {
             const response = await fetch(url, options)
 
@@ -109,14 +111,19 @@ export namespace Requests {
         }
     }
 
-    export const fetchJSON = async (url: string, options: RequestInit = {}): Promise<any> => {
-        const data = await fetch(url, options)
-        const response = await checkStatus(data)
+    export const fetchAsJson = async (url: string, options: RequestInit = {}): Promise<any> => {
+        try {
+            const response = await fetch(url, options)
+            const data = await checkStatus(response)
 
-        return await response.json()
+            return await data.json()
+        } catch (e) {
+            errorLogs(`Cannot fetch request by url: ${url}, message: ${e.message}`)
+            throw e
+        }
     }
 
-    export const jsonFromUR = async (url: string, param: string): Promise<string> => {
+    export const fetchJsonFromUrl = async (url: string, param: string): Promise<string> => {
         if (param) {
             url += encodeURIComponent(param)
         }
