@@ -1,3 +1,5 @@
+import boxen from 'boxen'
+
 import { Optional } from './standard-types'
 import { Profile } from './enum-types'
 
@@ -5,6 +7,17 @@ import { Camera } from '../tools/camera'
 import { Color } from '../tools/color'
 import { Vector } from '../tools/vector'
 
+// -------------------------------------------------------------------------------------------------
+/**
+ * ProfileOptions
+ * @desc Type representing profile options
+ */
+export type ProfileOptions = {
+    /**
+     * Output options
+     */
+    readonly outputOptions?: boxen.Options
+}
 // -------------------------------------------------------------------------------------------------
 /**
  * FormatCodeSettings

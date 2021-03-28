@@ -1,15 +1,25 @@
-import { ConfigOptions } from '../typings/domain-types'
+import { Profile } from '../typings/enum-types'
+import { ProfileOptions } from '../typings/domain-types'
 
-export namespace Configs {
-    export const getApiRootURL = async <T>(setup: ConfigOptions<T>, key: string): Promise<string> => {
-        const { NODE_ENV } = process.env
-        const isLocalEnv = NODE_ENV === 'development'
-        const options = isLocalEnv ? setup.options.dev : setup.options.prod
+import { OUTPUT_OPTIONS } from './constants'
 
-        if (!options[key]) {
-            throw new Error(`No API end point defined for ${key}`)
-        }
+/**
+ * ConfigRecord
+ * @desc Type representing profile config options
+ */
+export type ConfigRecord = Record<Profile, ProfileOptions>
 
-        return options[key]
-    }
+/**
+ * Configuration options
+ */
+export const Configs: Readonly<ConfigRecord> = {
+    dev: {
+        outputOptions: OUTPUT_OPTIONS,
+    },
+    prod: {
+        outputOptions: OUTPUT_OPTIONS,
+    },
+    test: {
+        outputOptions: OUTPUT_OPTIONS,
+    },
 }

@@ -1,9 +1,21 @@
+import boxen from 'boxen'
+
 import { RegexStringPair } from '../typings/general-types'
+
+/**
+ * Output configuration options
+ */
+export const OUTPUT_OPTIONS: Readonly<boxen.Options> = {
+    padding: 1,
+    margin: 1,
+    borderStyle: 'single',
+    borderColor: 'yellow',
+}
 
 /**
  * Collection of encoded regex pairs
  */
-export const REGEX_ASCII_PAIRS: RegexStringPair[] = [
+export const REGEX_ASCII_PAIRS: Readonly<RegexStringPair[]> = [
     { left: /%5B/g, right: '[' },
     { left: /%5D/g, right: ']' },
 ]
@@ -11,7 +23,7 @@ export const REGEX_ASCII_PAIRS: RegexStringPair[] = [
 /**
  * Collection of escaped regex entity pairs
  */
-export const REGEX_ENTITY_PAIRS: RegexStringPair[] = [
+export const REGEX_ENTITY_PAIRS: Readonly<RegexStringPair[]> = [
     { left: /&/g, right: '&amp;' },
     { left: /</g, right: '&lt;' },
     { left: />/g, right: '&gt;' },
@@ -22,7 +34,7 @@ export const REGEX_ENTITY_PAIRS: RegexStringPair[] = [
 /**
  * Collection of escaped regex control pairs
  */
-export const REGEX_CONTROL_PAIRS: RegexStringPair[] = [
+export const REGEX_CONTROL_PAIRS: Readonly<RegexStringPair[]> = [
     { left: /\\'/g, right: "\\'" },
     { left: /\\"/g, right: '\\"' },
     { left: /\\&/g, right: '\\&' },

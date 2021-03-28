@@ -4,12 +4,16 @@ import { parse, stringify } from 'qs'
 import { Formats } from './formats'
 import { Strings } from './strings'
 import { Arrays } from './arrays'
+import { Profiles } from './profiles'
+
 import { Optional } from '../typings/standard-types'
+import { ConfigOptions } from '../typings/domain-types'
 
 export namespace Requests {
     import isBlankString = Strings.isBlankString
     import toInt = Formats.toInt
     import makeArray = Arrays.makeArray
+    import isDev = Profiles.isDev
 
     export type InitHeaders = Headers | Record<string, string> | string[][]
 
@@ -17,6 +21,16 @@ export namespace Requests {
         type: 'blob' | 'src'
         blob: BlobPart
         src: string
+    }
+
+    export const getApiRootURL = async <T>(setup: ConfigOptions<T>, key: PropertyKey): Promise<string> => {
+        const options = isDev ? setup.options.dev : setup.options.prod
+
+        if (!options[key]) {
+            throw new Error(`No API end point defined for ${key.toString()}`)
+        }
+
+        return options[key]
     }
 
     /**
