@@ -3,8 +3,8 @@ import { describe, expect, test } from '@jest/globals'
 import { Requests } from '../src'
 
 export namespace Requests_Test {
-    import toBase64ImageUrl = Requests.toBase64ImageUrl;
-    import getUrlName = Requests.getUrlName;
+    import toBase64ImageUrl = Requests.toBase64ImageUrl
+    import getUrlName = Requests.getUrlName
 
     require('https').globalAgent.options.rejectUnauthorized = false
 
@@ -29,7 +29,9 @@ export namespace Requests_Test {
     describe('Get url name', () => {
         test('it should be a valid url name', async () => {
             expect(getUrlName('https://avatars1.githubusercontent.com/u/33148052?v=4')).toEqual('33148052')
-            expect(getUrlName('https://ru.wikipedia.org/wiki/Эмотикон#/media/Файл:SNice.svg')).toEqual('Файл:SNice.svg')
+            expect(getUrlName('https://ru.wikipedia.org/wiki/Эмотикон#/media/Файл:SNice.svg')).toEqual(
+                'Файл:SNice.svg',
+            )
         })
     })
 }

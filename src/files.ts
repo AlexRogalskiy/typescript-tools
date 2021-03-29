@@ -51,6 +51,11 @@ export namespace Files {
         return readFileSync(join(dir, filename), { encoding: 'utf-8' }).split(/\r\n/)
     }
 
+    export const getFilesizeInBytes = (filename: string): number => {
+        //return await fs.promises.stat(file)).size
+        return statSync(filename).size
+    }
+
     export async function processFiles(files: string[], opts: Options): Promise<ResultMap> {
         const resultMap: ResultMap = {}
 
