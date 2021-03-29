@@ -1,8 +1,6 @@
 import { Vector } from './vector'
 import { Errors } from '../src'
 
-import valueError = Errors.valueError
-
 export class Camera {
     static isCamera(value: any): boolean {
         return value instanceof Camera
@@ -12,9 +10,9 @@ export class Camera {
         return new Camera(pos, lookAt)
     }
 
-    static checkColor(value: Camera): void {
+    static checkCamera(value: Camera): void {
         if (!Camera.isCamera(value)) {
-            throw valueError(`not valid Camera instance: [ ${value} ]`)
+            throw Errors.valueError(`not valid Camera instance: [ ${value} ]`)
         }
     }
 

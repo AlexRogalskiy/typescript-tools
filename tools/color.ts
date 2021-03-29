@@ -1,7 +1,4 @@
-import { Checkers, Errors } from '../src'
-
-import valueError = Errors.valueError
-import checkIntNumber = Checkers.checkIntNumber
+import { Errors } from '../src'
 
 /**
  * ColorType
@@ -54,7 +51,7 @@ export class Color {
 
     static checkColor(value: Color): void {
         if (!Color.isColor(value)) {
-            throw valueError(`not valid Color instance: [ ${value} ]`)
+            throw Errors.valueError(`not valid Color instance: [ ${value} ]`)
         }
     }
 
@@ -65,10 +62,6 @@ export class Color {
      * @param b initial blue {@link Number} b
      */
     constructor(public r: number, public g: number, public b: number) {
-        checkIntNumber(r)
-        checkIntNumber(g)
-        checkIntNumber(b)
-
         this.r = r
         this.g = g
         this.b = b

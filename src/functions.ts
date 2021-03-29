@@ -1,17 +1,13 @@
 import _ from 'lodash'
 
 import { Callback, Executor, GenericValueCallback, Processor, Supplier } from '../typings/function-types'
+
 import { Checkers } from './checkers'
 import { Errors } from './errors'
 import { Utils } from './utils'
 
 export namespace Functions {
     import Commons = Utils.Commons
-    import isArray = Checkers.isArray
-    import isFunction = Checkers.isFunction
-    import typeError = Errors.typeError
-    import valueError = Errors.valueError
-    import defineProperty = Utils.Commons.defineProperty
 
     export const props = (() => {
         const props = {
@@ -23,7 +19,7 @@ export namespace Functions {
         /**
          * Creates binding context for function input parameters
          */
-        if (!isFunction(Function.prototype[props.proto.bind])) {
+        if (!Function.prototype[props.proto.bind]) {
             Commons.defineProperty(Function.prototype, props.proto.bind, {
                 value(obj, ...args) {
                     const slice = [].slice,
@@ -51,7 +47,7 @@ export namespace Functions {
 
     export const extend = (target: any, source: any): any => {
         for (const item of Object.getOwnPropertyNames(source)) {
-            defineProperty(target, item, Object.getOwnPropertyDescriptor(source, item))
+            Commons.defineProperty(target, item, Object.getOwnPropertyDescriptor(source, item))
         }
 
         return target
@@ -138,8 +134,8 @@ export namespace Functions {
      };
     */
     export const proxy = <T>(callback: Callback, self: any, ...args: any[]): Supplier<T> => {
-        if (!isFunction(callback)) {
-            throw typeError(`incorrect type value: function < ${callback} >`)
+        if (!Checkers.isFunction(callback)) {
+            throw Errors.typeError(`incorrect type value: function < ${callback} >`)
         }
 
         return () => callback.apply(self, args)
@@ -179,8 +175,8 @@ export namespace Functions {
         const add = (fn: any): void => {
             // if the queue had been flushed, return immediately
             //otherwise push it on the queue
-            if (!isFunction(fn)) {
-                throw valueError(`incorrect function value < ${fn} >`)
+            if (!Checkers.isFunction(fn)) {
+                throw Errors.valueError(`incorrect function value < ${fn} >`)
             }
             if (flushed) {
                 fn(response)
@@ -245,7 +241,7 @@ export namespace Functions {
             const calls = this._callbacks || (this._callbacks = {})
 
             if (calls[event]) {
-                if (isArray(calls[event])) {
+                if (Checkers.isArray(calls[event])) {
                     for (let i = 0; i < this._callbacks[event].length; i++) {
                         if (calls[event][i] === callback) {
                             calls[event].splice(i, 1)
@@ -310,7 +306,7 @@ export namespace Functions {
         }
 
         for (const item of args) {
-            if (isFunction(item)) {
+            if (Checkers.isFunction(item)) {
                 len2func[index(item)] = item
             }
         }

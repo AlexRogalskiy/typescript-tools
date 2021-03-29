@@ -47,6 +47,10 @@ export namespace Files {
         return getConfigFileName(resolve(baseDir, '../'), configFileName)
     }
 
+    export const getContent = (dir: string, filename: string): string[] => {
+        return readFileSync(join(dir, filename), { encoding: 'utf-8' }).split(/\r\n/)
+    }
+
     export async function processFiles(files: string[], opts: Options): Promise<ResultMap> {
         const resultMap: ResultMap = {}
 

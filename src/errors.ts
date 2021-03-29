@@ -1,12 +1,12 @@
 import { DbErrorType, ErrorData, ErrorType } from '../typings/enum-types'
 
-import { Logging } from './logging'
 import { Utils } from './utils'
 import { Checkers } from './checkers'
+import { Logging } from './logging'
 
 export namespace Errors {
-    import errors = Logging.errors
     import Commons = Utils.Commons
+    import errorLogs = Logging.errorLogs
 
     /**
      * ExtendableError
@@ -82,7 +82,7 @@ export namespace Errors {
          * @protected
          */
         protected logMessage(): void {
-            errors(this.message, this.args)
+            errorLogs(this.message, this.args)
         }
     }
 

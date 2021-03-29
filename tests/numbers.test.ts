@@ -15,6 +15,7 @@ export namespace Numbers_Test {
     import toBoolean = Commons.toBoolean;
     import sortBy = Numbers.sortBy;
     import findLongest = Numbers.findLongest;
+    import median = Numbers.median;
 
     beforeAll(() => {
         console.log("Numbers test suite started")
@@ -32,6 +33,15 @@ export namespace Numbers_Test {
             expect(countLeadingZeros(3)).toEqual(30)
             expect(countLeadingZeros(5)).toEqual(29)
             expect(countLeadingZeros(555)).toEqual(22)
+        })
+    })
+
+    describe('Check median calculation by input numbers', () => {
+        it('it should calculate valid median of input numbers', () => {
+            expect(median(1, 2, 3, 4, 5)).toEqual(3)
+            expect(median(1, 2)).toEqual(1)
+            expect(median(2, 3, 4)).toEqual(3)
+            expect(median()).toEqual(Number.NaN)
         })
     })
 

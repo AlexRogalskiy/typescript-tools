@@ -1,8 +1,5 @@
 import { Checkers, Errors } from '../src'
 
-import checkNumber = Checkers.checkNumber
-import valueError = Errors.valueError
-
 export class Vector {
     private readonly subscribers = {}
 
@@ -51,7 +48,7 @@ export class Vector {
 
     static checkVector(value: Vector): void {
         if (!Vector.isVector(value)) {
-            throw valueError(`not vector instance: [ ${value} ]`)
+            throw Errors.valueError(`not vector instance: [ ${value} ]`)
         }
     }
 
@@ -68,7 +65,7 @@ export class Vector {
     }
 
     scale(scale: number): Vector {
-        checkNumber(scale)
+        Checkers.checkNumber(scale)
 
         this.x *= scale
         this.y *= scale
@@ -78,9 +75,9 @@ export class Vector {
     }
 
     scaleAll(scaleX: number, scaleY: number, scaleZ: number): Vector {
-        checkNumber(scaleX)
-        checkNumber(scaleY)
-        checkNumber(scaleZ)
+        Checkers.checkNumber(scaleX)
+        Checkers.checkNumber(scaleY)
+        Checkers.checkNumber(scaleZ)
 
         this.x *= scaleX
         this.y *= scaleY
@@ -129,7 +126,7 @@ export class Vector {
         const len = this.length()
 
         if (len === 0) {
-            throw valueError(`incorrect vector3d length: < ${len} >`)
+            throw Errors.valueError(`incorrect vector3d length: < ${len} >`)
         }
 
         this.x /= len
@@ -140,7 +137,7 @@ export class Vector {
     }
 
     rotate(angle: number): Vector {
-        checkNumber(angle)
+        Checkers.checkNumber(angle)
 
         const phi = Math.acos(this.z / this.length())
         const xy = this.x === 0 && this.y >= 0 ? Math.PI / 2 : (3 * Math.PI) / 2
@@ -166,7 +163,7 @@ export class Vector {
     }
 
     rotateX(angle: number): Vector {
-        checkNumber(angle)
+        Checkers.checkNumber(angle)
 
         const vyy = this.y,
             vzz = this.z,
@@ -179,7 +176,7 @@ export class Vector {
     }
 
     rotateY(angle: number): Vector {
-        checkNumber(angle)
+        Checkers.checkNumber(angle)
 
         const vxx = this.x,
             vzz = this.z,
@@ -192,7 +189,7 @@ export class Vector {
     }
 
     rotateZ(angle: number): Vector {
-        checkNumber(angle)
+        Checkers.checkNumber(angle)
 
         const vxx = this.x,
             vyy = this.y,
@@ -205,9 +202,9 @@ export class Vector {
     }
 
     shift(deltaX: number, deltaY: number, deltaZ: number): Vector {
-        checkNumber(deltaX)
-        checkNumber(deltaY)
-        checkNumber(deltaZ)
+        Checkers.checkNumber(deltaX)
+        Checkers.checkNumber(deltaY)
+        Checkers.checkNumber(deltaZ)
 
         this.x += deltaX
         this.y += deltaY
@@ -283,7 +280,7 @@ export class Vector {
     }
 
     setX(value: number): Vector {
-        checkNumber(value)
+        Checkers.checkNumber(value)
 
         this.x = value
 
@@ -291,7 +288,7 @@ export class Vector {
     }
 
     setY(value: number): Vector {
-        checkNumber(value)
+        Checkers.checkNumber(value)
 
         this.y = value
 
@@ -299,7 +296,7 @@ export class Vector {
     }
 
     setZ(value: number): Vector {
-        checkNumber(value)
+        Checkers.checkNumber(value)
 
         this.z = value
 

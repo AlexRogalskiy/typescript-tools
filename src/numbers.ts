@@ -163,6 +163,19 @@ export namespace Numbers {
         }
     }
 
+    export const median = (...values: number[]): number => {
+        values.sort((a, b): number => {
+            return a - b
+        })
+
+        const half = Math.floor(values.length / 2)
+        if (values.length % 2) {
+            return values[half]
+        }
+
+        return Math.floor((values[half - 1] + values[half]) / 2)
+    }
+
     export const raffle = (
         rowSize: number,
         colSize: number,

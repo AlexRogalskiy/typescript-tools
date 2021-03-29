@@ -61,7 +61,7 @@ export namespace Strings {
             replacer: (substring: string, ...args: any[]) => string,
         ): string => self.replace(regex, replacer)
 
-        const escapeSpecialChars_ = (self: any, pairs: RegexStringPair[]): string => {
+        const escapeSpecialChars_ = (self: any, pairs: Readonly<RegexStringPair[]>): string => {
             let result = self
 
             for (const pair of pairs) {
