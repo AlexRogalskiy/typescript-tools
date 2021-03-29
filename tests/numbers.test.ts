@@ -3,28 +3,28 @@ import { describe, expect } from '@jest/globals'
 import { Arrays, Commons, Numbers } from '../src'
 
 export namespace Numbers_Test {
-    import average = Arrays.average;
-    import countLeadingZeros = Numbers.countLeadingZeros;
-    import numberOf2sInRange = Numbers.numberOf2sInRange;
-    import isPerfectNumber = Numbers.isPerfectNumber;
-    import isSimpleNumber = Numbers.isSimpleNumber;
-    import isSuperSimpleNumber = Numbers.isSuperSimpleNumber;
-    import getDiv3Xor7 = Numbers.getDiv3Xor7;
-    import getPrime = Numbers.getPrime;
-    import toUint32 = Numbers.toUint32;
-    import toBoolean = Commons.toBoolean;
-    import sortBy = Numbers.sortBy;
-    import findLongest = Numbers.findLongest;
-    import median = Numbers.median;
+    import average = Arrays.average
+    import countLeadingZeros = Numbers.countLeadingZeros
+    import numberOf2sInRange = Numbers.numberOf2sInRange
+    import isPerfectNumber = Numbers.isPerfectNumber
+    import isSimpleNumber = Numbers.isSimpleNumber
+    import isSuperSimpleNumber = Numbers.isSuperSimpleNumber
+    import getDiv3Xor7 = Numbers.getDiv3Xor7
+    import getPrime = Numbers.getPrime
+    import toUint32 = Numbers.toUint32
+    import toBoolean = Commons.toBoolean
+    import sortBy = Numbers.sortBy
+    import findLongest = Numbers.findLongest
+    import median = Numbers.median
 
     beforeAll(() => {
-        console.log("Numbers test suite started")
-        console.time("Execution time took")
+        console.log('Numbers test suite started')
+        console.time('Execution time took')
     })
 
     afterAll(() => {
-        console.log("Numbers test suite finished")
-        console.timeEnd("Execution time took")
+        console.log('Numbers test suite finished')
+        console.timeEnd('Execution time took')
     })
 
     describe('Check number of leading zeros in a number', () => {
@@ -53,8 +53,18 @@ export namespace Numbers_Test {
 
     describe('Check sort array order', () => {
         it('it should return valid array elements order', () => {
-            expect(sortBy(['fsd', 'sa', 'sadfdafsafds', 'werwe'])).toEqual(["sadfdafsafds", "werwe", "fsd", "sa"])
-            expect(sortBy(['fsd', 'sa', 'sadfdafsafds', 'werwe'], (v1, v2) => v1 >= v2 ? 1 : 0)).toEqual(["werwe", "sadfdafsafds", "sa", "fsd"])
+            expect(sortBy(['fsd', 'sa', 'sadfdafsafds', 'werwe'])).toEqual([
+                'sadfdafsafds',
+                'werwe',
+                'fsd',
+                'sa',
+            ])
+            expect(sortBy(['fsd', 'sa', 'sadfdafsafds', 'werwe'], (v1, v2) => (v1 >= v2 ? 1 : 0))).toEqual([
+                'werwe',
+                'sadfdafsafds',
+                'sa',
+                'fsd',
+            ])
             expect(sortBy(['fsd'])).toEqual(['fsd'])
             expect(sortBy([])).toEqual([])
         })
@@ -62,12 +72,12 @@ export namespace Numbers_Test {
 
     describe('Check longest string in a sequence', () => {
         it('it should return longest string', () => {
-            expect(findLongest('fsd', 'sa')).toEqual({ "index": 0, "value": "fsd" })
+            expect(findLongest('fsd', 'sa')).toEqual({ index: 0, value: 'fsd' })
             expect(findLongest('fsd', 'sa', 'sadfdafsafds', 'werwe')).toEqual({
-                "index": 2,
-                "value": "sadfdafsafds"
+                index: 2,
+                value: 'sadfdafsafds',
             })
-            expect(findLongest('')).toEqual({ "index": -1, "value": "" })
+            expect(findLongest('')).toEqual({ index: -1, value: '' })
         })
     })
 

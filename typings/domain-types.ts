@@ -9,6 +9,13 @@ import { Vector } from '../tools/vector'
 
 // -------------------------------------------------------------------------------------------------
 /**
+ * HttpRequest
+ * @desc Type representing supported http request methods
+ */
+export type HttpRequest = 'get' | 'post' | 'put' | 'patch' | 'head' | 'delete'
+
+// -------------------------------------------------------------------------------------------------
+/**
  * ProfileOptions
  * @desc Type representing profile options
  */
