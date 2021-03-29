@@ -9,6 +9,13 @@ import { Vector } from '../tools/vector'
 
 // -------------------------------------------------------------------------------------------------
 /**
+ * PathLike
+ * @desc Type representing supported paths
+ */
+export type PathLike = string | Buffer | URL
+
+// -------------------------------------------------------------------------------------------------
+/**
  * HttpRequest
  * @desc Type representing supported http request methods
  */

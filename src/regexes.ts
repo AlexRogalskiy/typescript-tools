@@ -19,6 +19,11 @@ export const URL_REGEX5 = /\.(html|css|js|png|jpg|jpeg|gif|ico|xml|rss|txt|eot|s
  */
 export const PHONE_REGEX = /(\d{3}).*(\d{3}).*(\d{4})/
 /**
+ * Html regex patterns
+ * @type {RegExp}
+ */
+export const HTML_REGEX = /## (?<title>[A-Za-z0-9 ]+)\n\n(?<body>[^#]+)/gs
+/**
  * Primitive regex patterns
  * @type {RegExp}
  */

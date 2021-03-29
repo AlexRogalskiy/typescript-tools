@@ -17,6 +17,14 @@ export namespace Requests {
     import isDev = Profiles.isDev
     import errorLogs = Logging.errorLogs
 
+    export const BASE_URL = (lang: string): string => `https://${lang}.wikiquote.org/`
+    export const USER_URL = (lang: string): string => `${BASE_URL(lang)}wiki/`
+    export const BASE_API_URL = (lang: string): string => `${BASE_URL(lang)}w/api.php?origin=*`
+    export const SEARCH_URL = (lang: string): string =>
+        `${BASE_API_URL(lang)}&format=json&action=opensearch&redirects=resolve&limit=max&search=`
+    export const PAGE_URL = (lang: string): string =>
+        `${BASE_API_URL(lang)}&format=json&action=parse&prop=text|categories&disabletoc&page=`
+
     export type InitHeaders = Headers | Record<string, string> | string[][]
 
     export type AttachmentData = {
@@ -82,13 +90,11 @@ export namespace Requests {
         return headers
     }
 
-    export const BASE_URL = (lang: string): string => `https://${lang}.wikiquote.org/`
-    export const USER_URL = (lang: string): string => `${BASE_URL(lang)}wiki/`
-    export const BASE_API_URL = (lang: string): string => `${BASE_URL(lang)}w/api.php?origin=*`
-    export const SEARCH_URL = (lang: string): string =>
-        `${BASE_API_URL(lang)}&format=json&action=opensearch&redirects=resolve&limit=max&search=`
-    export const PAGE_URL = (lang: string): string =>
-        `${BASE_API_URL(lang)}&format=json&action=parse&prop=text|categories&disabletoc&page=`
+    export const getUrlName = (url: string): Optional<string> => {
+        const value = url.split('/').pop()
+
+        return value && value.split('#')[0].split('?')[0]
+    }
 
     const checkStatus = async (response): Promise<Response> => {
         if (response.ok) {
@@ -140,7 +146,7 @@ export namespace Requests {
         return await res.json()
     }
 
-    export async function fetchHTML(url: string, options: RequestInit = {}): Promise<string> {
+    export const fetchHTML = async (url: string, options: RequestInit = {}): Promise<string> => {
         const data = await fetch(url, options)
 
         return await data.text()
