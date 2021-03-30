@@ -41,7 +41,7 @@ export namespace Strings_Test {
     import escapeHtml = Strings.escapeHtml
     import escapeAscii = Strings.escapeAscii
     import escapeControl = Strings.escapeControl
-    import maskToken = Strings.maskToken;
+    import maskToken = Strings.maskToken
 
     beforeAll(() => {
         console.log('Strings test suite started')
