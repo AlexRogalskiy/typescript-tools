@@ -9,6 +9,48 @@ import { Utils } from './utils'
 export namespace Functions {
     import Commons = Utils.Commons
 
+    export const DEFAULT_COERSIONS = {
+        boolean: (val: string): boolean => val === 'true',
+        array: (val: string): string[] => val.split(',').map(el => el.trim()),
+        string: (val: string): string => val.replace(/\\n/g, '\n'),
+        object: (val: string): any => JSON.parse(val),
+        integer: parseInt,
+    }
+
+    export const coersions: Record<string, (arg: string) => unknown> = {
+        boolean: (val: string): boolean => {
+            if (val === 'true' || val === '') {
+                return true
+            }
+            if (val === 'false') {
+                return false
+            }
+            throw new Error(`Invalid boolean value: expected 'true' or 'false', but got '${val}'`)
+        },
+        array: (val: string): string[] => {
+            if (val === '') {
+                return []
+            }
+            try {
+                return JSON.parse(val)
+            } catch (err) {
+                return val.split(',').map(el => el.trim())
+            }
+        },
+        object: (val: string): any => {
+            if (val === '') {
+                return {}
+            }
+            try {
+                return JSON.parse(val)
+            } catch (err) {
+                throw new Error(`Invalid JSON value: '${val}'`)
+            }
+        },
+        string: (val: string): string => val,
+        integer: parseInt,
+    }
+
     export const props = (() => {
         const props = {
             proto: {

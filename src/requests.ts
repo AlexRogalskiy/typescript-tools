@@ -33,6 +33,49 @@ export namespace Requests {
         src: string
     }
 
+    export const getQueryString = (params: Record<string, any>): string => {
+        const usp = new URLSearchParams()
+        for (const [k, v] of Object.entries(params)) {
+            if (Array.isArray(v)) {
+                for (const item of v) {
+                    usp.append(k, item.toString())
+                }
+            } else {
+                usp.append(k, v.toString())
+            }
+        }
+
+        return usp.toString()
+    }
+
+    export const validateUrl = (url?: string, httpOnly = true): boolean => {
+        if (!url) {
+            return false
+        }
+        try {
+            const { protocol } = new URL(url)
+            return httpOnly ? protocol.startsWith('http') : !!protocol
+        } catch (err) {
+            return false
+        }
+    }
+
+    export const parseUrl = (url: string): Optional<URL> => {
+        try {
+            return new URL(url)
+        } catch (err) {
+            return null
+        }
+    }
+
+    export const ensureTrailingSlash = (url: string): string => {
+        return url.replace(/\/?$/, '/')
+    }
+
+    export const trimTrailingSlash = (url: string): string => {
+        return url.replace(/\/+$/, '')
+    }
+
     export const getApiRootURL = async <T>(setup: ConfigOptions<T>, key: PropertyKey): Promise<string> => {
         const options = isDev ? setup.options.dev : setup.options.prod
 
@@ -94,6 +137,13 @@ export namespace Requests {
         const value = url.split('/').pop()
 
         return value && value.split('#')[0].split('?')[0]
+    }
+
+    export const isResponseOk = (response: Response): boolean => {
+        const statusCode = response.status
+        const limitStatusCode = response.redirected ? 299 : 399
+
+        return (statusCode >= 200 && statusCode <= limitStatusCode) || statusCode === 304
     }
 
     const checkStatus = async (response): Promise<Response> => {

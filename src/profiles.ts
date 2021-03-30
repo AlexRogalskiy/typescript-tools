@@ -19,5 +19,14 @@ export namespace Profiles {
         return getConfigByEnv(env)
     }
 
+    /**
+     * Get environment variable or empty string.
+     * Used for easy mocking.
+     * @param key variable name
+     */
+    export const getEnv = (key: string): string => {
+        return process.env[key] ?? ''
+    }
+
     export const profile = getConfigByEnv()
 }

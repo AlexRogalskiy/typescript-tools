@@ -50,6 +50,22 @@ export namespace Files {
         return getConfigFileName(resolve(baseDir, '../'), configFileName)
     }
 
+    export const getBuffer = async (stream: any): Promise<Buffer> => {
+        const chunks: Uint8Array[] = []
+        let length = 0
+
+        for await (const chunk of stream) {
+            chunks.push(chunk)
+            length += Buffer.byteLength(chunk)
+        }
+
+        if (Buffer.isBuffer(chunks[0])) {
+            return Buffer.concat(chunks, length)
+        }
+
+        return Buffer.from(chunks.join(''))
+    }
+
     export const checkCwdOption = (options = {}): void => {
         if (!options['cwd']) {
             return

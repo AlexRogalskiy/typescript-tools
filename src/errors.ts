@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import { DbErrorType, ErrorData, ErrorType } from '../typings/enum-types'
 
 import { Utils } from './utils'
@@ -53,6 +55,13 @@ export namespace Errors {
                 value: new Error(message).stack,
                 writable: true,
             })
+
+            if (_.isString(this.stack)) {
+                const indexOfMessage = this.stack.indexOf(this.message) + this.message.length
+                const thisStackTrace = this.stack.slice(indexOfMessage).split('\n').reverse()
+
+                this.stack = `${this.stack.slice(0, indexOfMessage)}${thisStackTrace.reverse().join('\n')}`
+            }
         }
     }
 

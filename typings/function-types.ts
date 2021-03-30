@@ -1,6 +1,13 @@
 import { NonNull, Optional } from './standard-types'
 // -------------------------------------------------------------------------------------------------
 /**
+ * HandlerFunction
+ * @desc Type representing handler function type in TypeScript
+ */
+export type HandlerFunction<T> = (options: T, next: (options: T) => T) => T | Promise<T>
+
+// -------------------------------------------------------------------------------------------------
+/**
  * Callback
  * @desc Type representing callback function type in TypeScript
  * @example

@@ -65,6 +65,18 @@ export enum InteractiveState {
 
 // -------------------------------------------------------------------------------------------------
 /**
+ * PrState
+ * @desc Type representing supported pull request states
+ */
+export enum PrState {
+    Merged = 'merged',
+    Open = 'open',
+    Closed = 'closed',
+    All = 'all',
+    NotOpen = '!open',
+}
+// -------------------------------------------------------------------------------------------------
+/**
  * Profile
  * @desc Type representing supported profiles
  */

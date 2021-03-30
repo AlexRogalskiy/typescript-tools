@@ -1,9 +1,17 @@
+import _ from 'lodash'
+
 import slugify from 'slugify'
 import { randomBytes } from 'crypto'
 
 import { RegexStringPair } from '../typings/general-types'
 import { Optional, OptionalNumber, OptionalString } from '../typings/standard-types'
-import { BiProcessor, Comparator, Processor, StringProcessor, Supplier } from '../typings/function-types'
+import {
+    BiProcessor,
+    Comparator,
+    Processor,
+    StringProcessor,
+    Supplier
+} from '../typings/function-types'
 
 import { Errors } from './errors'
 import { Checkers } from './checkers'
@@ -164,10 +172,45 @@ export namespace Strings {
         return !value || /^\s*$/.test(value)
     }
 
+    export const massageGithubUrl = (url: string): string => {
+        return url
+            .replace('http:', 'https:')
+            .replace(/^git:\/?\/?/, 'https://')
+            .replace('www.github.com', 'github.com')
+            .split('/')
+            .slice(0, 5)
+            .join('/')
+    }
+
+    export const maskToken = (str?: string): Optional<string> => {
+        return str ? [str.substring(0, 2), new Array(str.length - 3).join('*'), str.slice(-2)].join('') : str
+    }
+
+    export const massageGitlabUrl = (url: string): string => {
+        return url
+            .replace('http:', 'https:')
+            .replace(/^git:\/?\/?/, 'https://')
+            .replace(/\/tree\/.*$/i, '')
+            .replace(/\/$/i, '')
+            .replace('.git', '')
+    }
+
     export const assertPatternsInput = (patterns: any[]): void => {
         if (!patterns.every(pattern => typeof pattern === 'string')) {
             throw new TypeError('Patterns must be a string or an array of strings')
         }
+    }
+
+    export const repoName = (value: string | { repository: string }): string => {
+        return String(_.isString(value) ? value : value.repository).toLowerCase()
+    }
+
+    export const noWhitespaceOrHeadings = (input: string): string => {
+        return input.replace(/\r?\n|\r|\s|#/g, '')
+    }
+
+    export const noLeadingAtSymbol = (input: string): string => {
+        return input.length && input.startsWith('@') ? input.slice(1) : input
     }
 
     export const numFormat = (value: number, fraction = 2): string => value.toFixed(fraction)

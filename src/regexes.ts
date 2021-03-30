@@ -166,3 +166,79 @@ export const prependNoteIdPrefix = (prefix: string, noteId: string): string => {
 }
 
 export const isModule = (name: string): boolean => !/^(?:[./\\]|\w+:)/u.test(name)
+
+export const formatRule = (rule: string, ruleRegex = /^Host\(`(.+?)`\)$/): string => {
+    const match = ruleRegex.exec(rule)
+
+    if (match) {
+        return match[1]
+    }
+
+    return rule
+}
+
+export const getPos = (
+    msg: string,
+    regex = /\.spec\.ts:(?<line>\d+):(?<col>\d+)\)/,
+): Record<string, string> => {
+    const pos = regex.exec(msg)
+    if (!pos || !pos.groups) {
+        return {}
+    }
+
+    const line = pos.groups.line
+    const col = pos.groups.col
+
+    return {
+        line,
+        col,
+    }
+}
+
+export const stripComment = (str: string): string => str.replace(/(^|\s+)\/\/.*$/, '')
+
+export const isSingleLineDep = (str: string): boolean =>
+    /^\s*(libraryDependencies|dependencyOverrides)\s*\+=\s*/.test(str)
+
+export const isDepsBegin = (str: string): boolean =>
+    /^\s*(libraryDependencies|dependencyOverrides)\s*\+\+=\s*/.test(str)
+
+export const isPluginDep = (str: string): boolean => /^\s*addSbtPlugin\s*\(.*\)\s*$/.test(str)
+
+export const isStringLiteral = (str: string): boolean => /^"[^"]*"$/.test(str)
+
+export const isScalaVersion = (str: string): boolean => /^\s*scalaVersion\s*:=\s*"[^"]*"[\s,]*$/.test(str)
+
+export const getScalaVersion = (str: string): string =>
+    str.replace(/^\s*scalaVersion\s*:=\s*"/, '').replace(/"[\s,]*$/, '')
+
+export const isPackageFileVersion = (str: string): boolean => /^(version\s*:=\s*).*$/.test(str)
+
+export const getPackageFileVersion = (str: string): string =>
+    str
+        .replace(/^\s*version\s*:=\s*/, '')
+        .replace(/[\s,]*$/, '')
+        .replace(/"/g, '')
+
+export const isScalaVersionVariable = (str: string): boolean =>
+    /^\s*scalaVersion\s*:=\s*[_a-zA-Z][_a-zA-Z0-9]*[\s,]*$/.test(str)
+
+export const getScalaVersionVariable = (str: string): string =>
+    str.replace(/^\s*scalaVersion\s*:=\s*/, '').replace(/[\s,]*$/, '')
+
+export const isResolver = (str: string): boolean =>
+    /^\s*(resolvers\s*\+\+?=\s*(Seq\()?)?"[^"]*"\s*at\s*"[^"]*"[\s,)]*$/.test(str)
+
+export const getResolverUrl = (str: string): string =>
+    str.replace(/^\s*(resolvers\s*\+\+?=\s*(Seq\()?)?"[^"]*"\s*at\s*"/, '').replace(/"[\s,)]*$/, '')
+
+export const isVarDependency = (str: string): boolean =>
+    /^\s*(private\s*)?(lazy\s*)?val\s[_a-zA-Z][_a-zA-Z0-9]*\s*=.*(%%?).*%.*/.test(str)
+
+export const isVarDef = (str: string): boolean =>
+    /^\s*(private\s*)?(lazy\s*)?val\s+[_a-zA-Z][_a-zA-Z0-9]*\s*=\s*"[^"]*"\s*$/.test(str)
+
+export const getVarName = (str: string): string =>
+    str.replace(/^\s*(private\s*)?(lazy\s*)?val\s+/, '').replace(/\s*=\s*"[^"]*"\s*$/, '')
+
+export const isVarName = (str: string): boolean => /^[_a-zA-Z][_a-zA-Z0-9]*$/.test(str)

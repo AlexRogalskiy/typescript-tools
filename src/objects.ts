@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import { Numbers } from './numbers'
 import { Checkers } from './checkers'
 import { Errors } from './errors'
@@ -85,6 +87,16 @@ export namespace Objects {
         }
 
         return options
+    }
+
+    export const deepFreeze = <T extends Record<string, any>>(object: T): Readonly<T> => {
+        for (const value of Object.values(object)) {
+            if (_.isPlainObject(value) || _.isArray(value)) {
+                deepFreeze(value)
+            }
+        }
+
+        return Object.freeze(object)
     }
 
     export const getPropertyByPath = (

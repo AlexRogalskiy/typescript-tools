@@ -87,6 +87,25 @@ export namespace Arrays {
         return []
     }
 
+    export const validateString = (input: string, lexDelim = ',', tokenDelim = '='): boolean => {
+        if (!input) {
+            return true
+        }
+
+        const pairs = input.split(lexDelim)
+        const res = pairs.map(pair => {
+            const s = pair.split(tokenDelim)
+            const [key, val] = s
+            return key && val
+        })
+
+        if (res.some(r => !r)) {
+            throw valueError("Values should be specified in 'key=val,key2=val2' format!")
+        }
+
+        return true
+    }
+
     export const findMinValue = (arr: number[]): number => {
         return Math.min.apply(
             null,

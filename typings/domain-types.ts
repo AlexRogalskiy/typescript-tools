@@ -9,18 +9,22 @@ import { Vector } from '../tools/vector'
 
 // -------------------------------------------------------------------------------------------------
 /**
+ * Headers
+ * @desc Type representing collection of headers
+ */
+export type Headers = Record<string, string | string[] | undefined>
+// -------------------------------------------------------------------------------------------------
+/**
  * PathLike
  * @desc Type representing supported paths
  */
 export type PathLike = string | Buffer | URL
-
 // -------------------------------------------------------------------------------------------------
 /**
  * HttpRequest
  * @desc Type representing supported http request methods
  */
 export type HttpRequest = 'get' | 'post' | 'put' | 'patch' | 'head' | 'delete'
-
 // -------------------------------------------------------------------------------------------------
 /**
  * ProfileOptions
@@ -61,6 +65,65 @@ export interface ResultMap {
     [index: string]: Result
 }
 
+// -------------------------------------------------------------------------------------------------
+/**
+ * ResponseType
+ * @desc Type representing supported response types
+ */
+export type ResponseType = 'json' | 'buffer' | 'text'
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * GitOptions
+ * @desc Type representing git options
+ */
+export type GitOptions = Record<string, null | string | number>
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * FileData
+ * @desc Type representing file data
+ */
+export interface FileData {
+    isLastPage: boolean
+
+    lines: { text: string }[]
+
+    size: number
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * UpdateType
+ * @desc Type representing updates labels
+ */
+export type UpdateType =
+    | 'major'
+    | 'minor'
+    | 'patch'
+    | 'pin'
+    | 'digest'
+    | 'lockFileMaintenance'
+    | 'lockfileUpdate'
+    | 'rollback'
+    | 'bump'
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * GroupConfig
+ * @desc Type representing group configuration
+ */
+export interface GroupConfig extends Record<string, unknown> {
+    branchName?: string
+    branchTopic?: string
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * Level
+ * @desc Type representing supported logging levels
+ */
+export type Level = 'debug' | 'warning' | 'error'
 // -------------------------------------------------------------------------------------------------
 /**
  * Direction
