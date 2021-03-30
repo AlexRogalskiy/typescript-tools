@@ -10,9 +10,12 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     strategy:
+      max-parallel: 2
       matrix:
         node: [ "10", "12", "14" ]
+
     steps:
       - uses: actions/checkout@v2
 
@@ -39,7 +42,7 @@ jobs:
         run: yarn install
 
       - name: Lint
-        run: yarn all
+        run: yarn build
 
       - name: Jest
         run: yarn test:all
