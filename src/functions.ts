@@ -60,6 +60,33 @@ export namespace Functions {
         subType.prototype = subProto
     }
 
+    /**
+     * @param {function} f - A function.
+     * @param {function} g - A function.
+     * @returns {function} A logical-and function of `f` and `g`.
+     */
+    export const and = (f, g): Processor<string, string> => {
+        return filePath => f(filePath) && g(filePath)
+    }
+
+    /**
+     * @param {function} f - A function.
+     * @param {function} g - A function.
+     * @param {function|null} h - A function.
+     * @returns {function} A logical-or function of `f`, `g`, and `h`.
+     */
+    export const or = (f, g, h): Processor<string, string> => {
+        return filePath => f(filePath) || g(filePath) || (h && h(filePath))
+    }
+
+    /**
+     * @param {function} f - A function.
+     * @returns {function} A logical-not function of `f`.
+     */
+    export const not = (f): Processor<string, boolean> => {
+        return filePath => !f(filePath)
+    }
+
     export const makeBackgroundable = <T extends (...args: any[]) => any>(
         pool: any,
         func: T,

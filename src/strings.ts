@@ -125,8 +125,49 @@ export namespace Strings {
         }
     })()
 
+    /**
+     * Creates a function which replaces a given path.
+     *
+     * @param {RegExp} fromRegexp - A `RegExp` object to replace.
+     * @param {string} toStr - A new string to replace.
+     * @returns {function} A function which replaces a given path.
+     */
+    export const defineConvert = (fromRegexp: string, toStr: string): Processor<string, string> => {
+        return filePath => filePath.replace(fromRegexp, toStr)
+    }
+
+    /**
+     * Combines given converters.
+     * The result function converts a given path with the first matched converter.
+     *
+     * @param {{match: function, convert: function}} converters - A list of converters to combine.
+     * @returns {function} A function which replaces a given path.
+     */
+    export const combine = (converters: any[]): Processor<string, string> => {
+        return filePath => {
+            for (const converter of converters) {
+                if (converter.match(filePath)) {
+                    return converter.convert(filePath)
+                }
+            }
+            return filePath
+        }
+    }
+
+    export const stripImportPathParams = (path: string): string => {
+        const i = path.indexOf('!')
+
+        return i === -1 ? path : path.slice(0, i)
+    }
+
     export const isBlankString = (value: string): boolean => {
         return !value || /^\s*$/.test(value)
+    }
+
+    export const assertPatternsInput = (patterns: any[]): void => {
+        if (!patterns.every(pattern => typeof pattern === 'string')) {
+            throw new TypeError('Patterns must be a string or an array of strings')
+        }
     }
 
     export const numFormat = (value: number, fraction = 2): string => value.toFixed(fraction)

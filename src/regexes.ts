@@ -164,3 +164,5 @@ export const prependNoteIdPrefix = (prefix: string, noteId: string): string => {
     }
     return noteId
 }
+
+export const isModule = (name: string): boolean => !/^(?:[./\\]|\w+:)/u.test(name)

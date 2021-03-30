@@ -14,9 +14,10 @@ import {
     writeFileSync,
 } from 'fs'
 import { isDirectory, isDirectorySync } from 'path-type'
-import { dirname, extname, join, resolve } from 'path'
+import { dirname, extname, join, resolve, basename, relative } from 'path'
 import { randomBytes } from 'crypto'
 import { execSync, spawn, SpawnOptions } from 'child_process'
+import { Cache } from '../tools/cache'
 
 import { Strings } from './strings'
 
@@ -27,6 +28,8 @@ export namespace Files {
     import uniqueId = Strings.uniqueId
     import escapeRegExp = Strings.escapeRegExp
     import isBlankString = Strings.isBlankString
+
+    const cache = new Cache()
 
     interface ExecResult {
         status: number
@@ -47,8 +50,93 @@ export namespace Files {
         return getConfigFileName(resolve(baseDir, '../'), configFileName)
     }
 
+    export const checkCwdOption = (options = {}): void => {
+        if (!options['cwd']) {
+            return
+        }
+
+        let stat
+        try {
+            stat = statSync(options['cwd'])
+        } catch {
+            return
+        }
+
+        if (!stat.isDirectory()) {
+            throw new Error('The `cwd` option must be a path to a directory')
+        }
+    }
+
+    /**
+     * Reads the `package.json` data in a given path.
+     *
+     * Don't cache the data.
+     *
+     * @param {string} dir - The path to a directory to read.
+     * @returns {object|null} The read `package.json` data, or null.
+     */
+    export const readPackageJson = (dir): any => {
+        const filePath = join(dir, 'package.json')
+
+        try {
+            const text = readFileSync(filePath, 'utf8')
+            const data = JSON.parse(text)
+
+            if (typeof data === 'object' && data !== null) {
+                data.filePath = filePath
+                return data
+            }
+        } catch (_err) {
+            // do nothing.
+        }
+
+        return null
+    }
+
     export const getContent = (dir: string, filename: string): string[] => {
         return readFileSync(join(dir, filename), { encoding: 'utf-8' }).split(/\r\n/)
+    }
+
+    /**
+     * Check whether the file exists or not.
+     * @param {string} filePath The file path to check.
+     * @param regex regex to validate by
+     * @returns {boolean} `true` if the file exists.
+     */
+    export const existsCaseSensitive = (
+        filePath: string,
+        regex = /^(?:[/.]|\.\.|[A-Z]:\\|\\\\)(?:[/\\]\.\.)*$/u,
+    ): boolean => {
+        let dirPath = filePath
+
+        while (dirPath !== '' && !regex.test(dirPath)) {
+            const fileName = basename(dirPath)
+            dirPath = dirname(dirPath)
+
+            if (!readdirSync(dirPath).includes(fileName)) {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    export const exists = (filePath: string): boolean => {
+        let result = cache.get(filePath)
+        if (result == null) {
+            try {
+                const relativePath = relative(process.cwd(), filePath)
+                result = statSync(relativePath).isFile() && existsCaseSensitive(relativePath)
+            } catch (error) {
+                if (error.code !== 'ENOENT') {
+                    throw error
+                }
+                result = false
+            }
+            cache.set(filePath, result)
+        }
+
+        return result
     }
 
     export const getFilesizeInBytes = (filename: string): number => {

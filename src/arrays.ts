@@ -74,6 +74,19 @@ export namespace Arrays {
         }
     })()
 
+    /**
+     * Ensures the given value is a string array.
+     *
+     * @param {any} x - The value to ensure.
+     * @returns {string[]} The string array.
+     */
+    export const toStringArray = (x: any[]): string[] => {
+        if (Array.isArray(x)) {
+            return x.map(String)
+        }
+        return []
+    }
+
     export const findMinValue = (arr: number[]): number => {
         return Math.min.apply(
             null,

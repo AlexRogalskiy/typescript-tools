@@ -1412,6 +1412,25 @@ export namespace Utils {
             return false
         }
 
+
+        /**
+         * Converts old-style value to new-style value.
+         *
+         * @param {any} x - The value to convert.
+         * @returns {({include: string[], exclude: string[], replace: string[]})[]} Normalized value.
+         */
+        export const normalizeValue = (x: any): any => {
+            if (Array.isArray(x)) {
+                return x
+            }
+
+            return Object.keys(x).map(pattern => ({
+                include: [pattern],
+                exclude: [],
+                replace: x[pattern],
+            }))
+        }
+
         // Build a destructive iterator for the value list
         export const iteratorFor = <T>(items: T[]): Iterator<T> => {
             const iterator = {
