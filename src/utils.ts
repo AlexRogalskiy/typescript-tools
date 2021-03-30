@@ -1412,7 +1412,6 @@ export namespace Utils {
             return false
         }
 
-
         /**
          * Converts old-style value to new-style value.
          *
