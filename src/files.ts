@@ -1,3 +1,4 @@
+import hasha from 'hasha'
 import {
     accessSync,
     constants,
@@ -48,6 +49,29 @@ export namespace Files {
         }
 
         return getConfigFileName(resolve(baseDir, '../'), configFileName)
+    }
+
+    /**
+     * Given a Git URL, computes a semi-human-readable name for a folder in which to
+     * clone the repository.
+     */
+    export const cacheDirFromUrl = (url: URL): string => {
+        const proto = url.protocol.replace(/:$/, '')
+        const host = url.hostname
+        const hash = hasha(url.pathname, {
+            algorithm: 'sha256',
+        }).substr(0, 7)
+
+        return `crate-registry-${proto}-${host}-${hash}`
+    }
+
+    export const downloadFileProtocol = (pkgUrl: URL): Optional<string> => {
+        const pkgPath = pkgUrl.toString().replace('file://', '')
+        if (!exists(pkgPath)) {
+            return null
+        }
+
+        return readFileSync(pkgPath, 'utf8')
     }
 
     export const getBuffer = async (stream: any): Promise<Buffer> => {

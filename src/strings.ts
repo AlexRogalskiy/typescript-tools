@@ -1,7 +1,7 @@
 import _ from 'lodash'
 
 import slugify from 'slugify'
-import { randomBytes } from 'crypto'
+import { createHash, randomBytes } from 'crypto'
 
 import { RegexStringPair } from '../typings/general-types'
 import { Optional, OptionalNumber, OptionalString } from '../typings/standard-types'
@@ -14,6 +14,7 @@ import { Numbers } from './numbers'
 import { Utils } from './utils'
 
 import { REGEX_ENTITY_PAIRS, REGEX_CONTROL_PAIRS, REGEX_ASCII_PAIRS } from './constants'
+import { buildTimeRegex, githubRegex } from './regexes'
 
 export namespace Strings {
     import isString = Checkers.isString
@@ -38,6 +39,44 @@ export namespace Strings {
         }
 
         return result
+    }
+
+    export const envReplace = (value: any, env = process.env): string => {
+        if (!_.isString(value)) {
+            return value
+        }
+
+        const ENV_EXPR = /(\\*)\${([^}]+)}/g
+
+        return value.replace(ENV_EXPR, (match, envVarName): any => {
+            if (env[envVarName] === undefined) {
+                console.warn(`Failed to replace env in config: ${match}`)
+                throw new Error('env-replace')
+            }
+
+            return env[envVarName]
+        })
+    }
+
+    export const formatBuildTime = (timeStr: string): Optional<string> => {
+        if (!timeStr) {
+            return null
+        }
+
+        if (buildTimeRegex.test(timeStr)) {
+            return timeStr.replace(buildTimeRegex, '$1-$2-$3T$4:$5:$6$7')
+        }
+
+        return null
+    }
+
+    export const isDefaultRepo = (url: string, accountName: string, repoName: string): boolean => {
+        const match = githubRegex.exec(url)
+        if (match) {
+            const { account, repo } = match.groups || {}
+            return account.toLowerCase() === accountName && repo.toLowerCase() === repoName
+        }
+        return false
     }
 
     export const props = (() => {
@@ -174,6 +213,32 @@ export namespace Strings {
             .split('/')
             .slice(0, 5)
             .join('/')
+    }
+
+    export const normalizeName = (input: string): string => {
+        return input.toLowerCase().replace(/([-.])/g, '_')
+    }
+
+    export const shardParts = (lookupName: string): string[] => {
+        return createHash('md5').update(lookupName).digest('hex').slice(0, 3).split('')
+    }
+
+    export const cleanSimpleHtml = (html: string): string => {
+        return (
+            html
+                .replace(/<\/?pre>/, '')
+                // Certain simple repositories like artifactory don't escape > and <
+                .replace(/data-requires-python="([^"]*?)>([^"]*?)"/g, 'data-requires-python="$1&gt;$2"')
+                .replace(/data-requires-python="([^"]*?)<([^"]*?)"/g, 'data-requires-python="$1&lt;$2"')
+        )
+    }
+
+    export const parseIndexDir = (
+        content: string,
+        filterFn = (x: string): boolean => !/^\.+/.test(x),
+    ): string[] => {
+        const unfiltered = content.match(/(?<=href=['"])[^'"]*(?=\/['"])/g) || []
+        return unfiltered.filter(filterFn)
     }
 
     export const maskToken = (str?: string): Optional<string> => {

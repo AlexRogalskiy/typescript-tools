@@ -242,3 +242,15 @@ export const getVarName = (str: string): string =>
     str.replace(/^\s*(private\s*)?(lazy\s*)?val\s+/, '').replace(/\s*=\s*"[^"]*"\s*$/, '')
 
 export const isVarName = (str: string): boolean => /^[_a-zA-Z][_a-zA-Z0-9]*$/.test(str)
+
+export const githubRegex = /^https:\/\/github\.com\/(?<account>[^/]+)\/(?<repo>[^/]+?)(\.git|\/.*)?$/
+
+export const containsPlaceholder = (str: string): boolean => {
+    return /\${.*?}/g.test(str)
+}
+
+export const buildTimeRegex = new RegExp(
+    '^(\\d\\d\\d\\d)(\\d\\d)(\\d\\d)(\\d\\d)(\\d\\d)(\\d\\d)(\\+\\d\\d\\d\\d)$',
+)
+
+export const gitlabRegExp = /^(https:\/\/[^/]*gitlab.[^/]*)\/(.*)$/

@@ -60,6 +60,16 @@ export namespace Requests {
         }
     }
 
+    export const isTemporalError = (err: { code: string; statusCode: number }): boolean => {
+        return (
+            err.code === 'ECONNRESET' ||
+            err.statusCode === 429 ||
+            (err.statusCode >= 500 && err.statusCode < 600)
+        )
+    }
+
+    export const getHost = (x: string): string => new URL(x).host
+
     export const parseUrl = (url: string): Optional<URL> => {
         try {
             return new URL(url)

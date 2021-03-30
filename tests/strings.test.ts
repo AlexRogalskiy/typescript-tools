@@ -41,6 +41,7 @@ export namespace Strings_Test {
     import escapeHtml = Strings.escapeHtml
     import escapeAscii = Strings.escapeAscii
     import escapeControl = Strings.escapeControl
+    import maskToken = Strings.maskToken;
 
     beforeAll(() => {
         console.log('Strings test suite started')
@@ -74,6 +75,14 @@ export namespace Strings_Test {
         it('it should return valid CJK string', () => {
             expect(cjk('单词')).toEqual(['单', '词'])
             expect(cjk('一个单词')).toEqual(['一', '个', '单', '词'])
+        })
+    })
+
+    describe('Check mask token string', () => {
+        it('it should return valid masked string', () => {
+            expect(maskToken('TestInMyLife')).toEqual('Te********fe')
+            expect(maskToken('Test')).toEqual('Test')
+            expect(maskToken('')).toEqual('')
         })
     })
 

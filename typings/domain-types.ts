@@ -77,6 +77,17 @@ export type ResponseType = 'json' | 'buffer' | 'text'
  * GitOptions
  * @desc Type representing git options
  */
+export type DataSource = {
+    datasource: string
+    registryUrl?: string
+    lookupName: string
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * GitOptions
+ * @desc Type representing git options
+ */
 export type GitOptions = Record<string, null | string | number>
 
 // -------------------------------------------------------------------------------------------------
