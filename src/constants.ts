@@ -1,7 +1,7 @@
 import boxen from 'boxen'
 
 import { RegexStringPair } from '../typings/general-types'
-import { HandlerFunction } from "../typings/function-types";
+import { HandlerFunction } from '../typings/function-types'
 
 /**
  * Output configuration options
