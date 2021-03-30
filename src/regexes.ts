@@ -253,4 +253,24 @@ export const buildTimeRegex = new RegExp(
     '^(\\d\\d\\d\\d)(\\d\\d)(\\d\\d)(\\d\\d)(\\d\\d)(\\d\\d)(\\+\\d\\d\\d\\d)$',
 )
 
+export const githubRefMatchRegex = /github.com([/:])(?<project>[^/]+\/[a-z0-9-.]+).*\?ref=(?<tag>.*)$/
+
+export const gitTagsRefMatchRegex = /(?:git::)?(?<url>(?:http|https|ssh):\/\/(?:.*@)?(?<path>.*.*\/(?<project>.*\/.*)))\?ref=(?<tag>.*)$/
+
+export const hostnameMatchRegex = /^(?<hostname>([\w|\d]+\.)+[\w|\d]+)/
+
 export const gitlabRegExp = /^(https:\/\/[^/]*gitlab.[^/]*)\/(.*)$/
+
+export const providerBlockExtractionRegex = /^\s*(?<key>[^\s]+)\s+=\s+{/
+
+export const sourceExtractionRegex = /^(?:(?<hostname>(?:[a-zA-Z0-9]+\.+)+[a-zA-Z0-9]+)\/)?(?:(?<namespace>[^/]+)\/)?(?<type>[^/]+)/
+
+export const extractVersion = new RegExp('^v(?<version>.+)$')
+
+export const keyValueExtractionRegex = /^\s*(?<key>[^\s]+)\s+=\s+"(?<value>[^"]+)"\s*$/
+
+export const resourceTypeExtractionRegex = /^\s*resource\s+"(?<type>[^\s]+)"\s+"(?<name>[^"]+)"\s*{/
+
+export const checkIfStringIsPath = (path: string, regex = /(.|..)?(\/[^/])+/): boolean => {
+    return !!regex.exec(path)
+}

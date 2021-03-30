@@ -306,4 +306,17 @@ export namespace Errors {
     ): QueryParseError => {
         return new QueryParseError(message, start, end, args)
     }
+
+    export const errSerializer = (err: Error): Error => {
+        const redactedFields = ['message', 'stack', 'stdout', 'stderr']
+
+        for (const field of redactedFields) {
+            const val = err[field]
+            if (_.isString(val)) {
+                err[field] = val.replace(/https:\/\/[^@]*?@/g, 'https://**redacted**@')
+            }
+        }
+
+        return err
+    }
 }

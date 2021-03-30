@@ -1,4 +1,5 @@
 import boxen from 'boxen'
+import chalk from 'chalk'
 import dateFormat from 'dateformat'
 
 import { Processor } from '../typings/function-types'
@@ -13,6 +14,15 @@ export namespace Logging {
     const { hasOwnProperty: hasOwnProp } = Object.prototype
 
     const DATETIME_FORMAT = 'dddd, mmmm dS, yyyy, hh:MM:ss TT'
+
+    export const levels: Record<number, string> = {
+        10: chalk.gray('TRACE'),
+        20: chalk.blue('DEBUG'),
+        30: chalk.green(' INFO'),
+        40: chalk.magenta(' WARN'),
+        50: chalk.red('ERROR'),
+        60: chalk.bgRed('FATAL'),
+    }
 
     const getColor = (value: string, defaultValue = ''): string =>
         process.stdout.isTTY ? value : defaultValue
