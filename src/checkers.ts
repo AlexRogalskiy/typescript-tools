@@ -635,4 +635,8 @@ export namespace Checkers {
     export const isBlankString = (value: string): boolean => {
         return !value || /^\s*$/.test(value)
     }
+
+    export const isEmptyObject = (obj: any): boolean => {
+        return Object.keys(obj).length === 0 && obj.constructor === Object
+    }
 }

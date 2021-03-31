@@ -274,3 +274,35 @@ export const resourceTypeExtractionRegex = /^\s*resource\s+"(?<type>[^\s]+)"\s+"
 export const checkIfStringIsPath = (path: string, regex = /(.|..)?(\/[^/])+/): boolean => {
     return !!regex.exec(path)
 }
+
+export const REGEXES = {
+    wildcard: /^.*?/,
+    space: /(\s+|\/\/[^\n]*|\/\*.*\*\/)+/s,
+    depsKeyword: /dependencies/,
+    colon: /:/,
+    beginSection: /\[/,
+    endSection: /],?/,
+    package: /\s*.\s*package\s*\(\s*/,
+    urlKey: /url/,
+    stringLiteral: /"[^"]+"/,
+    comma: /,/,
+    from: /from/,
+    rangeOp: /\.\.[.<]/,
+    exactVersion: /\.\s*exact\s*\(\s*/,
+}
+
+export const packagePattern = new RegExp('[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]')
+
+export const regexMatchAll = (regex: RegExp, content: string): RegExpMatchArray[] => {
+    const matches: RegExpMatchArray[] = []
+
+    let matchResult
+    do {
+        matchResult = regex.exec(content)
+        if (matchResult) {
+            matches.push(matchResult)
+        }
+    } while (matchResult)
+
+    return matches
+}

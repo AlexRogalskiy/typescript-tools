@@ -1,9 +1,13 @@
 import _ from 'lodash'
 
 import slugify from 'slugify'
+import cryptoRandomString from 'crypto-random-string'
+import { XmlDocument } from 'xmldoc'
 import { createHash, randomBytes } from 'crypto'
+import { promises } from 'fs'
 
 import { RegexStringPair } from '../typings/general-types'
+import { LockFile, LockFileEntry } from '../typings/domain-types'
 import { Optional, OptionalNumber, OptionalString } from '../typings/standard-types'
 import { BiProcessor, Comparator, Processor, StringProcessor, Supplier } from '../typings/function-types'
 
@@ -56,6 +60,52 @@ export namespace Strings {
 
             return env[envVarName]
         })
+    }
+
+    export const getRandomString = (length = 15): string => {
+        return cryptoRandomString(length)
+    }
+
+    export const getSectionName = (str: string): string => {
+        const [, sectionName] = /^\[\s*([^\s]+)\s*]\s*$/.exec(str) || []
+        return sectionName
+    }
+
+    export const getSectionRecord = (str: string): string => {
+        const [, sectionRecord] = /^([^\s]+)\s+=/.exec(str) || []
+        return sectionRecord
+    }
+
+    export const readFileAsXmlDocument = async (file: string): Promise<XmlDocument> => {
+        try {
+            return new XmlDocument(await promises.readFile(file, { encoding: 'utf-8' }))
+        } catch (err) {
+            console.error(`failed to parse '${file}' as XML document, message ${err.message}`)
+            return undefined
+        }
+    }
+
+    export const parsePythonVersion = (str: string): number[] => {
+        const arr = str.split(' ')[1].split('.')
+
+        return [parseInt(arr[0], 10), parseInt(arr[1], 10)]
+    }
+
+    export async function getNpmLock(filePath: string): Promise<LockFile> {
+        const lockRaw = await promises.readFile(filePath, 'utf8')
+
+        try {
+            const lockParsed = JSON.parse(lockRaw)
+            const lockedVersions: Record<string, string> = {}
+            for (const [entry, val] of Object.entries((lockParsed.dependencies || {}) as LockFileEntry)) {
+                console.info({ entry, version: val.version })
+                lockedVersions[entry] = val.version
+            }
+            return { lockedVersions, lockfileVersion: lockParsed.lockfileVersion }
+        } catch (err) {
+            console.error({ filePath, err }, 'Warning: Exception parsing npm lock file')
+            return { lockedVersions: {} }
+        }
     }
 
     export const formatBuildTime = (timeStr: string): Optional<string> => {

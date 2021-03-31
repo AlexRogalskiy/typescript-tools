@@ -74,6 +74,65 @@ export type ResponseType = 'json' | 'buffer' | 'text'
 
 // -------------------------------------------------------------------------------------------------
 /**
+ * PreCommitConfig
+ * @desc Type representing pre-commit configuration
+ */
+export type PreCommitConfig = {
+    repos: PreCommitDependency[]
+}
+
+export function matchesPrecommitConfigHeuristic(data: unknown): data is PreCommitConfig {
+    return data !== null && typeof data === 'object' && Object.prototype.hasOwnProperty.call(data, 'repos')
+}
+
+/**
+ * PreCommitDependency
+ * @desc Type representing pre-commit dependency
+ */
+export type PreCommitDependency = {
+    repo: string
+    rev: string
+}
+
+export function matchesPrecommitDependencyHeuristic(data: unknown): data is PreCommitDependency {
+    return (
+        data !== null &&
+        typeof data === 'object' &&
+        Object.prototype.hasOwnProperty.call(data, 'repo') &&
+        Object.prototype.hasOwnProperty.call(data, 'rev')
+    )
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * LockFileEntry
+ * @desc Type representing lock file entry
+ */
+export type LockFileEntry = Record<string, { version: string; integrity?: boolean }>
+
+/**
+ * LockFile
+ * @desc Type representing lock file
+ */
+export interface LockFile {
+    lockedVersions: Record<string, string>
+    lockfileVersion?: number
+    isYarn1?: boolean
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * MatchResult
+ * @desc Type representing supported response types
+ */
+export type MatchResult = {
+    idx: number
+    len: number
+    label: string
+    substr: string
+}
+// -------------------------------------------------------------------------------------------------
+/**
  * GitOptions
  * @desc Type representing git options
  */

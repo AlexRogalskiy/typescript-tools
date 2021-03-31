@@ -500,4 +500,8 @@ export namespace Functions {
             return method.apply(object, args_)
         }
     }
+
+    export const hasKey = <K extends string, T>(k: K, o: T): o is T & Record<K, unknown> => {
+        return typeof o === 'object' && k in o
+    }
 }
