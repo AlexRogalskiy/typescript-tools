@@ -76,6 +76,8 @@ export class Color {
     }
 
     equals(obj: any): boolean {
+        Color.checkColor(obj)
+
         return this.r === obj.r && this.g === obj.g && this.b === obj.b
     }
 

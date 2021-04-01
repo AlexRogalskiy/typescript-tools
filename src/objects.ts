@@ -89,6 +89,32 @@ export namespace Objects {
         return options
     }
 
+    export const clone = (obj: any): any => {
+        if (obj === null || obj === undefined) {
+            return obj
+        }
+
+        const clone = Object.create(null),
+            keys = Object.keys(obj)
+
+        for (const key of keys) {
+            const val = obj[key]
+            if (Array.isArray(val)) {
+                clone[key] = val.slice()
+                continue
+            }
+
+            if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
+                clone[key] = val
+                continue
+            }
+
+            throw new TypeError('clone is not deep and does not support nested objects')
+        }
+
+        return clone
+    }
+
     export const deepFreeze = <T extends Record<string, any>>(object: T): Readonly<T> => {
         for (const value of Object.values(object)) {
             if (_.isPlainObject(value) || _.isArray(value)) {

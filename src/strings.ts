@@ -45,6 +45,10 @@ export namespace Strings {
         return result
     }
 
+    export const substitute = (value: string): string => {
+        return value.replace(/^\W+/, '').replace(/\W+$/, '')
+    }
+
     export const envReplace = (value: any, env = process.env): string => {
         if (!_.isString(value)) {
             return value

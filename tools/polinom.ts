@@ -1,4 +1,5 @@
 import { Checkers, Errors, Maths } from '../src'
+
 import valueError = Errors.valueError
 import checkNumber = Checkers.checkNumber
 import isIntNumber = Checkers.isIntNumber
@@ -24,6 +25,49 @@ export class Polinom {
      */
     constructor(private readonly values: number[]) {
         this.values = values.slice(0)
+    }
+
+    magnitude(): number {
+        let sumOfSquares = 0
+
+        for (let i = 1; i < this.values.length; i++) {
+            const val = this.values[i]
+            sumOfSquares += val * val
+        }
+
+        return Math.sqrt(sumOfSquares)
+    }
+
+    dot(otherVector: Polinom): number {
+        let dotProduct = 0,
+            aVal = 0,
+            bVal = 0,
+            i = 0,
+            j = 0
+
+        const a = this.values,
+            b = otherVector.values,
+            aLen = a.length,
+            bLen = b.length
+
+        while (i < aLen && j < bLen) {
+            ;(aVal = a[i]), (bVal = b[j])
+            if (aVal < bVal) {
+                i += 2
+            } else if (aVal > bVal) {
+                j += 2
+            } else if (aVal === bVal) {
+                dotProduct += a[i + 1] * b[j + 1]
+                i += 2
+                j += 2
+            }
+        }
+
+        return dotProduct
+    }
+
+    similarity(otherVector: Polinom): number {
+        return this.dot(otherVector) / this.magnitude() || 0
     }
 
     polinomMult(polinom: Polinom): Polinom {
