@@ -42,6 +42,8 @@ export namespace Strings_Test {
     import escapeAscii = Strings.escapeAscii
     import escapeControl = Strings.escapeControl
     import maskToken = Strings.maskToken
+    import checkAll = Strings.checkAll;
+    import checkAny = Strings.checkAny;
 
     beforeAll(() => {
         console.log('Strings test suite started')
@@ -83,6 +85,22 @@ export namespace Strings_Test {
             expect(maskToken('TestInMyLife')).toEqual('Te********fe')
             expect(maskToken('Test')).toEqual('Test')
             expect(maskToken('')).toEqual('')
+        })
+    })
+
+    describe('Check all items in array match pattern', () => {
+        it('it should return true when all items match pattern', () => {
+            expect(checkAll(['testico', 'itest', 'tester'], '*test*')).toBeTruthy()
+            expect(checkAll([], '*test*')).toBeFalsy()
+            expect(checkAll(['hello', 'world'], '*test*')).toBeFalsy()
+        })
+    })
+
+    describe('Check any items in array match pattern', () => {
+        it('it should return true when any items match pattern', () => {
+            expect(checkAny(['testico', 'itest', 'tes'], '*test*')).toBeTruthy()
+            expect(checkAny([], '*test*')).toBeFalsy()
+            expect(checkAny(['hello', 'world'], '*test*')).toBeFalsy()
         })
     })
 

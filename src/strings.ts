@@ -1,5 +1,6 @@
 import _ from 'lodash'
 
+import { IOptions, Minimatch } from 'minimatch'
 import slugify from 'slugify'
 import cryptoRandomString from 'crypto-random-string'
 import { XmlDocument } from 'xmldoc'
@@ -47,6 +48,40 @@ export namespace Strings {
 
     export const substitute = (value: string): string => {
         return value.replace(/^\W+/, '').replace(/\W+$/, '')
+    }
+
+    export const checkAll = (changedFiles: string[], glob: string, options?: IOptions): boolean => {
+        console.debug(`>>> checking "all" pattern ${glob}`)
+
+        if (!changedFiles.length) return false
+
+        const matcher = new Minimatch(glob, options)
+        for (const changedFile of changedFiles) {
+            console.debug(`>>> ${changedFile}`)
+            if (!matcher.match(changedFile)) {
+                console.debug(`>>> ${changedFile} did not match`)
+                return false
+            }
+        }
+
+        return true
+    }
+
+    export const checkAny = (changedFiles: string[], glob: string, options?: IOptions): boolean => {
+        console.debug(`>>> checking "any" pattern ${glob}`)
+
+        if (!changedFiles.length) return false
+
+        const matcher = new Minimatch(glob, options)
+        for (const changedFile of changedFiles) {
+            console.debug(`>>> - ${changedFile}`)
+            if (matcher.match(changedFile)) {
+                console.debug(`>>> ${changedFile} matches`)
+                return true
+            }
+        }
+
+        return false
     }
 
     export const envReplace = (value: any, env = process.env): string => {
