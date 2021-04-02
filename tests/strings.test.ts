@@ -44,7 +44,7 @@ export namespace Strings_Test {
     import maskToken = Strings.maskToken
     import checkAll = Strings.checkAll
     import checkAny = Strings.checkAny
-    import isMatch = Strings.isMatch;
+    import isMatch = Strings.isMatch
 
     beforeAll(() => {
         console.log('Strings test suite started')
