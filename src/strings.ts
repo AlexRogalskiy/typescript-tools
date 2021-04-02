@@ -50,21 +50,20 @@ export namespace Strings {
         return value.replace(/^\W+/, '').replace(/\W+$/, '')
     }
 
+    export const isMatch = (value: string, ...patterns: string[]): boolean => {
+        console.debug(`>>> matching patterns against value: ${value}`)
+
+        return patterns.map(v => new Minimatch(v)).every(matcher => matcher.match(value))
+    }
+
     export const checkAll = (changedFiles: string[], glob: string, options?: IOptions): boolean => {
         console.debug(`>>> checking "all" pattern ${glob}`)
 
         if (!changedFiles.length) return false
 
         const matcher = new Minimatch(glob, options)
-        for (const changedFile of changedFiles) {
-            console.debug(`>>> ${changedFile}`)
-            if (!matcher.match(changedFile)) {
-                console.debug(`>>> ${changedFile} did not match`)
-                return false
-            }
-        }
 
-        return true
+        return changedFiles.every(file => matcher.match(file))
     }
 
     export const checkAny = (changedFiles: string[], glob: string, options?: IOptions): boolean => {
@@ -73,25 +72,16 @@ export namespace Strings {
         if (!changedFiles.length) return false
 
         const matcher = new Minimatch(glob, options)
-        for (const changedFile of changedFiles) {
-            console.debug(`>>> - ${changedFile}`)
-            if (matcher.match(changedFile)) {
-                console.debug(`>>> ${changedFile} matches`)
-                return true
-            }
-        }
 
-        return false
+        return changedFiles.some(file => matcher.match(file))
     }
 
-    export const envReplace = (value: any, env = process.env): string => {
+    export const envReplace = (value: any, env = process.env, regex = /(\\*)\${([^}]+)}/g): string => {
         if (!_.isString(value)) {
             return value
         }
 
-        const ENV_EXPR = /(\\*)\${([^}]+)}/g
-
-        return value.replace(ENV_EXPR, (match, envVarName): any => {
+        return value.replace(regex, (match, envVarName): any => {
             if (env[envVarName] === undefined) {
                 console.warn(`Failed to replace env in config: ${match}`)
                 throw new Error('env-replace')

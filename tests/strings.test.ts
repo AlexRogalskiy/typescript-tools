@@ -42,8 +42,9 @@ export namespace Strings_Test {
     import escapeAscii = Strings.escapeAscii
     import escapeControl = Strings.escapeControl
     import maskToken = Strings.maskToken
-    import checkAll = Strings.checkAll;
-    import checkAny = Strings.checkAny;
+    import checkAll = Strings.checkAll
+    import checkAny = Strings.checkAny
+    import isMatch = Strings.isMatch;
 
     beforeAll(() => {
         console.log('Strings test suite started')
@@ -85,6 +86,14 @@ export namespace Strings_Test {
             expect(maskToken('TestInMyLife')).toEqual('Te********fe')
             expect(maskToken('Test')).toEqual('Test')
             expect(maskToken('')).toEqual('')
+        })
+    })
+
+    describe('Check item matches patterns', () => {
+        it('it should return true when item matches patterns', () => {
+            expect(isMatch('testico', '*test*', '*ico*')).toBeTruthy()
+            expect(isMatch('', '*test*')).toBeFalsy()
+            expect(isMatch('hello, world', '*test*', '*worm*')).toBeFalsy()
         })
     })
 
