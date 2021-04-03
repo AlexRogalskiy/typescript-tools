@@ -34,6 +34,35 @@ export namespace Browsers {
         color: string
     }
 
+    export const storeLocation = (position): { latitude: number; longitude: number } => {
+        const latitude = position.coords.latitude
+        const longitude = position.coords.longitude
+
+        return {
+            latitude,
+            longitude,
+        }
+    }
+
+    export const errorHandler = (err: any): void => {
+        if (err.code === 1) {
+            console.error('Error: Location Access Denied!')
+        } else if (err.code === 2) {
+            console.error('Error: Location is Unavailable!')
+        }
+    }
+
+    export const getLocation = (): void => {
+        if (navigator.geolocation) {
+            const options = {
+                timeout: 60000,
+            }
+            navigator.geolocation.getCurrentPosition(storeLocation, errorHandler, options)
+        } else {
+            throw valueError('Sorry, your browser does not support geolocation!')
+        }
+    }
+
     export type OsNameOptions = 'windows' | 'macos' | 'unix' | 'linux' | 'unknown'
 
     export const borderColor = ({ theme }: StyledProps): string => `border-color: ${theme.borderColor};`
