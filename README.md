@@ -13,6 +13,7 @@
 ![GitHub Repository branches](https://badgen.net/github/branches/AlexRogalskiy/typescript-tools)
 ![GitHub Repository dependents](https://badgen.net/github/dependents-repo/AlexRogalskiy/typescript-tools)
 
+[![DeepSource](https://deepsource.io/gh/AlexRogalskiy/typescript-tools.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/AlexRogalskiy/typescript-tools/?ref=repository-badge)
 [![DeepScan grade](https://deepscan.io/api/teams/11946/projects/16315/branches/347250/badge/grade.svg)](https://deepscan.io/dashboard#view=project\&tid=11946\&pid=16315\&bid=347250)
 [![Tokei](https://tokei.rs/b1/github/AlexRogalskiy/typescript-tools?category=lines)](https://github.com/XAMPPRocky/tokei)
 ![Mergify Status](https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/AlexRogalskiy/typescript-tools)
