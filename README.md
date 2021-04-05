@@ -19,6 +19,7 @@
 [![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 [![DOI](https://zenodo.org/badge/340115021.svg)](https://zenodo.org/badge/latestdoi/340115021)
 [![dependencies Status](https://status.david-dm.org/gh/AlexRogalskiy/typescript-tools.svg)](https://david-dm.org/AlexRogalskiy/typescript-tools)
+[![devDependencies Status](https://status.david-dm.org/gh/AlexRogalskiy/typescript-tools.svg)](https://david-dm.org/AlexRogalskiy/typescript-tools?type=dev)
 
 [![codecov](https://codecov.io/gh/AlexRogalskiy/typescript-tools/branch/master/graph/badge.svg?token=M0d8w0Z7ME)](https://codecov.io/gh/AlexRogalskiy/typescript-tools)
 [![CI](https://github.com/AlexRogalskiy/typescript-tools/workflows/CI/badge.svg)](https://github.com/AlexRogalskiy/typescript-tools/actions/workflows/build.yml)

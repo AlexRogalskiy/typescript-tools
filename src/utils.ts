@@ -1,3 +1,6 @@
+import * as shell from 'shelljs'
+
+import { Optional } from '../typings/standard-types'
 import { Iterator, IteratorStep } from '../typings/function-types'
 
 import { Checkers } from './checkers'
@@ -6,6 +9,25 @@ import { Errors } from './errors'
 import { Arrays } from './arrays'
 
 export namespace Utils {
+    export namespace Exec {
+        export const execToJson = (command = 'npm show quicktype versions --json'): string => {
+            return JSON.parse(exec(command))
+        }
+
+        export const exec = (command: string, options = { silent: true }): string => {
+            const result = shell.exec(command, options)
+
+            return (result.stdout as string).trim()
+        }
+
+        export const CURRENT_VERSION = (matcher = /quicktype: '(.+)'/): Optional<string> => {
+            const version = exec('npm version')
+            const match = version.match(matcher)
+
+            return match && match[1]
+        }
+    }
+
     export namespace Translations {
         export const translateBy = <T extends string>(value: T): string => {
             const code =
