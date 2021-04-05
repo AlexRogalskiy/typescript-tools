@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import minimatch from 'minimatch'
 
 import { Callback, Executor, GenericValueCallback, Processor, Supplier } from '../typings/function-types'
 
@@ -8,6 +9,7 @@ import { Utils } from './utils'
 
 export namespace Functions {
     import Commons = Utils.Commons
+    import normalize = Utils.Commons.normalize
 
     export const DEFAULT_COERSIONS = {
         boolean: (val: string): boolean => val === 'true',
@@ -15,6 +17,51 @@ export namespace Functions {
         string: (val: string): string => val.replace(/\\n/g, '\n'),
         object: (val: string): any => JSON.parse(val),
         integer: parseInt,
+    }
+
+    export const overrideThresholds = (key: string, ...args: any[]): any => {
+        let thresholds = {}
+
+        // First match wins
+        Object.keys(args).some(pattern => {
+            if (minimatch(normalize(key), pattern, { dot: true })) {
+                thresholds = args[pattern]
+                return true
+            }
+            return false
+        })
+
+        return thresholds
+    }
+
+    export const removeProps = (covObj: any, patterns: string[]): any => {
+        const obj = {}
+
+        for (const key of covObj) {
+            const found = patterns.some(pattern => {
+                return minimatch(normalize(key), pattern, { dot: true })
+            })
+
+            // if no patterns match, keep the key
+            if (!found) {
+                obj[key] = covObj[key]
+            }
+        }
+
+        return obj
+    }
+
+    export const mixin = (destination: any, ...args: any[]): any => {
+        for (let i = 1; i < args.length; i++) {
+            const source = args[i]
+            for (const key in source) {
+                if (Object.prototype.hasOwnProperty.call(source, key)) {
+                    destination[key] = source[key]
+                }
+            }
+        }
+
+        return destination
     }
 
     export const coersions: Record<string, (arg: string) => unknown> = {

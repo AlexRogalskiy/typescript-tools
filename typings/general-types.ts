@@ -315,61 +315,61 @@ export type NonNullKeyValue<T, V> = KeyValue<T, NonNull<V>>
 // -------------------------------------------------------------------------------------------------
 /**
  * NameValue
- * @desc NameValue type with string name and value properties
+ * @desc NameValue type with {@link PropertyKey} name and {@link V} value properties
  */
 export type NameValue<T extends PropertyKey, V> = { name: T; value: V }
 
 /**
  * OptionalNameValue
- * @desc Optional name-value type with string name and optional value properties
+ * @desc Optional name-value type with {@link PropertyKey} name and {@link Optional} value properties
  */
 export type OptionalNameValue<V> = NameValue<PropertyKey, Optional<V>>
 
 /**
  * PartialValue
- * @desc NameValue type with string name and partial value properties
+ * @desc NameValue type with {@link PropertyKey} name and {@link Partial} value properties
  */
 export type PartialValue<V> = NameValue<PropertyKey, Partial<V>>
 
 /**
  * RequiredValue
- * @desc NameValue type with string name and required value properties
+ * @desc NameValue type with {@link PropertyKey} name and {@link Required} value properties
  */
 export type RequiredValue<V> = NameValue<PropertyKey, Required<V>>
 
 /**
  * NonNullNameValue
- * @desc Non-nullable name-value type with string name and non-nullable value properties
+ * @desc Non-nullable name-value type with {@link PropertyKey} name and {@link NonNull} value properties
  */
 export type NonNullNameValue<V> = NameValue<PropertyKey, NonNull<V>>
 
 /**
  * NumberNameValue
- * @desc Number name-value type with string name and number value properties
+ * @desc Number name-value type with {@link PropertyKey} name and {@link number} value properties
  */
 export type NumberNameValue = NameValue<PropertyKey, number | bigint>
 
 /**
  * StringNameValue
- * @desc String name-value type with string name and string value properties
+ * @desc String name-value type with {@link PropertyKey} name and {@link string} value properties
  */
 export type StringNameValue = NameValue<PropertyKey, string>
 
 /**
  * BooleanNameValue
- * @desc Boolean name-value type with string name and boolean value properties
+ * @desc Boolean name-value type with {@link PropertyKey} name and {@link boolean} value properties
  */
 export type BooleanNameValue = NameValue<PropertyKey, boolean>
 
 /**
  * RegexNameValue
- * @desc Regex name-value type with string name and regex value properties
+ * @desc Regex name-value type with {@link PropertyKey} name and {@link RegExp} value properties
  */
 export type RegexNameValue = NameValue<PropertyKey, RegExp>
 // -------------------------------------------------------------------------------------------------
 /**
  * RangeValue
- * @desc RangeValue type with lower and upper bound properties
+ * @desc RangeValue type with {@link T} lower and {@link T} upper bound properties
  */
 export type Range<T> = { lower: T; upper: T }
 

@@ -65,6 +65,8 @@ export namespace Utils {
             b: number
         }
 
+        export const unhex = (value: string): string => value.slice(Math.max(0, value.indexOf('#') + 1))
+
         export const randColor = (colors: any): any => {
             const available = [
                 'underline',

@@ -291,6 +291,8 @@ export const REGEXES = {
     exactVersion: /\.\s*exact\s*\(\s*/,
 }
 
+export const sourceMapRegEx = /(?:\/{2}[#@]{1,2}|\/\*)\s+sourceMappingURL\s*=\s*(data:(?:[^;]+;)*(base64)?,)?(\S+)(?:\n\s*)?/
+
 export const packagePattern = new RegExp('[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]')
 
 export const regexMatchAll = (regex: RegExp, content: string): RegExpMatchArray[] => {

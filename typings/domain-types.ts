@@ -1,6 +1,6 @@
 import boxen from 'boxen'
 
-import { Optional } from './standard-types'
+import { ObjectMap, Optional } from './standard-types'
 import { Profile } from './enum-types'
 
 import { Camera } from '../tools/camera'
@@ -118,6 +118,34 @@ export interface LockFile {
     lockedVersions: Record<string, string>
     lockfileVersion?: number
     isYarn1?: boolean
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * SandboxObject
+ * @desc Type representing sandbox type
+ */
+export type SandboxObject = {
+    get(key: string): any
+    set(key: string, value: any): void
+}
+
+export type Location = {
+    longitude: number
+    latitude: number
+}
+
+// -------------------------------------------------------------------------------------------------
+export interface Comparable {
+    compareTo: (object: any) => number
+}
+
+// -------------------------------------------------------------------------------------------------
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'HEAD' | 'OPTIONS' | 'TRACE'
+// -------------------------------------------------------------------------------------------------
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+export class Types {
+    static typeMap: ObjectMap<new (...arg: any[]) => SandboxObject>
 }
 
 // -------------------------------------------------------------------------------------------------
