@@ -130,19 +130,48 @@ export type SandboxObject = {
     set(key: string, value: any): void
 }
 
+/**
+ * Location
+ * @desc Type representing location
+ */
 export type Location = {
     longitude: number
     latitude: number
 }
 
 // -------------------------------------------------------------------------------------------------
+/**
+ * Comparable
+ * @desc Type representing comparable interface
+ */
 export interface Comparable {
     compareTo: (object: any) => number
 }
 
 // -------------------------------------------------------------------------------------------------
+/**
+ * LanguageFeature
+ * @desc Type representing supported language features
+ */
+export type LanguageFeature =
+    | 'enum'
+    | 'union'
+    | 'no-defaults'
+    | 'strict-optional'
+    | 'date-time'
+    | 'integer-string'
+    | 'bool-string'
+    | 'uuid'
+    | 'minmax'
+    | 'minmaxlength'
+    | 'pattern'
+// -------------------------------------------------------------------------------------------------
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'HEAD' | 'OPTIONS' | 'TRACE'
 // -------------------------------------------------------------------------------------------------
+/**
+ * Types
+ * @desc Class representing supported types
+ */
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class Types {
     static typeMap: ObjectMap<new (...arg: any[]) => SandboxObject>

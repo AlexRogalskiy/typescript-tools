@@ -24,11 +24,13 @@ import { Strings } from './strings'
 
 import { Optional } from '../typings/standard-types'
 import { Options, Result, ResultMap } from '../typings/domain-types'
+import { Errors } from './errors'
 
 export namespace Files {
     import uniqueId = Strings.uniqueId
     import escapeRegExp = Strings.escapeRegExp
     import isBlankString = Strings.isBlankString
+    import valueError = Errors.valueError
 
     const cache = new Cache()
 
@@ -63,6 +65,29 @@ export namespace Files {
         }).substr(0, 7)
 
         return `crate-registry-${proto}-${host}-${hash}`
+    }
+
+    export const pathWithoutExtension = (fullPath: string, extension: string): string => {
+        return join(dirname(fullPath), basename(fullPath, extension))
+    }
+
+    export const graphQLSchemaFilename = (baseName: string): string => {
+        const baseMatch = baseName.match(/(.*\D)\d+$/)
+
+        if (baseMatch === null) {
+            throw valueError('GraphQL test filename does not correspond to naming schema', { baseName })
+        }
+
+        return `${baseMatch[1]}.gqlschema`
+    }
+
+    export const mapFile = (
+        source: string,
+        destination: string,
+        transform: (content: string) => string,
+    ): void => {
+        const content = readFileSync(source, 'utf8')
+        writeFileSync(destination, transform(content))
     }
 
     export const downloadFileProtocol = (pkgUrl: URL): Optional<string> => {

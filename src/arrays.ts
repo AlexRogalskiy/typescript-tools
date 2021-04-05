@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import { Numbers } from './numbers'
 import { Checkers } from './checkers'
 import { Errors } from './errors'
@@ -85,6 +87,12 @@ export namespace Arrays {
             return x.map(String)
         }
         return []
+    }
+
+    export const randomJoin = (n: number, delim = ' ', ...args: any[]): string => {
+        return _.range(n)
+            .map(() => randomElement(args))
+            .join(delim)
     }
 
     export const validateString = (input: string, lexDelim = ',', tokenDelim = '='): boolean => {

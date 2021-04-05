@@ -19,6 +19,14 @@ export namespace Profiles {
         return getConfigByEnv(env)
     }
 
+    export const runEnvForLanguage = (additionalRendererOptions: any): NodeJS.ProcessEnv => {
+        const newEnv = Object.assign({}, process.env)
+        for (const o of Object.getOwnPropertyNames(additionalRendererOptions)) {
+            newEnv[`QUICKTYPE_${o.toUpperCase().replace('-', '_')}`] = additionalRendererOptions[o]
+        }
+        return newEnv
+    }
+
     /**
      * Get environment variable or empty string.
      * Used for easy mocking.

@@ -1,4 +1,7 @@
+import _ from 'lodash'
+
 import * as shell from 'shelljs'
+import { join } from 'path'
 
 import { Optional } from '../typings/standard-types'
 import { Iterator, IteratorStep } from '../typings/function-types'
@@ -7,9 +10,12 @@ import { Checkers } from './checkers'
 import { Numbers } from './numbers'
 import { Errors } from './errors'
 import { Arrays } from './arrays'
+import { Files } from './files'
 
 export namespace Utils {
     export namespace Exec {
+        import mapFile = Files.mapFile
+        import valueError = Errors.valueError
         export const execToJson = (command = 'npm show quicktype versions --json'): string => {
             return JSON.parse(exec(command))
         }
@@ -18,6 +24,43 @@ export namespace Utils {
             const result = shell.exec(command, options)
 
             return (result.stdout as string).trim()
+        }
+
+        export const installDeps = (): void => {
+            const result = shell.exec('npm install --ignore-scripts')
+            if (result.code !== 0) {
+                process.exit(result.code)
+            }
+        }
+
+        export const makeDistributedCLIExecutable = (
+            destDir = 'dist',
+            scriptPrefix = '#!/usr/bin/env node\n',
+        ): void => {
+            const cli = join(destDir, 'cli', 'index.js')
+
+            mapFile(cli, cli, content => {
+                if (_.startsWith(content, scriptPrefix)) return content
+                return scriptPrefix + content
+            })
+
+            shell.chmod('+x', cli)
+        }
+
+        export async function execAsync(
+            s: string,
+            opts: { silent: boolean },
+        ): Promise<{ stdout: string; code: number }> {
+            return new Promise<{ stdout: string; code: number }>((resolve, reject) => {
+                shell.exec(s, opts, (code, stdout, stderr) => {
+                    if (code !== 0) {
+                        console.error(stdout)
+                        console.error(stderr)
+                        reject(valueError('Unsupported exec command', { command: s, code }))
+                    }
+                    resolve({ stdout, code })
+                })
+            })
         }
 
         export const CURRENT_VERSION = (matcher = /quicktype: '(.+)'/): Optional<string> => {
@@ -1409,6 +1452,14 @@ export namespace Utils {
             }
 
             return name.toLowerCase()
+        }
+
+        export async function time<T>(work: () => Promise<T>): Promise<[T, number]> {
+            const start = +new Date()
+            const result = await work()
+            const end = +new Date()
+
+            return [result, end - start]
         }
 
         export const normalize = (value: any): string => {

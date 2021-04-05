@@ -209,6 +209,7 @@
         "browser": true
     },
     "globals": {
+        "NodeJS": "readonly",
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"
     }
