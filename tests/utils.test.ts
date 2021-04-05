@@ -1,11 +1,10 @@
 import { describe, test } from '@jest/globals'
 
-import { Utils } from '../src'
+import { TranslationUtils } from '../src'
 
 export namespace Utils_Test {
     export namespace Translations_Test {
-        import translateBy = Utils.Translations.translateBy
-
+        import translateBy = TranslationUtils.translateBy
         type TranslationPattern<T extends string, V> = { [K in T]: V }
 
         const alphabets: TranslationPattern<string, string> = {

@@ -46,7 +46,7 @@
         "test": "env-cmd --silent -e test jest",
         "test:coverage": "env-cmd --silent -e test jest --collectCoverage --detectOpenHandles",
         "test:watch": "env-cmd --silent -e test jest --watch",
-        "test:license": "license-checker --production --summary --unknown --onlyAllow=\"Apache-2.0;BSD;ISC;MIT;UNLICENSED;\"",
+        "test:license": "license-checker --production --summary --unknown --onlyAllow=\"Apache-2.0;BSD;ISC;MIT;GPL-3.0;UNLICENSED;\"",
         "lint:all": "npm run lint:clean && npm run lint && npm run lint:md",
         "format:all": "npm run format && npm run format:md",
         "check:all": "npm run format:check",

@@ -1,4 +1,5 @@
 import { Networks } from '../src'
+
 import getQueryParams = Networks.getQueryParams
 
 export class Url {

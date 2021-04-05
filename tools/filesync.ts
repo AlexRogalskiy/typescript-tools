@@ -1,5 +1,6 @@
-import { Base } from './base'
 import { existsSync, readFileSync, writeFileSync } from 'fs'
+
+import { Base } from './base'
 
 export class FileSync extends Base {
     read(): any {

@@ -1,6 +1,7 @@
-import { Checkers, Utils } from '../src'
+import { Checkers, CommonUtils } from '../src'
+
 import isFunction = Checkers.isFunction
-import Commons = Utils.Commons
+import defineStaticProperty = CommonUtils.defineStaticProperty
 
 const I18N = {
     Errors: {
@@ -68,13 +69,13 @@ export const propleys = ((globals, i18n: any) => {
     }
 
     if (!isFunction(globals['getString'])) {
-        Commons.defineStaticProperty(globals, 'getString', {
+        defineStaticProperty(globals, 'getString', {
             value: (prop: string, ...args: any[]) => getString(prop, args),
         })
     }
 
     if (!isFunction(globals['setString'])) {
-        Commons.defineStaticProperty(globals, 'setString', {
+        defineStaticProperty(globals, 'setString', {
             value: (prop: string, value: any) => setString(prop, value),
         })
     }

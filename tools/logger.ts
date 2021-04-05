@@ -2,6 +2,7 @@ import dateFormat from 'dateformat'
 
 import { Checkers } from '../src'
 import { Converter } from './converter'
+
 import isNumber = Checkers.isNumber
 import isObject = Checkers.isObject
 import isString = Checkers.isString

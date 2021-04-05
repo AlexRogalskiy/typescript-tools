@@ -1,4 +1,5 @@
 import { Checkers, Commons, Objects } from '../src'
+
 import { StringPair } from '../typings/general-types'
 
 export namespace Objects_Test {

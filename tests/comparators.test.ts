@@ -69,6 +69,10 @@ export namespace Comparators_Test {
         })
 
         it('it should return valid result when comparing strings by ignore case', () => {
+            const a = 'Things Work Out Best For Those Who Make The Best Of How Things Work Out.'
+            const b = 'Things work out best for those who make the best of how things work out.'
+            expect(compareIgnoreCase(a, b)).toEqual(0)
+
             expect(compareIgnoreCase('1', '1')).toEqual(0)
             expect(compareIgnoreCase('1', '2')).toEqual(-1)
             expect(compareIgnoreCase('2', '1')).toEqual(1)

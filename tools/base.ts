@@ -1,4 +1,5 @@
 import { Strings } from '../src'
+
 import stringify = Strings.stringify
 
 export class Base {

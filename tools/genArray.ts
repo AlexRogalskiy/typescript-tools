@@ -1,4 +1,5 @@
 import { Errors } from '../src'
+
 import valueError = Errors.valueError
 
 export class GenArray<T> {

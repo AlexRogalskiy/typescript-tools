@@ -2,7 +2,7 @@ import { describe } from '@jest/globals'
 
 import { Errors } from '../src'
 import { ErrorType } from '../typings/enum-types'
-import { introspect } from '../src/decorators'
+import { introspect } from '../src/mediator/decorators'
 
 export namespace Errors_Test {
     import ExtendableError = Errors.ExtendableError

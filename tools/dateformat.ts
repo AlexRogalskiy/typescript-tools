@@ -1,4 +1,5 @@
 import { Strings } from '../src'
+
 import pad = Strings.pad
 
 export class Dateformat {

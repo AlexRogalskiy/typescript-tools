@@ -1,4 +1,5 @@
 import { Checkers } from '../src'
+
 import isFunction = Checkers.isFunction
 import isArray = Checkers.isArray
 

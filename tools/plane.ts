@@ -1,6 +1,7 @@
 import { Intersection, Ray, Surface, Thing } from '../typings/domain-types'
-import { Vector } from './vector'
 import { Optional } from '../typings/standard-types'
+
+import { Vector } from './vector'
 
 export class Plane implements Thing {
     normal: (pos: Vector) => Vector

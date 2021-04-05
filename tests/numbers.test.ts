@@ -1,6 +1,6 @@
 import { describe, expect } from '@jest/globals'
 
-import { Arrays, Commons, Numbers } from '../src'
+import { Arrays, Formats, Numbers } from '../src'
 
 export namespace Numbers_Test {
     import average = Arrays.average
@@ -12,10 +12,10 @@ export namespace Numbers_Test {
     import getDiv3Xor7 = Numbers.getDiv3Xor7
     import getPrime = Numbers.getPrime
     import toUint32 = Numbers.toUint32
-    import toBoolean = Commons.toBoolean
     import sortBy = Numbers.sortBy
     import findLongest = Numbers.findLongest
     import median = Numbers.median
+    import toBoolean = Formats.toBoolean
 
     beforeAll(() => {
         console.log('Numbers test suite started')
@@ -47,7 +47,7 @@ export namespace Numbers_Test {
 
     describe('Check division XOR value', () => {
         it('it should calculate valid number', () => {
-            expect(getDiv3Xor7(10, 100)).toEqual(35)
+            expect(getDiv3Xor7(10, 100)).toEqual(15)
         })
     })
 

@@ -1,5 +1,6 @@
 import { Optional } from '../typings/standard-types'
 import { Intersection, Ray, Surface, Thing } from '../typings/domain-types'
+
 import { Vector } from './vector'
 
 export class Sphere implements Thing {
