@@ -546,6 +546,46 @@ export namespace Functions {
         }
     }
 
+    export const executeTask = async (task: any): Promise<void> => {
+        return new Promise((resolve, reject) => {
+            if (task.length === 1) {
+                task(err => {
+                    if (err) {
+                        return reject(err)
+                    }
+                    resolve()
+                })
+                return
+            }
+
+            const taskResult = task()
+            if (typeof taskResult === 'undefined') {
+                resolve()
+                return
+            }
+
+            // eslint-disable-next-line github/no-then
+            if (typeof taskResult.then === 'function') {
+                // this is a promise returning task
+                // eslint-disable-next-line github/no-then
+                taskResult.then(resolve, reject)
+                return
+            }
+
+            // this is a stream returning task
+            taskResult.on('end', () => resolve())
+            taskResult.on('error', err => reject(err))
+        })
+    }
+
+    export const executeTasks = (...tasks: any[]): (() => Promise<void>) => {
+        return async () => {
+            for (const item of tasks) {
+                await executeTask(item)
+            }
+        }
+    }
+
     export const hasKey = <K extends string, T>(k: K, o: T): o is T & Record<K, unknown> => {
         return typeof o === 'object' && k in o
     }

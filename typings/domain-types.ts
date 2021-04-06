@@ -9,10 +9,18 @@ import { Vector } from '../tools/vector'
 
 // -------------------------------------------------------------------------------------------------
 /**
+ * ObjectConstructor
+ * @desc Type representing object constructor interface
+ */
+export interface ObjectConstructor {
+    assign(...objects: any[]): any
+}
+// -------------------------------------------------------------------------------------------------
+/**
  * Headers
  * @desc Type representing collection of headers
  */
-export type Headers = Record<string, string | string[] | undefined>
+export type Headers = Record<string, Optional<string | string[]>>
 // -------------------------------------------------------------------------------------------------
 /**
  * PathLike
@@ -167,6 +175,7 @@ export type LanguageFeature =
     | 'pattern'
 // -------------------------------------------------------------------------------------------------
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'HEAD' | 'OPTIONS' | 'TRACE'
+
 // -------------------------------------------------------------------------------------------------
 /**
  * Types

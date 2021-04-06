@@ -40,4 +40,3 @@ log/
 site/
 .cache
 node_modules
-.vercel
