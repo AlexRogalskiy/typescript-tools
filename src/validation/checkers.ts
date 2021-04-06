@@ -258,6 +258,51 @@ export namespace Checkers {
         return isNotNull(value) && Object.prototype.toString.apply(value) === '[object JSON]'
     }
 
+    export const isValidJson = (value: string): boolean => {
+        try {
+            JSON.parse(value)
+            return true
+        } catch (err) {
+            return false
+        }
+    }
+
+    export const inRange = (value: number, { min, max, inclusive = true }): boolean => {
+        if (min > max) {
+            throw valueError('Max value must be bigger then min value')
+        }
+
+        return inclusive ? min <= value && value <= max : min < value && value < max
+    }
+
+    export const isHostname = (value: string): boolean => {
+        const regExp = /^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*(\.[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*)*$/
+        return matchPattern(value, regExp)
+    }
+
+    export const includesUppercase = (value: string): boolean => {
+        return matchPattern(value, /[A-Z]/)
+    }
+
+    export const includesLowercase = (value: string): boolean => {
+        return matchPattern(value, /[a-z]/)
+    }
+
+    export const includesDigit = (value: string): boolean => {
+        return matchPattern(value, /[0-9]/)
+    }
+
+    export const matchPattern = (value, regExp): boolean => {
+        return !value || regExp.test(value)
+    }
+
+    export const isEmail = (value: string): boolean => {
+        // eslint-disable-next-line no-control-regex
+        const regExp = /^((([a-z]|\d|[!#\\$%&'*+\-/=?^_`{|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\\$%&'*+\-/=?^_`{|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)(((([\x20\x09])*(\x0d\x0a))?([\x20\x09])+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*((([\x20\x09])*(\x0d\x0a))?([\x20\x09])+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i
+
+        return matchPattern(value, regExp)
+    }
+
     export const isObject = (value: any): boolean => {
         return isNotNull(value) && Object.prototype.toString.apply(value) === '[object Object]'
     }
