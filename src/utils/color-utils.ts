@@ -1,4 +1,5 @@
 import { Arrays, Errors, Numbers, Checkers } from '..'
+import { Optional } from '../../typings/standard-types'
 
 export namespace ColorsUtils {
     /**
@@ -23,6 +24,23 @@ export namespace ColorsUtils {
         r: number
         g: number
         b: number
+    }
+
+    export const isDark = (hexColor: string): boolean => {
+        return getBrightness(hexColor) < 128
+    }
+    export const getSnippetBgColor = (html: string): Optional<string> => {
+        const match = html.match(/background-color: (#[a-fA-F0-9]+)/)
+        return match ? match[1] : undefined
+    }
+
+    export const getBrightness = (hexColor: string): number => {
+        const rgb = parseInt(hexColor.slice(1), 16)
+        const r = (rgb >> 16) & 0xff
+        const g = (rgb >> 8) & 0xff
+        const b = (rgb >> 0) & 0xff
+
+        return (r * 299 + g * 587 + b * 114) / 1000
     }
 
     export const unhex = (value: string): string => value.slice(Math.max(0, value.indexOf('#') + 1))
@@ -51,6 +69,11 @@ export namespace ColorsUtils {
         return (letter: string): string => {
             return /^\s*$/.test(letter) ? letter : colors[Arrays.randomElement(available)](letter)
         }
+    }
+
+    export const getBrightness2 = (color: string): number => {
+        const rgb = convertHexStringToRgbString(color)
+        return (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000
     }
 
     export const getColorBrightness = (color: RGBColor | string): number => {

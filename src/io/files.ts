@@ -40,6 +40,19 @@ export namespace Files {
         stderr: string
     }
 
+    export const getHtmlContent = (htmlPath: string): string => {
+        const htmlContent = readFileSync(htmlPath, 'utf-8')
+        return htmlContent.replace(/script src="([^"]*)"/g, (_, src) => {
+            const realSource = `vscode-resource:${resolve(htmlPath, '..', src)}`
+            return `script src="${realSource}"`
+        })
+    }
+
+    export const writeToFile = (value: ArrayLike<number> | ArrayBufferLike, fileName: string): void => {
+        const bytes = new Uint8Array(value)
+        writeFileSync(fileName, Buffer.from(bytes))
+    }
+
     export const getConfigFileName = (baseDir: string, configFileName: string): Optional<string> => {
         const configFilePath = resolve(baseDir, configFileName)
         if (existsSync(configFilePath)) {

@@ -1,6 +1,6 @@
 import boxen from 'boxen'
 
-import { ObjectMap, Optional } from './standard-types'
+import { ObjectMap, Optional, Primitive } from './standard-types'
 import { Profile } from './enum-types'
 
 import { Camera } from '../tools/camera'
@@ -15,6 +15,7 @@ import { Vector } from '../tools/vector'
 export interface ObjectConstructor {
     assign(...objects: any[]): any
 }
+
 // -------------------------------------------------------------------------------------------------
 /**
  * Headers
@@ -71,6 +72,48 @@ export interface Result {
  */
 export interface ResultMap {
     [index: string]: Result
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * Fields
+ * @desc Type representing supported fields
+ */
+export interface Fields {
+    [key: string]: string | string[]
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * ArrayBuffer
+ * @desc Type representing array buffer interface
+ */
+export interface ArrayBuffer {
+    /**
+     * Read-only. The length of the ArrayBuffer (in bytes).
+     */
+    readonly byteLength: number
+
+    /**
+     * Returns a section of an ArrayBuffer.
+     */
+    slice(begin: number, end?: number): ArrayBuffer
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * LiteralUnion
+ * @desc Type representing literal union
+ */
+export type LiteralUnion<LiteralType, BaseType extends Primitive> = LiteralType | (BaseType & { _?: never })
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * Files
+ * @desc Type representing supported files
+ */
+export interface Files {
+    [key: string]: File | File[]
 }
 
 // -------------------------------------------------------------------------------------------------
