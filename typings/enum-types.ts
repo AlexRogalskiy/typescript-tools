@@ -20,20 +20,10 @@ export enum ErrorType {
  * DbErrorType
  * @desc Type representing database errors
  */
-export enum DbErrorType {
+export enum DatabaseErrorType {
     UnprocessableEntity = 'UnprocessableEntity',
     Conflict = 'Conflict',
     NotFound = 'NotFound',
-}
-
-// -------------------------------------------------------------------------------------------------
-/**
- * ErrorData
- * @desc Type representing error data
- */
-export type ErrorData = {
-    readonly type: ErrorType
-    readonly message: string
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -45,7 +35,9 @@ export enum StatusCode {
     OK = 200,
     CREATED = 201,
     UNAUTHORIZED = 401,
+    BAD_REQUEST = 403,
     NOT_FOUND = 404,
+    CONFLICT = 409,
     UNPROCESSABLE_ENTITY = 422,
     INTERNAL_SERVER_ERROR = 500,
     SERVICE_UNAVAILABLE = 503,
@@ -65,10 +57,10 @@ export enum InteractiveState {
 
 // -------------------------------------------------------------------------------------------------
 /**
- * PrState
+ * PullRequestState
  * @desc Type representing supported pull request states
  */
-export enum PrState {
+export enum PullRequestState {
     Merged = 'merged',
     Open = 'open',
     Closed = 'closed',

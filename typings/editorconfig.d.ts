@@ -20,7 +20,7 @@ declare module 'editorconfig' {
      */
     export interface ParseOptions {
         config: string
-        version: any // string or Version
+        version: any
     }
 
     export function parseFromFiles(filepath: string, files: any[], options?: ParseOptions): Promise<FileInfo>

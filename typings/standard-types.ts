@@ -89,6 +89,18 @@ export type NonNull<T> = NonNullable<T>
 
 // -------------------------------------------------------------------------------------------------
 /**
+ * Undef
+ * @desc Type representing [`Undef`] in TypeScript: `T | undefined`
+ */
+export type Undef<T> = T | undefined
+// -------------------------------------------------------------------------------------------------
+/**
+ * Keys
+ * @desc Type representing [`Keys`] in TypeScript: `T`
+ */
+export type Keys<T> = keyof T
+// -------------------------------------------------------------------------------------------------
+/**
  * Optional
  * @desc Type representing [`Optional`] in TypeScript: `T | null | undefined`
  */
@@ -250,10 +262,10 @@ export type NumberSet = Set<number | bigint>
 export type DateSet = Set<Date>
 
 /**
- * PropertyKeySet
- * @desc Type representing property key {@link Set}
+ * PropertySet
+ * @desc Type representing property {@link Set}
  */
-export type PropertyKeySet = Set<PropertyKey>
+export type PropertySet = Set<PropertyKey>
 
 /**
  * OptionalSet
@@ -269,8 +281,8 @@ export type OptionalSet<T> = Set<Optional<T>>
 export type StringRecord<T> = Record<string, T>
 
 /**
- * PropertyKeyRecord
- * @desc Type representing property key {@link Record}
+ * PropertyRecord
+ * @desc Type representing property {@link Record}
  */
-export type PropertyKeyRecord<T> = Record<PropertyKey, T>
+export type PropertyRecord<T> = Record<PropertyKey, T>
 // -------------------------------------------------------------------------------------------------

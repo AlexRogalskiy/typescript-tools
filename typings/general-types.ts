@@ -173,31 +173,31 @@ export type mixed = unknown
  * Pair2
  * @desc Pair2 type with first and second values
  */
-export type Pair2<T, V> = { first: T; second: V }
+export type Tuple2<T, V> = { first: T; second: V }
 
 /**
  * Pair3
  * @desc Pair3 type with first, second and third values
  */
-export type Pair3<T, V, R> = { first: T; second: V; third: R }
+export type Tuple3<T, V, R> = { first: T; second: V; third: R }
 
 /**
  * Pair4
  * @desc Pair4 type with first, second, third and fourth values
  */
-export type Pair4<T, V, R, S> = { first: T; second: V; third: R; fourth: S }
+export type Tuple4<T, V, R, S> = { first: T; second: V; third: R; fourth: S }
 
 /**
  * Pair5
  * @desc Pair5 type with first, second, third, fourth and fifth values
  */
-export type Pair5<T, V, R, S, M> = { first: T; second: V; third: R; fourth: S; fifth: M }
+export type Tuple5<T, V, R, S, M> = { first: T; second: V; third: R; fourth: S; fifth: M }
 
 /**
  * Pair6
  * @desc Pair6 type with first, second, third, fourth, fifth and sixth values
  */
-export type Pair6<T, V, R, S, M, N> = { first: T; second: V; third: R; fourth: S; fifth: M; sixth: N }
+export type Tuple6<T, V, R, S, M, N> = { first: T; second: V; third: R; fourth: S; fifth: M; sixth: N }
 // -------------------------------------------------------------------------------------------------
 /**
  * Pair

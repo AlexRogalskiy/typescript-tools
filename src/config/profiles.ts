@@ -9,15 +9,15 @@ export namespace Profiles {
         return process.env.NODE_ENV && Profile[process.env.NODE_ENV]
     }
 
-    export const isDev = Profile.dev === getProfile()
+    export const getProfileByEnv = (env: Optional<string> = process.env.NODE_ENV): Profile =>
+        env && Profile[env] ? Profile[env] : Profile.dev
 
-    export const getConfigByEnv = (env: Optional<string> = process.env.NODE_ENV): ProfileOptions => {
-        return env && Object.prototype.hasOwnProperty.call(Configs, env) ? Configs[env] : Configs[Profile.dev]
-    }
+    export const getConfigByEnv = (env: Optional<string> = process.env.NODE_ENV): ProfileOptions =>
+        Configs[getProfileByEnv(env)]
 
-    export const getConfigByProfile = (env: Optional<Profile>): ProfileOptions => {
-        return getConfigByEnv(env)
-    }
+    export const isProd = Profile.prod === getProfile()
+
+    export const config = isProd ? Configs[Profile.prod] : getConfigByEnv()
 
     export const runEnvForLanguage = (additionalRendererOptions: any): NodeJS.ProcessEnv => {
         const newEnv = Object.assign({}, process.env)
@@ -35,6 +35,4 @@ export namespace Profiles {
     export const getEnv = (key: string): string => {
         return process.env[key] ?? ''
     }
-
-    export const profile = getConfigByEnv()
 }

@@ -9,7 +9,7 @@ import { Profiles } from '../config/profiles'
 import { CommonUtils } from '..'
 
 export namespace Logging {
-    import profile = Profiles.profile
+    import profile = Profiles.config
     import mergeProps = CommonUtils.mergeProps
 
     const { hasOwnProperty: hasOwnProp } = Object.prototype

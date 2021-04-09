@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { DbErrorType, ErrorData, ErrorType } from '../../typings/enum-types'
+import { DatabaseErrorType, ErrorType, StatusCode } from '../../typings/enum-types'
 
 import { Logging } from '..'
 
@@ -8,10 +8,68 @@ export namespace Errors {
     import errorLogs = Logging.errorLogs
 
     /**
+     * ErrorData
+     * @desc Type representing error data
+     */
+    export type ErrorData = {
+        /**
+         * Error code
+         */
+        readonly code: StatusCode
+        /**
+         * Error description
+         */
+        readonly description: string
+    }
+
+    /**
+     * ErrorCode
+     * @desc Type representing error codes
+     */
+    export const ErrorCode: Record<ErrorType, ErrorData> = {
+        [ErrorType.general_error]: {
+            code: StatusCode.INTERNAL_SERVER_ERROR,
+            description: 'General Error',
+        },
+        [ErrorType.parser_error]: {
+            code: StatusCode.UNPROCESSABLE_ENTITY,
+            description: 'Parser Error',
+        },
+        [ErrorType.db_error]: {
+            code: StatusCode.INTERNAL_SERVER_ERROR,
+            description: 'DataBase Error',
+        },
+        [ErrorType.validation_error]: {
+            code: StatusCode.BAD_REQUEST,
+            description: 'Validation Error',
+        },
+        [ErrorType.request_error]: { code: StatusCode.BAD_REQUEST, description: 'Request Error' },
+        [ErrorType.response_error]: {
+            code: StatusCode.INTERNAL_SERVER_ERROR,
+            description: 'Response Error',
+        },
+        [ErrorType.parameter_error]: {
+            code: StatusCode.BAD_REQUEST,
+            description: 'Parameter Error',
+        },
+        [ErrorType.type_error]: { code: StatusCode.BAD_REQUEST, description: 'Type Error' },
+        [ErrorType.value_error]: { code: StatusCode.BAD_REQUEST, description: 'Value Error' },
+    }
+
+    /**
      * ExtendableError
      * @desc Class representing extendable error
      */
     export class ExtendableError extends Error {
+        /**
+         * Error data by provided {@link ErrorType}
+         */
+        readonly data: ErrorData = ErrorCode[this.type]
+        /**
+         * Error timestamp
+         */
+        readonly timestamp = new Date().getTime()
+
         /**
          * Extendable error constructor by input parameters
          * @param type initial input {@link ErrorType}
@@ -31,6 +89,13 @@ export namespace Errors {
                 configurable: true,
                 enumerable: false,
                 value: type,
+                writable: true,
+            })
+
+            Object.defineProperty(this, 'data', {
+                configurable: true,
+                enumerable: false,
+                value: ErrorCode[type],
                 writable: true,
             })
 
@@ -221,35 +286,36 @@ export namespace Errors {
     export class DbClientError extends GeneralError {
         readonly statusCode: number
 
-        constructor(readonly message: string, readonly code: DbErrorType, ...args: any[]) {
+        constructor(readonly message: string, readonly code: DatabaseErrorType, ...args: any[]) {
             super(ErrorType.db_error, message, args)
+
             this.code = code
             this.statusCode = DbClientError.getStatusCodeFromCode(code)
         }
 
         static getStatusCodeFromCode(code: string): number {
-            if (code === DbErrorType.NotFound) {
-                return 404
-            } else if (code === DbErrorType.Conflict) {
-                return 409
-            } else if (code === DbErrorType.UnprocessableEntity) {
-                return 422
+            if (code === DatabaseErrorType.NotFound) {
+                return StatusCode.NOT_FOUND
+            } else if (code === DatabaseErrorType.Conflict) {
+                return StatusCode.CONFLICT
+            } else if (code === DatabaseErrorType.UnprocessableEntity) {
+                return StatusCode.UNPROCESSABLE_ENTITY
             }
 
-            return 500
+            return StatusCode.INTERNAL_SERVER_ERROR
         }
     }
 
     export const unprocessableEntityDbError = (message: string): DbClientError => {
-        return new DbClientError(message, DbErrorType.UnprocessableEntity)
+        return new DbClientError(message, DatabaseErrorType.UnprocessableEntity)
     }
 
     export const notFoundDbError = (message: string): DbClientError => {
-        return new DbClientError(message, DbErrorType.NotFound)
+        return new DbClientError(message, DatabaseErrorType.NotFound)
     }
 
     export const conflictDbError = (message: string): DbClientError => {
-        return new DbClientError(message, DbErrorType.Conflict)
+        return new DbClientError(message, DatabaseErrorType.Conflict)
     }
 
     /**
@@ -267,8 +333,8 @@ export namespace Errors {
     export type QueryParseErrorConstructor = typeof QueryParseError
     export type DbClientErrorConstructor = typeof DbClientError
 
-    export const newError = (type: ErrorType, message: string): ErrorData => {
-        return { type, message }
+    export const newError = (code: StatusCode, description: string): ErrorData => {
+        return { code, description }
     }
 
     export const typeError = (message: string, ...args: any[]): TypeError => {

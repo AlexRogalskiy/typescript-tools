@@ -9,6 +9,14 @@ export namespace Functions {
     import normalize = CommonUtils.normalize
     import defineProperty = CommonUtils.defineProperty
 
+    export interface EnumObject {
+        [enumValue: number]: string
+    }
+
+    export const getEnumValues = (e: EnumObject): string[] => {
+        return Object.keys(e).map(i => e[i])
+    }
+
     export const DEFAULT_COERSIONS = {
         boolean: (val: string): boolean => val === 'true',
         array: (val: string): string[] => val.split(',').map(el => el.trim()),
