@@ -1,4 +1,4 @@
-import { Numeric } from "./general-types";
+import { Numeric } from './general-types'
 
 /**
  * Nullish

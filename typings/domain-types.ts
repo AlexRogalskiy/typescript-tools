@@ -114,9 +114,7 @@ export interface ArrayBuffer {
  * LiteralUnion
  * @desc Type representing literal union
  */
-export type LiteralUnion<LiteralType, BaseType extends Primitive> =
-    LiteralType
-    | (BaseType & { _?: never })
+export type LiteralUnion<LiteralType, BaseType extends Primitive> = LiteralType | (BaseType & { _?: never })
 
 // -------------------------------------------------------------------------------------------------
 export type Key = string | number
