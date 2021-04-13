@@ -170,6 +170,12 @@ export type Class<T> = new (...args: any[]) => T
 export type mixed = unknown
 // -------------------------------------------------------------------------------------------------
 /**
+ * Numeric
+ * @desc Pair2 type with numeric ("number" | "bigint") value
+ */
+export type Numeric = number | bigint
+// -------------------------------------------------------------------------------------------------
+/**
  * Pair2
  * @desc Pair2 type with first and second values
  */
@@ -257,7 +263,7 @@ export type PropertyKeyPair = Pair<PropertyKey, PropertyKey>
  * NumberPair
  * @desc Number pair type with left and right number values
  */
-export type NumberPair = Pair<number | bigint, number | bigint>
+export type NumberPair = Pair<Numeric, Numeric>
 
 /**
  * StringPair
@@ -347,7 +353,7 @@ export type NonNullNameValue<V> = NameValue<PropertyKey, NonNull<V>>
  * NumberNameValue
  * @desc Number name-value type with {@link PropertyKey} name and {@link number} value properties
  */
-export type NumberNameValue = NameValue<PropertyKey, number | bigint>
+export type NumberNameValue = NameValue<PropertyKey, Numeric>
 
 /**
  * StringNameValue
@@ -401,7 +407,7 @@ export type NonNullRange<T> = Range<NonNull<T>>
  * NumberRange
  * @desc NumberRange type with number lower and upper bound properties
  */
-export type NumberRange = Range<number | bigint>
+export type NumberRange = Range<Numeric>
 
 /**
  * DateRange
@@ -413,7 +419,7 @@ export type DateRange = Range<Date>
  * KeywordData
  * @desc KeywordData type with double-sized string/number array values
  */
-export type KeywordData<T extends PropertyKey> = [T, number | bigint]
+export type KeywordData<T extends PropertyKey> = [T, Numeric]
 
 /**
  * KeywordDict

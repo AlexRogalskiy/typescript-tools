@@ -31,6 +31,16 @@ export namespace Browsers {
         color: string
     }
 
+    export const validate = (evt: any): void => {
+        const theEvent = evt || window['event']
+        let key = theEvent.keyCode || theEvent.which
+        key = String.fromCharCode(key)
+        const regex = /[0-9]|\./
+        if (!regex.test(key)) {
+            theEvent.returnValue = false
+        }
+    }
+
     export const storeLocation = (position): { latitude: number; longitude: number } => {
         const latitude = position.coords.latitude
         const longitude = position.coords.longitude

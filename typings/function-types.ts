@@ -1,4 +1,5 @@
 import { NonNull, Optional } from './standard-types'
+import { Numeric } from './general-types'
 // -------------------------------------------------------------------------------------------------
 /**
  * HandlerFunction
@@ -218,7 +219,7 @@ export type NonNullPredicate<T> = Predicate<NonNull<T>>
  * @example
  *   type NumberPredicate = (v) => return 1 === v
  */
-export type NumberPredicate = Predicate<number | bigint>
+export type NumberPredicate = Predicate<Numeric>
 
 /**
  * StringPredicate
@@ -290,7 +291,7 @@ export type NonNullBiPredicate<T, V> = BiPredicate<NonNull<T>, NonNull<V>>
  * @example
  *   type NumberBiPredicate = (v1, v2) => return v1 === v2
  */
-export type NumberBiPredicate = BiPredicate<number | bigint, number | bigint>
+export type NumberBiPredicate = BiPredicate<Numeric, Numeric>
 
 /**
  * StringBiPredicate
@@ -362,7 +363,7 @@ export type NonNullTriPredicate<T, V, S> = TriPredicate<NonNull<T>, NonNull<V>, 
  * @example
  *   type NumberTriPredicate = (v1, v2, v3) => return v1 === v2 === v3
  */
-export type NumberTriPredicate = TriPredicate<number | bigint, number | bigint, number | bigint>
+export type NumberTriPredicate = TriPredicate<Numeric, Numeric, Numeric>
 
 /**
  * StringTriPredicate
@@ -434,7 +435,7 @@ export type NonNullSupplier<T> = Supplier<NonNull<T>>
  * @example
  *   type NumberSupplier = () => return 1
  */
-export type NumberSupplier = Supplier<number | bigint>
+export type NumberSupplier = Supplier<Numeric>
 
 /**
  * BooleanSupplier
@@ -506,7 +507,7 @@ export type NonNullBiSupplier<T, V> = BiSupplier<NonNull<T>, NonNull<V>>
  * @example
  *   type NumberBiSupplier = () => return {"v1": "first", "v2": "second"}
  */
-export type NumberBiSupplier = BiSupplier<number | bigint, number | bigint>
+export type NumberBiSupplier = BiSupplier<Numeric, Numeric>
 
 /**
  * StringBiSupplier
@@ -578,7 +579,7 @@ export type NonNullTriSupplier<T, V, S> = TriSupplier<NonNull<T>, NonNull<V>, No
  * @example
  *   type NumberTriSupplier = () => return {"v1": "first", "v2": "second", "v3": "third"}
  */
-export type NumberTriSupplier = TriSupplier<number | bigint, number | bigint, number | bigint>
+export type NumberTriSupplier = TriSupplier<Numeric, Numeric, Numeric>
 
 /**
  * StringTriSupplier
@@ -650,7 +651,7 @@ export type NonNullConsumer<T> = Consumer<NonNull<T>>
  * @example
  *   type NumberConsumer = (v) => console.log(v)
  */
-export type NumberConsumer = Consumer<number | bigint>
+export type NumberConsumer = Consumer<Numeric>
 
 /**
  * StringConsumer
@@ -722,7 +723,7 @@ export type NonNullBiConsumer<T, V> = BiConsumer<NonNull<T>, NonNull<V>>
  * @example
  *   type NumberBiConsumer = (v1, v2) => console.log(v1 + ":" + v2)
  */
-export type NumberBiConsumer = BiConsumer<number | bigint, number | bigint>
+export type NumberBiConsumer = BiConsumer<Numeric, Numeric>
 
 /**
  * StringBiConsumer
@@ -794,7 +795,7 @@ export type NonNullTriConsumer<T, V, S> = TriConsumer<NonNull<T>, NonNull<V>, No
  * @example
  *   type NumberTriConsumer = (v1, v2, v3) => console.log(v1 + ":" + v2 + ":" + v3)
  */
-export type NumberTriConsumer = TriConsumer<number | bigint, number | bigint, number | bigint>
+export type NumberTriConsumer = TriConsumer<Numeric, Numeric, Numeric>
 
 /**
  * StringTriConsumer
@@ -874,7 +875,7 @@ export type NonNullProcessor<T, R> = Processor<NonNull<T>, R>
  * @example
  *   type NumberProcessor = (v) => return new String(v)
  */
-export type NumberProcessor<R> = Processor<number | bigint, R>
+export type NumberProcessor<R> = Processor<Numeric, R>
 
 /**
  * StringProcessor
@@ -906,7 +907,7 @@ export type BooleanProcessor<R> = Processor<boolean, R>
  * @example
  *   type NumberToStringProcessor = (v) => return new String(v)
  */
-export type NumberToStringProcessor = Processor<number | bigint, string>
+export type NumberToStringProcessor = Processor<Numeric, string>
 
 /**
  * StringToNumberProcessor
@@ -914,7 +915,7 @@ export type NumberToStringProcessor = Processor<number | bigint, string>
  * @example
  *   type StringToNumberProcessor = (v) => return parseInt(v)
  */
-export type StringToNumberProcessor = Processor<string, number | bigint>
+export type StringToNumberProcessor = Processor<string, Numeric>
 
 /**
  * PropertyKeyToNumberProcessor
@@ -922,7 +923,7 @@ export type StringToNumberProcessor = Processor<string, number | bigint>
  * @example
  *   type PropertyKeyToNumberProcessor = (v) => return parseInt(v)
  */
-export type PropertyKeyToNumberProcessor = Processor<PropertyKey, number | bigint>
+export type PropertyKeyToNumberProcessor = Processor<PropertyKey, Numeric>
 
 /**
  * BooleanToStringProcessor
@@ -986,7 +987,7 @@ export type ToNonNullProcessor<T, V> = Processor<T, NonNull<V>>
  * @example
  *   type ToNumberProcessor = (v) => return v.length
  */
-export type ToNumberProcessor<T> = Processor<T, number | bigint>
+export type ToNumberProcessor<T> = Processor<T, Numeric>
 
 /**
  * ToStringProcessor
@@ -1058,7 +1059,7 @@ export type NonNullBiProcessor<T, V, R> = BiProcessor<NonNull<T>, NonNull<V>, R>
  * @example
  *   type NumberBiProcessor = (v1, v2) => return v1 + v2
  */
-export type NumberBiProcessor<R> = BiProcessor<number | bigint, number | bigint, R>
+export type NumberBiProcessor<R> = BiProcessor<Numeric, Numeric, R>
 
 /**
  * StringBiProcessor
@@ -1122,7 +1123,7 @@ export type ToNonNullBiProcessor<T, V, R> = BiProcessor<T, V, NonNull<R>>
  * @example
  *   type ToNumberBiProcessor = (v1, v2) => return v1.length + v2.length
  */
-export type ToNumberBiProcessor<T, V> = BiProcessor<T, V, number | bigint>
+export type ToNumberBiProcessor<T, V> = BiProcessor<T, V, Numeric>
 
 /**
  * ToStringBiProcessor
@@ -1194,7 +1195,7 @@ export type NonNullTriProcessor<T, V, S, R> = TriProcessor<NonNull<T>, NonNull<V
  * @example
  *   type NumberTriProcessor = (v1, v2, v3) => return v1 + v2 + v3
  */
-export type NumberTriProcessor<R> = TriProcessor<number | bigint, number | bigint, number | bigint, R>
+export type NumberTriProcessor<R> = TriProcessor<Numeric, Numeric, Numeric, R>
 
 /**
  * StringTriProcessor
@@ -1330,7 +1331,7 @@ export type NonNullUnaryOperator<T> = UnaryOperator<NonNull<T>>
  * @example
  *   type NumberUnaryOperator = (v) => return v
  */
-export type NumberUnaryOperator = UnaryOperator<number | bigint>
+export type NumberUnaryOperator = UnaryOperator<Numeric>
 
 /**
  * StringUnaryOperator
@@ -1402,7 +1403,7 @@ export type NonNullBinaryOperator<T> = BinaryOperator<NonNull<T>>
  * @example
  *   type NumberBinaryOperator = (v1, v2) => return v1 + v2
  */
-export type NumberBinaryOperator = BinaryOperator<number | bigint>
+export type NumberBinaryOperator = BinaryOperator<Numeric>
 
 /**
  * StringBinaryOperator
@@ -1474,7 +1475,7 @@ export type NonNullTernaryOperator<T> = TernaryOperator<NonNull<T>>
  * @example
  *   type NumberTernaryOperator = (v1, v2, v3) => return v1 + v2 + v3
  */
-export type NumberTernaryOperator = TernaryOperator<number | bigint>
+export type NumberTernaryOperator = TernaryOperator<Numeric>
 
 /**
  * StringTernaryOperator
@@ -1546,7 +1547,7 @@ export type NonNullFilter<T> = Filter<NonNull<T>>
  * @example
  *   type NumberFilter = (v1 => true) => return [v1, v1]
  */
-export type NumberFilter = Filter<number | bigint>
+export type NumberFilter = Filter<Numeric>
 
 /**
  * StringFilter
@@ -1594,7 +1595,7 @@ export type ArraySetter<T> = BiConsumer<T[], T>
  * @example
  *   type NumberArrayGetter = (num) => (v1) => return v1[num]
  */
-export type NumberArrayGetter<T> = Processor<number | bigint, ArrayGetter<T>>
+export type NumberArrayGetter<T> = Processor<Numeric, ArrayGetter<T>>
 
 /**
  * NumberArraySetter
@@ -1602,7 +1603,7 @@ export type NumberArrayGetter<T> = Processor<number | bigint, ArrayGetter<T>>
  * @example
  *   type NumberArraySetter = (num) => (v1, v) => v1[num] = v
  */
-export type NumberArraySetter<T> = Processor<number | bigint, ArraySetter<T>>
+export type NumberArraySetter<T> = Processor<Numeric, ArraySetter<T>>
 // -------------------------------------------------------------------------------------------------
 /**
  * Comparator modes
@@ -1696,7 +1697,7 @@ export type NonNullPropertyComparator<T> = PropertyComparator<NonNull<T>>
  * @example
  *   type NumberComparator = (v1, v2) => return 0
  */
-export type NumberComparator = Comparator<number | bigint>
+export type NumberComparator = Comparator<Numeric>
 
 /**
  * StringComparator

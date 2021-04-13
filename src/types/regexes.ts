@@ -311,3 +311,7 @@ export const regexMatchAll = (regex: RegExp, content: string): RegExpMatchArray[
 
     return matches
 }
+
+export const classReg = (className: string): RegExp => {
+    return new RegExp(`(^|\\s+)${className}(\\s+|$)`)
+}

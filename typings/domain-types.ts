@@ -1,6 +1,6 @@
 import boxen from 'boxen'
 
-import { ObjectMap, Optional, Primitive } from './standard-types'
+import { ObjectMap, Optional, Primitive, PropertyRecord } from './standard-types'
 import { Profile } from './enum-types'
 
 import { Camera } from '../tools/camera'
@@ -14,6 +14,15 @@ import { Vector } from '../tools/vector'
  */
 export interface ObjectConstructor {
     assign(...objects: any[]): any
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * Properties
+ * @desc Type representing collection of properties
+ */
+export type Properties<T> = {
+    [name: string]: T
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -105,7 +114,43 @@ export interface ArrayBuffer {
  * LiteralUnion
  * @desc Type representing literal union
  */
-export type LiteralUnion<LiteralType, BaseType extends Primitive> = LiteralType | (BaseType & { _?: never })
+export type LiteralUnion<LiteralType, BaseType extends Primitive> =
+    LiteralType
+    | (BaseType & { _?: never })
+
+// -------------------------------------------------------------------------------------------------
+export type Key = string | number
+export type Ref<T> = string | ((instance: T) => any)
+export type ComponentState = {} | void
+
+/**
+ * ClassAttributes
+ * @desc Type representing attributes
+ */
+export interface Attributes {
+    key?: Key
+}
+
+/**
+ * ClassAttributes
+ * @desc Type representing class attributes
+ */
+export interface ClassAttributes<T> extends Attributes {
+    ref?: Ref<T>
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * Factory
+ * @desc Type representing factory
+ */
+export type Factory<T, P> = (new () => T) | (new () => { props: P })
+
+/**
+ * Factory
+ * @desc Type representing property factory
+ */
+export type PropertyFactory<T, P> = Factory<T, PropertyRecord<P>>
 
 // -------------------------------------------------------------------------------------------------
 /**

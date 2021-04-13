@@ -1,3 +1,5 @@
+import { Numeric } from "./general-types";
+
 /**
  * Nullish
  * @desc Type representing [nullish values][https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#nullish-coalescing] in TypeScript: `null | undefined`
@@ -128,7 +130,7 @@ export type OptionalPropertyKey = Optional<PropertyKey>
  * OptionalNumber
  * @desc Type representing [`Optional`] number type in TypeScript: `number | bigint | null | undefined`
  */
-export type OptionalNumber = Optional<number | bigint>
+export type OptionalNumber = Optional<Numeric>
 
 /**
  * OptionalBoolean
@@ -253,7 +255,7 @@ export type StringSet = Set<string>
  * NumberSet
  * @desc Type representing number {@link Set}
  */
-export type NumberSet = Set<number | bigint>
+export type NumberSet = Set<Numeric>
 
 /**
  * DateSet
