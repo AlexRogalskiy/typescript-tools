@@ -11,8 +11,8 @@ import { Profiles } from '../config/profiles'
 export namespace Requests {
     import isBlankString = Strings.isBlankString
     import makeArray = Arrays.makeArray
-    import isDev = Profiles.isDev
     import errorLogs = Logging.errorLogs
+    import isProd = Profiles.isProd
 
     export const BASE_URL = (lang: string): string => `https://${lang}.wikiquote.org/`
     export const USER_URL = (lang: string): string => `${BASE_URL(lang)}wiki/`
@@ -84,7 +84,7 @@ export namespace Requests {
     }
 
     export const getApiRootURL = async <T>(setup: ConfigOptions<T>, key: PropertyKey): Promise<string> => {
-        const options = isDev ? setup.options.dev : setup.options.prod
+        const options = isProd ? setup.options.prod : setup.options.dev
 
         if (!options[key]) {
             throw new Error(`No API end point defined for ${key.toString()}`)
