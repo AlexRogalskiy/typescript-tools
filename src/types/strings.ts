@@ -6,13 +6,14 @@ import cryptoRandomString from 'crypto-random-string'
 import { XmlDocument } from 'xmldoc'
 import { createHash, randomBytes } from 'crypto'
 import { promises } from 'fs'
+import yaml from 'js-yaml'
 
 import { RegexStringPair } from '../../typings/general-types'
 import { LockFile, LockFileEntry } from '../../typings/domain-types'
 import { Optional, OptionalNumber, OptionalString } from '../../typings/standard-types'
 import { BiProcessor, Comparator, Processor, StringProcessor, Supplier } from '../../typings/function-types'
 
-import { Errors, Checkers, Maths, Numbers, CommonUtils } from '..'
+import { Errors, Checkers, Maths, Numbers, CommonUtils, Logging } from '..'
 
 import { REGEX_ENTITY_PAIRS, REGEX_CONTROL_PAIRS, REGEX_ASCII_PAIRS } from '../constant/constants'
 
@@ -35,6 +36,7 @@ export namespace Strings {
     import randomBy = Numbers.randomBy
     import defineProperty = CommonUtils.defineProperty
     import defineStaticProperty = CommonUtils.defineStaticProperty
+    import errorLogs = Logging.errorLogs
 
     const fixedEncode = (value: string, ...pairs: RegexStringPair[]): string => {
         let result = value
@@ -74,6 +76,15 @@ export namespace Strings {
         const matcher = new Minimatch(glob, options)
 
         return changedFiles.some(file => matcher.match(file))
+    }
+
+    export const extractYaml = (content: string, options = { json: true }): Optional<string> => {
+        try {
+            return yaml.safeLoad(content, options)
+        } catch (err) {
+            errorLogs('Failed to parse helm requirements.yaml')
+            return null
+        }
     }
 
     export const envReplace = (value: any, env = process.env, regex = /(\\*)\${([^}]+)}/g): string => {

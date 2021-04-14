@@ -1,4 +1,5 @@
 import hasha from 'hasha'
+
 import {
     accessSync,
     constants,
@@ -7,13 +8,13 @@ import {
     mkdirSync,
     promises,
     readdirSync,
-    readFile,
     readFileSync,
     rmdirSync,
     statSync,
     unlinkSync,
     writeFileSync,
 } from 'fs'
+import { readFile } from 'fs-extra'
 import { isDirectory, isDirectorySync } from 'path-type'
 import { dirname, extname, join, resolve, basename, relative } from 'path'
 import { randomBytes } from 'crypto'
@@ -639,6 +640,57 @@ export namespace Files {
                     stderr,
                 })
             })
+        })
+    }
+
+    export const isGradleFile = (path: string): boolean => {
+        const filename = basename(path).toLowerCase()
+
+        return filename.endsWith('.gradle') || filename.endsWith('.gradle.kts')
+    }
+
+    export const isPropsFile = (path: string): boolean => {
+        const filename = basename(path).toLowerCase()
+
+        return filename === 'gradle.properties'
+    }
+
+    export const toAbsolutePath = (packageFile: string): string => {
+        return join(packageFile.replace(/^[/\\]*/, '/'))
+    }
+
+    export const readString = async (...paths: string[]): Promise<Buffer> => {
+        return readFile(resolve(...paths), 'utf8')
+    }
+
+    export const reorderFiles = (packageFiles: string[]): string[] => {
+        return packageFiles.sort((x, y) => {
+            const xAbs = toAbsolutePath(x)
+            const yAbs = toAbsolutePath(y)
+
+            const xDir = dirname(xAbs)
+            const yDir = dirname(yAbs)
+
+            if (xDir === yDir) {
+                if ((isGradleFile(xAbs) && isGradleFile(yAbs)) || (isPropsFile(xAbs) && isPropsFile(yAbs))) {
+                    if (xAbs > yAbs) {
+                        return 1
+                    }
+                    if (xAbs < yAbs) {
+                        return -1
+                    }
+                } else if (isGradleFile(xAbs)) {
+                    return 1
+                } else if (isGradleFile(yAbs)) {
+                    return -1
+                }
+            } else if (xDir.startsWith(yDir)) {
+                return 1
+            } else if (yDir.startsWith(xDir)) {
+                return -1
+            }
+
+            return 0
         })
     }
 }

@@ -1,7 +1,60 @@
 import { Pair } from '../../typings/general-types'
+import { GradleDependency } from '../../typings/domain-types'
+import { Optional } from '../../typings/standard-types'
+import { TokenType } from '../../typings/enum-types'
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires
 const isRegex = require('is-regex')
+
+const ESCAPE_REGEX_PATTERN = /\\['"bfnrt\\]/
+const PROPERTY_REGEX_PATTERN = '[a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)*'
+
+const regex = (str: string): RegExp => new RegExp(str, 'g')
+
+export const MODULE_REGEX_CONFIG = {
+    distributionMatch: regex(
+        '^(?:distributionUrl\\s*=\\s*)\\S*-(?<version>\\d+\\.\\d+(?:\\.\\d+)?(?:-\\w+)*)-(?<type>bin|all)\\.zip\\s*$',
+    ),
+    urlMatch: regex(
+        '^(?:git::)?(?<url>(?:(?:(?:http|https|ssh)://)?(?:.*@)?)?(?<path>(?:[^:/]+[:/])?(?<project>[^/]+/[^/]+)))(?<subdir>[^?]*)?ref=(?<currentValue>.+)$',
+    ),
+    artifactMatch: regex('^[a-zA-Z][-_a-zA-Z0-9]*(?:\\.[a-zA-Z0-9][-_a-zA-Z0-9]*?)*$'),
+    versionMatch: regex('^(?<version>[-.\\[\\](),a-zA-Z0-9+]+)'),
+}
+
+export const GITHUB_REGEX_CONFIG = {
+    imageMatch: regex('^s*image:s*\'?"?([^s\'"]+|)\'?"?s*$'),
+    nameMatch: regex('^s*name:s*\'?"?([^s\'"]+|)\'?"?s*$'),
+    usesMatch: regex('^s+-?s+?uses: (?<depName>[w-]+/[w-]+)(?<path>.*)?@(?<currentValue>.+?)s*?$'),
+}
+
+export const DOCKER_REGEX_CONFIG = {
+    fileMatch: [regex('(^|/|\\.)Dockerfile$'), regex('(^|/)Dockerfile\\.[^/]*$')],
+    fromMatch: regex(
+        '^[ \t]*FROM(?:\\\r?\n| |\t|#.*?\r?\n|[ \t]--[a-z]+=w+?)*[ \t](?<image>S+)(?:(?:\\\r?\n| |\t|#.*\r?\n)+as[ \t]+(?<name>S+))?/gim',
+    ),
+    copyMatch: regex('^[ \t]*COPY(?:\\\r?\n| |\t|#.*\r?\n|[ \t]--[a-z]+=w+?)*[ \t]--from=(?<image>S+)/gim'),
+}
+
+export const PROPERTY_REGEX = regex(
+    `^(?<leftPart>\\s*(?<key>${PROPERTY_REGEX_PATTERN})\\s*=\\s*['"]?)(?<value>[^\\s'"]+)['"]?\\s*$`,
+)
+
+export const COMMENT_REGEX = /^\s*#/
+
+export const COMMA_REGEX = '\\s*,\\s*'
+
+export const GROOVY_QUOTES = '(?:["\'](?:""|\'\')?)'
+
+export const GROOVY_VERSION_REGEX = `(?:${GROOVY_QUOTES}\\$)?{?([^\\s"'{}$)]+)}?${GROOVY_QUOTES}?`
+
+export const KOTLIN_VERSION_REGEX = '(?:"\\$)?{?([^\\s"{}$]+?)}?"?'
+
+export const SCRIPT_REGEX = /<\s*(script|link)\s+[^>]*?\/?>/i
+
+export const INTEGRITY_REGEX = /\s+integrity\s*=\s*(["'])(?<currentDigest>[^"']+)/
+
+export const YAML_REGEX = /\.ya?ml$/
 
 /**
  * Url regex patterns
@@ -84,14 +137,11 @@ export const EMAIL_REGEX2 = new RegExp(
  * @type {RegExp}
  */
 export const ALPHA_REGEX = /^[a-zA-Z]+$/
-// -------------------------------------------------------------------------------------------------
-const regex = (str: string): RegExp => {
-    return new RegExp(str, 'g')
-}
+// ------------------------------------------------------------------------------------------------
 
 const replace = (str: string, ...regexp: Pair<string, RegExp>[]): string => {
-    for (let i = 0; i < /** @type {Array} */ regexp.length; i += 1) {
-        str = str.replace(regexp[i].right, regexp[i].left)
+    for (const item of regexp) {
+        str = str.replace(item.right, item.left)
     }
 
     return str
@@ -312,6 +362,349 @@ export const regexMatchAll = (regex: RegExp, content: string): RegExpMatchArray[
     return matches
 }
 
-export const classReg = (className: string): RegExp => {
+export const expandDepName = (name: string): string => {
+    return name.includes('/') ? name.replace('/', ':') : `${name}:${name}`
+}
+
+export const classRegex = (className: string): RegExp => {
     return new RegExp(`(^|\\s+)${className}(\\s+|$)`)
+}
+
+export const groovyVersionRegex = (dependency: GradleDependency): RegExp => {
+    const groovyQuotes = '(?:["\'](?:""|\'\')?)'
+    const groovyVersion = `(?:${groovyQuotes}\\$)?{?([^\\s"'{}$)]+)}?${groovyQuotes}?`
+
+    return regex(
+        `id\\s+${groovyQuotes}${dependency.group}${groovyQuotes}\\s+version\\s+${groovyVersion}(?:\\s|;|})`,
+    )
+}
+
+export const kotlinPluginVersionRegex = (dependency: GradleDependency): RegExp => {
+    return regex(`(id\\("${dependency.group}"\\)\\s+version\\s+")[^$].*?(")`)
+}
+
+export const dependencyVersionRegex = (dependency: GradleDependency): RegExp => {
+    return regex(`(dependency\\s+['"]${dependency.group}:${dependency.name}:)[^'"]+(['"])`)
+}
+
+export const formatRegexArray = (
+    group: string,
+    name: string,
+    version: string,
+    prefix: string,
+    postfix: string,
+    comma = COMMA_REGEX,
+): RegExp[] => {
+    const regexes = [
+        `${group}${comma}${name}${comma}${version}`,
+        `${group}${comma}${version}${comma}${name}`,
+        `${name}${comma}${group}${comma}${version}`,
+        `${version}${comma}${group}${comma}${name}`,
+        `${name}${comma}${version}${comma}${group}`,
+        `${version}${comma}${name}${comma}${group}`,
+    ]
+
+    return regexes.map(value => regex(`${prefix}${value}${postfix}`))
+}
+
+export const variableRegex = (variable: string, version: string): RegExp => {
+    return regex(`(${variable}\\s*:\\s*?["'])(${version})(["'])`)
+}
+
+export const updateVersionLiterals = (
+    dependency: GradleDependency,
+    buildGradleContent: string,
+    newValue: string,
+): Optional<string> => {
+    const regexes: RegExp[] = [
+        groovyVersionRegex(dependency),
+        kotlinPluginVersionRegex(dependency),
+        dependencyVersionRegex(dependency),
+    ]
+
+    let result = buildGradleContent
+    for (const regex of regexes) {
+        const match = regex.exec(result)
+        if (match) {
+            result = result.replace(match[0], `${match[1]}${newValue}${match[2]}`)
+        }
+    }
+    return result === buildGradleContent ? null : result
+}
+
+export const updatePropertyFileGlobalVariables = (
+    dependency: GradleDependency,
+    content: string,
+    newValue: string,
+    variables: Record<string, string> = {},
+): Optional<string> => {
+    const variable = variables[`${dependency.group}:${dependency.name}`]
+
+    if (variable) {
+        const value = regex(`(${variable}\\s*=\\s*)(.*)`)
+        const match = value.exec(content)
+
+        if (match) {
+            return content.replace(match[0], `${match[1]}${newValue}`)
+        }
+    }
+
+    return null
+}
+
+export const updateKotlinVariablesByExtra = (
+    dependency: GradleDependency,
+    buildGradleContent: string,
+    newValue: string,
+    variables: Record<string, string> = {},
+): Optional<string> => {
+    const variable = variables[`${dependency.group}:${dependency.name}`]
+
+    if (variable) {
+        const value = regex(`(val ${variable} by extra(?: {|\\()\\s*")(.*)("\\s*[})])`)
+        const match = value.exec(buildGradleContent)
+
+        if (match) {
+            return buildGradleContent.replace(match[0], `${match[1]}${newValue}${match[3]}`)
+        }
+    }
+
+    return null
+}
+
+export const updateGlobalVariables = (
+    dependency: GradleDependency,
+    buildGradleContent: string,
+    newValue: string,
+    variables: Record<string, string> = {},
+): Optional<string> => {
+    const variable = variables[`${dependency.group}:${dependency.name}`]
+
+    if (variable) {
+        const regex = variableDefinitionRegex(variable)
+        const match = regex.exec(buildGradleContent)
+
+        if (match) {
+            return buildGradleContent.replace(match[0], `${match[1]}${newValue}${match[3]}`)
+        }
+    }
+
+    return null
+}
+
+export const updateGlobalMapVariables = (
+    dependency: GradleDependency,
+    buildGradleContent: string,
+    newValue: string,
+    variables: Record<string, string> = {},
+): Optional<string> => {
+    let variable = variables[`${dependency.group}:${dependency.name}`]
+
+    if (variable) {
+        while (variable && variable.split('.').length > 0) {
+            const regex = variableMapDefinitionRegex(variable, dependency.version)
+            const match = regex.exec(buildGradleContent)
+
+            if (match) {
+                return buildGradleContent.replace(match[0], `${match[1]}${newValue}${match[3]}`)
+            }
+
+            variable = variable.split('.').splice(1).join('.')
+        }
+    }
+
+    return null
+}
+
+export const variableMapDefinitionRegex = (variable: string, version: Optional<string>): RegExp => {
+    return regex(`(${variable}\\s*:\\s*?["'])(${version})(["'])`)
+}
+
+export const variableDefinitionRegex = (variable: string): RegExp => {
+    return regex(`(${variable}\\s*=\\s*?["'])(.*)(["'])`)
+}
+
+export const dependencyStringLiteralExpressionRegex = (dependency: GradleDependency): RegExp => {
+    return regex(`\\s*dependency\\s+['"]${dependency.group}:${dependency.name}:([^'"{}$]+)['"](?:\\s|;|})`)
+}
+
+export const kotlinImplementationVersionRegex = (dependency: GradleDependency): RegExp => {
+    // implementation("com.graphql-java", "graphql-java", graphqlVersion)
+    return regex(
+        `(?:implementation|testImplementation)\\s*\\(\\s*['"]${dependency.group}['"]\\s*,\\s*['"]${dependency.name}['"]\\s*,\\s*([a-zA-Z_][a-zA-Z_0-9]*)\\s*\\)\\s*(?:\\s|;|})`,
+    )
+}
+
+export const kotlinPluginVariableDotVersionRegex = (dependency: GradleDependency): RegExp => {
+    // id("org.jetbrains.kotlin.jvm").version(kotlinVersion)
+    return regex(
+        `id\\s*\\(\\s*"${dependency.group}"\\s*\\)\\s*\\.\\s*version\\s*\\(\\s*([a-zA-Z_][a-zA-Z_0-9]*)\\s*\\)\\s*(?:\\s|;|})`,
+    )
+}
+
+export const dependencyStringVariableExpressionRegex = (dependency: GradleDependency): RegExp => {
+    return regex(`\\s*dependency\\s+['"]${dependency.group}:${dependency.name}:([^}]*)}['"](?:\\s|;|)`)
+}
+
+export const moduleKotlinVersionRegex = (dependency: GradleDependency): RegExp[] => {
+    // one capture group: the version variable
+    const group = `group\\s*=\\s*"${dependency.group}"`
+    const name = `name\\s*=\\s*"${dependency.name}"`
+    const version = `version\\s*=\\s*${KOTLIN_VERSION_REGEX}`
+
+    return formatRegexArray(group, name, version, '', '[\\s),]')
+}
+
+export const groovyPluginVersionRegex = (dependency: GradleDependency): RegExp => {
+    return regex(
+        `(id\\s+${GROOVY_QUOTES}${dependency.group}${GROOVY_QUOTES}\\s+version\\s+${GROOVY_QUOTES})[^"$].*?(${GROOVY_QUOTES})`,
+    )
+}
+
+export const moduleMapVersionRegex = (dependency: GradleDependency): RegExp[] => {
+    // two captures groups: start and end. The version is in between them
+    const group = `group\\s*:\\s*${GROOVY_QUOTES}${dependency.group}${GROOVY_QUOTES}`
+    const name = `name\\s*:\\s*${GROOVY_QUOTES}${dependency.name}${GROOVY_QUOTES}`
+    const version = `version\\s*:\\s*${GROOVY_QUOTES})[^{}$"']+?(${GROOVY_QUOTES}`
+
+    return formatRegexArray(group, name, version, '(', ')')
+}
+
+export const moduleKotlinNamedVersionRegex = (dependency: GradleDependency): RegExp[] => {
+    // two captures groups: start and end. The version is in between them
+    const group = `group\\s*=\\s*"${dependency.group}"`
+    const name = `name\\s*=\\s*"${dependency.name}"`
+    const version = 'version\\s*=\\s*")[^{}$]*?("'
+
+    return formatRegexArray(group, name, version, '(', ')')
+}
+
+export const moduleMapVariableVersionRegex = (dependency: GradleDependency): RegExp[] => {
+    // one capture group: the version variable
+    const group = `group\\s*:\\s*${GROOVY_QUOTES}${dependency.group}${GROOVY_QUOTES}`
+    const name = `name\\s*:\\s*${GROOVY_QUOTES}${dependency.name}${GROOVY_QUOTES}`
+    const version = `version\\s*:\\s*${GROOVY_VERSION_REGEX}`
+
+    return formatRegexArray(group, name, version, '', '')
+}
+
+export const moduleKotlinVariableVersionRegex = (dependency: GradleDependency): RegExp[] => {
+    // one capture group: the version variable
+    const group = `group\\s*=\\s*"${dependency.group}"`
+    const name = `name\\s*=\\s*"${dependency.name}"`
+    const version = `version\\s*=\\s*${KOTLIN_VERSION_REGEX}`
+
+    return formatRegexArray(group, name, version, '', '[\\s),]')
+}
+
+export const moduleStringVersionRegex = (dependency: GradleDependency): RegExp => {
+    return regex(`${GROOVY_QUOTES}${dependency.group}:${dependency.name}:\\$([^{].*?)${GROOVY_QUOTES}`)
+}
+
+export const groovyPluginVariableVersionRegex = (dependency: GradleDependency): RegExp => {
+    return regex(
+        `id\\s+${GROOVY_QUOTES}${dependency.group}${GROOVY_QUOTES}\\s+version\\s+${GROOVY_VERSION_REGEX}(?:\\s|;|})`,
+    )
+}
+
+export const kotlinPluginVariableVersionRegex = (dependency: GradleDependency): RegExp => {
+    return regex(`id\\("${dependency.group}"\\)\\s+version\\s+${KOTLIN_VERSION_REGEX}(?:\\s|;|})`)
+}
+
+export const variableDefinitionFormatMatch = (variable: string): RegExp => {
+    return regex(`(${variable}\\s*=\\s*?["'])(.*)(["'])`)
+}
+
+export const variableMapDefinitionFormatMatch = (variable: string, version: string): RegExp => {
+    return regex(`(${variable}\\s*:\\s*?["'])(${version})(["'])`)
+}
+
+export const skipCommentLines = (
+    lines: string[],
+    lineNumber: number,
+): { lineNumber: number; line: string } => {
+    let ln = lineNumber
+
+    while (ln < lines.length - 1 && COMMENT_REGEX.test(lines[ln])) {
+        ln += 1
+    }
+
+    return { line: lines[ln], lineNumber: ln }
+}
+
+// Extracts version-like and range-like strings
+// from the beginning of input
+export const versionLikeSubstring = (input: string): Optional<string> => {
+    const match = input ? MODULE_REGEX_CONFIG.versionMatch.exec(input) : null
+    return match && match.groups ? match.groups.version : null
+}
+
+export const isDependencyString = (input: string): boolean => {
+    const split = input?.split(':')
+
+    if (split?.length !== 3) {
+        return false
+    }
+
+    const [groupId, artifactId, versionPart] = split
+
+    return (
+        groupId !== null &&
+        artifactId !== null &&
+        versionPart !== null &&
+        MODULE_REGEX_CONFIG.artifactMatch.test(groupId) &&
+        MODULE_REGEX_CONFIG.artifactMatch.test(artifactId) &&
+        versionPart === versionLikeSubstring(versionPart)
+    )
+}
+
+export const ESCAPE_CHARS = {
+    [TokenType.LineComment]: { match: /\/\/.*?$/ },
+    [TokenType.MultiComment]: { match: /\/\*[^]*?\*\//, lineBreaks: true },
+    [TokenType.Newline]: { match: /\r?\n/, lineBreaks: true },
+    [TokenType.Space]: { match: /[ \t\r]+/ },
+    [TokenType.Semicolon]: ';',
+    [TokenType.Colon]: ':',
+    [TokenType.Dot]: '.',
+    [TokenType.Comma]: ',',
+    [TokenType.Operator]: /(?:==|\+=?|-=?|\/=?|\*\*?|\.+|:)/,
+    [TokenType.Assignment]: '=',
+    [TokenType.SingleQuoted]: {
+        match: "'",
+    },
+    [TokenType.DoubleQuoted]: {
+        match: '"',
+    },
+    [TokenType.Substitute]: {
+        match: /\${\s*[a-zA-Z_][a-zA-Z0-9_]*(?:\s*\.\s*[a-zA-Z_][a-zA-Z0-9_]*)*\s*}|\$[a-zA-Z_][a-zA-Z0-9_]*(?:\.[a-zA-Z_][a-zA-Z0-9_]*)*/,
+        value: (value: string): string => value.replace(/^\${?\s*/, '').replace(/\s*}$/, ''),
+    },
+    [TokenType.Unknown]: { match: /./ },
+    [TokenType.Word]: { match: /[a-zA-Z$_][a-zA-Z0-9$_]+/ },
+    [TokenType.LeftParen]: { match: '(' },
+    [TokenType.RightParen]: { match: ')' },
+    [TokenType.LeftBracket]: { match: '[' },
+    [TokenType.RightBracket]: { match: ']' },
+    [TokenType.LeftBrace]: { match: '{' },
+    [TokenType.RightBrace]: { match: '}' },
+    [TokenType.TripleSingleQuoted]: {
+        match: "'''",
+    },
+    [TokenType.TripleDoubleQuoted]: {
+        match: '"""',
+    },
+    [TokenType.EscapedChar]: {
+        match: ESCAPE_REGEX_PATTERN,
+        value: (value: string): string =>
+            ({
+                "\\'": "'",
+                '\\"': '"',
+                '\\b': '\b',
+                '\\f': '\f',
+                '\\n': '\n',
+                '\\r': '\r',
+                '\\t': '\t',
+                '\\\\': '\\',
+            }[value]),
+    },
 }

@@ -1,6 +1,6 @@
 import boxen from 'boxen'
 
-import { ObjectMap, Optional, Primitive, PropertyRecord } from './standard-types'
+import { ObjectMap, Optional, Primitive, PropertyRecord, StringRecord } from './standard-types'
 import { Profile } from './enum-types'
 
 import { Camera } from '../tools/camera'
@@ -14,6 +14,76 @@ import { Vector } from '../tools/vector'
  */
 export interface ObjectConstructor {
     assign(...objects: any[]): any
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * GradleDependency
+ * @desc Type representing gradle dependency
+ */
+export type GradleDependency = {
+    group: string
+    name: string
+    version?: string
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * DockerComposeConfig
+ * @desc Type representing docker compose configuration
+ */
+export type DockerComposeConfig = {
+    version?: string
+    services?: StringRecord<DockerComposeService>
+}
+
+/**
+ * DockerComposeService
+ * @desc Type representing docker compose service
+ */
+export type DockerComposeService = {
+    image?: string
+    build?: {
+        context?: string
+        dockerfile?: string
+    }
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * JenkinsPluginRenovate
+ * @desc Type representing jenkins plugin renovate
+ */
+export type JenkinsPluginRenovate = {
+    ignore?: boolean
+}
+
+/**
+ * JenkinsPluginRenovate
+ * @desc Type representing jenkins plugin source
+ */
+export type JenkinsPluginSource = {
+    version?: string
+    url?: string
+}
+
+/**
+ * JenkinsPluginRenovate
+ * @desc Type representing jenkins plugin
+ */
+export type JenkinsPlugin = {
+    artifactId?: string
+    groupId?: string
+    source?: JenkinsPluginSource
+    renovate?: JenkinsPluginRenovate
+}
+
+/**
+ * JenkinsPluginRenovate
+ * @desc Type representing jenkins plugins
+ */
+export type JenkinsPlugins = {
+    plugins?: JenkinsPlugin[]
 }
 
 // -------------------------------------------------------------------------------------------------

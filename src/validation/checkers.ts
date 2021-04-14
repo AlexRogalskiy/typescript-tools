@@ -625,6 +625,12 @@ export namespace Checkers {
         }
     }
 
+    export const isValidChartName = (name: string): boolean => !/[!@#$%^&*(),.?":{}/|<>A-Z]/.test(name)
+
+    export const isSpace = (c: string): boolean => {
+        return /\s/.test(c)
+    }
+
     export const isHostMethod = (obj: any, prop: PropertyKey): boolean => {
         return (obj && typeof obj[prop] === 'function') || isHostObject(obj, prop)
     }

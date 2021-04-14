@@ -17,6 +17,38 @@ export enum ErrorType {
 
 // -------------------------------------------------------------------------------------------------
 /**
+ * TokenType
+ * @desc Type representing supported tokens
+ */
+export enum TokenType {
+    Unknown,
+    Word,
+    Assignment,
+    Operator,
+    Comma,
+    Dot,
+    Colon,
+    Semicolon,
+    Space,
+    Newline,
+    MultiComment,
+    LineComment,
+    LeftParen,
+    RightParen,
+    LeftBracket,
+    RightBracket,
+    LeftBrace,
+    RightBrace,
+    SingleQuoted,
+    DoubleQuoted,
+    TripleSingleQuoted,
+    TripleDoubleQuoted,
+    Substitute,
+    EscapedChar,
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
  * DbErrorType
  * @desc Type representing database errors
  */
@@ -67,6 +99,7 @@ export enum PullRequestState {
     All = 'all',
     NotOpen = '!open',
 }
+
 // -------------------------------------------------------------------------------------------------
 /**
  * Profile
