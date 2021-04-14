@@ -1468,4 +1468,36 @@ export namespace Strings {
     export const escapeControl = (value: string): string => {
         return fixedEncode(value, ...REGEX_CONTROL_PAIRS)
     }
+
+    /**
+     * @public
+     * @function deepTrim
+     * @description Deep trim object properties of type {String}.
+     * @param {Object} object - Object with untrimmed properties of type {String}.
+     * @returns {Object} - Object with trimmed properties of type {String}.
+     */
+    export const deepTrim = (object: any): void => {
+        if (!object) return
+
+        for (const property in object) {
+            if (object.hasOwnProperty(property)) {
+                if (typeof object[property] === 'object' || object[property] instanceof Object) {
+                    deepTrim(object[property])
+                } else if (typeof object[property] === 'string' || object[property] instanceof String) {
+                    object[property] = object[property].trim()
+                }
+            }
+        }
+
+        return object
+    }
+
+    export const escapeJSON = (value: string): string => {
+        value = value.replace(new RegExp("\\'".replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1'), 'g'), "'")
+        value = value.replace(/"((?:"[^"]*"|[^"])*?)"(?=[:},])(?=(?:"[^"]*"|[^"])*$)/gm, (_, group) => {
+            return `"${group.replace(/"/g, '\\"')}"`
+        })
+
+        return value
+    }
 }

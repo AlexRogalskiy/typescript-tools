@@ -702,6 +702,12 @@ export const transformRegUrl = (url: string): string => {
     return url.replace(/(\/packages\.json)$/, '')
 }
 
+export const isIPv4 = (value: string): boolean => {
+    return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(
+        value,
+    )
+}
+
 export const ESCAPE_CHARS = {
     [TokenType.LineComment]: { match: /\/\/.*?$/ },
     [TokenType.MultiComment]: { match: /\/\*[^]*?\*\//, lineBreaks: true },

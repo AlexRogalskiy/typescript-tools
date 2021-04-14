@@ -544,4 +544,34 @@ export namespace Objects {
     export const keys = (objectMap: ObjectMap<any>): string[] => {
         return Object.keys(objectMap)
     }
+
+    /**
+     * @public
+     * @function deepFreeze
+     * @description Deep freeze object.
+     * @param {Object} object - Object to deep freeze.
+     * @returns {Object} - Deep frozen object.
+     */
+    export const deepFreeze2 = (object: any): void => {
+        if (!object) return
+
+        let property, propertyKey
+        object = Object.freeze(object)
+
+        for (propertyKey in object) {
+            if (object.hasOwnProperty(propertyKey)) {
+                property = object[propertyKey]
+                if (
+                    typeof property !== 'object' ||
+                    !(property instanceof Object) ||
+                    Object.isFrozen(property)
+                ) {
+                    continue
+                }
+                deepFreeze2(property)
+            }
+        }
+
+        return object
+    }
 }
