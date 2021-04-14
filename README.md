@@ -50,7 +50,7 @@
 [![NPM Package Version](https://img.shields.io/npm/v/ts-devtools.svg)](https://npmjs.org/package/ts-devtools)
 [![NPM Package License](https://img.shields.io/npm/l/ts-devtools.svg)](https://opensource.org/licenses/gpl-license)
 [![NPM Package Downloads](https://img.shields.io/npm/dm/ts-devtools.svg)](https://npmjs.org/package/ts-devtools)
-[![Inch CI Documentation Coverage Status](https://inch-ci.org/github/AnatoliyGatt/ts-devtools.svg)](https://inch-ci.org/github/AnatoliyGatt/ts-devtools)
+[![Inline docs](http://inch-ci.org/github/AlexRogalskiy/typescript-tools.svg?branch=master)](http://inch-ci.org/github/AlexRogalskiy/typescript-tools)
 
 [![NPM Package Statistics](https://nodei.co/npm/ts-devtools.png?downloads=true\&downloadRank=true\&stars=true)](https://npmjs.org/package/ts-devtools)
 
