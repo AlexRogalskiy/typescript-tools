@@ -1,4 +1,4 @@
-# *TypeScript Tools*
+# *TypeScript DevTools*
 
 ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/AlexRogalskiy/typescript-tools)
 ![GitHub Release Date](https://img.shields.io/github/release-date/AlexRogalskiy/typescript-tools)
@@ -46,6 +46,12 @@
 [![Chat](https://img.shields.io/badge/chat-discussions-success.svg)](https://github.com/AlexRogalskiy/typescript-tools/discussions)
 [![Open questions](https://img.shields.io/badge/Open-questions-blue.svg?style=flat-curved)](https://github.com/AlexRogalskiy/typescript-tools/labels/question)
 [![Open bugs](https://img.shields.io/badge/Open-bugs-red.svg?style=flat-curved)](https://github.com/AlexRogalskiy/typescript-tools/labels/bug)
+
+[![NPM Package Version](https://img.shields.io/npm/v/ts-devtools.svg)](https://npmjs.org/package/ts-devtools)
+[![NPM Package License](https://img.shields.io/npm/v/ts-devtools.svg)](https://opensource.org/licenses/gpl-license)
+[![NPM Package Downloads](https://img.shields.io/npm/v/ts-devtools.svg)](https://npmjs.org/package/ts-devtools)
+
+[![NPM Package Statistics](https://nodei.co/npm/ts-devtools.png?downloads=true&downloadRank=true&stars=true)](https://npmjs.org/package/ts-devtools)
 
 ## *Table of contents*
 
