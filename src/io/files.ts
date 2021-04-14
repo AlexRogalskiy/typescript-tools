@@ -18,20 +18,21 @@ import { readFile } from 'fs-extra'
 import { isDirectory, isDirectorySync } from 'path-type'
 import { dirname, extname, join, resolve, basename, relative } from 'path'
 import { randomBytes } from 'crypto'
-import { execSync, spawn, SpawnOptions } from 'child_process'
+import { execSync, spawn, spawnSync, SpawnOptions } from 'child_process'
 
 import { Optional } from '../../typings/standard-types'
 import { Options, Result, ResultMap } from '../../typings/domain-types'
 
 import { Cache } from '../../tools/cache'
 
-import { Strings, Errors } from '..'
+import { Strings, Errors, parseJavaVersion, Logging } from '..'
 
 export namespace Files {
     import uniqueId = Strings.uniqueId
     import escapeRegExp = Strings.escapeRegExp
     import isBlankString = Strings.isBlankString
     import valueError = Errors.valueError
+    import errorLogs = Logging.errorLogs
 
     const cache = new Cache()
 
@@ -692,5 +693,19 @@ export namespace Files {
 
             return 0
         })
+    }
+
+    export const determineJavaVersion = (): number => {
+        try {
+            const javaVersionCommand = spawnSync('java', ['-version'], {
+                encoding: 'utf8',
+                windowsHide: true,
+            })
+
+            return parseJavaVersion(javaVersionCommand.stderr)
+        } catch (e) {
+            errorLogs(e.message)
+            return 0
+        }
     }
 }

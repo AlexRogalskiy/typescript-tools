@@ -51,6 +51,16 @@ export type DockerComposeService = {
 
 // -------------------------------------------------------------------------------------------------
 /**
+ * UserPass
+ * @desc Type representing user pass interface
+ */
+export interface UserPass {
+    username: string
+    password: string
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
  * JenkinsPluginRenovate
  * @desc Type representing jenkins plugin renovate
  */

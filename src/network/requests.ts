@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-unfetch'
 import { parse, stringify } from 'qs'
 
-import { Formats, Strings, Arrays, Logging } from '..'
+import { Arrays, Formats, Logging, Strings } from '..'
 
 import { Optional } from '../../typings/standard-types'
 import { ConfigOptions } from '../../typings/domain-types'
@@ -25,9 +25,9 @@ export namespace Requests {
     export type InitHeaders = Headers | Record<string, string> | string[][]
 
     export type AttachmentData = {
-        type: 'blob' | 'src'
-        blob: BlobPart
-        src: string
+        readonly type: 'blob' | 'src'
+        readonly blob: BlobPart
+        readonly src: string
     }
 
     export const getQueryString = (params: Record<string, any>): string => {
@@ -140,6 +140,15 @@ export namespace Requests {
         return headers
     }
 
+    export const normalizeUrl = (fragment: string): string => {
+        const url = fragment.replace(/\/+/g, '/')
+        if (url.length > 1) {
+            return url.replace(/\/$/, '')
+        }
+
+        return url
+    }
+
     export const getUrlName = (url: string): Optional<string> => {
         const value = url.split('/').pop()
 
@@ -163,26 +172,15 @@ export namespace Requests {
         return Promise.reject(error)
     }
 
-    export const fetchJson = async (url: string, options: RequestInit = {}): Promise<any> => {
-        try {
-            const response = await fetch(url, options)
-
-            return await response.json()
-        } catch (e) {
-            console.error(`Cannot fetch request by url: ${url}, message: ${e.message}`)
-            throw e
-        }
-    }
-
     export const fetchAsJson = async (url: string, options: RequestInit = {}): Promise<any> => {
         try {
             const response = await fetch(url, options)
             const data = await checkStatus(response)
 
             return await data.json()
-        } catch (e) {
-            errorLogs(`Cannot fetch request by url: ${url}, message: ${e.message}`)
-            throw e
+        } catch (error) {
+            errorLogs(`Cannot fetch request by url: ${url}, message: ${error.message}`)
+            throw error
         }
     }
 
@@ -301,6 +299,19 @@ export namespace Requests {
                 skipNulls: true,
             },
         )
+    }
+
+    export const getHost2 = ({ hostName, domainName, endpoint, baseUrl }: any): Optional<string> => {
+        let host = hostName || domainName
+        if (!host) {
+            try {
+                host = endpoint || baseUrl
+                host = new URL(host).host
+            } catch (err) {
+                host = null
+            }
+        }
+        return host
     }
 
     export const replacePageNumber = (param: string, pageNum: number): string => {

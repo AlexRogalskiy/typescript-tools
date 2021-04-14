@@ -2,6 +2,8 @@ import { Pair } from '../../typings/general-types'
 import { GradleDependency } from '../../typings/domain-types'
 import { Optional } from '../../typings/standard-types'
 import { TokenType } from '../../typings/enum-types'
+import { Strings } from './strings'
+import quote = Strings.quote
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires
 const isRegex = require('is-regex')
@@ -39,6 +41,10 @@ export const DOCKER_REGEX_CONFIG = {
 export const PROPERTY_REGEX = regex(
     `^(?<leftPart>\\s*(?<key>${PROPERTY_REGEX_PATTERN})\\s*=\\s*['"]?)(?<value>[^\\s'"]+)['"]?\\s*$`,
 )
+
+export const CLOUDFLARE_URL_REGEX = /\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/(?<depName>[^/]+?)\/(?<currentValue>[^/]+?)\/(?<asset>[-/_.a-zA-Z0-9]+)/
+
+export const PLUGIN_REGEX = /^\s*plugin\s*(['"])(?<plugin>[^'"]+)\1/
 
 export const COMMENT_REGEX = /^\s*#/
 
@@ -656,6 +662,44 @@ export const isDependencyString = (input: string): boolean => {
         MODULE_REGEX_CONFIG.artifactMatch.test(artifactId) &&
         versionPart === versionLikeSubstring(versionPart)
     )
+}
+
+export const parseJavaVersion = (value: string): number => {
+    const versionMatch = /version "(?:1\.)?(\d+)[\d._-]*"/.exec(value)
+
+    if (versionMatch !== null && versionMatch.length === 2) {
+        return parseInt(versionMatch[1], 10)
+    }
+
+    return 0
+}
+
+export const getPluginCommands = (content: string): string[] => {
+    const result = new Set<string>()
+    const lines: string[] = content.split('\n')
+
+    for (const line of lines) {
+        const match = PLUGIN_REGEX.exec(line)
+        if (match) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            const { plugin } = match.groups
+            result.add(`gem install ${quote(plugin)}`)
+        }
+    }
+
+    return [...result]
+}
+
+/**
+ * The regUrl is expected to be a base URL. GitLab composer repository installation guide specifies
+ * to use a base URL containing packages.json. Composer still works in this scenario by determining
+ * whether to add / remove packages.json from the URL.
+ *
+ * See https://github.com/composer/composer/blob/750a92b4b7aecda0e5b2f9b963f1cb1421900675/src/Composer/Repository/ComposerRepository.php#L815
+ */
+export const transformRegUrl = (url: string): string => {
+    return url.replace(/(\/packages\.json)$/, '')
 }
 
 export const ESCAPE_CHARS = {
