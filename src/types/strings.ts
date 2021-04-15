@@ -1489,6 +1489,10 @@ export namespace Strings {
         return object
     }
 
+    export const toTitleCase = (str: string): string => {
+        return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())
+    }
+
     export const escapeJSON = (value: string): string => {
         value = value.replace(new RegExp("\\'".replace(/([.*+?^=!:${}()|[\]/\\])/g, '\\$1'), 'g'), "'")
         value = value.replace(/"((?:"[^"]*"|[^"])*?)"(?=[:},])(?=(?:"[^"]*"|[^"])*$)/gm, (_, group) => {
