@@ -24,29 +24,35 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - uses: actions/cache@v2
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+      - name: Retrieve dependencies from cache
+        id: cacheNpm
+        uses: actions/cache@v2
         with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          path: |
+            ~/.npm
+            node_modules
+          key: npm-${{ runner.os }}-${{ github.ref }}-${{ hashFiles('package.json') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            npm-${{ runner.os }}-${{ github.ref }}-
+            npm-${{ runner.os }}-refs/heads/master-
 
-      - name: Install
-        run: yarn install
+      - name: Install dependencies
+        if: steps.cacheNpm.outputs.cache-hit != 'true'
+        run: |
+          npm update --no-save
+          npm update --save-dev --no-save
 
-      - name: Lint
-        run: yarn build
+      - name: Build project
+        run: npm run build
 
-      - name: Jest
-        run: yarn test:all
+      - name: Run tests
+        run: npm run test:all
 
-      - name: Check
-        run: yarn check:all
+      - name: Run lint rules
+        run: npm run format:all
+
+      - name: Run format check
+        run: npm run check:all
 
       - name: Circular dependency check
         uses: gerrit0/circular-dependency-check@v1

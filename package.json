@@ -22,7 +22,7 @@
         "prebuild": "del-cli dist coverage .cache",
         "build": "tsdx build",
         "watch": "tsdx watch",
-        "clean": "del-cli --dot=true \"./dist/**/*\"",
+        "clean": "del-cli --dot=true dist",
         "reinstall": "del-cli --dot=true ./node_modules ./package-lock.json ./yarn.lock",
         "coverage": "cat ./coverage/lcov.info | coveralls",
         "version": "git add -A dist",
