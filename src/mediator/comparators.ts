@@ -1,9 +1,16 @@
 import { Optional } from '../../typings/standard-types'
 import { Comparator, ComparatorMode, PropertyComparator } from '../../typings/function-types'
 
-import { Checkers, Errors } from '..'
+import { Checkers, Errors, Logging } from '..'
 
 export namespace Comparators {
+    import notNullOrUndefined = Checkers.notNullOrUndefined
+    import errorLogs = Logging.errorLogs
+    import isString = Checkers.isString
+    import isObject = Checkers.isObject
+    import valueError = Errors.valueError
+    import isFunction = Checkers.isFunction
+
     /**
      * @public
      * @module comparators
@@ -18,7 +25,6 @@ export namespace Comparators {
 
         if (typeof a === typeof b) {
             if (Checkers.hasProperty(a, 'compareTo')) {
-                console.log(a.compareTo)
                 return a.compareTo(b)
             }
 
@@ -49,8 +55,8 @@ export namespace Comparators {
      * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
     export const compareByLocale = <T extends string>(a: T, b: T, mode: ComparatorMode = 'asc'): number => {
-        let a_ = a === null ? '' : `${a}`
-        let b_ = b === null ? '' : `${b}`
+        let a_ = !a ? '' : `${a}`
+        let b_ = !b ? '' : `${b}`
 
         if (mode !== 'asc') {
             b_ = [a_, (a_ = b_)][0]
@@ -68,8 +74,8 @@ export namespace Comparators {
      * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
     export const compareIgnoreCase = <T extends string>(a: T, b: T, mode: ComparatorMode = 'asc'): number => {
-        let a_ = a.toLowerCase()
-        let b_ = b.toLowerCase()
+        let a_ = !a ? '' : `${a}`.toLowerCase()
+        let b_ = !b ? '' : `${b}`.toLowerCase()
 
         if (mode !== 'asc') {
             b_ = [a_, (a_ = b_)][0]
@@ -87,18 +93,18 @@ export namespace Comparators {
      * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
     export const compareByLocaleIgnoreCase = <T extends string>(
-        a: T,
-        b: T,
+        a: Optional<T>,
+        b: Optional<T>,
         mode: ComparatorMode = 'asc',
     ): number => {
-        let a_: string = a === null ? '' : `${a}`
-        let b_: string = b === null ? '' : `${b}`
+        let a_: string = !a ? '' : `${a}`.toLowerCase()
+        let b_: string = !b ? '' : `${b}`.toLowerCase()
 
         if (mode !== 'asc') {
             b_ = [a_, (a_ = b_)][0]
         }
 
-        return a_.toLowerCase().localeCompare(b_.toLowerCase())
+        return a_.localeCompare(b_)
     }
 
     /**
@@ -109,9 +115,13 @@ export namespace Comparators {
      * @param {ComparatorMode} mode comparator mode (ascending / descending)
      * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
-    export const compareByLength = <T extends string>(a: T, b: T, mode: ComparatorMode = 'asc'): number => {
-        let a_ = a === null ? '' : `${a}`
-        let b_ = b === null ? '' : `${b}`
+    export const compareByLength = <T extends string>(
+        a: Optional<T>,
+        b: Optional<T>,
+        mode: ComparatorMode = 'asc',
+    ): number => {
+        let a_ = !a ? '' : `${a}`
+        let b_ = !b ? '' : `${b}`
 
         if (mode !== 'asc') {
             b_ = [a_, (a_ = b_)][0]
@@ -168,7 +178,7 @@ export namespace Comparators {
      * @param comparator initial input {@link Comparator} to operate by
      * @return {@link Number} -1 - lower, 0 - equals, 1 - greater
      */
-    export const compareByPropertyDefault = <T>(
+    export const compareByProp = <T>(
         prop: PropertyKey,
         comparator: Comparator<T> = compareByOrder,
     ): Comparator<T> => {
@@ -181,13 +191,11 @@ export namespace Comparators {
                 throw Errors.valueError(`Property=${String(prop)} not exists on object=${b}`)
             }
 
-            const comparator_ = Checkers.isFunction(comparator) ? comparator : null
-
-            if (!comparator_) {
-                throw Errors.valueError(`Invalid comparator type: ${comparator_}, should be valid Comparator`)
+            if (!isFunction(comparator)) {
+                throw valueError(`Invalid comparator type: ${typeof comparator}, should be [Function]`)
             }
 
-            return comparator_(a[prop], b[prop])
+            return comparator(a[prop], b[prop])
         }
     }
 
@@ -218,8 +226,8 @@ export namespace Comparators {
         prop: PropertyKey,
         mode: ComparatorMode = 'asc',
     ): number => {
-        let a_ = a === null ? '' : `${a[prop]}`
-        let b_ = b === null ? '' : `${b[prop]}`
+        let a_ = !a ? '' : `${a[prop]}`
+        let b_ = !b ? '' : `${b[prop]}`
 
         if (a_ === b_) {
             return 0
@@ -238,14 +246,7 @@ export namespace Comparators {
      */
     export const compareBy = <T>(...comparators: Comparator<T>[]): Comparator<T> => {
         return (a, b): number => {
-            for (const comparator of comparators) {
-                const value = comparator(a, b)
-                if (value !== 0) {
-                    return value
-                }
-            }
-
-            return 0
+            return comparators.map(f => f.call(null, a, b)).find(v => v !== 0) || 0
         }
     }
 
@@ -258,7 +259,7 @@ export namespace Comparators {
      * @param {PropertyKey} props property collection to compare by
      * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
-    export const compareByProperties = <T>(
+    export const compareByProps = <T>(
         a: T,
         b: T,
         mode: ComparatorMode = 'asc',
@@ -289,56 +290,41 @@ export namespace Comparators {
      * options = { sensitivity: 'base' }
      * locale = 'sv'
      */
-    export const compareByLocaleOptions = (() => {
-        const DEFAULT_OPTIONS = { sensitivity: 'base' }
-        const DEFAULT_LOCALE = 'en'
-
+    export const compareByLocaleOptions = ((localeOptions: any): any => {
         return <T extends string>(
-            a: T,
-            b: T,
+            a: Optional<T>,
+            b: Optional<T>,
             mode: ComparatorMode = 'asc',
             locale?: string,
             options?: any,
         ): number => {
-            let a_ = a === null ? '' : `${a}`
-            let b_ = b === null ? '' : `${b}`
+            let a_ = !a ? '' : `${a}`
+            let b_ = !b ? '' : `${b}`
 
             if (mode !== 'asc') {
                 b_ = [a_, (a_ = b_)][0]
             }
 
-            const locale_ = Checkers.isString(locale) ? locale : DEFAULT_LOCALE
-            const options_ = Checkers.isObject(options) ? options : DEFAULT_OPTIONS
+            const locale_: string | string[] = isString(locale) ? locale : localeOptions.locale
+            const options_: Intl.CollatorOptions = isObject(options) ? options : localeOptions.options
 
-            const localeCompareSupportsCollator = <T extends string>(a: T, b: T): Optional<number> => {
+            const compareByCollator = <TT extends string>(aa: TT, bb: TT): Optional<number> => {
                 try {
-                    return new Intl.Collator(locale_, options_).compare(a, b)
-                } catch (e) {
-                    console.log(`ERROR: invalid locale supports collator < ${e.message} >`)
+                    return new Intl.Collator(locale_, options_).compare(aa, bb)
+                } catch (error) {
+                    errorLogs(`Invalid locale collation, message: ${error.message}`)
+
                     return null
                 }
             }
 
-            const localeCompareSupportsLocales = <T extends string>(a: T, b: T): Optional<number> => {
-                try {
-                    return new Intl.Collator(locale_, options_).compare(a, b)
-                } catch (e) {
-                    console.log(`ERROR: invalid supports locales < ${e.message} >`)
-                    return null
-                }
-            }
-
-            let result = localeCompareSupportsCollator(a_, b_)
-            if (Checkers.isNullOrUndefined(result)) {
-                result = localeCompareSupportsLocales(a_, b_)
-                if (Checkers.isNullOrUndefined(result)) {
-                    return compareByLocale(a_, b_)
-                }
-            }
-
-            return result ? result : 0
+            return (
+                [compareByCollator, compareByLocale]
+                    .map(func => func.call(null, a_, b_))
+                    .find(notNullOrUndefined) || 0
+            )
         }
-    })()
+    })({ locale: 'en', options: { sensitivity: 'base' } })
 
     /**
      * @public

@@ -88,6 +88,10 @@ export namespace Checkers {
         return !isUndefined(value)
     }
 
+    export const notNullOrUndefined = (value: any): boolean => {
+        return isNotNull(value) && isNotUndefined(value)
+    }
+
     export const isMobileBrowser = (navigator: string): boolean => {
         return !(
             !MOBILE_NAVIGATOR_TYPE_REGEX.test(navigator) &&

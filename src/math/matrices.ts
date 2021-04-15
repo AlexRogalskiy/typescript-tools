@@ -176,7 +176,7 @@ export namespace Matrices {
             throw valueError(`incorrect {colIndex} value: < ${sortCol} >`)
         }
 
-        data.sort(Comparators.compareByPropertyDefault(sortCol))
+        data.sort(Comparators.compareByProp(sortCol))
 
         return data
     }

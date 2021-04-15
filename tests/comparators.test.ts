@@ -8,11 +8,11 @@ export namespace Comparators_Test {
     import compareByLocaleIgnoreCase = Comparators.compareByLocaleIgnoreCase
     import compareByLength = Comparators.compareByLength
     import compareByPropertyKey = Comparators.compareByPropertyKey
-    import compareByPropertyDefault = Comparators.compareByPropertyDefault
+    import compareByPropertyDefault = Comparators.compareByProp
     import compareByProperty = Comparators.compareByProperty
     import compareByPropertyOrder = Comparators.compareByPropertyOrder
     import compareBy = Comparators.compareBy
-    import compareByProperties = Comparators.compareByProperties
+    import compareByProperties = Comparators.compareByProps
     import compareByLocaleOptions = Comparators.compareByLocaleOptions
     import normalizeAndCompare = Comparators.normalizeAndCompare
     beforeAll(() => {
