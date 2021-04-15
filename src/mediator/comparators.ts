@@ -36,7 +36,6 @@ export namespace Comparators {
      * @return {number} -1 - lower, 0 - equals, 1 - greater
      */
     export const compare = <T>(a: T, b: T): number => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         return (a === null) - (b === null) || +(a > b) || -(a < b)
     }
@@ -350,7 +349,6 @@ export namespace Comparators {
     export const normalizeAndCompare = ((...list: string[]): PropertyComparator<any> => {
         return (a: any, b: any, value: string): number => {
             if (a === null || b === null) {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 return (a === null) - (b === null)
             }

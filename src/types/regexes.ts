@@ -1,7 +1,10 @@
+import { cloneDeep, merge } from 'lodash'
+
 import { Pair } from '../../typings/general-types'
 import { GradleDependency } from '../../typings/domain-types'
 import { Optional } from '../../typings/standard-types'
 import { TokenType } from '../../typings/enum-types'
+
 import { Strings } from './strings'
 
 import quote = Strings.quote
@@ -9,7 +12,6 @@ import quote = Strings.quote
 // eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires
 const isRegex = require('is-regex')
 
-const ESCAPE_REGEX_PATTERN = /\\['"bfnrt\\]/
 const PROPERTY_REGEX_PATTERN = '[a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)*'
 
 const regex = (str: string): RegExp => new RegExp(str, 'g')
@@ -680,7 +682,6 @@ export const getPluginCommands = (content: string): string[] => {
     for (const line of lines) {
         const match = PLUGIN_REGEX.exec(line)
         if (match) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             const { plugin } = match.groups
             result.add(`gem install ${quote(plugin)}`)
@@ -702,42 +703,36 @@ export const transformRegUrl = (url: string): string => {
 }
 
 export const ESCAPE_CHARS = {
-    [TokenType.LineComment]: { match: /\/\/.*?$/ },
-    [TokenType.MultiComment]: { match: /\/\*[^]*?\*\//, lineBreaks: true },
-    [TokenType.Newline]: { match: /\r?\n/, lineBreaks: true },
-    [TokenType.Space]: { match: /[ \t\r]+/ },
-    [TokenType.Semicolon]: ';',
-    [TokenType.Colon]: ':',
-    [TokenType.Dot]: '.',
-    [TokenType.Comma]: ',',
-    [TokenType.Operator]: /(?:==|\+=?|-=?|\/=?|\*\*?|\.+|:)/,
-    [TokenType.Assignment]: '=',
-    [TokenType.SingleQuoted]: {
-        match: "'",
-    },
-    [TokenType.DoubleQuoted]: {
-        match: '"',
-    },
+    [TokenType.LineComment]: { match: regex('//.*?$') },
+    [TokenType.MultiComment]: { match: regex('/*[^]*?*//') },
+    [TokenType.Newline]: { match: regex('\r?\n/') },
+    [TokenType.Space]: { match: regex('[ \t\r]+/ ') },
+    [TokenType.Semicolon]: { match: regex(';') },
+    [TokenType.Colon]: { match: regex(':') },
+    [TokenType.Dot]: { match: regex('.') },
+    [TokenType.Comma]: { match: regex(',') },
+    [TokenType.Operator]: { match: regex('(?:==|+=?|-=?|/=?|**?|.+|:)/') },
+    [TokenType.Assignment]: { match: regex('=') },
+    [TokenType.SingleQuoted]: { match: regex("'") },
+    [TokenType.DoubleQuoted]: { match: regex('"') },
     [TokenType.Substitute]: {
-        match: /\${\s*[a-zA-Z_][a-zA-Z0-9_]*(?:\s*\.\s*[a-zA-Z_][a-zA-Z0-9_]*)*\s*}|\$[a-zA-Z_][a-zA-Z0-9_]*(?:\.[a-zA-Z_][a-zA-Z0-9_]*)*/,
+        match: regex(
+            '${s*[a-zA-Z_][a-zA-Z0-9_]*(?:s*.s*[a-zA-Z_][a-zA-Z0-9_]*)*s*}|$[a-zA-Z_][a-zA-Z0-9_]*(?:.[a-zA-Z_][a-zA-Z0-9_]*)*',
+        ),
         value: (value: string): string => value.replace(/^\${?\s*/, '').replace(/\s*}$/, ''),
     },
-    [TokenType.Unknown]: { match: /./ },
-    [TokenType.Word]: { match: /[a-zA-Z$_][a-zA-Z0-9$_]+/ },
-    [TokenType.LeftParen]: { match: '(' },
-    [TokenType.RightParen]: { match: ')' },
-    [TokenType.LeftBracket]: { match: '[' },
-    [TokenType.RightBracket]: { match: ']' },
-    [TokenType.LeftBrace]: { match: '{' },
-    [TokenType.RightBrace]: { match: '}' },
-    [TokenType.TripleSingleQuoted]: {
-        match: "'''",
-    },
-    [TokenType.TripleDoubleQuoted]: {
-        match: '"""',
-    },
+    [TokenType.Unknown]: { match: regex('.') },
+    [TokenType.Word]: { match: regex('[a-zA-Z$_][a-zA-Z0-9$_]+/') },
+    [TokenType.LeftParen]: { match: regex('(') },
+    [TokenType.RightParen]: { match: regex(')') },
+    [TokenType.LeftBracket]: { match: regex('[') },
+    [TokenType.RightBracket]: { match: regex(']') },
+    [TokenType.LeftBrace]: { match: regex('{') },
+    [TokenType.RightBrace]: { match: regex('}') },
+    [TokenType.TripleSingleQuoted]: { match: regex("'''") },
+    [TokenType.TripleDoubleQuoted]: { match: regex('"""') },
     [TokenType.EscapedChar]: {
-        match: ESCAPE_REGEX_PATTERN,
+        match: regex('\\[\'"bfnrt\\]'),
         value: (value: string): string =>
             ({
                 "\\'": "'",
@@ -750,4 +745,17 @@ export const ESCAPE_CHARS = {
                 '\\\\': '\\',
             }[value]),
     },
+}
+
+export const createRegexMatcher = <T extends keyof typeof ESCAPE_CHARS, B extends typeof ESCAPE_CHARS[T]>(
+    eventType: T,
+    body: B,
+): Optional<B> => {
+    const event = ESCAPE_CHARS[eventType]
+
+    if (event) {
+        return merge(cloneDeep(event), body)
+    }
+
+    return null
 }

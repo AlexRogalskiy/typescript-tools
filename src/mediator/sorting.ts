@@ -712,7 +712,6 @@ export namespace Sorting {
             //}
         }
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const siftdown = <T>(data: T[], value: number, cmp: Comparator<T>): void => {

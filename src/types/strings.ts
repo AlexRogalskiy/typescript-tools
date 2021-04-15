@@ -1113,7 +1113,6 @@ export namespace Strings {
     export const tabExpand = (value: string): string => {
         const tab = 8
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const tabExpand_ = (str, p1, p2): string => {
             return p1 + ' '.repeat(p2.length * tab - (p1.length % tab))
@@ -1133,7 +1132,6 @@ export namespace Strings {
     export const tabUnexpand = (value: string): string => {
         const tab = 8
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const tabExpand_ = (value, p1, p2): string => {
             return p1 + ' '.repeat(p2.length * tab - (p1.length % tab))
@@ -1207,7 +1205,6 @@ export namespace Strings {
 
         return {
             gensym: () => {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 return prefixValue + seqValue++
             },

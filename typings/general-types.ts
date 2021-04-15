@@ -174,6 +174,7 @@ export type mixed = unknown
  * @desc Pair2 type with numeric ("number" | "bigint") value
  */
 export type Numeric = number | bigint
+
 // -------------------------------------------------------------------------------------------------
 /**
  * Pair2
@@ -260,10 +261,10 @@ export type OptionalRight<T, V> = Pair<T, Optional<V>>
 export type PropertyKeyPair = Pair<PropertyKey, PropertyKey>
 
 /**
- * NumberPair
- * @desc Number pair type with left and right number values
+ * NumericPair
+ * @desc Numeric pair type with left and right numeric values
  */
-export type NumberPair = Pair<Numeric, Numeric>
+export type NumericPair = Pair<Numeric, Numeric>
 
 /**
  * StringPair
@@ -318,6 +319,12 @@ export type RequiredKeyValue<T, V> = KeyValue<T, Required<V>>
  * @desc KeyValue type with key and non-nullable value properties
  */
 export type NonNullKeyValue<T, V> = KeyValue<T, NonNull<V>>
+
+/**
+ * PropertyKeyValue
+ * @desc PropertyKeyValue type with property key and value properties
+ */
+export type PropertyKeyValue<V> = KeyValue<PropertyKey, V>
 // -------------------------------------------------------------------------------------------------
 /**
  * NameValue
@@ -350,10 +357,10 @@ export type RequiredValue<V> = NameValue<PropertyKey, Required<V>>
 export type NonNullNameValue<V> = NameValue<PropertyKey, NonNull<V>>
 
 /**
- * NumberNameValue
- * @desc Number name-value type with {@link PropertyKey} name and {@link number} value properties
+ * NumericNameValue
+ * @desc Numeric name-value type with {@link PropertyKey} name and {@link numeric} value properties
  */
-export type NumberNameValue = NameValue<PropertyKey, Numeric>
+export type NumericNameValue = NameValue<PropertyKey, Numeric>
 
 /**
  * StringNameValue
@@ -404,10 +411,10 @@ export type RequiredRange<T> = Range<Required<T>>
 export type NonNullRange<T> = Range<NonNull<T>>
 
 /**
- * NumberRange
- * @desc NumberRange type with number lower and upper bound properties
+ * NumericRange
+ * @desc NumericRange type with numeric lower and upper bound properties
  */
-export type NumberRange = Range<Numeric>
+export type NumericRange = Range<Numeric>
 
 /**
  * DateRange
@@ -417,7 +424,7 @@ export type DateRange = Range<Date>
 // -------------------------------------------------------------------------------------------------
 /**
  * KeywordData
- * @desc KeywordData type with double-sized string/number array values
+ * @desc KeywordData type with double-sized string/Numeric array values
  */
 export type KeywordData<T extends PropertyKey> = [T, Numeric]
 

@@ -2718,7 +2718,6 @@ export namespace Maths {
                 throw Errors.valueError(`incorrect {max} value: < ${max} >`)
             }
 
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             if (minValue > maxValue) {
                 throw Errors.valueError(`incorrect range size: min < ${minValue} >, max < ${maxValue} >`)
@@ -2729,10 +2728,8 @@ export namespace Maths {
                 throw Errors.valueError(`incorrect {delta} value: < ${delta} >`)
             }
 
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             for (let i = minValue; i <= maxValue; i += delta) {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 res.push(i)
             }

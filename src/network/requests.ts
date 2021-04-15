@@ -195,7 +195,6 @@ export namespace Requests {
             credentials: 'omit',
         }
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const res = await fetch(url, option)
         return await res.json()

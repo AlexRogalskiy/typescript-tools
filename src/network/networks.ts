@@ -72,7 +72,6 @@ export namespace Networks {
         const reg = new RegExp(`(^|&)${value}=([^&*])(&|$)`)
         const query = window.location.search.substr(1).match(reg)
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         return isNotNull(query) ? unescape(query[2]) : null
     }

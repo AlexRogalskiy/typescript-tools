@@ -1,11 +1,24 @@
 import { NonNull, Optional } from './standard-types'
 import { Numeric } from './general-types'
-// -------------------------------------------------------------------------------------------------
+
 /**
  * HandlerFunction
  * @desc Type representing handler function type in TypeScript
  */
 export type HandlerFunction<T> = (options: T, next: (options: T) => T) => T | Promise<T>
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * Dictionary
+ * @desc Type representing key {@link string}/value {@link T} record
+ */
+export type Dictionary<T> = Record<string, T>
+
+/**
+ * NumericDictionary
+ * @desc Type representing key {@link number}/value {@link T} record
+ */
+export type NumericDictionary<T> = Record<number, T>
 
 // -------------------------------------------------------------------------------------------------
 /**
@@ -1620,6 +1633,14 @@ export type ComparatorMode = 'asc' | 'desc'
 export type Comparator<T> = BiProcessor<T, T, number>
 
 /**
+ * DiffComparator
+ * @desc Type representing diff comparator function type in TypeScript
+ * @example
+ *   type DiffComparator = (v1, v2) => return 0
+ */
+export type DiffComparator<T1, T2> = BiProcessor<T1, T2, number>
+
+/**
  * PropertyComparator
  * @desc Type representing property comparator function type in TypeScript
  * @example
@@ -1693,7 +1714,7 @@ export type NonNullPropertyComparator<T> = PropertyComparator<NonNull<T>>
 
 /**
  * NumberComparator
- * @desc Type representing number comparator function type in TypeScript
+ * @desc Type representing Numeric comparator function type in TypeScript
  * @example
  *   type NumberComparator = (v1, v2) => return 0
  */

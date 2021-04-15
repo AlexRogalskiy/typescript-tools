@@ -90,7 +90,6 @@ export class Logger {
     }
 
     static getRawMessage2(messages: string[], ...args: any[]): string {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         return messages.reduce((s, v, idx) => {
             return (

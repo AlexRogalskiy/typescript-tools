@@ -43,7 +43,6 @@ export class Cache<K, V extends { expire: number; value: V }> {
             entry['value'] = value
             entry['expire'] = expire
         } else {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             this.map.set(key, { value, expire })
         }
