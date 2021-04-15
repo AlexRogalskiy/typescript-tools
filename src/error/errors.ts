@@ -3,9 +3,25 @@ import _ from 'lodash'
 import { DatabaseErrorType, ErrorType, StatusCode } from '../../typings/enum-types'
 
 import { Logging } from '..'
+import { Optional } from '../../typings/standard-types'
 
 export namespace Errors {
     import errorLogs = Logging.errorLogs
+
+    /**
+     * ErrorInfo
+     * @desc Type representing error information
+     */
+    export type ErrorInfo = {
+        /**
+         * Error number
+         */
+        readonly line: number
+        /**
+         * Error column
+         */
+        readonly column: number
+    }
 
     /**
      * ErrorData
@@ -370,7 +386,18 @@ export namespace Errors {
         return new QueryParseError(message, start, end, args)
     }
 
-    export const errSerializer = (err: Error): Error => {
+    export const errorData = (err: Error): Optional<ErrorInfo> => {
+        const match = /:(\d+):(\d+)/.exec((err.stack || '').split('\n')[1])
+
+        if (!match) return null
+
+        return {
+            line: parseInt(match[1], 10),
+            column: parseInt(match[2], 10),
+        }
+    }
+
+    export const errorSerializer = (err: Error): Error => {
         const redactedFields = ['message', 'stack', 'stdout', 'stderr']
 
         for (const field of redactedFields) {

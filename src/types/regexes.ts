@@ -3,6 +3,7 @@ import { GradleDependency } from '../../typings/domain-types'
 import { Optional } from '../../typings/standard-types'
 import { TokenType } from '../../typings/enum-types'
 import { Strings } from './strings'
+
 import quote = Strings.quote
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires
@@ -638,8 +639,6 @@ export const skipCommentLines = (
     return { line: lines[ln], lineNumber: ln }
 }
 
-// Extracts version-like and range-like strings
-// from the beginning of input
 export const versionLikeSubstring = (input: string): Optional<string> => {
     const match = input ? MODULE_REGEX_CONFIG.versionMatch.exec(input) : null
     return match && match.groups ? match.groups.version : null
@@ -700,12 +699,6 @@ export const getPluginCommands = (content: string): string[] => {
  */
 export const transformRegUrl = (url: string): string => {
     return url.replace(/(\/packages\.json)$/, '')
-}
-
-export const isIPv4 = (value: string): boolean => {
-    return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(
-        value,
-    )
 }
 
 export const ESCAPE_CHARS = {

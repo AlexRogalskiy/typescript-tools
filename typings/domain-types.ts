@@ -52,9 +52,9 @@ export type DockerComposeService = {
 // -------------------------------------------------------------------------------------------------
 /**
  * UserPass
- * @desc Type representing user pass interface
+ * @desc Type representing user passwords
  */
-export interface UserPass {
+export type UserPass = {
     username: string
     password: string
 }

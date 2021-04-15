@@ -560,6 +560,12 @@ export namespace Checkers {
         )
     }
 
+    export const isIPv4 = (value: string): boolean => {
+        return /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(
+            value,
+        )
+    }
+
     /**
      * Checks for an object to be of the date type; if not throws an Error.
      */
