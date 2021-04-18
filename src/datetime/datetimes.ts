@@ -18,7 +18,11 @@ export namespace DateTimes {
         return new Date().toISOString()
     }
 
-    export const formateDate = (date: Date | number | string, format: string): string => {
+    export const getISOTimestamp = (date: Date): string => {
+        return `${date.toISOString().split('.')[0]}Z`
+    }
+
+    export const formatDate = (date: Date | number | string, format: string): string => {
         let d: Date
         if (typeof date === 'number') {
             d = new Date(date)
