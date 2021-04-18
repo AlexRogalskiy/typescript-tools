@@ -1,8 +1,9 @@
 import _ from 'lodash'
 
-import { ObjectMap } from '../../typings/standard-types'
+import { ObjectMap, Optional } from '../../typings/standard-types'
 
 import { Numbers, Checkers, Errors, CommonUtils } from '..'
+import { KeyValue } from '../../typings/general-types'
 
 export namespace Objects {
     import isFunction = Checkers.isFunction
@@ -543,6 +544,26 @@ export namespace Objects {
 
     export const keys = (objectMap: ObjectMap<any>): string[] => {
         return Object.keys(objectMap)
+    }
+
+    export const getByValue = <K, V>(item: V, values: Map<K, V>): Optional<KeyValue<K, V>> => {
+        for (const [key, value] of values) {
+            if (value === item) {
+                return { key, value }
+            }
+        }
+
+        return null
+    }
+
+    export const getByKey = <K, V>(item: K, values: Map<K, V>): Optional<KeyValue<K, V>> => {
+        for (const [key, value] of values) {
+            if (key === item) {
+                return { key, value }
+            }
+        }
+
+        return null
     }
 
     /**
