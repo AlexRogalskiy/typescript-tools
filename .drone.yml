@@ -6,7 +6,7 @@ steps:
   - name: install
     image: node:14
     commands:
-      - yarn install
+      - npm install
 
   - name: build
     image: node:14
