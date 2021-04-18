@@ -1,0 +1,58 @@
+kind: pipeline
+type: docker
+name: docker
+
+steps:
+  - name: install
+    image: node:14
+    commands:
+      - yarn install
+
+  - name: build
+    image: node:14
+    commands:
+      - npm run build
+
+  - name: test
+    image: node:14
+    commands:
+      - npm run test:all
+
+  - name: lint-all
+    image: node:14
+    commands:
+      - npm run lint:all
+
+  - name: format-all
+    image: node:14
+    commands:
+      - npm run format:all
+      -
+  - name: check-all
+    image: node:14
+    commands:
+      - npm run check:all
+      -
+  - name: codeql
+    image: mcr.microsoft.com/cstsectools/codeql-container
+    commands:
+      - apt-get install nodejs -y
+      - mkdir -p /opt/results
+      - codeql database create --language=javascript /opt/results/source_db -s .
+      - codeql database upgrade /opt/results/source_db
+      - codeql database analyze /opt/results/source_db --format=sarif-latest --output=/opt/results/issues.sarif javascript-security-and-quality.qls
+    when:
+      branch: master
+      event: push
+
+  - name: npm
+    image: plugins/npm
+    settings:
+      username: alexrogalskiy
+      password:
+        from_secret: NPM_PASSWORD
+      email: arogalsky@github.com
+      access: public
+    when:
+      branch: release
+      event: push
