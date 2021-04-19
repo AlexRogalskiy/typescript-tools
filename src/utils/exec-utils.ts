@@ -8,7 +8,6 @@ import { Optional } from '../../typings/standard-types'
 import { Errors, Files } from '..'
 
 export namespace ExecUtils {
-    import valueError = Errors.valueError
     export const execToJson = (command = 'npm show quicktype versions --json'): string => {
         return JSON.parse(exec(command))
     }
@@ -49,7 +48,7 @@ export namespace ExecUtils {
                 if (code !== 0) {
                     console.error(stdout)
                     console.error(stderr)
-                    reject(valueError('Unsupported exec command', { command: s, code }))
+                    reject(Errors.valueError('Unsupported exec command', { command: s, code }))
                 }
                 resolve({ stdout, code })
             })

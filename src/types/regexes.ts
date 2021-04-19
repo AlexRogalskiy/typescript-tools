@@ -747,6 +747,36 @@ export const ESCAPE_CHARS = {
     },
 }
 
+export const matchPattern = (value, regExp): boolean => {
+    return !value || regExp.test(value)
+}
+
+export const includesUppercase = (value: string): boolean => {
+    return matchPattern(value, /[A-Z]/)
+}
+
+export const includesLowercase = (value: string): boolean => {
+    return matchPattern(value, /[a-z]/)
+}
+
+export const includesDigit = (value: string): boolean => {
+    return matchPattern(value, /[0-9]/)
+}
+
+export const isHostname = (value: string): boolean => {
+    const regExp = /^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*(\.[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*)*$/
+
+    return matchPattern(value, regExp)
+}
+
+export const inRange = (value, { min, max, inclusive = true }): boolean => {
+    if (min > max) {
+        throw new Error('Max value must be bigger then min value')
+    }
+
+    return inclusive ? min <= value && value <= max : min < value && value < max
+}
+
 export const createRegexMatcher = <T extends keyof typeof ESCAPE_CHARS, B extends typeof ESCAPE_CHARS[T]>(
     eventType: T,
     body: B,

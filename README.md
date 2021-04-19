@@ -24,6 +24,7 @@
 
 [![codecov](https://codecov.io/gh/AlexRogalskiy/typescript-tools/branch/master/graph/badge.svg?token=M0d8w0Z7ME)](https://codecov.io/gh/AlexRogalskiy/typescript-tools)
 [![CI](https://github.com/AlexRogalskiy/typescript-tools/workflows/CI/badge.svg)](https://github.com/AlexRogalskiy/typescript-tools/actions/workflows/build.yml)
+[![Build Status](https://cloud.drone.io/api/badges/AlexRogalskiy/typescript-tools/status.svg)](https://cloud.drone.io/AlexRogalskiy/typescript-tools)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://raw.githubusercontent.com/alexrogalskiy/typescript-tools/master/LICENSE?token=AH44ZFH7IF2KSEDK7LSIW3C7YOFYC)
 [![Issue](https://img.shields.io/github/issues/alexrogalskiy/typescript-tools)](https://img.shields.io/github/issues/alexrogalskiy/typescript-tools)
