@@ -12,6 +12,8 @@ jobs:
       - name: Mark issue stale
       - uses: actions/stale@v3
         with:
+          days-before-pr-stale: 30
+          days-before-pr-close: 14
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           stale-pr-message: 'This pull request is stale because it has been open 6 months with no activity. Please comment or this will be closed in 14 days.'
           stale-issue-message: 'This issue is stale because it has been open 30 days with no activity. Remove stale label or comment or this will be closed in 5 days'
