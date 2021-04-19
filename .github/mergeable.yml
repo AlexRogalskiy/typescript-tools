@@ -1,6 +1,6 @@
 # Configuration for Mergeable - https://github.com/jusx/mergeable
-
 version: 2
+
 mergeable:
   - when: pull_request.*
     validate:
@@ -9,14 +9,17 @@ mergeable:
           enabled: false
 
       - do: title
+        # Do not merge when it is marked work in progress (WIP)
         must_exclude:
           regex: ^\[WIP\]
+          message: This is work in progress. Do not merge yet.
 
       - do: label
-      #  must_include:
-      #    regex: 'change|feat|imp|fix|doc|i18n'
+        #  must_include:
+        #    regex: 'change|feat|imp|fix|doc|i18n'
         must_exclude:
           regex: 'wip|work in progress'
+          message: 'This PR is work in progress or it is still blocked.'
 
       #- do: project
       #  no_empty:
@@ -27,3 +30,13 @@ mergeable:
       - do: milestone
         no_empty:
           enabled: false
+
+      - do: description
+        must_exclude:
+          # Do not allow 'DO NOT MERGE' phrase on PR's description.
+          regex: 'DO NOT MERGE'
+          message: 'Description says that the PR should not be merged yet.'
+        no_empty:
+          # Do not allow empty descriptions on PR.
+          enabled: true
+          message: 'Description can not be empty.'

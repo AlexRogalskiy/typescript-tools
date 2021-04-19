@@ -1,16 +1,16 @@
 import * as rm from 'typed-rest-client/RestClient'
 
 import WebSocket from 'ws'
-import axios from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 
 import { Callback } from '../../typings/function-types'
 
 import { Networks } from './networks'
 
-export namespace RestClients {
+export namespace NetworkClients {
     import getQueryParams = Networks.getQueryParams
 
-    export interface RestClientSettings {
+    export type RestClientSettings = {
         url: string
     }
 
@@ -22,7 +22,7 @@ export namespace RestClients {
         QUOTA = 'quota',
     }
 
-    export interface Quota {
+    export type Quota = {
         quota_used: number
         quota_limit: number
         quota_remaining: number
@@ -33,113 +33,135 @@ export namespace RestClients {
         url: 'https://api.1forge.com/',
     }
 
-    export class AxiosRestClients {
-        constructor(private readonly baseUrl: string) {
-            this.baseUrl = baseUrl
+    export class AxiosRestClient {
+        private readonly axios: AxiosInstance
+
+        static response(data: any): Response {
+            return new Response(data)
+        }
+
+        private readonly baseConfig: AxiosRequestConfig = {
+            withCredentials: true,
+            headers: { 'Content-Type': 'application/json' },
+        }
+
+        constructor(config?: AxiosRequestConfig) {
+            this.axios = axios.create(Object.assign(this.baseConfig, config))
         }
 
         async getUser<R>(userId: string, headers?: string[]): Promise<R> {
-            return await axios.get(`${this.baseUrl}/api/users/profile/${userId}`, {
+            return await this.axios.get(`/api/users/profile/${userId}`, {
                 headers: { ...headers },
             })
         }
 
         async followUser<R>(followId: string, headers?: string[]): Promise<R> {
-            const { data } = await axios.put(
-                `${this.baseUrl}/api/users/follow`,
+            const { data } = await this.axios.put(
+                '/api/users/follow',
                 { followId },
                 {
                     headers: { ...headers },
                 },
             )
+
             return data
         }
 
         async unfollowUser<R>(followId: string, headers?: string[]): Promise<R> {
-            const { data } = await axios.put(
-                `${this.baseUrl}/api/users/unfollow`,
+            const { data } = await this.axios.put(
+                '/api/users/unfollow',
                 { followId },
                 {
                     headers: { ...headers },
                 },
             )
+
             return data
         }
 
         async deleteUser<R>(authUserId: string, headers?: string[]): Promise<R> {
-            const { data } = await axios.delete(`${this.baseUrl}/api/users/${authUserId}`, {
+            const { data } = await this.axios.delete(`/api/users/${authUserId}`, {
                 headers: { ...headers },
             })
+
             return data
         }
 
         async getAuthUser<R>(authUserId: string, headers?: string[]): Promise<R> {
-            const { data } = await axios.get(`${this.baseUrl}/api/users/${authUserId}`, {
+            const { data } = await this.axios.get(`/api/users/${authUserId}`, {
                 headers: { ...headers },
             })
+
             return data
         }
 
         async updateUser<R>(authUserId: string, userData: string, headers?: string[]): Promise<R> {
-            const { data } = await axios.put(`${this.baseUrl}/api/users/${authUserId}`, userData, {
+            const { data } = await this.axios.put(`/api/users/${authUserId}`, userData, {
                 headers: { ...headers },
             })
+
             return data
         }
 
         async getUserFeed<R>(authUserId: string, headers?: string[]): Promise<R> {
-            const { data } = await axios.get(`${this.baseUrl}/api/users/feed/${authUserId}`, {
+            const { data } = await this.axios.get(`/api/users/feed/${authUserId}`, {
                 headers: { ...headers },
             })
+
             return data
         }
 
         async addPost<R>(authUserId: string, post: string, headers?: string[]): Promise<R> {
-            const { data } = await axios.post(`${this.baseUrl}/api/posts/new/${authUserId}`, post, {
+            const { data } = await this.axios.post(`/api/posts/new/${authUserId}`, post, {
                 headers: { ...headers },
             })
+
             return data
         }
 
         async getPostFeed<R>(authUserId: string, headers?: string[]): Promise<R> {
-            const { data } = await axios.get(`${this.baseUrl}/api/posts/feed/${authUserId}`, {
+            const { data } = await this.axios.get(`/api/posts/feed/${authUserId}`, {
                 headers: { ...headers },
             })
+
             return data
         }
 
         async deletePost<R>(postId: string, headers?: string[]): Promise<R> {
-            const { data } = await axios.delete(`${this.baseUrl}/api/posts/${postId}`, {
+            const { data } = await this.axios.delete(`/api/posts/${postId}`, {
                 headers: { ...headers },
             })
+
             return data
         }
 
         async likePost<R>(postId: string, headers?: string[]): Promise<R> {
-            const { data } = await axios.put(
-                `${this.baseUrl}/api/posts/like`,
+            const { data } = await this.axios.put(
+                '/api/posts/like',
                 { postId },
                 {
                     headers: { ...headers },
                 },
             )
+
             return data
         }
 
         async unlikePost<R>(postId: string, headers?: string[]): Promise<R> {
-            const { data } = await axios.put(
-                `${this.baseUrl}/api/posts/unlike`,
+            const { data } = await this.axios.put(
+                '/api/posts/unlike',
                 { postId },
                 {
                     headers: { ...headers },
                 },
             )
+
             return data
         }
 
         async addComment<R>(postId: string, comment: string, headers?: string[]): Promise<R> {
-            const { data } = await axios.put(
-                `${this.baseUrl}/api/posts/comment`,
+            const { data } = await this.axios.put(
+                '/api/posts/comment',
                 {
                     postId,
                     comment,
@@ -148,12 +170,13 @@ export namespace RestClients {
                     headers: { ...headers },
                 },
             )
+
             return data
         }
 
         async deleteComment<R>(postId: string, comment: string, headers?: string[]): Promise<R> {
-            const { data } = await axios.put(
-                `${this.baseUrl}/api/posts/uncomment`,
+            const { data } = await this.axios.put(
+                '/api/posts/uncomment',
                 {
                     postId,
                     comment,
@@ -162,14 +185,50 @@ export namespace RestClients {
                     headers: { ...headers },
                 },
             )
+
             return data
         }
 
+        async get(url: string, config?: any): Promise<any> {
+            return await this.axios.get(url, config)
+        }
+
+        async post(url: string, data: any, config?: any): Promise<any> {
+            return await this.axios.post(url, data, config)
+        }
+
+        async patch(url: string, data: any, config?: any): Promise<any> {
+            return await this.axios.patch(url, data, config)
+        }
+
+        async delete(url: string, config?: any): Promise<any> {
+            return await this.axios.delete(url, config)
+        }
+
         async getPostsByUser<R>(userId: string, headers?: string[]): Promise<R> {
-            const { data } = await axios.get(`${this.baseUrl}/api/posts/by/${userId}`, {
+            const { data } = await this.get(`/api/posts/by/${userId}`, {
                 headers: { ...headers },
             })
+
             return data
+        }
+    }
+
+    export class Response {
+        private readonly code: number
+        private readonly data: any
+
+        constructor(response: AxiosResponse) {
+            this.code = response.status
+            this.data = response.data
+        }
+
+        getCode(): number {
+            return this.code
+        }
+
+        getData(): any {
+            return this.data
         }
     }
 

@@ -7,6 +7,34 @@
   name: ":robot: bot"
   color: "69cde9"
   description: ""
+- # ux
+  name: ux
+  color: e3f49c
+  description: Issues related to user experience.
+- # info
+  name: needinfo
+  color: b38ddd
+  description: This needs more information from the reporter to be implemented.
+- # translate
+  name: translate-toolkit
+  color: fef2c0
+  description: Issues which need to be fixed in the translate-toolkit
+- # undecided
+  name: undecided
+  color: 87a2f2
+  description: These features might not be implemented. Can be prioritized by sponsorship.
+- # hosted
+  name: hosted
+  color: e3f49c
+  description: Issues affecting Hosted Weblate service.
+- # naming
+  name: naming
+  color: e3f49c
+  description: Discussions about naming Weblate features.
+- # backlog
+  name: backlog
+  color: 87a2f2
+  description: This is not on the Weblate roadmap for now. Can be prioritized by sponsorship.
 - # bug
   name: ":bug: bug"
   color: "b60205"

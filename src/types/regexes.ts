@@ -16,6 +16,13 @@ const PROPERTY_REGEX_PATTERN = '[a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_
 
 const regex = (str: string): RegExp => new RegExp(str, 'g')
 
+export const newBlockRegEx = /^\s*-\s*((\w+):\s*(.*))$/
+export const blockLineRegEx = /^\s*((\w+):\s*(.*))$/
+export const galaxyDepRegex = /[\w-]+\.[\w-]+/
+export const dependencyRegex = /^dependencies:/
+export const galaxyRegEx = /^\s+(?<lookupName>[\w.]+):\s*["'](?<version>.+)["']\s*/
+export const nameMatchRegex = /(?<source>((git\+)?(?:(git|ssh|https?):\/\/)?(.*@)?(?<hostname>[\w.-]+)(?:(:\d+)?\/|:))(?<depName>[\w./-]+)(?:\.git)?)(,(?<version>[\w.]*))?/
+
 // Regex by Diego Perini from: http://mathiasbynens.be/demo/url-regex
 export const URI_REGEX = new RegExp(
     '^(?:(?:https?|ftp)://)(?:\\S+(?::\\S*)?@)?(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z¡-￿0-9]-*)*[a-z¡-￿0-9]+)(?:\\.(?:[a-z¡-￿0-9]-*)*[a-z¡-￿0-9]+)*(?:\\.(?:[a-z¡-￿]{2,}))\\.?)(?::\\d{2,5})?(?:[/?#]\\S*)?$',
