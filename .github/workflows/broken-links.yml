@@ -20,9 +20,13 @@ jobs:
           git config --global help.autocorrect 1
           git config --global core.fileMode false
 
+      - name: Read Node version from .nvmrc
+        run: echo "##[set-output name=NVMRC;]$(cat .nvmrc)"
+        id: nvm
+
       - uses: actions/setup-node@v2.1.4
         with:
-          node-version: 12.x
+          node-version: ${{ steps.nvm.outputs.NVMRC }}
 
       - run: npm install -g markdown-link-check
       - run: find . -name \*.md -exec markdown-link-check -c .broken-link-config.json {} \;

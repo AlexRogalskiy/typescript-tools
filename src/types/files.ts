@@ -1,5 +1,5 @@
 import hasha from 'hasha'
-
+import mkdirp from 'mkdirp'
 import {
     accessSync,
     constants,
@@ -16,7 +16,7 @@ import {
 } from 'fs'
 import { readFile } from 'fs-extra'
 import { isDirectory, isDirectorySync } from 'path-type'
-import { dirname, extname, join, resolve, basename, relative } from 'path'
+import { dirname, extname, join, resolve, basename, relative, isAbsolute } from 'path'
 import { randomBytes } from 'crypto'
 import { execSync, spawn, spawnSync, SpawnOptions } from 'child_process'
 
@@ -31,7 +31,6 @@ export namespace Files {
     import uniqueId = Strings.uniqueId
     import escapeRegExp = Strings.escapeRegExp
     import isBlankString = Strings.isBlankString
-    import valueError = Errors.valueError
     import errorLogs = Logging.errorLogs
 
     const cache = new Cache()
@@ -40,6 +39,22 @@ export namespace Files {
         status: number
         stdout: string
         stderr: string
+    }
+
+    export const writeFileWithCliOptions = async (
+        output: string,
+        contents: string,
+        workingDir?: string,
+    ): Promise<string> => {
+        const outputPath = isAbsolute(output) ? output : join(workingDir || '.', output)
+        try {
+            await mkdirp.sync(dirname(outputPath))
+            await promises.writeFile(outputPath, contents)
+
+            return outputPath
+        } catch (e) {
+            throw Errors.valueError(`Failed to write to "${outputPath}"`, e)
+        }
     }
 
     export const getHtmlContent = (htmlPath: string): string => {
@@ -108,7 +123,9 @@ export namespace Files {
         const baseMatch = baseName.match(/(.*\D)\d+$/)
 
         if (baseMatch === null) {
-            throw valueError('GraphQL test filename does not correspond to naming schema', { baseName })
+            throw Errors.valueError('GraphQL test filename does not correspond to naming schema', {
+                baseName,
+            })
         }
 
         return `${baseMatch[1]}.gqlschema`

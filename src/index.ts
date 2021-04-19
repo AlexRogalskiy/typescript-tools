@@ -9,7 +9,7 @@ export * from './utils/common-utils'
 export * from './utils/calc-utils'
 export * from './utils/exec-utils'
 export * from './utils/translation-utils'
-export * from './utils/zlib-utils'
+export * from './utils/zip-utils'
 export * from './utils/canvas-utils'
 
 export * from './logging/logging'

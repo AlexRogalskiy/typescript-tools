@@ -1,8 +1,8 @@
 import zlib from 'zlib'
 
-import promisify from 'es6-promisify'
+import promisify from 'util.promisify'
 
-export namespace ZlibUtils {
+export namespace ZipUtils {
     const _compress = promisify(zlib.gzip)
     const _decompress = promisify(zlib.gunzip)
 

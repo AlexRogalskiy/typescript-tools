@@ -1538,6 +1538,31 @@ export namespace Strings {
         return str.substr(str.lastIndexOf(delimiter) + 1)
     }
 
+    export const toBase64 = (kind: 'normal' | 'url', text: any): Optional<string> => {
+        if (kind === 'normal') {
+            return Buffer.from(text, 'utf8').toString('base64')
+        } else if (kind === 'url') {
+            return Buffer.from(text, 'utf8')
+                .toString('base64')
+                .replace(/\+/g, '-')
+                .replace(/\//g, '_')
+                .replace(/=/g, '')
+        }
+
+        return null
+    }
+
+    export const fromBase64 = (text: any): string => {
+        return Buffer.from(text, 'base64').toString('utf8')
+    }
+
+    export const joinPath = (p1: string, p2: string): string => {
+        p1 = p1.replace(/\/$/, '')
+        p2 = p2.replace(/^\//, '')
+
+        return `${p1}/${p2}`
+    }
+
     export const shortString = (str, maxLength = 25, suffixLength = 5): string => {
         if (str.length <= maxLength) {
             return str

@@ -189,6 +189,19 @@ export namespace Errors {
     }
 
     /**
+     * WrappedError
+     * @desc Class representing wrapped error
+     */
+    export class WrappedError extends GeneralError {
+        protected cause?: Error
+
+        constructor(readonly message: string, cause?: Error, ...args: any[]) {
+            super(ErrorType.general_error, message, args)
+            this.cause = cause
+        }
+    }
+
+    /**
      * ValueError
      * @desc Class representing value error
      */
