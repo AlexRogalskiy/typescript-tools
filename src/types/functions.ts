@@ -17,6 +17,14 @@ export namespace Functions {
         return Object.keys(e).map(i => e[i])
     }
 
+    export const promisify = async (func: any, owner = null): Promise<Callback> => {
+        return async (...args) =>
+            new Promise((resolve, reject) => {
+                const cb = (err, result): void => (err ? reject(err) : resolve(result))
+                func.call(owner, ...args, cb)
+            })
+    }
+
     export const DEFAULT_COERSIONS = {
         boolean: (val: string): boolean => val === 'true',
         array: (val: string): string[] => val.split(',').map(el => el.trim()),

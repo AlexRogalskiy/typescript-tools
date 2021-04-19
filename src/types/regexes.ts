@@ -16,6 +16,12 @@ const PROPERTY_REGEX_PATTERN = '[a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_
 
 const regex = (str: string): RegExp => new RegExp(str, 'g')
 
+// Regex by Diego Perini from: http://mathiasbynens.be/demo/url-regex
+export const URI_REGEX = new RegExp(
+    '^(?:(?:https?|ftp)://)(?:\\S+(?::\\S*)?@)?(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z¡-￿0-9]-*)*[a-z¡-￿0-9]+)(?:\\.(?:[a-z¡-￿0-9]-*)*[a-z¡-￿0-9]+)*(?:\\.(?:[a-z¡-￿]{2,}))\\.?)(?::\\d{2,5})?(?:[/?#]\\S*)?$',
+    'i',
+)
+
 export const MODULE_REGEX_CONFIG = {
     distributionMatch: regex(
         '^(?:distributionUrl\\s*=\\s*)\\S*-(?<version>\\d+\\.\\d+(?:\\.\\d+)?(?:-\\w+)*)-(?<type>bin|all)\\.zip\\s*$',
@@ -733,8 +739,8 @@ export const ESCAPE_CHARS = {
     [TokenType.TripleDoubleQuoted]: { match: regex('"""') },
     [TokenType.EscapedChar]: {
         match: regex('\\[\'"bfnrt\\]'),
-        value: (value: string): string =>
-            ({
+        value: (value: string): string => {
+            const regexes = {
                 "\\'": "'",
                 '\\"': '"',
                 '\\b': '\b',
@@ -743,7 +749,9 @@ export const ESCAPE_CHARS = {
                 '\\r': '\r',
                 '\\t': '\t',
                 '\\\\': '\\',
-            }[value]),
+            }
+            return regexes[value]
+        },
     },
 }
 

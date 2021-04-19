@@ -25,7 +25,7 @@ import { Options, Result, ResultMap } from '../../typings/domain-types'
 
 import { Cache } from '../../tools/cache'
 
-import { Strings, Errors, parseJavaVersion, Logging } from '..'
+import { Strings, Errors, parseJavaVersion, Logging } from '../index'
 
 export namespace Files {
     import uniqueId = Strings.uniqueId
@@ -80,6 +80,24 @@ export namespace Files {
         }).substr(0, 7)
 
         return `crate-registry-${proto}-${host}-${hash}`
+    }
+
+    export const readFileAsText = async (file: Blob): Promise<string> => {
+        const reader = new FileReader()
+        return new Promise((resolve, reject) => {
+            reader.onload = evt => resolve(String(evt.target?.result))
+            reader.onerror = err => reject(err)
+            reader.readAsText(file)
+        })
+    }
+
+    export const readFileAsArrayBuffer = async (file: Blob): Promise<string> => {
+        const reader = new FileReader()
+        return new Promise((resolve, reject) => {
+            reader.onload = evt => resolve(String(evt.target?.result))
+            reader.onerror = err => reject(err)
+            reader.readAsArrayBuffer(file)
+        })
     }
 
     export const pathWithoutExtension = (fullPath: string, extension: string): string => {

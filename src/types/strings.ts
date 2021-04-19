@@ -13,9 +13,18 @@ import { LockFile, LockFileEntry } from '../../typings/domain-types'
 import { Optional, OptionalNumber, OptionalString } from '../../typings/standard-types'
 import { BiProcessor, Comparator, Processor, StringProcessor, Supplier } from '../../typings/function-types'
 
-import { Errors, Checkers, Maths, Numbers, CommonUtils, Logging } from '..'
-
-import { REGEX_ENTITY_PAIRS, REGEX_CONTROL_PAIRS, REGEX_ASCII_PAIRS } from '../constant/constants'
+import {
+    Errors,
+    Checkers,
+    Maths,
+    Numbers,
+    CommonUtils,
+    Logging,
+    Arrays,
+    REGEX_ENTITY_PAIRS,
+    REGEX_CONTROL_PAIRS,
+    REGEX_ASCII_PAIRS,
+} from '..'
 
 import { buildTimeRegex, githubRegex } from './regexes'
 
@@ -37,6 +46,7 @@ export namespace Strings {
     import defineProperty = CommonUtils.defineProperty
     import defineStaticProperty = CommonUtils.defineStaticProperty
     import errorLogs = Logging.errorLogs
+    import makeArray3 = Arrays.makeArray3
 
     const fixedEncode = (value: string, ...pairs: RegexStringPair[]): string => {
         let result = value
@@ -843,16 +853,20 @@ export namespace Strings {
     export const replaceBy = (regex: string | RegExp, value: string, replace = ''): string =>
         value.replace(regex, replace)
 
-    export const pad = (num: number, size = 2, type = '0'): string => `${num}`.padStart(size, type)
+    export const padBegin = (num: number, size = 2, type = '0'): string => `${num}`.padStart(size, type)
+
+    export const padEnd = (num: number, size = 2, type = '0'): string => `${num}`.padEnd(size, type)
 
     //let message = tag`${count} items cost $${count * price}.toFixed(2).`;
     export const tag = <T>(literals: T[], ...substitutions: any[]): string => {
         let result = ''
+
         for (let i = 0; i < substitutions.length; i++) {
             result += literals[i]
             result += substitutions[i]
         }
         result += literals[literals.length - 1]
+
         return result
     }
 
@@ -1020,7 +1034,7 @@ export namespace Strings {
         return value.match(RegExp(regex, 'g'))?.join(brk)
     }
 
-    export const randomString = (len = 8): string => {
+    export const randomString3 = (len = 8): string => {
         const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
         let result = ''
 
@@ -1030,8 +1044,8 @@ export namespace Strings {
         }
 
         for (let i = 0; i < length; i++) {
-            const rnum = Math.floor(Math.random() * chars.length)
-            result += chars.substring(rnum, rnum + 1)
+            const value = random(chars.length)
+            result += chars.substring(value, value + 1)
         }
 
         return result
@@ -1489,8 +1503,26 @@ export namespace Strings {
         return object
     }
 
+    export const randomString = (len = 8): string => {
+        const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+
+        return makeArray3(len, () => possible.charAt((Math.random() * possible.length) | 0)).join('')
+    }
+
+    export const equalIgnoreCase = (str1: string, str2: string): boolean => {
+        return str1.toLowerCase() === str2.toLowerCase()
+    }
+
     export const toTitleCase = (str: string): string => {
         return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())
+    }
+
+    export const toCamelCase = (str: string): string => {
+        return str.replace(/-\w/g, match => match[1].toUpperCase())
+    }
+
+    export const toDashedCase = (str: string): string => {
+        return str.replace(/[A-Z]+/g, match => `-${match.toLowerCase()}`)
     }
 
     export const escapeJSON = (value: string): string => {
@@ -1500,5 +1532,19 @@ export namespace Strings {
         })
 
         return value
+    }
+
+    export const lastSegment = (str = '', delimiter): string => {
+        return str.substr(str.lastIndexOf(delimiter) + 1)
+    }
+
+    export const shortString = (str, maxLength = 25, suffixLength = 5): string => {
+        if (str.length <= maxLength) {
+            return str
+        }
+
+        return `${str.slice(0, maxLength - (suffixLength + 3))}...${
+            suffixLength ? str.slice(-suffixLength) : ''
+        }`
     }
 }

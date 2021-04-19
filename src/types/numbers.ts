@@ -1,6 +1,6 @@
 import { Optional } from '../../typings/standard-types'
 
-import { Checkers, Errors, Comparators } from '..'
+import { Checkers, Errors, Comparators } from '../index'
 
 export namespace Numbers {
     import isNumber = Checkers.isNumber
@@ -20,6 +20,12 @@ export namespace Numbers {
             }
 
             return res
+        }
+
+        export const decimalRound = (number, fractionalLength = 2): any => {
+            const factor = 10 ** fractionalLength
+
+            return Math.round(number * factor) / factor
         }
 
         export const divide2 = (minValue: number, maxValue: number, length = 5): number[] => {

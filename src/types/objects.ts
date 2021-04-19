@@ -9,6 +9,7 @@ export namespace Objects {
     import isFunction = Checkers.isFunction
     import defineProperty = CommonUtils.defineProperty
     import defineStaticProperty = CommonUtils.defineStaticProperty
+    import isObject = Checkers.isObject
 
     const { hasOwnProperty: hasOwnProp } = Object.prototype
 
@@ -79,6 +80,31 @@ export namespace Objects {
             })
         }
     })()
+
+    export const hasOwn = (obj, propName): boolean => {
+        return Object.prototype.hasOwnProperty.call(obj, propName)
+    }
+
+    export const pick = (obj: any, keys: any[]): any => {
+        return keys.reduce((picked, key) => {
+            if (hasOwn(obj, key)) {
+                picked[key] = obj[key]
+            }
+            return picked
+        }, {})
+    }
+
+    export const deepFreeze3 = (val: any): any => {
+        if (isObject(val) && !Object.isFrozen(val)) {
+            for (const [key, value] of Object.entries<any>(val)) {
+                value[key] = deepFreeze(value[key])
+            }
+
+            return Object.freeze(val)
+        }
+
+        return val
+    }
 
     export const formatOptions = (options: any, defaultOptions: any): any => {
         if (!options) {

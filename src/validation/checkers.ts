@@ -84,8 +84,50 @@ export namespace Checkers {
         return !isNull(value)
     }
 
+    export const isDNSName = (str: string): boolean => {
+        const regExp = /^[A-Za-z0-9][A-Za-z0-9-.]*[A-Za-z0-9]$/
+        return regExp.test(str)
+    }
+
+    export const isPortNumber = (value: number): boolean => {
+        return isNumber(value) && value >= 1 && value <= 65536
+    }
+
+    export const isIP = (str: string): boolean => {
+        const regExp = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+        return regExp.test(str)
+    }
+
+    export const isLowerCase = (str: string): boolean => {
+        return str.toLowerCase() === str
+    }
+
+    export const escapeRegExp = (str: string): string => {
+        return str.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
+    }
+
+    export const pluralize = (word: string, amount = 2): string => {
+        if (amount === 1) {
+            return word
+        }
+
+        return word.endsWith('y') ? `${word.slice(0, -1)}ies` : `${word}s`
+    }
+
+    export const splice = (str: string, start: number, end: number, replacement = ''): string => {
+        return `${str.substr(0, start)}${replacement}${str.substr(end)}`
+    }
+
+    export const isUpperCase = (str: string): boolean => {
+        return str.toUpperCase() === str
+    }
+
     export const isNotUndefined = (value: any): boolean => {
         return !isUndefined(value)
+    }
+
+    export const isFalsy = (value: any): boolean => {
+        return !value
     }
 
     export const notNullOrUndefined = (value: any): boolean => {

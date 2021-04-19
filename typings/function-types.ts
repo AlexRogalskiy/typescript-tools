@@ -15,28 +15,18 @@ export type HandlerFunction<T> = (options: T, next: (options: T) => T) => T | Pr
 export type Dictionary<T> = Record<string, T>
 
 /**
- * NumericDictionary
+ * NumberDictionary
  * @desc Type representing key {@link number}/value {@link T} record
  */
-export type NumericDictionary<T> = Record<number, T>
+export type NumberDictionary<T> = Record<number, T>
+
+/**
+ * PropertyDictionary
+ * @desc Type representing key {@link PropertyKey}/value {@link T} record
+ */
+export type PropertyDictionary<T> = Record<PropertyKey, T>
 
 // -------------------------------------------------------------------------------------------------
-/**
- * Callback
- * @desc Type representing callback function type in TypeScript
- * @example
- *   type Callback = () => console.log("test")
- */
-export type Callback = (...args: any[]) => void
-
-/**
- * GenericCallback
- * @desc Type representing generic callback function type in TypeScript
- * @example
- *   type GenericCallback = () => console.log("test")
- */
-export type GenericCallback<T> = (...args: T[]) => void
-
 /**
  * GenericValueCallback
  * @desc Type representing generic value callback function type in TypeScript
@@ -46,12 +36,36 @@ export type GenericCallback<T> = (...args: T[]) => void
 export type GenericValueCallback<T, U> = (...args: T[]) => U
 
 /**
+ * Callback
+ * @desc Type representing callback function type in TypeScript
+ * @example
+ *   type Callback = () => console.log("test")
+ */
+export type Callback = GenericValueCallback<any, void>
+
+/**
+ * PromiseCallback
+ * @desc Type representing promise callback function type in TypeScript
+ * @example
+ *   type PromiseCallback = () => console.log("test")
+ */
+export type PromiseCallback<T> = GenericValueCallback<any, Promise<T>>
+
+/**
+ * GenericCallback
+ * @desc Type representing generic callback function type in TypeScript
+ * @example
+ *   type GenericCallback = () => console.log("test")
+ */
+export type GenericCallback<T> = GenericValueCallback<T, void>
+
+/**
  * OptionalValueCallback
  * @desc Type representing optional value callback function type in TypeScript
  * @example
  *   type OptionalValueCallback = () => console.log("test")
  */
-export type OptionalValueCallback<T, U> = (...args: T[]) => Optional<U>
+export type OptionalValueCallback<T, U> = GenericValueCallback<T, Optional<U>>
 
 /**
  * PartialValueCallback
@@ -59,7 +73,7 @@ export type OptionalValueCallback<T, U> = (...args: T[]) => Optional<U>
  * @example
  *   type PartialValueCallback = () => console.log("test")
  */
-export type PartialValueCallback<T, U> = (...args: T[]) => Partial<U>
+export type PartialValueCallback<T, U> = GenericValueCallback<T, Partial<U>>
 
 /**
  * RequiredValueCallback
@@ -67,7 +81,7 @@ export type PartialValueCallback<T, U> = (...args: T[]) => Partial<U>
  * @example
  *   type RequiredValueCallback = () => console.log("test")
  */
-export type RequiredValueCallback<T, U> = (...args: T[]) => Required<U>
+export type RequiredValueCallback<T, U> = GenericValueCallback<T, Required<U>>
 
 /**
  * NonNullValueCallback
@@ -75,7 +89,7 @@ export type RequiredValueCallback<T, U> = (...args: T[]) => Required<U>
  * @example
  *   type NonNullValueCallback = () => console.log("test")
  */
-export type NonNullValueCallback<T, U> = (...args: T[]) => NonNull<U>
+export type NonNullValueCallback<T, U> = GenericValueCallback<T, NonNull<U>>
 // -------------------------------------------------------------------------------------------------
 /**
  * IteratorStep
@@ -89,7 +103,7 @@ export type IteratorStep<T> = { value: Optional<T>; done: boolean }
  * Iterator
  * @desc Type representing iterator type in TypeScript
  * @example
- *   type Iterator = { next: () => console.log("test") }
+ *   type Iterator = { next: () => return { value: 'test', done: true } }
  */
 export type Iterator<T> = { next: Supplier<IteratorStep<T>> }
 
@@ -97,7 +111,7 @@ export type Iterator<T> = { next: Supplier<IteratorStep<T>> }
  * OptionalIterator
  * @desc Type representing optional iterator type in TypeScript
  * @example
- *   type OptionalIterator = { next: () => console.log("test") }
+ *   type OptionalIterator = { next: () => return { value: 'test', done: true } }
  */
 export type OptionalIterator<T> = Iterator<Optional<T>>
 
@@ -105,7 +119,7 @@ export type OptionalIterator<T> = Iterator<Optional<T>>
  * PartialIterator
  * @desc Type representing partial iterator type in TypeScript
  * @example
- *   type PartialIterator = { next: () => console.log("test") }
+ *   type PartialIterator = { next: () => return { value: 'test', done: true }}
  */
 export type PartialIterator<T> = Iterator<Partial<T>>
 
@@ -113,7 +127,7 @@ export type PartialIterator<T> = Iterator<Partial<T>>
  * RequiredIterator
  * @desc Type representing required iterator type in TypeScript
  * @example
- *   type RequiredIterator = { next: () => console.log("test") }
+ *   type RequiredIterator = { next: () => return { value: 'test', done: true } }
  */
 export type RequiredIterator<T> = Iterator<Required<T>>
 
@@ -121,7 +135,7 @@ export type RequiredIterator<T> = Iterator<Required<T>>
  * NonNullIterator`
  * @desc Type representing non-nullable iterator type in TypeScript
  * @example
- *   type NonNullIterator = { next: () => console.log("test") }
+ *   type NonNullIterator = { next: () => return { value: 'test', done: true } }
  */
 export type NonNullIterator<T> = Iterator<NonNull<T>>
 
@@ -192,7 +206,15 @@ export type Executor = () => void
  * @example
  *   type Predicate = (v) => return 1 === v
  */
-export type Predicate<T> = (v: T) => boolean
+export type Predicate<T> = (value: T) => boolean
+
+/**
+ * ArrayPredicate
+ * @desc Type representing array predicate function type in TypeScript
+ * @example
+ *   type ArrayPredicate = (v, i, d[]) => return 1 === v
+ */
+export type ArrayPredicate<T, S extends T[]> = (value: T, index: number, array: S) => boolean
 
 /**
  * OptionalPredicate
@@ -624,7 +646,7 @@ export type BooleanTriSupplier = TriSupplier<boolean, boolean, boolean>
  * @example
  *   type Consumer = (v) => console.log(v)
  */
-export type Consumer<T> = (v: T) => void
+export type Consumer<T> = (value: T) => void
 
 /**
  * OptionalConsumer
@@ -840,7 +862,7 @@ export type BooleanTriConsumer = TriConsumer<boolean, boolean, boolean>
  * @example
  *   type Processor = (v) => return new String(v)
  */
-export type Processor<T, V> = (v: T) => V
+export type Processor<T, V> = (value: T) => V
 
 /**
  * ReverseProcessor
@@ -1825,10 +1847,10 @@ export type RequiredFactory<T, V> = Factory<T, Required<V>>
 export type NonNullFactory<T, V> = Factory<T, NonNull<V>>
 // -------------------------------------------------------------------------------------------------
 /**
- * Formatter
- * @desc Type representing formatter function type in TypeScript
+ * StringFormatter
+ * @desc Type representing string formatter function type in TypeScript
  * @example
- *   type Formatter = (v1, v2) => return '0'
+ *   type StringFormatter = (v1, v2) => return '0'
  */
-export type StringFormatter = (value: number, fraction: number) => string
+export type StringFormatter = <T extends string>(value: number, fraction: number) => T
 // -------------------------------------------------------------------------------------------------

@@ -1,8 +1,9 @@
 import _ from 'lodash'
 
-import { Consumer, Predicate, Processor, Comparator } from '../../typings/function-types'
+import { Consumer, Predicate, Processor, Comparator, BiProcessor } from '../../typings/function-types'
 
-import { Numbers, Checkers, Errors, Maths, Sorting, CommonUtils } from '..'
+import { Numbers, Checkers, Errors, Maths, Sorting, CommonUtils, Objects } from '..'
+import { SizeUtils } from '../utils/size-utils'
 
 export namespace Arrays {
     import Helpers = Maths.Helpers
@@ -23,6 +24,14 @@ export namespace Arrays {
     import defineProperty = CommonUtils.defineProperty
     import lambda = CommonUtils.lambda
     import defineStaticProperty = CommonUtils.defineStaticProperty
+    import isUndefined = Checkers.isUndefined
+    import notNullOrUndefined = Checkers.notNullOrUndefined
+    import isNullOrUndefined = Checkers.isNullOrUndefined
+    import deepFreeze = Objects.deepFreeze
+
+    import fromBigInteger = SizeUtils.fromBigInteger
+    import interpolateSizes = SizeUtils.interpolateSizes
+    import toBigInteger = SizeUtils.toBigInteger
 
     export const props = (() => {
         const props = {
@@ -79,6 +88,208 @@ export namespace Arrays {
         for (let index = 0; index < array.length; index++) {
             await callback(array[index], index, array)
         }
+    }
+
+    export const makeArray3 = <T>(size: number, initializer: any): T[] => {
+        if (!isFunction(initializer)) {
+            const val = initializer
+            initializer = () => val
+        }
+
+        const array: T[] = []
+        for (let i = 0; i < size; ++i) {
+            array.push(initializer(i))
+        }
+        return array
+    }
+
+    export const first = <T>(arr: T[]): T => {
+        return arr[0]
+    }
+
+    export const last = <T>(arr): T[] => {
+        return arr[arr.length - 1]
+    }
+
+    export const clamp = (num, min, max): number => {
+        return Math.max(min, Math.min(num, max))
+    }
+
+    export const flatMap = <T>(arr: any, selector: BiProcessor<any, number, T>): T[] => {
+        return arr.reduce((result, item, i) => {
+            const mappedValue = selector(item, i)
+            if (notNullOrUndefined(mappedValue)) {
+                if (Array.isArray(mappedValue)) {
+                    result.push(...mappedValue)
+                } else {
+                    result.push(mappedValue)
+                }
+            }
+
+            return result
+        }, [])
+    }
+
+    export const memoize = (func: any, areArgsEqual = equalItems): any => {
+        let lastArgs: any[] = [],
+            lastResult
+
+        return function (...args) {
+            if (!areArgsEqual(args, lastArgs)) {
+                lastResult = deepFreeze(func(...(lastArgs = args)))
+            }
+            return lastResult
+        }
+    }
+
+    export const sumBy = <T>(array: T[], selector: Processor<T, number>): number => {
+        return array.map(selector).reduce((sum, value) => sum + value, 0)
+    }
+
+    export const averageBy = <T>(array: T[], selector: Processor<T, number>): number => {
+        return sumBy(array, selector) / array.length
+    }
+
+    export const keyBy = (arrayOrIter, keySelector, valueMapper: any): any => {
+        const array = Array.isArray(arrayOrIter) ? arrayOrIter : Array.from(arrayOrIter)
+
+        return array.reduce((map, item, i) => {
+            const key = keySelector(item, i)
+            map[key] = valueMapper(item, key, map[key])
+            return map
+        }, {})
+    }
+
+    export const bitsToNumber = (...bits: number[]): number => {
+        // @ts-ignore
+        return bits.reduce((number, bit) => (number << 1) | (!!bit | 0), 0)
+    }
+
+    export const makeRange = (start: number, end: number): any => {
+        if (isUndefined(end)) {
+            if (start < 0) {
+                throw new TypeError('Invalid count')
+            }
+
+            end = start - 1
+            start = 0
+        }
+
+        const dir = start > end ? -1 : 1
+        const count = Math.abs(end - start + dir)
+
+        return makeArray3(count, i => i * dir + start)
+    }
+
+    export const aggregateStorage = (...list): any => {
+        const aggregate = list.reduce((aggregate, storage) => {
+            for (const [key, value] of Object.entries(storage)) {
+                aggregate[key] = aggregate[key].add(toBigInteger(value))
+            }
+            return aggregate
+        }, {})
+
+        return mapValues(aggregate, fromBigInteger)
+    }
+
+    export const interpolateStorage = (storage1, storage2, t): any => {
+        const keySet = new Set([...Object.keys(storage1), ...Object.keys(storage2)])
+
+        return keyBy(
+            keySet.keys(),
+            i => i,
+            key => interpolateSizes(storage1[key], storage2[key], t),
+        )
+    }
+
+    export const keyByProperty2 = (array, keyName, valueMapper): any => {
+        return keyBy(array, item => item[keyName], valueMapper)
+    }
+
+    export const groupBy2 = (array, keySelector, valueMapper: any): any => {
+        return keyBy(array, keySelector, (item, _, list: any[] = []) => {
+            list.push(valueMapper(item))
+            return list
+        })
+    }
+
+    export const countBy = <T>(array: T[], keySelector: any): any => {
+        return keyBy(array, keySelector, (_, __, count = 0) => count + 1)
+    }
+
+    export const mapValues = (obj: any, mapOp: (value, key) => any, omitUndefinedValues = true): any => {
+        const res = {}
+
+        for (const [key, value] of Object.entries(obj)) {
+            const newValue = mapOp(value, key)
+            if (!omitUndefinedValues || isNullOrUndefined(newValue)) res[key] = newValue
+        }
+
+        return res
+    }
+
+    export const mergeBy = (...arrays): any => {
+        const keySelector = isFunction(last(arrays)) ? arrays.pop() : null
+        const merge = {}
+
+        for (const arr of arrays) {
+            Object.assign(
+                merge,
+                keyBy(arr, keySelector, i => i),
+            )
+        }
+
+        return Object.values(merge)
+    }
+
+    export const reverse = (iterable): any => {
+        return Array.from(iterable).reverse()
+    }
+
+    export const get = (val, path, defaultValue): any => {
+        for (const part of path) {
+            if (val == null) {
+                val = undefined
+                break
+            }
+
+            val = val[part]
+        }
+
+        return isNullOrUndefined(val) ? val : defaultValue
+    }
+
+    export const equalItems = (arr1, arr2): boolean => {
+        if (arr1.length !== arr2.length) {
+            return false
+        }
+
+        for (let i = 0; i < arr1.length; ++i) {
+            if (!Object.is(arr1[i], arr2[i])) {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    export const unique = (values: any[]): any[] => {
+        return Array.from(new Set(values).values())
+    }
+
+    export const unionAll = (...arrays: any[]): any[] => {
+        return unique(flatMap(arrays, i => i))
+    }
+
+    export const hashCode = (value: any): number => {
+        return Array.from(JSON.stringify(value)).reduce(
+            (hash, char) => ((hash << 5) - hash + char.charCodeAt(0)) | 0,
+            0,
+        )
+    }
+
+    export const filterValues = (obj: any, filter: (value, key) => any): any => {
+        return mapValues(obj, (value, key) => (filter(value, key) ? value : undefined))
     }
 
     /**
@@ -787,16 +998,16 @@ export namespace Arrays {
         return index
     }
 
-    export const trueForAll = <T>(match: Predicate<T>, ...array: T[]): boolean => {
+    export const trueForAll = <T>(predicate: Predicate<T>, ...array: T[]): boolean => {
         if (!isArray(array)) {
             throw valueError(`incorrect input value: array # 1 < ${array} >`)
         }
 
-        match = lambda(match)
-        checkType(match, 'function')
+        predicate = lambda(predicate)
+        checkType(predicate, 'function')
 
         for (let i = 0, _len = array.length; i < _len; i++) {
-            if (!match(array[i])) {
+            if (!predicate(array[i])) {
                 return false
             }
         }

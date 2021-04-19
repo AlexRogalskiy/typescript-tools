@@ -1,18 +1,17 @@
 import fetch from 'isomorphic-unfetch'
 import { parse, stringify } from 'qs'
 
-import { Arrays, Formats, Logging, Strings } from '..'
+import { Arrays, Checkers, Formats, Logging, Profiles, Strings, URI_REGEX } from '..'
 
 import { Optional } from '../../typings/standard-types'
 import { ConfigOptions } from '../../typings/domain-types'
-
-import { Profiles } from '../config/profiles'
 
 export namespace Requests {
     import isBlankString = Strings.isBlankString
     import makeArray = Arrays.makeArray
     import errorLogs = Logging.errorLogs
     import isProd = Profiles.isProd
+    import isUndefined = Checkers.isUndefined
 
     export const BASE_URL = (lang: string): string => `https://${lang}.wikiquote.org/`
     export const USER_URL = (lang: string): string => `${BASE_URL(lang)}wiki/`
@@ -149,6 +148,63 @@ export namespace Requests {
         return url
     }
 
+    export const parseQuery = (str: string): any => {
+        return str
+            .replace(/(^\?)/, '')
+            .split('&')
+            .filter(Boolean)
+            .reduce((result, part) => {
+                const [name, value] = part.split('=').map(decodeURIComponent)
+                result[name] = value || true
+                return result
+            }, {})
+    }
+
+    export const isUri = (str, inforceHttp = true): boolean => {
+        const hasProtocol = str.startsWith('http://') || str.startsWith('https://')
+        const value = `${!inforceHttp && !hasProtocol ? 'http://' : ''}${
+            //Strip whitespace
+            str.replace(/^\s+|\s+$/, '')
+        }`
+
+        return URI_REGEX.test(value)
+    }
+
+    export const toFormData = (payload: any): FormData => {
+        return Object.entries<string | Blob>(payload).reduce((formData, [key, value]) => {
+            if (value.constructor === Blob) {
+                formData.append(key, value, key)
+            } else {
+                formData.append(key, value)
+            }
+            return formData
+        }, new FormData())
+    }
+
+    export const recognizeBrowser = (): Optional<string> => {
+        const userAgentTokens = ['chrome', 'chromium', 'firefox', 'edge', 'msie', 'safari', 'opr']
+
+        const userAgent = navigator.userAgent.toLowerCase()
+
+        return userAgentTokens.find(token => userAgent.includes(token))
+    }
+
+    export const stringifyQueryString = (query: string): string => {
+        return Object.keys(query)
+            .reduce((list: string[], key) => {
+                if (!isUndefined(query[key])) {
+                    const encodedName = encodeURIComponent(key)
+                    const value =
+                        query[key] === true ? encodedName : `${encodedName}=${encodeURIComponent(query[key])}`
+
+                    list.push(value)
+                }
+
+                return list
+            }, [])
+            .join('&')
+    }
+
     export const getUrlName = (url: string): Optional<string> => {
         const value = url.split('/').pop()
 
@@ -225,6 +281,10 @@ export namespace Requests {
         }
     }
 
+    export const hasSameOrigin = (url: string): boolean => {
+        return new URL(url).origin === window.location.origin
+    }
+
     export const requireValidUrl = (value: string): string => {
         if (isValidUrl(value)) {
             return value
@@ -263,8 +323,7 @@ export namespace Requests {
         !!url && !/\.json$/i.test(url) ? `${url.replace(/\/$/, '')}.json` : url
 
     export const parseQueryString = (value: string): any => {
-        const parameters = parse(value, { ignoreQueryPrefix: true })
-
+        const parameters = parse(value, { ignoreQueryPrefix: true })``
         return {
             ...parameters,
             page: Formats.toInt(parameters.page),
@@ -298,6 +357,14 @@ export namespace Requests {
                 skipNulls: true,
             },
         )
+    }
+
+    export const ipToNumber = (ip: string): number => {
+        return ip
+            .split('.')
+            .map(Number)
+            .map((part, i) => Math.pow(256, 4 - i) * part)
+            .reduce((a, b) => a + b)
     }
 
     export const getHost2 = ({ hostName, domainName, endpoint, baseUrl }: any): Optional<string> => {

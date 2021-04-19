@@ -34,6 +34,17 @@ export namespace Comparators {
         return typeof a < typeof b ? -1 : 1
     }
 
+    export const compareArray = (a: any[], b: any): number => {
+        for (let i = 0; i < a.length; ++i) {
+            const result = compare(a[i], b[i])
+            if (result !== 0) {
+                return result
+            }
+        }
+
+        return 0
+    }
+
     /**
      * @public
      * @module comparators
