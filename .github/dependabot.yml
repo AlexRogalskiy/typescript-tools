@@ -41,6 +41,14 @@ updates:
       # for example, `dependabot-npm_and_yarn-next_js-acorn-6.4.1`
       separator: "-"
 
+  - package-ecosystem: "gitsubmodule"
+    open-pull-requests-limit: 10
+    directory: /
+    schedule:
+      interval: daily
+    labels:
+      - dependencies
+
   - package-ecosystem: "pip"
     open-pull-requests-limit: 10
     directory: "/"
