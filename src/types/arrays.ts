@@ -27,7 +27,6 @@ export namespace Arrays {
     import isUndefined = Checkers.isUndefined
     import notNullOrUndefined = Checkers.notNullOrUndefined
     import isNullOrUndefined = Checkers.isNullOrUndefined
-    import deepFreeze = Objects.deepFreeze
 
     import fromBigInteger = SizeUtils.fromBigInteger
     import interpolateSizes = SizeUtils.interpolateSizes
@@ -136,7 +135,7 @@ export namespace Arrays {
 
         return function (...args) {
             if (!areArgsEqual(args, lastArgs)) {
-                lastResult = deepFreeze(func(...(lastArgs = args)))
+                lastResult = Objects.deepFreeze(func(...(lastArgs = args)))
             }
             return lastResult
         }
