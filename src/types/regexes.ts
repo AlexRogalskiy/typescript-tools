@@ -717,7 +717,7 @@ export const transformRegUrl = (url: string): string => {
 
 export const ESCAPE_CHARS = {
     [TokenType.LineComment]: { match: regex('//.*?$') },
-    [TokenType.MultiComment]: { match: regex('\\/*.*?*//') },
+    [TokenType.MultiComment]: { match: regex('(?s)/\\*.*?\\*/') },
     [TokenType.Newline]: { match: regex('\r?\n/') },
     [TokenType.Space]: { match: regex('[ \t\r]+/ ') },
     [TokenType.Semicolon]: { match: regex(';') },
