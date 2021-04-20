@@ -4,32 +4,32 @@ name: docker
 
 steps:
   - name: install
-    image: node:12
+    image: node:14
     commands:
       - npm install
 
   - name: build
-    image: node:12
+    image: node:14
     commands:
       - npm run build
 
   - name: test
-    image: node:12
+    image: node:14
     commands:
       - npm run test:all
 
   - name: lint-all
-    image: node:12
+    image: node:14
     commands:
       - npm run lint:all
 
   - name: format-all
-    image: node:12
+    image: node:14
     commands:
       - npm run format:all
       -
   - name: check-all
-    image: node:12
+    image: node:14
     commands:
       - npm run check:all
       -
