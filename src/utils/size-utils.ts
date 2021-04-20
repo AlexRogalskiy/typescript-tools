@@ -1,13 +1,9 @@
-import { Objects } from '..'
-
 import bigInteger, { BigInteger } from 'big-integer'
 
 export namespace SizeUtils {
-    import deepFreeze = Objects.deepFreeze
+    export const sizeUnits = Object.freeze([' bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'])
 
-    export const sizeUnits = deepFreeze([' bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'])
-
-    export const unitsInBytes = deepFreeze({
+    export const unitsInBytes = Object.freeze({
         KILOBYTE: 1024,
         KB: 1024,
         MEGABYTE: Math.pow(1024, 2),
