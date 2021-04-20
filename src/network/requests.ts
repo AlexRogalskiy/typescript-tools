@@ -383,4 +383,11 @@ export namespace Requests {
     export const replacePageNumber = (param: string, pageNum: number): string => {
         return window.location.href.replace(new RegExp(`${param}=(\\d)`), `${param}=${pageNum}`)
     }
+
+    export const toDataUrl = (code: string, mime = 'image/svg+xml'): string => {
+        const buffer = Buffer.from(code, 'utf-8')
+        const encoded = buffer.toString('base64')
+
+        return `'data:${mime};base64,${encoded}'`
+    }
 }
