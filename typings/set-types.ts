@@ -1,3 +1,4 @@
+import { Keys } from './general-types'
 // -------------------------------------------------------------------------------------------------
 /**
  * And (same as Extract)
@@ -61,8 +62,8 @@ export type Undef<A> = A extends undefined ? never : A
  */
 export type FunctionKeys<T> = {
     // eslint-disable-next-line @typescript-eslint/ban-types
-    [K in keyof T]-?: Undef<T[K]> extends Function ? K : never
-}[keyof T]
+    [K in Keys<T>]-?: Undef<T[K]> extends Function ? K : never
+}[Keys<T>]
 // -------------------------------------------------------------------------------------------------
 /**
  * NonFunctionKeys
@@ -75,8 +76,8 @@ export type FunctionKeys<T> = {
  */
 export type NonFunctionKeys<T> = {
     // eslint-disable-next-line @typescript-eslint/ban-types
-    [K in keyof T]-?: Undef<T[K]> extends Function ? never : K
-}[keyof T]
+    [K in Keys<T>]-?: Undef<T[K]> extends Function ? never : K
+}[Keys<T>]
 // -------------------------------------------------------------------------------------------------
 /**
  * RequiredKeys
@@ -89,8 +90,8 @@ export type NonFunctionKeys<T> = {
  *   type Keys = RequiredKeys<Props>;
  */
 export type RequiredKeys<T> = {
-    [K in keyof T]-?: {} extends Pick<T, K> ? never : K
-}[keyof T]
+    [K in Keys<T>]-?: {} extends Pick<T, K> ? never : K
+}[Keys<T>]
 // -------------------------------------------------------------------------------------------------
 /**
  * OptionalKeys
@@ -103,6 +104,6 @@ export type RequiredKeys<T> = {
  *   type Keys = OptionalKeys<Props>;
  */
 export type OptionalKeys<T> = {
-    [K in keyof T]-?: {} extends Pick<T, K> ? K : never
-}[keyof T]
+    [K in Keys<T>]-?: {} extends Pick<T, K> ? K : never
+}[Keys<T>]
 // -------------------------------------------------------------------------------------------------

@@ -18,31 +18,6 @@ export type BufferEncoding =
     | 'hex'
 // -------------------------------------------------------------------------------------------------
 /**
- * ProcessConfig
- * @desc Type representing supported process configurations
- */
-export type ProcessConfig<T = keyof Profile> = {
-    readonly env: T
-}
-
-export const dev: ProcessConfig<Profile.dev> = { env: Profile.dev }
-export const prod: ProcessConfig<Profile.prod> = { env: Profile.prod }
-export const test: ProcessConfig<Profile.test> = { env: Profile.test }
-
-// -------------------------------------------------------------------------------------------------
-/**
- * SearchOptions
- * @desc Type representing search options
- */
-export type SearchOptions = {
-    limit?: number
-    suggest?: boolean
-    where?: { [key: string]: string }
-    field?: string | string[]
-    bool?: 'and' | 'or' | 'not'
-}
-// -------------------------------------------------------------------------------------------------
-/**
  * Keys
  * @desc Get the union type of all the keys in an object type `T`
  * @see https://flow.org/en/docs/types/utilities/#toc-keys
@@ -64,7 +39,49 @@ export type Keys<T> = keyof T
  *   // Expect: string | number | boolean
  *   type PropsValues = Values<Props>;
  */
-export type Values<T> = T[keyof T]
+export type Values<T> = T[Keys<T>]
+// -------------------------------------------------------------------------------------------------
+/**
+ * ProcessConfig
+ * @desc Type representing supported process configurations
+ */
+export type ProcessConfig<T = Keys<Profile>> = {
+    readonly env: T
+}
+
+export const dev: ProcessConfig<Profile.dev> = { env: Profile.dev }
+export const prod: ProcessConfig<Profile.prod> = { env: Profile.prod }
+export const test: ProcessConfig<Profile.test> = { env: Profile.test }
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * An interface for services that keep persistent data
+ */
+export interface Persistable {
+    /**
+     * A method to retrieve the data from a service that is intended for persistent storage
+     * @return The data of the service that should be stored persistently, e.g. access credentials
+     */
+    saveAsString: () => string
+    /**
+     * Loads/restores data saved by {@link #saveAsString() saveAsString} into the service
+     * @param savedState The persistent data that was stored
+     */
+    loadAsString: (savedState: string) => void
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * SearchOptions
+ * @desc Type representing search options
+ */
+export type SearchOptions = {
+    limit?: number
+    suggest?: boolean
+    where?: { [key: string]: string }
+    field?: string | string[]
+    bool?: 'and' | 'or' | 'not'
+}
 // -------------------------------------------------------------------------------------------------
 /**
  * PropertyType
@@ -81,7 +98,7 @@ export type Values<T> = T[keyof T]
  *   // Expect: number
  *   type B = PropertyType<Tuple, '1'>;
  */
-export type PropertyType<T, K extends keyof T> = T[K]
+export type PropertyType<T, K extends Keys<T>> = T[K]
 // -------------------------------------------------------------------------------------------------
 /**
  * ElementType
@@ -106,7 +123,7 @@ export type PropertyType<T, K extends keyof T> = T[K]
  *   type Obj = { [key: string]: number };
  *   type ValuesType = ElementType<Obj, string>;
  */
-export type ElementType<T extends { [P in K & any]: any }, K extends keyof T | number> = T[K]
+export type ElementType<T extends Record<K & any, any>, K extends Keys<T> | number> = T[K]
 // -------------------------------------------------------------------------------------------------
 /**
  * Shape

@@ -1,9 +1,9 @@
 import _ from 'lodash'
 
+import { Keys, KeyValue, Values } from '../../typings/general-types'
 import { ObjectMap, Optional } from '../../typings/standard-types'
 
 import { Numbers, Checkers, Errors, CommonUtils } from '..'
-import { KeyValue } from '../../typings/general-types'
 
 export namespace Objects {
     import isFunction = Checkers.isFunction
@@ -289,14 +289,14 @@ export namespace Objects {
         }, source)
     }
 
-    export const randomEnum = <T>(enumType: T): T[keyof T] => {
-        const values = (Object.values(enumType) as unknown) as T[keyof T][]
+    export const randomEnum = <T>(enumType: T): Values<T> => {
+        const values = (Object.values(enumType) as unknown) as Values<T>[]
         const index = Numbers.random(values.length)
 
         return values[index]
     }
 
-    export const pluckBy = <T, K extends keyof T>(obj: T, propertyNames: K[]): T[K][] => {
+    export const pluckBy = <T, K extends Keys<T>>(obj: T, propertyNames: K[]): T[K][] => {
         return propertyNames.map(n => obj[n])
     }
 

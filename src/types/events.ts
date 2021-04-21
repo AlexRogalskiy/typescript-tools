@@ -1,6 +1,7 @@
 import { cloneDeep, Dictionary, merge } from 'lodash'
 
 import { Optional } from '../../typings/standard-types'
+import { Keys } from '../../typings/general-types'
 
 export namespace Events {
     const dictionary: Dictionary<string> = {
@@ -10,7 +11,7 @@ export namespace Events {
         inserted: 'inserted',
     }
 
-    export const createEvent = <T extends keyof typeof dictionary, V extends typeof dictionary[T]>(
+    export const createEvent = <T extends Keys<typeof dictionary>, V extends typeof dictionary[T]>(
         eventType: T,
         body: V,
     ): Optional<V> => {

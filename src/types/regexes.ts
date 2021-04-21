@@ -1,6 +1,6 @@
 import { cloneDeep, merge } from 'lodash'
 
-import { Pair } from '../../typings/general-types'
+import { Keys, Pair } from '../../typings/general-types'
 import { GradleDependency } from '../../typings/domain-types'
 import { Optional } from '../../typings/standard-types'
 import { TokenType } from '../../typings/enum-types'
@@ -792,7 +792,7 @@ export const inRange = (value, { min, max, inclusive = true }): boolean => {
     return inclusive ? min <= value && value <= max : min < value && value < max
 }
 
-export const createRegexMatcher = <T extends keyof typeof ESCAPE_CHARS, B extends typeof ESCAPE_CHARS[T]>(
+export const createRegexMatcher = <T extends Keys<typeof ESCAPE_CHARS>, B extends typeof ESCAPE_CHARS[T]>(
     eventType: T,
     body: B,
 ): Optional<B> => {

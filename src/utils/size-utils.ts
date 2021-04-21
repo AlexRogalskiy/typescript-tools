@@ -1,5 +1,7 @@
 import bigInteger, { BigInteger } from 'big-integer'
 
+import { Keys } from '../../typings/general-types'
+
 export namespace SizeUtils {
     export const sizeUnits = Object.freeze([' bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'])
 
@@ -43,7 +45,7 @@ export namespace SizeUtils {
         })
     }
 
-    export const fromSizeAndUnit = (size: BigInteger, unit: keyof typeof unitsInBytes): BigInteger => {
+    export const fromSizeAndUnit = (size: BigInteger, unit: Keys<typeof unitsInBytes>): BigInteger => {
         return fromBigInteger(bigInteger(unitsInBytes[unit]).multiply(size))
     }
 

@@ -1,11 +1,13 @@
 import ow, { BasePredicate } from 'ow'
 
+import { Keys } from '../../typings/general-types'
+
 export type PredicateSchema = { [key: string]: BasePredicate<any> }
 
 export type PredicateValue<T extends BasePredicate> = T extends BasePredicate<infer U> ? U : never
 
 export type ValidatedObject<S extends PredicateSchema> = {
-    [K in keyof S]: PredicateValue<S[K]>
+    [K in Keys<S>]: PredicateValue<S[K]>
 }
 
 export const schema = <T extends PredicateSchema>(predicateSchema: T): BasePredicate<ValidatedObject<T>> =>

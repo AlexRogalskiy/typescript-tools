@@ -1,6 +1,7 @@
 import 'jsdom-global/register'
 
 import { DomElement, Optional } from '../../typings/standard-types'
+import { Keys } from '../../typings/general-types'
 
 import { URL_REGEX4, Checkers, Errors, Strings, CommonUtils, ColorsUtils, Formats } from '..'
 
@@ -159,12 +160,12 @@ export namespace Browsers {
 
     export const contextMenuShadow = ({ theme }: StyledProps): string => `box-shadow: ${theme.shadow};`
 
-    export const $ = <K extends keyof HTMLElementTagNameMap>(
+    export const $ = <K extends Keys<HTMLElementTagNameMap>>(
         selector: K,
         doc: Document = document,
     ): Optional<HTMLElementTagNameMap[K]> => doc.querySelector(selector)
 
-    export const $$ = <K extends keyof HTMLElementTagNameMap>(
+    export const $$ = <K extends Keys<HTMLElementTagNameMap>>(
         selector: K,
         doc: Document = document,
     ): NodeListOf<HTMLElementTagNameMap[K]> => doc.querySelectorAll(selector)
@@ -173,7 +174,7 @@ export namespace Browsers {
         const _matchesStaticSymbol = '__matches__'
         const _matchesSymbol = 'matches'
 
-        const matches_ = <K extends keyof HTMLElementTagNameMap>(obj: any, selector: K): boolean => {
+        const matches_ = <K extends Keys<HTMLElementTagNameMap>>(obj: any, selector: K): boolean => {
             const matches = $$(selector, obj.document || obj.ownerDocument)
             let i = matches.length
             while (--i >= 0 && matches.item(i) !== obj) {
@@ -846,7 +847,7 @@ export namespace Browsers {
     export const findBy = (() => {
         const cache = {}
 
-        return <K extends keyof HTMLElementTagNameMap>(
+        return <K extends Keys<HTMLElementTagNameMap>>(
             id: string,
             el: K,
         ): Optional<HTMLCollectionOf<HTMLElementTagNameMap[K]>> => {
@@ -1153,7 +1154,7 @@ export namespace Browsers {
      * @param  {object} attributes        - any attributes
      * @returns {Element}
      */
-    export const make = <K extends keyof HTMLElementTagNameMap>(
+    export const make = <K extends Keys<HTMLElementTagNameMap>>(
         tagName: K,
         classNames: string[] = [],
         attributes = {},

@@ -97,12 +97,6 @@ export type NonNull<T> = NonNullable<T>
 export type Undef<T> = T | undefined
 // -------------------------------------------------------------------------------------------------
 /**
- * Keys
- * @desc Type representing [`Keys`] in TypeScript: `T`
- */
-export type Keys<T> = keyof T
-// -------------------------------------------------------------------------------------------------
-/**
  * Optional
  * @desc Type representing [`Optional`] in TypeScript: `T | null | undefined`
  */

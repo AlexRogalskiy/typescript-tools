@@ -1,8 +1,10 @@
 import _ from 'lodash'
 
+import { Keys } from '../../typings/general-types'
 import { Consumer, Predicate, Processor, Comparator, BiProcessor } from '../../typings/function-types'
 
 import { Numbers, Checkers, Errors, Maths, Sorting, CommonUtils, Objects } from '..'
+
 import { SizeUtils } from '../utils/size-utils'
 
 export namespace Arrays {
@@ -626,7 +628,7 @@ export namespace Arrays {
         })
     }
 
-    export const groupBy = <T, K extends keyof any>(list: T[], getKey: (item: T) => K): Record<K, T[]> => {
+    export const groupBy = <T, K extends Keys<T>>(list: T[], getKey: (item: T) => K): Record<K, T[]> => {
         return list.reduce((previous, currentItem) => {
             const group = getKey(currentItem)
             if (!previous[group]) {
