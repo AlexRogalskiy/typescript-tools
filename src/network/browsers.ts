@@ -32,6 +32,10 @@ export namespace Browsers {
         color: string
     }
 
+    export const getBlobCodeInner = (el: any): any[] => {
+        return [].slice.call(el.getElementsByClassName('blob-code-inner'))
+    }
+
     export const validate = (evt: any): void => {
         const theEvent = evt || window['event']
         let key = theEvent.keyCode || theEvent.which
