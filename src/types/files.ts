@@ -13,6 +13,7 @@ import {
     statSync,
     unlinkSync,
     writeFileSync,
+    PathLike,
 } from 'fs'
 import { readFile } from 'fs-extra'
 import { isDirectory, isDirectorySync } from 'path-type'
@@ -81,6 +82,23 @@ export namespace Files {
         }
 
         return getConfigFileName(resolve(baseDir, '../'), configFileName)
+    }
+
+    export const iterateFolder = (dir: PathLike, callback: any, filter?: any): void => {
+        const dirs = readdirSync(dir)
+        for (const file of dirs) {
+            const absPath = `${dir}/${file}`
+
+            if (filter && !filter(absPath, file)) {
+                return
+            }
+
+            if (statSync(absPath).isDirectory()) {
+                iterateFolder(absPath, callback)
+            } else {
+                callback(absPath, file)
+            }
+        }
     }
 
     /**
