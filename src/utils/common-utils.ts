@@ -17,6 +17,13 @@ export namespace CommonUtils {
         return name.toLowerCase()
     }
 
+    export const getTopModuleName = (target: string): string => {
+        const isScoped = target.startsWith('@')
+        const numComponents = isScoped ? 2 : 1
+
+        return target.split('/').slice(0, numComponents).join('/')
+    }
+
     export const mergeProps = <T>(...obj: any[]): T =>
         _.mergeWith({}, ...obj, (o, s) => {
             return _.isArray(s) && _.isArray(o) ? _.union(o, s) : _.isNull(s) ? o : s
@@ -194,10 +201,15 @@ export namespace CommonUtils {
         }
     }
 
+    export const qs = (obj: any): string =>
+        Object.entries<any>(obj)
+            .map(([name, value]) => `${encodeURIComponent(name)}=${encodeURIComponent(value)}`)
+            .join('&')
+
     // addMethod(this, "find", () => {})
     // addMethod(this, "find", (name) => {})
     // addMethod(this, "find", (first, last) => {})
-    export const addMethod = (obj: any, name: string, fn, ...args: any[]): any => {
+    export const addMethod = (obj: any, name: string, fn: any, ...args: any[]): any => {
         const old = obj[name]
         obj[name] = () => {
             if (fn.length === args.length) {

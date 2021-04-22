@@ -174,6 +174,25 @@ export namespace Errors {
     }
 
     /**
+     * ExecError
+     * @desc Class representing execution error
+     */
+    export class ExecError extends GeneralError {
+        constructor(
+            readonly message: string,
+            readonly code: any,
+            readonly stdout: any,
+            readonly stderr: any,
+            ...args: any[]
+        ) {
+            super(ErrorType.type_error, message, args)
+            this.code = code
+            this.stdout = stdout
+            this.stderr = stderr
+        }
+    }
+
+    /**
      * TypeError
      * @desc Class representing type error
      */

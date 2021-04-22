@@ -51,6 +51,15 @@ export type DockerComposeService = {
 
 // -------------------------------------------------------------------------------------------------
 /**
+ * JsonValue
+ * @desc Type representing json value
+ */
+export interface JsonValue {
+    [key: string]: Optional<string | number | boolean | JsonValue | JsonValue[]>
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
  * UserPass
  * @desc Type representing user passwords
  */
@@ -171,6 +180,12 @@ export interface ResultMap {
 export interface Fields {
     [key: string]: string | string[]
 }
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * Signature of a Node.js style callback
+ */
+export type NodeCallback<T> = (err: Error, data?: T) => void
 
 // -------------------------------------------------------------------------------------------------
 /**

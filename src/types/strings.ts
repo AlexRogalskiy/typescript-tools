@@ -88,6 +88,17 @@ export namespace Strings {
         return changedFiles.some(file => matcher.match(file))
     }
 
+    export const shortHash = (buffer: any): string => {
+        const h = createHash('sha256')
+        h.write(buffer)
+        h.end()
+        return h.digest('hex').slice(0, 20)
+    }
+
+    export const splitTags = (value: string): string[] => {
+        return value.trim().split(/\s*,\s*/)
+    }
+
     export const getLineFromPos = (str, pos, matchPartial = '', matchValue = ''): number => {
         let offset = 1
 

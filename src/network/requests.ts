@@ -343,6 +343,40 @@ export namespace Requests {
         }
     }
 
+    export const req = async <T>({
+        url,
+        method,
+        body,
+        headers,
+    }: {
+        method: 'GET' | 'POST'
+        url: string
+        headers?: { [k: string]: string }
+        body?: any
+    }): Promise<T> => {
+        const res = await fetch(url, {
+            method,
+            body,
+            headers,
+        })
+
+        if (!res.ok) {
+            const data = await res.text()
+            errorLogs(`HTTP status ${res.status} from ${url} with response ${data}`)
+        }
+
+        return res.json()
+    }
+
+    export const isURLImport = (target: string): boolean => {
+        try {
+            const { origin } = new URL(target)
+            return !!origin
+        } catch (error) {
+            return false
+        }
+    }
+
     export const stateToQueryString = ({ query, selectedTags, sort, page }): any => {
         return stringify(
             {
