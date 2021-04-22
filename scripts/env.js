@@ -1,8 +1,11 @@
-const fs = require('fs-extra');
-const path = require('path');
+const fs = require('fs-extra')
+const path = require('path')
 
-async function writeDotenv({ splunkdUrl, splunkdUser, splunkdPassword }, { destFolder = process.cwd() } = {}) {
-    console.log('Writing splunkd password to .env');
+async function writeDotenv(
+    { splunkdUrl, splunkdUser, splunkdPassword },
+    { destFolder = process.cwd() } = {},
+) {
+    console.log('Writing splunkd password to .env')
     await fs.writeFile(
         path.join(destFolder, '.env'),
         [
@@ -14,10 +17,10 @@ async function writeDotenv({ splunkdUrl, splunkdUser, splunkdPassword }, { destF
         ].join('\n'),
         {
             encoding: 'utf-8',
-        }
-    );
+        },
+    )
 }
 
 module.exports = {
     writeDotenv,
-};
+}
