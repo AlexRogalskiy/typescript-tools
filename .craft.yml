@@ -1,0 +1,12 @@
+minVersion: "0.14.0"
+github:
+  owner: AlexRogalskiy
+  repo: typescript-tools
+releaseBranchPrefix: releases
+changelogPolicy: none
+artifactProvider:
+  name: none
+statusProvider:
+  name: github
+targets:
+  - name: github

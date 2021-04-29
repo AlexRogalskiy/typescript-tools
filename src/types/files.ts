@@ -102,6 +102,15 @@ export namespace Files {
     }
 
     /**
+     * Adjusts the base path of all the paths in an LCOV file
+     * The paths in the LCOV file will be joined with the provided base path
+     * @param lcovFile a string containing an entire LCOV file
+     * @param basePath the base path to join with the LCOV file paths
+     */
+    export const adjustLcovBasePath = (lcovFile: string, basePath: string): string =>
+        lcovFile.replace(/^SF:(.+)$/gm, (_, match) => `SF:${join(basePath, match)}`)
+
+    /**
      * Given a Git URL, computes a semi-human-readable name for a folder in which to
      * clone the repository.
      */
