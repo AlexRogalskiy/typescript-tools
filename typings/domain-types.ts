@@ -8,6 +8,17 @@ import { Color } from '../tools/color'
 import { Vector } from '../tools/vector'
 
 // -------------------------------------------------------------------------------------------------
+/**
+ * DateOptions
+ * @desc Type representing date options
+ */
+export type DateOptions = { from?: string | Date; to?: string | Date } | { year: number }
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * FlatArray
+ * @desc Type representing flat array
+ */
 export type FlatArray<Arr, Depth extends number> = {
     done: Arr
     recur: Arr extends readonly (infer InnerArr)[]

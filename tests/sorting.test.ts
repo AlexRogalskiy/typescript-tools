@@ -1,7 +1,7 @@
 import { Sorting } from '../src'
 
 export namespace Sorting_Test {
-    import sortPush = Sorting.sortPush;
+    import sortPush = Sorting.sortPush
 
     const sortFn = (a: number, b: number) => a - b
 
@@ -16,7 +16,7 @@ export namespace Sorting_Test {
     })
 
     describe('Check sorting push algorithm', () => {
-        it("should sort push length=0", () => {
+        it('should sort push length=0', () => {
             const a: any[] = []
             const x = -1
             const res = [...a, x].sort(sortFn)
@@ -24,9 +24,9 @@ export namespace Sorting_Test {
             sortPush(a, x, sortFn)
 
             expect(a).toEqual(res)
-        });
+        })
 
-        it("should sort push under", () => {
+        it('should sort push under', () => {
             const a = [1, 2, 3, 4, 5]
             const x = -1
             const res = [...a, x].sort(sortFn)
@@ -34,9 +34,9 @@ export namespace Sorting_Test {
             sortPush(a, x, sortFn)
 
             expect(a).toEqual(res)
-        });
+        })
 
-        it("should sort push 0", () => {
+        it('should sort push 0', () => {
             const a = [1, 2, 3, 4, 5]
             const x = 1
             const res = [...a, x].sort(sortFn)
@@ -46,7 +46,7 @@ export namespace Sorting_Test {
             expect(a).toEqual(res)
         })
 
-        it("should sort push end", () => {
+        it('should sort push end', () => {
             const a = [1, 2, 3, 4, 5]
             const x = 5
             const res = [...a, x].sort(sortFn)
@@ -56,7 +56,7 @@ export namespace Sorting_Test {
             expect(a).toEqual(res)
         })
 
-        it("should sort push over", () => {
+        it('should sort push over', () => {
             const a = [1, 2, 3, 4, 5]
             const x = 10
             const res = [...a, x].sort(sortFn)
@@ -75,23 +75,23 @@ export namespace Sorting_Test {
         })
     })
 
-    describe("benchmark", () => {
+    describe('benchmark', () => {
         const n = 200
 
         const samples = Array.from({ length: 5000 }, () => [
             Math.random(),
             Array.from({ length: n }, () => Math.random()),
         ])
-        const s0 = samples.map(([x, arr]: any) => [x, arr.slice()]);
-        const s1 = samples.map(([x, arr]: any) => [x, arr.slice()]);
+        const s0 = samples.map(([x, arr]: any) => [x, arr.slice()])
+        const s1 = samples.map(([x, arr]: any) => [x, arr.slice()])
 
-        it("push + sort", () => {
+        it('push + sort', () => {
             for (const [x, arr] of s0) {
-                arr.push(x);
+                arr.push(x)
                 arr.sort(sortFn)
             }
         })
-        it("sortPush", () => {
+        it('sortPush', () => {
             for (const [x, arr] of s1) {
                 sortPush(arr, x, sortFn)
             }

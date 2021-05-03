@@ -18,6 +18,16 @@ export namespace DateTimes {
         return new Date().toISOString()
     }
 
+    export const formatDate2 = (input: Date | string): string => {
+        const currentDate = new Date(input)
+
+        const year = currentDate.getFullYear()
+        const month = currentDate.getMonth() + 1
+        const date = currentDate.getDate()
+
+        return [year, month.toString().padStart(2, '0'), date.toString().padStart(2, '0')].join('-')
+    }
+
     export const getISOTimestamp = (date: Date): string => {
         return `${date.toISOString().split('.')[0]}Z`
     }

@@ -97,6 +97,13 @@ export type NonNull<T> = NonNullable<T>
 export type Undef<T> = T | undefined
 // -------------------------------------------------------------------------------------------------
 /**
+ * ThenArg
+ * @desc Type representing [`ThenArg`] in TypeScript: PromiseLike`
+ */
+export type ThenArg<T> = T extends PromiseLike<infer U> ? U : T
+
+// -------------------------------------------------------------------------------------------------
+/**
  * Optional
  * @desc Type representing [`Optional`] in TypeScript: `T | null | undefined`
  */
