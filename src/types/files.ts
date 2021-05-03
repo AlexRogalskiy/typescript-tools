@@ -1,5 +1,6 @@
 import hasha from 'hasha'
 import mkdirp from 'mkdirp'
+import dirSync from 'tmp'
 import {
     accessSync,
     constants,
@@ -98,6 +99,18 @@ export namespace Files {
             } else {
                 callback(absPath, file)
             }
+        }
+    }
+
+    export const withTmpDir = async <T>(handler: (dir: string) => Promise<T>): Promise<T> => {
+        const { name: dir, removeCallback: cleanUp } = dirSync({
+            unsafeCleanup: true,
+        })
+
+        try {
+            return await handler(dir)
+        } finally {
+            cleanUp()
         }
     }
 

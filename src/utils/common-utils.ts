@@ -9,6 +9,10 @@ export namespace CommonUtils {
     export type Color = (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9) & { _tag: '__Color__' }
     export type Empty = 0 & { _tag: '__Empty__' }
 
+    export const lerp = (k: number, a: number, b: number): number => (1 - k) * a + k * b
+
+    export const clamp = (x: number, a: number, b: number): number => Math.max(a, Math.min(b, x))
+
     export const normalizeBy = (name: string): string => {
         if (!Checkers.isString(name)) {
             name = String(name)
@@ -19,6 +23,61 @@ export namespace CommonUtils {
         }
 
         return name.toLowerCase()
+    }
+
+    export const isInsideCircle = (x: number, y: number, r: number): boolean => {
+        const l = 6
+        let k = 0
+
+        for (let dx = 0; dx < l; dx++)
+            for (let dy = 0; dy < l; dy++) {
+                const ux = x + (dx + 0.5) / l
+                const uy = y + (dy + 0.5) / l
+
+                if (ux * ux + uy * uy < r * r) k++
+            }
+
+        return k > l * l * 0.6
+    }
+
+    export const getCellPath = (n: number): Point[] => {
+        const l = Math.ceil(Math.sqrt(n))
+
+        const cells: any = []
+
+        for (let x = -l; x <= l; x++)
+            for (let y = -l; y <= l; y++) {
+                const a = (Math.atan2(y, x) + (5 * Math.PI) / 2) % (Math.PI * 2)
+
+                let r = 0
+
+                while (!isInsideCircle(x, y, r + 0.5)) r++
+
+                cells.push({ x, y, f: r * 100 + a })
+            }
+
+        return cells.sort((a, b) => a.f - b.f).slice(0, n)
+    }
+
+    export const silent = (handler: () => void | Promise<void>) => async (): Promise<any> => {
+        const originalConsoleLog = console.log
+        console.log = () => undefined
+
+        try {
+            return await handler()
+        } finally {
+            console.log = originalConsoleLog
+        }
+    }
+
+    export const getCircleSize = (c: Point[]): { max: Point; min: Point } => {
+        const xs = c.map(p => p.x)
+        const ys = c.map(p => p.y)
+
+        return {
+            max: { x: Math.max(0, ...xs), y: Math.max(0, ...ys) },
+            min: { x: Math.min(0, ...xs), y: Math.min(0, ...ys) },
+        }
     }
 
     export const getTopModuleName = (target: string): string => {
@@ -246,7 +305,12 @@ export namespace CommonUtils {
     export const gridEquals = (a: Grid, b: Grid): boolean => a.data.every((_, i) => a.data[i] === b.data[i])
 
     export const getCellsFromGrid = ({ width, height }: Grid): any =>
-        Array.from({ length: width }, (_, x) => Array.from({ length: height }, (_, y) => ({ x, y }))).flat()
+        Array.from({ length: width }, (_, x) =>
+            Array.from({ length: height }, (_, y) => ({
+                x,
+                y,
+            })),
+        ).flat()
 
     export const createEmptyGrid = (width: number, height: number): Grid => ({
         width,

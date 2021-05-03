@@ -2,6 +2,8 @@ import { ScaleLinear } from 'd3-scale'
 import { line } from 'd3-shape'
 
 import { Point, Rectangular, TextStyle, TickValueDescription } from '../../typings/domain-types'
+import { CommonUtils } from '..'
+import Color = CommonUtils.Color
 
 const PADDING_LEFT = 12
 const PADDING_RIGHT = 12
@@ -23,6 +25,50 @@ export const drawLine = (
     ctx.lineWidth = lineWidth
     ctx.stroke()
     ctx.restore()
+}
+
+export const pathRoundedRect = (
+    ctx: CanvasRenderingContext2D,
+    width: number,
+    height: number,
+    borderRadius: number,
+): void => {
+    ctx.moveTo(borderRadius, 0)
+    ctx.arcTo(width, 0, width, height, borderRadius)
+    ctx.arcTo(width, height, 0, height, borderRadius)
+    ctx.arcTo(0, height, 0, 0, borderRadius)
+    ctx.arcTo(0, 0, width, 0, borderRadius)
+}
+
+export const drawStack = (
+    ctx: CanvasRenderingContext2D,
+    stack: Color[],
+    max: number,
+    width: number,
+    o: { colorDots: Record<Color, string> },
+): void => {
+    ctx.save()
+
+    const m = width / max
+
+    for (let i = 0; i < stack.length; i++) {
+        // @ts-ignore
+        ctx.fillStyle = o.colorDots[stack[i]]
+        ctx.fillRect(i * m, 0, m + width * 0.005, 10)
+    }
+
+    ctx.restore()
+}
+
+export const highlightCell = (
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    color = 'orange',
+): void => {
+    ctx.fillStyle = color
+    ctx.beginPath()
+    ctx.fillRect((1 + x + 0.5) * 16 - 2, (2 + y + 0.5) * 16 - 2, 4, 4)
 }
 
 export const drawText = (

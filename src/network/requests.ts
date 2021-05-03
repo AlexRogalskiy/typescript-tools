@@ -344,11 +344,11 @@ export namespace Requests {
     }
 
     export const req = async <T>({
-                                     url,
-                                     method,
-                                     body,
-                                     headers,
-                                 }: {
+        url,
+        method,
+        body,
+        headers,
+    }: {
         method: 'GET' | 'POST'
         url: string
         headers?: { [k: string]: string }

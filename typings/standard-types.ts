@@ -97,6 +97,13 @@ export type NonNull<T> = NonNullable<T>
 export type Undef<T> = T | undefined
 // -------------------------------------------------------------------------------------------------
 /**
+ * BufferRecord
+ * @desc Type representing [`BufferRecord`] in TypeScript: `Buffer | string`
+ */
+export type BufferRecord = Record<string, Buffer | string>
+
+// -------------------------------------------------------------------------------------------------
+/**
  * ThenArg
  * @desc Type representing [`ThenArg`] in TypeScript: PromiseLike`
  */
