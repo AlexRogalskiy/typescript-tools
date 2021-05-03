@@ -29,6 +29,13 @@ export class Point {
         }
     }
 
+    static equals(a: Point, b: Point): boolean {
+        Point.checkPoint(a)
+        Point.checkPoint(b)
+
+        return a.x === b.x && a.y === b.y
+    }
+
     /**
      * Default {@link Point} constructor by input parameters
      * @param x initial input {@link Number} x

@@ -1,10 +1,14 @@
 import _ from 'lodash'
 
+import { Grid, Point } from '../../typings/domain-types'
 import { Iterator, IteratorStep } from '../../typings/function-types'
 
 import { Checkers, Errors } from '..'
 
 export namespace CommonUtils {
+    export type Color = (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9) & { _tag: '__Color__' }
+    export type Empty = 0 & { _tag: '__Empty__' }
+
     export const normalizeBy = (name: string): string => {
         if (!Checkers.isString(name)) {
             name = String(name)
@@ -201,10 +205,37 @@ export namespace CommonUtils {
         }
     }
 
+    export const isInside = (grid: Grid, point: Point): boolean =>
+        point.x >= 0 && point.y >= 0 && point.x < grid.width && point.y < grid.height
+
+    export const isInsideWithMargin = (grid: Grid, m: number, point: Point): boolean =>
+        point.x >= -m && point.y >= -m && point.x < grid.width + m && point.y < grid.height + m
+
     export const qs = (obj: any): string =>
         Object.entries<any>(obj)
             .map(([name, value]) => `${encodeURIComponent(name)}=${encodeURIComponent(value)}`)
             .join('&')
+
+    export const copyGrid = ({ width, height, data }: Grid): Grid => ({
+        width,
+        height,
+        data: Uint8Array.from(data),
+    })
+
+    export const isEmpty = (color: Color | Empty): color is Empty => color === 0
+
+    export const gridEquals = (a: Grid, b: Grid): boolean => a.data.every((_, i) => a.data[i] === b.data[i])
+
+    export const createEmptyGrid = (width: number, height: number): Grid => ({
+        width,
+        height,
+        data: new Uint8Array(width * height),
+    })
+
+    /**
+     * return true if the grid is empty
+     */
+    export const isGridEmpty = (grid: Grid): boolean => grid.data.every(x => x === 0)
 
     // addMethod(this, "find", () => {})
     // addMethod(this, "find", (name) => {})

@@ -18,6 +18,15 @@ export interface ObjectConstructor {
 
 // -------------------------------------------------------------------------------------------------
 /**
+ * TaggedData
+ * @desc Type representing tagged data
+ */
+export type TaggedData<D, T extends PropertyKey> = {
+    data: D
+    tag: T
+}
+// -------------------------------------------------------------------------------------------------
+/**
  * GradleDependency
  * @desc Type representing gradle dependency
  */
@@ -181,6 +190,23 @@ export interface Fields {
     [key: string]: string | string[]
 }
 
+// -------------------------------------------------------------------------------------------------
+/**
+ * Grid
+ * @desc Type representing supported grid
+ */
+export type Grid = {
+    width: number
+    height: number
+    data: Uint8Array
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * Uint8ArrayTag
+ * @desc Type representing supported Uint8ArrayTag
+ */
+export type Uint8ArrayTag = (tag: string) => Uint8Array & { tag }
 // -------------------------------------------------------------------------------------------------
 /**
  * Signature of a Node.js style callback
