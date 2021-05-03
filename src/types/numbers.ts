@@ -28,6 +28,8 @@ export namespace Numbers {
             return Math.round(number * factor) / factor
         }
 
+        export const percent = (x: number): string => (x * 100).toFixed(2)
+
         export const divide2 = (minValue: number, maxValue: number, length = 5): number[] => {
             const step = (maxValue - minValue) / (length - 1)
             const result = [minValue]

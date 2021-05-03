@@ -91,6 +91,9 @@ export namespace Arrays {
         }
     }
 
+    export const arrayEquals = <T>(a: T[], b: T[]): boolean =>
+        a.length === b.length && a.every((_, i) => a[i] === b[i])
+
     export const makeArray3 = <T>(size: number, initializer: any): T[] => {
         if (!isFunction(initializer)) {
             const val = initializer

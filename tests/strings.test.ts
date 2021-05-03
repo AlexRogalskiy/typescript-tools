@@ -1,7 +1,7 @@
 import { EMOJI_REGEX, Strings } from '../src'
 
 export namespace Strings_Test {
-    import pad = Strings.pad
+    import pad = Strings.padBegin
     import parseJson = Strings.parseJson
     import capFirstLetter = Strings.capitalFirstLetter
     import formatNumber = Strings.formatNumber

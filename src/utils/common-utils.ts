@@ -222,9 +222,31 @@ export namespace CommonUtils {
         data: Uint8Array.from(data),
     })
 
+    export const toAttribute = (o: any): string =>
+        Object.entries(o)
+            .filter(([, value]) => value !== null)
+            .map(([name, value]) => `${name}="${value}"`)
+            .join(' ')
+
+    export const removeInterpolatedPositions = <T extends Point>(arr: T[]): T[] =>
+        arr.filter((u, i, arr) => {
+            if (i - 1 < 0 || i + 1 >= arr.length) return true
+
+            const a = arr[i - 1]
+            const b = arr[i + 1]
+
+            const ex = (a.x + b.x) / 2
+            const ey = (a.y + b.y) / 2
+
+            return !(Math.abs(ex - u.x) < 0.01 && Math.abs(ey - u.y) < 0.01)
+        })
+
     export const isEmpty = (color: Color | Empty): color is Empty => color === 0
 
     export const gridEquals = (a: Grid, b: Grid): boolean => a.data.every((_, i) => a.data[i] === b.data[i])
+
+    export const getCellsFromGrid = ({ width, height }: Grid): any =>
+        Array.from({ length: width }, (_, x) => Array.from({ length: height }, (_, y) => ({ x, y }))).flat()
 
     export const createEmptyGrid = (width: number, height: number): Grid => ({
         width,
