@@ -18,13 +18,11 @@ export interface ObjectConstructor {
 
 // -------------------------------------------------------------------------------------------------
 /**
- * TaggedData
- * @desc Type representing tagged data
+ * Labeled
+ * @desc Type representing labeled data
  */
-export type TaggedData<D, T extends PropertyKey> = {
-    data: D
-    tag: T
-}
+export type Labeled<T, R = { data: T } & { _label?: PropertyKey }> = R
+
 // -------------------------------------------------------------------------------------------------
 /**
  * GradleDependency
