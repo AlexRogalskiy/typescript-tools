@@ -1,4 +1,5 @@
 import { DateOptions } from '../typings/domain-types'
+
 import { DateTimes } from '../src'
 
 import formatDate2 = DateTimes.formatDate2
