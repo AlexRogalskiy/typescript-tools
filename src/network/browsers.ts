@@ -3,24 +3,24 @@ import 'jsdom-global/register'
 import { DomElement, Optional } from '../../typings/standard-types'
 import { Keys } from '../../typings/general-types'
 
-import { URL_REGEX4, Checkers, Errors, Strings, CommonUtils, ColorsUtils, Formats } from '..'
+import { Checkers, ColorsUtils, CommonUtils, Errors, Formats, Strings, URL_REGEX4 } from '..'
 
 export namespace Browsers {
-    import isDomElement = Checkers.isDomElement
-    import isString = Checkers.isString
-    import isNull = Checkers.isNull
-    import isNumber = Checkers.isNumber
-    import isNotNull = Checkers.isNotNull
-    import isFunction = Checkers.isFunction
+    import isDomElement = Checkers.isDomElement;
+    import isString = Checkers.isString;
+    import isNull = Checkers.isNull;
+    import isNumber = Checkers.isNumber;
+    import isNotNull = Checkers.isNotNull;
+    import isFunction = Checkers.isFunction;
 
-    import valueError = Errors.valueError
+    import valueError = Errors.valueError;
 
-    import capitalFirstLetter = Strings.capitalFirstLetter
+    import capitalFirstLetter = Strings.capitalFirstLetter;
 
-    import defineStaticProperty = CommonUtils.defineStaticProperty
-    import defineProperty = CommonUtils.defineProperty
+    import defineStaticProperty = CommonUtils.defineStaticProperty;
+    import defineProperty = CommonUtils.defineProperty;
 
-    import isColorBright = ColorsUtils.isColorBright
+    import isColorBright = ColorsUtils.isColorBright;
 
     const { hasOwnProperty: hasOwnProp } = Object.prototype
 
@@ -44,6 +44,10 @@ export namespace Browsers {
         if (!regex.test(key)) {
             theEvent.returnValue = false
         }
+    }
+
+    export const getStyleElements = (selector: string): Array<HTMLStyleElement> => {
+        return Array.from(document.querySelectorAll(selector))
     }
 
     export const storeLocation = (position): { latitude: number; longitude: number } => {

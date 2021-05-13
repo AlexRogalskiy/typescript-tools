@@ -8,6 +8,7 @@ import {
     URL_REGEX2,
     Numbers,
     Errors,
+    domElementPattern,
 } from '..'
 
 import { Optional } from '../../typings/standard-types'
@@ -51,6 +52,20 @@ export namespace Checkers {
         const value = /^\[object (.*)]$/.exec(str)
 
         return value ? value[1] : null
+    }
+
+    // https://github.com/facebook/jest/blob/be4bec387d90ac8d6a7596be88bf8e4994bc3ed9/packages/expect/src/jasmine_utils.js#L234
+    export const isA = (typeName: string, value: any): boolean => {
+        return Object.prototype.toString.apply(value) === `[object ${typeName}]`
+    }
+
+    export const isDOMElement = (val: any): boolean => {
+        return (
+            val.nodeType === 1 &&
+            val.constructor &&
+            val.constructor.name &&
+            domElementPattern.test(val.constructor.name)
+        )
     }
 
     export const getType = (obj: any): string => {

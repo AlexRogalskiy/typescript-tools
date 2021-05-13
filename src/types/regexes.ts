@@ -16,6 +16,12 @@ const PROPERTY_REGEX_PATTERN = '[a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_
 
 const regex = (str: string): RegExp => new RegExp(str, 'g')
 
+export const componentSelectorClassNamePattern = /^e[a-zA-Z0-9]+[0-9]+$/
+
+export const keyframesPattern = /^@keyframes\s+(animation-[^{\s]+)+/
+export const removeCommentPattern = /\/\*[\s\S]*?\*\//g
+
+export const domElementPattern = /^((HTML|SVG)\w*)?Element$/
 export const newBlockRegEx = /^\s*-\s*((\w+):\s*(.*))$/
 export const blockLineRegEx = /^\s*((\w+):\s*(.*))$/
 export const galaxyDepRegex = /[\w-]+\.[\w-]+/
