@@ -4,7 +4,7 @@ import dateFormat from 'dateformat'
 
 import { Processor } from '../../typings/function-types'
 
-import { Profiles } from '../config/profiles'
+import { Profiles } from '../configuration/profiles'
 
 import { CommonUtils } from '..'
 

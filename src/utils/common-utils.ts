@@ -1,11 +1,13 @@
 import _ from 'lodash'
 
 import { Grid, Point } from '../../typings/domain-types'
-import { Iterator, IteratorStep } from '../../typings/function-types'
+import { Iterator, IteratorStep, Processor } from '../../typings/function-types'
 
 import { Checkers, Errors } from '..'
 
 export namespace CommonUtils {
+    export type Fn<T> = (key: string) => T
+
     export type Color = (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9) & { _tag: '__Color__' }
     export type Empty = 0 & { _tag: '__Empty__' }
 
@@ -67,6 +69,17 @@ export namespace CommonUtils {
             return await handler()
         } finally {
             console.log = originalConsoleLog
+        }
+    }
+
+    export const memoize = <V>(fn: Processor<string, V>): Processor<string, V> => {
+        const cache = {}
+
+        return (arg: string): V => {
+            if (cache[arg] === undefined) {
+                cache[arg] = fn(arg)
+            }
+            return cache[arg]
         }
     }
 

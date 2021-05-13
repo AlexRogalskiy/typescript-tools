@@ -1,5 +1,5 @@
-export * from './config/configs'
-export * from './config/profiles'
+export * from './configuration/configs'
+export * from './configuration/profiles'
 
 export * from './constant/constants'
 

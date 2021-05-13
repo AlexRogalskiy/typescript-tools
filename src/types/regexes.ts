@@ -16,6 +16,9 @@ const PROPERTY_REGEX_PATTERN = '[a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_
 
 const regex = (str: string): RegExp => new RegExp(str, 'g')
 
+export const commonRegexPattern = (props: any): string =>
+    `/^((${Object.keys(props).join('|')})|(([Dd][Aa][Tt][Aa]|[Aa][Rr][Ii][Aa]|x)-.*))$/`
+
 export const componentSelectorClassNamePattern = /^e[a-zA-Z0-9]+[0-9]+$/
 
 export const keyframesPattern = /^@keyframes\s+(animation-[^{\s]+)+/
