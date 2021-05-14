@@ -79,7 +79,7 @@
         "axios": "^0.21.1",
         "boxen": "^5.0.0",
         "canvas": "^2.7.0",
-        "codecov": "^3.8.1",
+        "codecov": "4.0.0-0",
         "conventional-changelog-cli": "^2.0.0",
         "coveralls": "^3.0.0",
         "crypto": "^1.0.1",
