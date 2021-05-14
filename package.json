@@ -147,7 +147,7 @@
         "vague-time": "^2.4.2",
         "ws": "^7.4.3",
         "xmldoc": "^1.1.2",
-        "yaml": "^1.10.0",
+        "yaml": "2.0.0-5",
         "yaspeller": "^7.0.0"
     },
     "repository": {
