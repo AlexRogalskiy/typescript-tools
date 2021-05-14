@@ -204,6 +204,42 @@ export type Executor = () => void
 export type GenericPredicate<A> = (...args: readonly A[]) => boolean
 
 /**
+ * StringGenericPredicate
+ * @param A
+ * @desc Type representing string generic array predicate function type in TypeScript
+ * @example
+ *   type StringGenericPredicate = (v) => return 1 === v
+ */
+export type StringGenericPredicate = GenericPredicate<string>
+
+/**
+ * NumericGenericPredicate
+ * @param A
+ * @desc Type representing numeric generic array predicate function type in TypeScript
+ * @example
+ *   type NumericGenericPredicate = (v) => return 1 === v
+ */
+export type NumericGenericPredicate = GenericPredicate<Numeric>
+
+/**
+ * BooleanGenericPredicate
+ * @param A
+ * @desc Type representing boolean generic array predicate function type in TypeScript
+ * @example
+ *   type BooleanGenericPredicate = (v) => return 1 === v
+ */
+export type BooleanGenericPredicate = GenericPredicate<boolean>
+
+/**
+ * PropertyGenericPredicate
+ * @param A
+ * @desc Type representing property generic array predicate function type in TypeScript
+ * @example
+ *   type BooleanGenericPredicate = (v) => return 1 === v
+ */
+export type PropertyGenericPredicate = GenericPredicate<PropertyKey>
+
+/**
  * AnyPredicate
  * @param A
  * @desc Type representing any array predicate function type in TypeScript
@@ -376,7 +412,7 @@ export type BooleanBiPredicate = BiPredicate<boolean, boolean>
  * TriPredicate
  * @desc Type representing ternary predicate function type in TypeScript
  * @example
- *   type TriPredicate = (v1, v2, v3) => return v1 === v2 === v3
+ *   type TriPredicate = (v1, v2, v3) => return (v1 === v2 === v3)
  */
 export type TriPredicate<T, V, S> = (v1: T, v2: V, v3: S) => boolean
 
