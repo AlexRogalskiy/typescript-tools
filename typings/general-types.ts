@@ -18,6 +18,29 @@ export type BufferEncoding =
     | 'hex'
 // -------------------------------------------------------------------------------------------------
 /**
+ * ValueOfRecord
+ * @param R
+ * @desc Type representing value of a record
+ */
+export type ValueOfRecord<R> = R extends Record<any, infer T> ? T : never
+
+/**
+ * If `T` is a union, `T[keyof T]` (cf. `map` and `values` in `index.d.ts`) contains the types of object values that are common across the union (i.e., an intersection).
+ * Because we want to include the types of all values, including those that occur in some, but not all members of the union, we first define `ValueOfUnion`.
+ * @see https://stackoverflow.com/a/60085683
+ */
+export type ValueOfUnion<T> = T extends infer U ? U[keyof U] : never
+
+/**
+ * ObjectHavingSome
+ * @param Key
+ * @desc Type representing multi object
+ */
+export type MultiObject<Key extends PropertyKey, T> = {
+    [K in Key]: { [P in K]: T }
+}[Key]
+// -------------------------------------------------------------------------------------------------
+/**
  * Keys
  * @desc Get the union type of all the keys in an object type `T`
  * @see https://flow.org/en/docs/types/utilities/#toc-keys
@@ -40,6 +63,15 @@ export type Keys<T> = keyof T
  *   type PropsValues = Values<Props>;
  */
 export type Values<T> = T[Keys<T>]
+// -------------------------------------------------------------------------------------------------
+/**
+ * KeyValuePair
+ * @param K
+ * @param V
+ * @desc Type representing key-value pair
+ */
+export type KeyValuePair<K, V> = [K, V]
+
 // -------------------------------------------------------------------------------------------------
 /**
  * ProcessConfig

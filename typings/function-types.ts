@@ -1,12 +1,6 @@
 import { NonNull, Optional } from './standard-types'
 import { Numeric } from './general-types'
 
-/**
- * HandlerFunction
- * @desc Type representing handler function type in TypeScript
- */
-export type HandlerFunction<T> = (options: T, next: (options: T) => T) => T | Promise<T>
-
 // -------------------------------------------------------------------------------------------------
 /**
  * Dictionary
@@ -201,6 +195,24 @@ export interface IterableIterator<T> extends ItemIterator<T> {
 export type Executor = () => void
 // -------------------------------------------------------------------------------------------------
 /**
+ * GenericPredicate
+ * @param A
+ * @desc Type representing generic array predicate function type in TypeScript
+ * @example
+ *   type GenericPredicate = (v) => return 1 === v
+ */
+export type GenericPredicate<A> = (...args: readonly A[]) => boolean
+
+/**
+ * AnyPredicate
+ * @param A
+ * @desc Type representing any array predicate function type in TypeScript
+ * @example
+ *   type AnyPredicate = (v) => return 1 === v
+ */
+export type AnyPredicate<T extends (...args: any) => boolean> = (value: T) => boolean
+
+/**
  * Predicate
  * @desc Type representing predicate function type in TypeScript
  * @example
@@ -212,9 +224,17 @@ export type Predicate<T> = (value: T) => boolean
  * ArrayPredicate
  * @desc Type representing array predicate function type in TypeScript
  * @example
- *   type ArrayPredicate = (v, i, d[]) => return 1 === v
+ *   type ArrayPredicate = (v, i, d[]) => return v == d[i]
  */
 export type ArrayPredicate<T, S extends T[]> = (value: T, index: number, array: S) => boolean
+
+/**
+ * ObjectPredicate
+ * @desc Type representing array predicate function type in TypeScript
+ * @example
+ *   type ObjectPredicate = (v, key) => return 1 === v[key]
+ */
+export type ObjectPredicate<T> = (value: T, key: unknown extends T ? string : keyof T) => boolean
 
 /**
  * OptionalPredicate
@@ -1853,4 +1873,11 @@ export type NonNullFactory<T, V> = Factory<T, NonNull<V>>
  *   type StringFormatter = (v1, v2) => return '0'
  */
 export type StringFormatter = <T extends string>(value: number, fraction: number) => T
+// -------------------------------------------------------------------------------------------------
+
+/**
+ * HandlerFunction
+ * @desc Type representing handler function type in TypeScript
+ */
+export type HandlerFunction<T> = (value: T, next: UnaryOperator<T>) => T | Promise<T>
 // -------------------------------------------------------------------------------------------------

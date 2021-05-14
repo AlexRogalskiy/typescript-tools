@@ -309,6 +309,16 @@ export type MultiValue<T> = T | Optional<T[]>
 export type Label = {
     label?: string
 }
+
+// -------------------------------------------------------------------------------------------------
+/**
+ * Styles
+ * @desc Type representing styles
+ */
+export interface Styles {
+    [ruleOrSelector: string]: string | number | Styles
+}
+
 // -------------------------------------------------------------------------------------------------
 /**
  * An array or object (possibly nested) of related CSS properties
