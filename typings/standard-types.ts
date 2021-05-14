@@ -10,7 +10,7 @@ import { Numeric } from './general-types'
  *   Exclude<Various, Nullish>;
  */
 export type Nullish = null | undefined
-
+// -------------------------------------------------------------------------------------------------
 /**
  * Tests for Nullish by simply comparing `val` for equality with `null`.
  * @example
@@ -295,4 +295,24 @@ export type StringRecord<T> = Record<string, T>
  * @desc Type representing property {@link Record}
  */
 export type PropertyRecord<T> = Record<PropertyKey, T>
+// -------------------------------------------------------------------------------------------------
+/**
+ * MultiValue
+ * @desc Type representing single value {@link T} or multiple values
+ */
+export type MultiValue<T> = T | Optional<T[]>
+// -------------------------------------------------------------------------------------------------
+/**
+ * Label
+ * @desc Type representing label
+ */
+export type Label = {
+    label?: string
+}
+// -------------------------------------------------------------------------------------------------
+/**
+ * An array or object (possibly nested) of related CSS properties
+ * @see https://theme-ui.com/theme-spec#theme-scales
+ */
+export type Scale<T> = T[] | { [K: string]: T | Scale<T>; [I: number]: T }
 // -------------------------------------------------------------------------------------------------

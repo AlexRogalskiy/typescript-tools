@@ -1,6 +1,6 @@
 import { Strings } from '../src'
 
-import pad = Strings.pad
+import padBegin = Strings.padBegin
 
 export class Dateformat {
     /**
@@ -116,31 +116,31 @@ export class Dateformat {
             ?.replace(Dateformat.timezoneClip, '')
         const flags = {
             d,
-            dd: pad(d),
+            dd: padBegin(d),
             ddd: Dateformat.i18n.dayNames[D],
             dddd: Dateformat.i18n.dayNames[D + 7],
             m: m + 1,
-            mm: pad(m + 1),
+            mm: padBegin(m + 1),
             mmm: Dateformat.i18n.monthNames[m],
             mmmm: Dateformat.i18n.monthNames[m + 12],
             yy: String(y).slice(2),
             yyyy: y,
             h: H % 12 || 12,
-            hh: pad(H % 12 || 12),
+            hh: padBegin(H % 12 || 12),
             H,
-            HH: pad(H),
+            HH: padBegin(H),
             M,
-            MM: pad(M),
+            MM: padBegin(M),
             s,
-            ss: pad(s),
-            l: pad(L, 3),
-            L: pad(L > 99 ? Math.round(L / 10) : L),
+            ss: padBegin(s),
+            l: padBegin(L, 3),
+            L: padBegin(L > 99 ? Math.round(L / 10) : L),
             t: H < 12 ? 'a' : 'p',
             tt: H < 12 ? 'am' : 'pm',
             T: H < 12 ? 'A' : 'P',
             TT: H < 12 ? 'AM' : 'PM',
             Z: utc ? 'UTC' : time,
-            o: (o > 0 ? '-' : '+') + pad(Math.floor(Math.abs(o) / 60) * 100 + (Math.abs(o) % 60), 4),
+            o: (o > 0 ? '-' : '+') + padBegin(Math.floor(Math.abs(o) / 60) * 100 + (Math.abs(o) % 60), 4),
             S: ['th', 'st', 'nd', 'rd'][d % 10 > 3 ? 0 : (Number((d % 100) - (d % 10) !== 10) * d) % 10],
         }
 
