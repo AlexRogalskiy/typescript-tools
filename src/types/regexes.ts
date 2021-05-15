@@ -12,9 +12,24 @@ import quote = Strings.quote
 // eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires
 const isRegex = require('is-regex')
 
+const MRE = /^m[trblxy]?$/
+
 const PROPERTY_REGEX_PATTERN = '[a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)*'
 
 const regex = (str: string): RegExp => new RegExp(str, 'g')
+
+export const getProps = test => props => {
+    const next = {}
+    for (const key in props) {
+        if (Object.prototype.hasOwnProperty.call(props, key) && test(key || '')) {
+            next[key] = props[key]
+        }
+    }
+    return next
+}
+
+export const getMargin = getProps(k => MRE.test(k))
+export const omitMargin = getProps(k => !MRE.test(k))
 
 export const commonRegexPattern = (props: any): string =>
     `/^((${Object.keys(props).join('|')})|(([Dd][Aa][Tt][Aa]|[Aa][Rr][Ii][Aa]|x)-.*))$/`

@@ -35,6 +35,19 @@ export namespace Checkers {
         '[object Object]': 'object',
     }
 
+    export const isInRange2 = (start: number, end: number, num: number): boolean => {
+        return num >= start && num <= end
+    }
+
+    export const checkRanges = (range: number[], num: number): boolean => {
+        for (let i = 0; i < range.length; i += 2) {
+            if (isInRange2(range[i], range[i + 1], num)) {
+                return true
+            }
+        }
+        return false
+    }
+
     export const isTrue = (value: any): boolean => {
         const lowercase = value.toLowerCase()
         return (

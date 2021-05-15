@@ -8,6 +8,15 @@ import { Color } from '../tools/color'
 import { Vector } from '../tools/vector'
 
 // -------------------------------------------------------------------------------------------------
+const aliases = {
+    inlineCode: 'code',
+    thematicBreak: 'hr',
+    root: 'div',
+} as const
+
+export const isAlias = (x: string): x is keyof typeof aliases => x in aliases
+
+// -------------------------------------------------------------------------------------------------
 /**
  * DateOptions
  * @desc Type representing date options
@@ -22,10 +31,8 @@ export type DateOptions = { from?: string | Date; to?: string | Date } | { year:
 export type FlatArray<Arr, Depth extends number> = {
     done: Arr
     recur: Arr extends readonly (infer InnerArr)[]
-        ? FlatArray<
-              InnerArr,
-              [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20][Depth]
-          >
+        ? FlatArray<InnerArr,
+            [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20][Depth]>
         : Arr
 }[Depth extends -1 ? 'done' : 'recur']
 
@@ -255,7 +262,9 @@ export interface ArrayBuffer {
  * LiteralUnion
  * @desc Type representing literal union
  */
-export type LiteralUnion<LiteralType, BaseType extends Primitive> = LiteralType | (BaseType & { _?: never })
+export type LiteralUnion<LiteralType, BaseType extends Primitive> =
+    LiteralType
+    | (BaseType & { _?: never })
 
 // -------------------------------------------------------------------------------------------------
 export type Key = string | number

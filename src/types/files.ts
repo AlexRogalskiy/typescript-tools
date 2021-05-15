@@ -43,6 +43,21 @@ export namespace Files {
         stderr: string
     }
 
+    const packagePath = (project: string): string => {
+        return join(__dirname, '../', project, 'package.json')
+    }
+
+    export const readPkg = (project: string): any => {
+        const packageJsonPath = packagePath(project)
+        return JSON.parse(readFileSync(packageJsonPath, 'utf-8'))
+    }
+
+    export const writePkg = (project: string, pkg: string): void => {
+        const packageJsonPath = packagePath(project)
+        const text = JSON.stringify(pkg, null, 2)
+        return writeFileSync(packageJsonPath, `${text}\n`)
+    }
+
     export const writeFileWithCliOptions = async (
         output: string,
         contents: string,

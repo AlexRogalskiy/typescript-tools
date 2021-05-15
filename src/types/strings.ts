@@ -916,9 +916,13 @@ export namespace Strings {
     export const replaceBy = (regex: string | RegExp, value: string, replace = ''): string =>
         value.replace(regex, replace)
 
+    export const removeSlash = (str: string): string => (str.length > 1 ? str.replace(/\/$/, '') : str)
+
     export const padBegin = (num: number, size = 2, type = '0'): string => `${num}`.padStart(size, type)
 
     export const padEnd = (num: number, size = 2, type = '0'): string => `${num}`.padEnd(size, type)
+
+    export const joinStr = (...args: (string | undefined)[]): string => args.filter(Boolean).join('-')
 
     //let message = tag`${count} items cost $${count * price}.toFixed(2).`;
     export const tag = <T>(literals: T[], ...substitutions: any[]): string => {

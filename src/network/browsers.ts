@@ -36,6 +36,8 @@ export namespace Browsers {
         return [].slice.call(el.getElementsByClassName('blob-code-inner'))
     }
 
+    export const win = typeof (window as any) !== 'undefined' ? window : {}
+
     export const validate = (evt: any): void => {
         const theEvent = evt || window['event']
         let key = theEvent.keyCode || theEvent.which
