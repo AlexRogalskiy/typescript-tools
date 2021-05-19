@@ -74,6 +74,15 @@ export type KeyValuePair<K, V> = [K, V]
 
 // -------------------------------------------------------------------------------------------------
 /**
+ * LabelValue
+ * @param K
+ * @param V
+ * @desc Type representing label-value pair
+ */
+export type LabelValuePair<K, V> = [K, V]
+
+// -------------------------------------------------------------------------------------------------
+/**
  * ProcessConfig
  * @desc Type representing supported process configurations
  */
