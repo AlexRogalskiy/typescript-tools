@@ -1,3 +1,5 @@
+import { Readable } from 'stream'
+
 export namespace ArrayBuffers {
     const ARRAY_BUFFER_TYPES = [
         '[object ArrayBuffer]',
@@ -18,5 +20,20 @@ export namespace ArrayBuffers {
 
     export const isArrayBuffer = (obj: any): boolean => {
         return isDataView(obj) || ARRAY_BUFFER_TYPES.includes(Object.prototype.toString.call(obj))
+    }
+
+    export async function rawBody(readable: Readable): Promise<Buffer> {
+        return new Promise((resolve, reject) => {
+            let bytes = 0
+            const chunks: Buffer[] = []
+            readable.on('error', reject)
+            readable.on('data', chunk => {
+                chunks.push(chunk)
+                bytes += chunk.length
+            })
+            readable.on('end', () => {
+                resolve(Buffer.concat(chunks, bytes))
+            })
+        })
     }
 }

@@ -7,9 +7,29 @@ import { Checkers, Errors } from '..'
 
 export namespace CommonUtils {
     export type Fn<T> = (key: string) => T
-
     export type Color = (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9) & { _tag: '__Color__' }
     export type Empty = 0 & { _tag: '__Empty__' }
+
+    export const nodeMajor = Number(process.versions.node.split('.')[0])
+
+    export const getRandomId = (): string => {
+        return Math.random().toString().slice(2)
+    }
+
+    /**
+     * Cached fs operation wrapper.
+     */
+    export const cachedLookup = <T>(fn: (arg: string) => T): ((arg: string) => T) => {
+        const cache = new Map<string, T>()
+
+        return (arg: string): T => {
+            if (!cache.has(arg)) {
+                cache.set(arg, fn(arg))
+            }
+
+            return cache.get(arg) as T
+        }
+    }
 
     export const lerp = (k: number, a: number, b: number): number => (1 - k) * a + k * b
 

@@ -18,7 +18,7 @@ import {
 } from 'fs'
 import { readFile } from 'fs-extra'
 import { isDirectory, isDirectorySync } from 'path-type'
-import { dirname, extname, join, resolve, basename, relative, isAbsolute } from 'path'
+import { dirname, extname, join, resolve, basename, relative, isAbsolute, parse as parsePath } from 'path'
 import { randomBytes } from 'crypto'
 import { execSync, spawn, spawnSync, SpawnOptions } from 'child_process'
 
@@ -34,6 +34,7 @@ export namespace Files {
     import escapeRegExp = Strings.escapeRegExp
     import isBlankString = Strings.isBlankString
     import errorLogs = Logging.errorLogs
+    import joinPath = Strings.joinPath
 
     const cache = new Cache()
 
@@ -45,6 +46,27 @@ export namespace Files {
 
     const packagePath = (project: string): string => {
         return join(__dirname, '../', project, 'package.json')
+    }
+
+    // Takes a filename or foldername, strips the extension
+    // gets the part between the "[]" brackets.
+    // It will return `null` if there are no brackets
+    // and therefore no segment.
+    export const getSegmentName = (segment: string): string | null => {
+        const { name } = parsePath(segment)
+
+        if (name.startsWith('[') && name.endsWith(']')) {
+            return name.slice(1, -1)
+        }
+
+        return null
+    }
+
+    export const getAbsolutePath = (unresolvedPath: string): string => {
+        const { dir, name } = parsePath(unresolvedPath)
+        const parts = joinPath(dir, name).split('/')
+
+        return parts.map(part => part.replace(/\[.*]/, '1')).join('/')
     }
 
     export const readPkg = (project: string): any => {

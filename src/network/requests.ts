@@ -23,6 +23,27 @@ export namespace Requests {
 
     export type InitHeaders = Headers | Record<string, string> | string[][]
 
+    export const fetchApi = async (url: string, opts: any = {}): Promise<any> => {
+        const apiHost = process.env.API_HOST || 'api.vercel.com'
+        const urlWithHost = `https://${apiHost}${url}`
+        const { method = 'GET', body } = opts
+
+        if (process.env.VERBOSE) {
+            console.log('fetch', method, url)
+            if (body) console.log(encodeURIComponent(body).slice(0, 80))
+        }
+
+        if (!opts.headers) opts.headers = {}
+
+        if (!opts.headers.Accept) {
+            opts.headers.Accept = 'application/json'
+        }
+
+        opts.headers['x-now-trace-priority'] = '1'
+
+        return await fetch(urlWithHost, opts)
+    }
+
     export type AttachmentData = {
         readonly type: 'blob' | 'src'
         readonly blob: BlobPart

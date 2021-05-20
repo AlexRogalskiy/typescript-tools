@@ -1,7 +1,7 @@
 import { Optional } from '../../typings/standard-types'
 import { Comparator, ComparatorMode, PropertyComparator } from '../../typings/function-types'
 
-import { Checkers, Errors, Logging } from '..'
+import { Checkers, Errors, Files, Logging } from '..'
 
 export namespace Comparators {
     import notNullOrUndefined = Checkers.notNullOrUndefined
@@ -10,6 +10,37 @@ export namespace Comparators {
     import isObject = Checkers.isObject
     import valueError = Errors.valueError
     import isFunction = Checkers.isFunction
+    import getSegmentName = Files.getSegmentName
+
+    export const sortFilesBySegmentCount = (fileA: string, fileB: string): number => {
+        const lengthA = fileA.split('/').length
+        const lengthB = fileB.split('/').length
+
+        if (lengthA > lengthB) {
+            return -1
+        }
+
+        if (lengthA < lengthB) {
+            return 1
+        }
+
+        // Paths that have the same segment length but
+        // less placeholders are preferred
+        const countSegments = (prev: number, segment: string): number =>
+            getSegmentName(segment) ? prev + 1 : 0
+        const segmentLengthA = fileA.split('/').reduce(countSegments, 0)
+        const segmentLengthB = fileB.split('/').reduce(countSegments, 0)
+
+        if (segmentLengthA > segmentLengthB) {
+            return 1
+        }
+
+        if (segmentLengthA < segmentLengthB) {
+            return -1
+        }
+
+        return fileA.localeCompare(fileB)
+    }
 
     /**
      * @public
