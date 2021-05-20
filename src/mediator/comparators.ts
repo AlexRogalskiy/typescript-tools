@@ -12,6 +12,76 @@ export namespace Comparators {
     import isFunction = Checkers.isFunction
     import getSegmentName = Files.getSegmentName
 
+    const TYPE_BOOLEAN = 1
+    const TYPE_NAN = 2
+    const TYPE_NUMBER = 3
+    const TYPE_STRING = 4
+    const TYPE_NULL = 5
+    const TYPE_OBJECT = 6
+    const TYPE_OTHER = 7
+
+    const cmpType = (value: any): number => {
+        if (typeof value === 'boolean') {
+            return TYPE_BOOLEAN
+        } else if (typeof value === 'number') {
+            return value !== value ? /* NaN */ TYPE_NAN : TYPE_NUMBER
+        } else if (typeof value === 'string') {
+            return TYPE_STRING
+        } else if (typeof value === 'object') {
+            return value === null ? TYPE_NULL : TYPE_OBJECT
+        } else {
+            return TYPE_OTHER
+        }
+    }
+
+    export const cmp = (a: any, b: any): number => {
+        const typeA = cmpType(a)
+        const typeB = cmpType(b)
+
+        return typeA !== typeB ? (typeA < typeB ? -1 : 1) : a < b ? -1 : a > b ? 1 : 0
+    }
+
+    export const cmpAnalytical = (a: any, b: any): number => {
+        const typeA = cmpType(a)
+        const typeB = cmpType(b)
+
+        if (typeA !== typeB) {
+            return typeA < typeB ? -1 : 1
+        }
+
+        if (typeA === TYPE_NUMBER) {
+            return b - a // reverse order for numbers
+        }
+
+        return a < b ? -1 : a > b ? 1 : 0
+    }
+
+    export const cmpNaturalAnalytical = (a: any, b: any): number => {
+        const typeA = cmpType(a)
+        const typeB = cmpType(b)
+
+        if (
+            (typeA === TYPE_NUMBER || typeA === TYPE_STRING) &&
+            (typeB === TYPE_NUMBER || typeB === TYPE_STRING)
+        ) {
+            return naturalAnalyticalCompare(a, b)
+        }
+
+        return typeA !== typeB ? (typeA < typeB ? -1 : 1) : a < b ? -1 : a > b ? 1 : 0
+    }
+
+    export const naturalAnalyticalCompare = (a: any, b: any): number => {
+        let ret = 0
+
+        const typeA = typeof a
+        const typeB = typeof b
+        if ((typeA === 'number' || typeA === 'string') && (typeB === 'number' || typeB === 'string')) {
+            ret = compare(String(a), String(b))
+        }
+
+        return ret
+    }
+
     export const sortFilesBySegmentCount = (fileA: string, fileB: string): number => {
         const lengthA = fileA.split('/').length
         const lengthB = fileB.split('/').length

@@ -166,6 +166,21 @@ export type PropertyType<T, K extends Keys<T>> = T[K]
  */
 export type ElementType<T extends Record<K & any, any>, K extends Keys<T> | number> = T[K]
 // -------------------------------------------------------------------------------------------------
+interface ErrorType {
+    name: string
+    message: string
+    stack?: string
+}
+
+interface ErrorConstructor {
+    new (message?: string): ErrorType
+    (message?: string): ErrorType
+    readonly prototype: ErrorType
+}
+
+export declare const Error: ErrorConstructor
+
+// -------------------------------------------------------------------------------------------------
 /**
  * Shape
  * @desc Copies the shape of the type supplied, but marks every field optional.

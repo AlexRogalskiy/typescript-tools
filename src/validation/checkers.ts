@@ -9,13 +9,20 @@ import {
     Numbers,
     Errors,
     domElementPattern,
+    Objects,
+    CommonUtils,
 } from '..'
 
+import { Bools } from '../types/bools'
 import { Optional } from '../../typings/standard-types'
+import { BiPredicate } from '../../typings/function-types'
 
 export namespace Checkers {
     import valueError = Errors.valueError
     import validationError = Errors.validationError
+    import hasOwn = Objects.hasOwn
+    import addToSet = CommonUtils.addToSet
+    import bool = Bools.bool
 
     const { hasOwnProperty: hasOwnProp } = Object.prototype
 
@@ -35,6 +42,151 @@ export namespace Checkers {
         '[object Object]': 'object',
     }
 
+    export const safeCharCodeAt = (source: string, offset: number): number =>
+        offset < source.length ? source.charCodeAt(offset) : 0
+
+    export const isSign = (code: number): boolean => code === 0x002b || code === 0x002d
+
+    export const isDigit2 = (code: number): boolean => code >= 0x0030 && code <= 0x0039
+
+    export const isWS = (code: number): boolean =>
+        code === 0x0009 || // \t
+        code === 0x000a || // \n
+        code === 0x000c || // \f
+        code === 0x000d || // \r
+        code === 0x0020
+
+    export const isDelim = (code: number): boolean =>
+        (code > 0x0020 &&
+            code < 0x0100 && // ascii char
+            (code < 0x0041 || code > 0x005a) && // not A..Z
+            (code < 0x0061 || code > 0x007a) && // not a..z
+            (code < 0x0030 || code > 0x0039) && // not 0..9
+            code !== 0x002b && // not +
+            code !== 0x002d) || // not -
+        code === 0x2116
+
+    export const eq = (a: any, b: any): boolean => {
+        return Object.is(a, b)
+    }
+
+    export const in_ = (a: any, b: any): boolean => {
+        if (isPlainObject(b)) {
+            return hasOwn(b, a)
+        }
+
+        return b && typeof b.indexOf === 'function' ? b.indexOf(a) !== -1 : false
+    }
+
+    export const match = (value, pattern): boolean => {
+        if (typeof pattern === 'function') {
+            return some(value, pattern)
+        }
+
+        if (isRegExp(pattern)) {
+            return some(value, pattern.test.bind(pattern))
+        }
+
+        return pattern === null || pattern === undefined
+    }
+
+    export const pick = (current: any, ref: BiPredicate<any, any>): any => {
+        if (!current) {
+            return undefined
+        }
+
+        if (typeof ref === 'function') {
+            if (Array.isArray(current) || typeof current === 'string') {
+                for (let i = 0; i < current.length; i++) {
+                    if (ref(current[i], i)) {
+                        return current[i]
+                    }
+                }
+            }
+
+            for (const key in current) {
+                if (hasOwn(current, key)) {
+                    if (ref(current[key], key)) {
+                        return current[key]
+                    }
+                }
+            }
+
+            return undefined
+        }
+
+        if (Array.isArray(current) || typeof current === 'string') {
+            return isFinite(ref)
+                ? current[ref < 0 ? current.length + Number(ref) : Number(ref) || 0]
+                : undefined
+        }
+
+        return hasOwn(current, ref) ? current[ref] : undefined
+    }
+
+    export const map = (value, getter): any => {
+        const fn = typeof getter === 'function' ? getter : current => getPropertyValue(current, getter)
+
+        if (Array.isArray(value)) {
+            return [...value.reduce((set, item) => addToSet(set, fn(item)), new Set())]
+        }
+
+        return value !== undefined ? fn(value) : value
+    }
+
+    export const mapRecursive = (value, getter): any => {
+        const result = new Set()
+
+        addToSet(result, map(value, getter))
+
+        for (const current of result) {
+            addToSet(result, map(current, getter))
+        }
+
+        return [...result]
+    }
+
+    export const some = (value: any, fn: any): boolean => {
+        return Array.isArray(value) ? value.some(current => bool(fn(current))) : bool(fn(value))
+    }
+
+    export const filter = (value: any, fn: any): boolean[] => {
+        if (Array.isArray(value)) {
+            return value.filter(current => bool(fn(current)))
+        }
+
+        return bool(fn(value)) ? value : undefined
+    }
+
+    export const slice = (value, from = 0, to = value && value.length, step = 1): any => {
+        if (!isArrayLike(value)) {
+            return []
+        }
+
+        from = parseInt(String(from), 10) || 0
+        to = parseInt(to, 10) || value.length
+        step = parseInt(String(step), 10) || 1
+
+        if (step !== 1) {
+            const result: any[] = []
+
+            from = from < 0 ? Math.max(0, value.length + from) : Math.min(value.length, from)
+            to = to < 0 ? Math.max(0, value.length + to) : Math.min(value.length, to)
+
+            for (let i = step > 0 ? from : to - 1; i >= from && i < to; i += step) {
+                result.push(value[i])
+            }
+
+            return result
+        }
+
+        if (typeof value === 'string') {
+            return value.slice(from, to)
+        }
+
+        return Array.prototype.slice.call(value, from, to)
+    }
+
     export const isInRange2 = (start: number, end: number, num: number): boolean => {
         return num >= start && num <= end
     }
@@ -46,6 +198,10 @@ export namespace Checkers {
             }
         }
         return false
+    }
+
+    export const isArrayLike = (value: any): boolean => {
+        return value && hasOwn(value, 'length')
     }
 
     export const isTrue = (value: any): boolean => {
@@ -70,6 +226,33 @@ export namespace Checkers {
     // https://github.com/facebook/jest/blob/be4bec387d90ac8d6a7596be88bf8e4994bc3ed9/packages/expect/src/jasmine_utils.js#L234
     export const isA = (typeName: string, value: any): boolean => {
         return Object.prototype.toString.apply(value) === `[object ${typeName}]`
+    }
+
+    export const isPlainObject2 = (value: any): boolean => {
+        return value !== null && typeof value === 'object' && value.constructor === Object
+    }
+
+    export const isSuggestProhibitedChar = (str: string, offset: number): boolean => {
+        return offset >= 0 && offset < str.length && /[a-zA-Z_$0-9]/.test(str[offset])
+    }
+
+    export const isWhiteSpace = (str: string, offset: number): boolean => {
+        const code = str.charCodeAt(offset)
+        return code === 9 || code === 10 || code === 13 || code === 32
+    }
+
+    export const onlyWsInRange = (str: string, start: number, end: number): boolean => {
+        for (; start < end; start++) {
+            if (!isWhiteSpace(str, start)) {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    export const getPropertyValue = (value: any, property: string): any => {
+        return value && hasOwn(value, property) ? value[property] : undefined
     }
 
     export const isDOMElement = (val: any): boolean => {
@@ -318,18 +501,17 @@ export namespace Checkers {
 
     export const isArray = (value: any): boolean => {
         // return myArray.constructor.toString().indexOf("Array") > -1;
-        return isNotNull(value) && Object.prototype.toString.apply(value) === '[object Array]'
+        return isNotNull(value) && isA('Array', value)
     }
 
     export const isArray2 =
         Array.isArray ||
         ((value: any): boolean => {
-            const ts = Object.prototype.toString
-            return typeof value === 'object' && ts.call(value) === '[object Array]'
+            return typeof value === 'object' && isA('Array', value)
         })
 
     export const isJSON = (value: any): boolean => {
-        return isNotNull(value) && Object.prototype.toString.apply(value) === '[object JSON]'
+        return isNotNull(value) && isA('JSON', value)
     }
 
     export const isValidJson = (value: string): boolean => {
@@ -378,21 +560,15 @@ export namespace Checkers {
     }
 
     export const isObject = (value: any): boolean => {
-        return isNotNull(value) && Object.prototype.toString.apply(value) === '[object Object]'
+        return isNotNull(value) && isA('Object', value)
     }
 
     export const isArrayBuffer = (value: any): boolean => {
-        return (
-            isNotNull(value) &&
-            isNotUndefined(value) &&
-            Object.prototype.toString.apply(value.buffer || value) === '[object ArrayBuffer]'
-        )
+        return isNotNull(value) && isNotUndefined(value) && isA('ArrayBuffer', value.buffer || value)
     }
 
     export const isDate = (value: any): boolean => {
-        return (
-            isNotNull(value) && Object.prototype.toString.apply(value) === '[object Date]' && isFinite(value)
-        )
+        return isNotNull(value) && isA('Date', value) && isFinite(value)
     }
 
     export const isPropertyInRange = (

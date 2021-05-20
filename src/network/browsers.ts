@@ -21,6 +21,7 @@ export namespace Browsers {
     import defineProperty = CommonUtils.defineProperty
 
     import isColorBright = ColorsUtils.isColorBright
+    import isA = Checkers.isA
 
     const { hasOwnProperty: hasOwnProp } = Object.prototype
 
@@ -239,7 +240,7 @@ export namespace Browsers {
     }
 
     export const supportsNativeJSON = (): boolean => {
-        return typeof JSON !== 'undefined' && Object.prototype.toString.call(JSON) === '[object JSON]'
+        return typeof JSON !== 'undefined' && isA('JSON', JSON)
     }
 
     export const changeParamValue = (param: string, value: any): void => {

@@ -828,3 +828,13 @@ export const createRegexMatcher = <T extends Keys<typeof ESCAPE_CHARS>, B extend
 
     return null
 }
+
+export const matchEntry = (match: RegExpMatchArray): any => {
+    return {
+        matched: match.slice(),
+        start: match.index,
+        end: (match.index ? match.index : 0) + match[0].length,
+        input: match.input,
+        groups: match.groups || undefined,
+    }
+}

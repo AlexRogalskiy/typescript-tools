@@ -4,22 +4,82 @@ import { spawn, SpawnOptionsWithoutStdio } from 'child_process'
 import { Grid, Point } from '../../typings/domain-types'
 import { Iterator, IteratorStep, Processor } from '../../typings/function-types'
 
-import { Checkers, Errors } from '..'
+import { Checkers, Errors, Objects } from '..'
 
 export namespace CommonUtils {
+    import isPlainObject = Checkers.isPlainObject
+    import isArray = Checkers.isArray
+    import keys = Objects.keys
+
     export type Fn<T> = (key: string) => T
     export type Color = (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9) & { _tag: '__Color__' }
     export type Empty = 0 & { _tag: '__Empty__' }
 
+    const RANDOMNESS_PLACEHOLDER_STRING = 'RANDOMNESS_PLACEHOLDER'
+
+    const isWindowsOS = process.platform.startsWith('win')
+    const npm = isWindowsOS ? 'npm.cmd' : 'npm'
+
     // eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/no-require-imports
     export const glob = require('util').promisify(require('glob'))
 
+    export const esc = (s: any): string => JSON.stringify(s).slice(1, -1)
+
     export const nodeMajor = Number(process.versions.node.split('.')[0])
 
-    // await spawnAsync('npm', ['--loglevel', 'warn', 'pack'], {
-    //     stdio: 'inherit',
-    //     cwd: builderPath,
-    // });
+    export const add = (a: any, b: any): any => {
+        if (Array.isArray(a) || Array.isArray(b)) {
+            return [...new Set([].concat(a, b))]
+        }
+
+        return a + b
+    }
+
+    export const sub = (a: any, b: any): any => {
+        if (Array.isArray(a)) {
+            const result = new Set(a)
+
+            // filter b items from a
+            if (Array.isArray(b)) {
+                for (const item of b) {
+                    result.delete(item)
+                }
+            } else {
+                result.delete(b)
+            }
+
+            return [...result]
+        }
+
+        return a - b
+    }
+
+    export const stringify = (value: any): string => {
+        if (typeof value === 'string') {
+            return JSON.stringify(value)
+        } else if (typeof value === 'undefined' || typeof value === 'boolean' || typeof value === 'number') {
+            return String(value)
+        } else if (typeof value === 'object') {
+            if (value === null) {
+                return String(value)
+            }
+
+            if (value instanceof RegExp) {
+                return String(value)
+            }
+
+            if (isArray(value)) {
+                return `[${value.map(stringify)}]`
+            }
+
+            return `{${keys(value)
+                .map(k => `${k}:${stringify(value[k])}`)
+                .join(',')}}`
+        }
+
+        return ''
+    }
+
     export const spawnAsync = async (command: string, options?: SpawnOptionsWithoutStdio): Promise<any> => {
         return await new Promise((resolve, reject) => {
             const child: any = spawn(command, options)
@@ -47,9 +107,41 @@ export namespace CommonUtils {
         })
     }
 
+    export const npmCommand = async (options: SpawnOptionsWithoutStdio): Promise<any> => {
+        // await spawnAsync(npm, ['--loglevel', 'warn', 'pack'], {
+        //     stdio: 'inherit',
+        //     cwd: builderPath,
+        // });
+        return await spawnAsync(npm, options)
+    }
+
     export const getRandomId = (): string => {
         return Math.random().toString().slice(2)
     }
+
+    export const dirtyWalk = (node, fn): void => {
+        if (!node || !node.type) {
+            return
+        }
+
+        fn(node)
+
+        for (const value of Object.values(node)) {
+            if (Array.isArray(value)) {
+                for (const elem of value) {
+                    dirtyWalk(elem, fn)
+                }
+            } else {
+                dirtyWalk(value, fn)
+            }
+        }
+    }
+
+    export const randomness = (repeat = 6): string =>
+        Math.floor(Math.random() * 0x7fffffff)
+            .toString(16)
+            .repeat(repeat)
+            .slice(0, RANDOMNESS_PLACEHOLDER_STRING.length)
 
     /**
      * Cached fs operation wrapper.
@@ -64,6 +156,100 @@ export namespace CommonUtils {
 
             return cache.get(arg) as T
         }
+    }
+
+    export const valuesToSuggestions = (context, values, related): any => {
+        const suggestions = new Set()
+        const addValue = (value: any): any => {
+            if (typeof value === 'string') {
+                suggestions.add(JSON.stringify(value))
+            } else if (typeof value === 'number') {
+                suggestions.add(String(value))
+            }
+        }
+
+        if (context === '' || context === 'path') {
+            for (const value of values) {
+                if (Array.isArray(value)) {
+                    for (const item of value) {
+                        if (isPlainObject(item)) {
+                            addToSet(suggestions, Object.keys(item))
+                        }
+                    }
+                } else if (isPlainObject(value)) {
+                    addToSet(suggestions, Object.keys(value))
+                }
+            }
+        } else if (context === 'key') {
+            for (const value of values) {
+                if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+                    // eslint-disable-next-line github/array-foreach
+                    Object.keys(value).forEach(addValue)
+                }
+            }
+        } else if (context === 'value') {
+            for (const value of values) {
+                if (Array.isArray(value)) {
+                    for (const item of value) {
+                        addValue(item)
+                    }
+                } else {
+                    addValue(value)
+                }
+            }
+        } else if (context === 'in-value') {
+            for (const value of values) {
+                if (Array.isArray(value)) {
+                    for (const item of value) {
+                        addValue(item)
+                    }
+                } else if (isPlainObject(value)) {
+                    // eslint-disable-next-line github/array-foreach
+                    Object.keys(value).forEach(addValue)
+                } else {
+                    addValue(value)
+                }
+            }
+        } else if (context === 'var') {
+            for (const value of values) {
+                suggestions.add(`$${value}`)
+            }
+        } else if (context === 'value-subset') {
+            for (const value of values) {
+                if (Array.isArray(value)) {
+                    for (const item of value) {
+                        addValue(item)
+                    }
+                } else {
+                    addValue(value)
+                }
+            }
+
+            // delete used
+            for (const arr of related) {
+                for (const value of arr) {
+                    if (typeof value === 'string' || typeof value === 'number') {
+                        suggestions.delete(JSON.stringify(value))
+                    }
+                }
+            }
+        }
+
+        return [...suggestions]
+    }
+
+    export const addToSet = <T>(set: Set<T>, value: any): Set<T> => {
+        if (value !== undefined) {
+            if (Array.isArray(value)) {
+                for (const item of value) {
+                    set.add(item)
+                }
+            } else {
+                set.add(value)
+            }
+        }
+
+        return set
     }
 
     export const lerp = (k: number, a: number, b: number): number => (1 - k) * a + k * b

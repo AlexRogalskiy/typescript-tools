@@ -85,6 +85,16 @@ export namespace Arrays {
         }
     })()
 
+    export const addUnique = (arr: any[], items: any[]): any[] => {
+        for (const item of items) {
+            if (!arr.includes(item)) {
+                arr.push(item)
+            }
+        }
+
+        return arr
+    }
+
     export const uniqueArray = <T>(arr: T[]): T[] => Array.from(new Set(arr))
 
     export const asyncForEach = async (array, callback): Promise<void> => {
