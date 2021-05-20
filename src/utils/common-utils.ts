@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { spawn, SpawnOptionsWithoutStdio } from 'child_process'
 
 import { Grid, Point } from '../../typings/domain-types'
 import { Iterator, IteratorStep, Processor } from '../../typings/function-types'
@@ -10,7 +11,41 @@ export namespace CommonUtils {
     export type Color = (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9) & { _tag: '__Color__' }
     export type Empty = 0 & { _tag: '__Empty__' }
 
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/no-require-imports
+    export const glob = require('util').promisify(require('glob'))
+
     export const nodeMajor = Number(process.versions.node.split('.')[0])
+
+    // await spawnAsync('npm', ['--loglevel', 'warn', 'pack'], {
+    //     stdio: 'inherit',
+    //     cwd: builderPath,
+    // });
+    export const spawnAsync = async (command: string, options?: SpawnOptionsWithoutStdio): Promise<any> => {
+        return await new Promise((resolve, reject) => {
+            const child: any = spawn(command, options)
+
+            //child.stdout.on('data', d => console.log(d.toString()));
+            //child.stderr.on('data', d => console.log(d.toString()));
+
+            let result
+            if (child.stdout) {
+                result = ''
+                child.stdout.on('data', chunk => {
+                    result += chunk.toString()
+                })
+            }
+
+            child.on('error', reject)
+            child.on('close', (code, signal) => {
+                if (code !== 0) {
+                    if (result) console.log(result)
+                    reject(new Error(`Exited with ${code || signal}`))
+                    return
+                }
+                resolve(result)
+            })
+        })
+    }
 
     export const getRandomId = (): string => {
         return Math.random().toString().slice(2)
