@@ -117,7 +117,7 @@
         "jest": "^26.6.3",
         "jest-circus": "^26.6.3",
         "js-yaml": "^4.0.0",
-        "jsdom": "16.4.0",
+        "jsdom": "16.6.0",
         "jsdom-global": "3.0.2",
         "json-schemify": "0.0.10",
         "license-badger": "^0.18.0",
