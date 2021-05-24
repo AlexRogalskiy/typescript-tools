@@ -23,7 +23,7 @@
         "build": "tsdx build",
         "watch": "tsdx watch",
         "clean": "rimraf dist",
-        "reinstall": "rimraf ./node_modules ./package-lock.json ./yarn.lock",
+        "reinstall": "rimraf ./node_modules",
         "coverage": "cat ./coverage/lcov.info | coveralls",
         "version": "git add -A dist",
         "postpublish": "git push && git push --tags",
