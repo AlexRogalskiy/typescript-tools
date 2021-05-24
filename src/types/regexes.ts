@@ -848,3 +848,12 @@ export const stripComments = (str: string): string => {
         .replace(/\n/g, '')
         .replace(/^\s+|\s+$|(\s)+/g, '$1')
 }
+
+/**
+ * @param {string} value
+ * @param {RegExp} pattern
+ * @return {string?}
+ */
+export const match = (value: any, pattern: RegExp): any => {
+    return (value = pattern.exec(value)) != null ? value[0] : value
+}

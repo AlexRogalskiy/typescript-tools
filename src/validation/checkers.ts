@@ -9,7 +9,6 @@ import {
     Numbers,
     Errors,
     domElementPattern,
-    Objects,
     CommonUtils,
 } from '..'
 
@@ -20,7 +19,6 @@ import { BiPredicate } from '../../typings/function-types'
 export namespace Checkers {
     import valueError = Errors.valueError
     import validationError = Errors.validationError
-    import hasOwn = Objects.hasOwn
     import addToSet = CommonUtils.addToSet
     import bool = Bools.bool
 
@@ -72,7 +70,7 @@ export namespace Checkers {
 
     export const in_ = (a: any, b: any): boolean => {
         if (isPlainObject(b)) {
-            return hasOwn(b, a)
+            return Object.prototype.hasOwnProperty.call(b, a)
         }
 
         return b && typeof b.indexOf === 'function' ? b.indexOf(a) !== -1 : false
@@ -105,7 +103,7 @@ export namespace Checkers {
             }
 
             for (const key in current) {
-                if (hasOwn(current, key)) {
+                if (Object.prototype.hasOwnProperty.call(current, key)) {
                     if (ref(current[key], key)) {
                         return current[key]
                     }
@@ -121,7 +119,7 @@ export namespace Checkers {
                 : undefined
         }
 
-        return hasOwn(current, ref) ? current[ref] : undefined
+        return Object.prototype.hasOwnProperty.call(current, ref) ? current[ref] : undefined
     }
 
     export const map = (value, getter): any => {
@@ -201,7 +199,7 @@ export namespace Checkers {
     }
 
     export const isArrayLike = (value: any): boolean => {
-        return value && hasOwn(value, 'length')
+        return value && Object.prototype.hasOwnProperty.call(value, 'length')
     }
 
     export const isTrue = (value: any): boolean => {
@@ -252,7 +250,7 @@ export namespace Checkers {
     }
 
     export const getPropertyValue = (value: any, property: string): any => {
-        return value && hasOwn(value, property) ? value[property] : undefined
+        return value && Object.prototype.hasOwnProperty.call(value, property) ? value[property] : undefined
     }
 
     export const isDOMElement = (val: any): boolean => {

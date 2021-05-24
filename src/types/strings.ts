@@ -351,6 +351,10 @@ export namespace Strings {
         return result
     }
 
+    export const repeatString = (str: string, count: number): string => {
+        return new Array(count + 1).join(str)
+    }
+
     export const b64EncodeUnicode = (str: string): string => {
         // first we use encodeURIComponent to get percent-encoded UTF-8,
         // then we convert the percent encodings into raw bytes which

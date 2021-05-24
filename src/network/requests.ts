@@ -353,6 +353,32 @@ export namespace Requests {
         }
     }
 
+    export const getJoiner = (url: string): string => {
+        url = url || ''
+        return !url.includes('?') ? '?' : '&'
+    }
+
+    /**
+     * Join querystring to URL
+     */
+    export const joinUrlAndQueryString = (url: string, qs: string): string => {
+        if (!qs) {
+            return url
+        }
+
+        if (!url) {
+            return qs
+        }
+
+        const [base, ...hashes] = url.split('#')
+
+        // TODO: Make this work with URLs that have a #hash component
+        const baseUrl = base || ''
+        const joiner = getJoiner(base)
+        const hash = hashes.length ? `#${hashes.join('#')}` : ''
+        return `${baseUrl}${joiner}${qs}${hash}`
+    }
+
     export const queryStringToState = (value: string): unknown => {
         const parameters = parseQueryString(value)
 

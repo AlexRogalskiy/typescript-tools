@@ -10,10 +10,6 @@ import { Iterator, IteratorStep, Processor } from '../../typings/function-types'
 import { Checkers, Errors, Objects } from '..'
 
 export namespace CommonUtils {
-    import isPlainObject = Checkers.isPlainObject
-    import isArray = Checkers.isArray
-    import keys = Objects.keys
-
     export type Fn<T> = (key: string) => T
     export type Color = (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9) & { _tag: '__Color__' }
     export type Empty = 0 & { _tag: '__Empty__' }
@@ -30,6 +26,18 @@ export namespace CommonUtils {
         p1 = p1.replace(/\/$/, '')
         p2 = p2.replace(/^\//, '')
         return `${p1}/${p2}`
+    }
+
+    export const noConsoleLog = async <T>(callback: () => Promise<T>): Promise<T> => {
+        const oldConsoleLog = console.log
+
+        console.log = () => undefined
+
+        try {
+            return await callback()
+        } finally {
+            console.log = oldConsoleLog
+        }
     }
 
     export const distinctByProperty = <T>(arr: T[], propertySelector: (item: T) => any): T[] => {
@@ -114,16 +122,38 @@ export namespace CommonUtils {
                 return String(value)
             }
 
-            if (isArray(value)) {
+            if (Array.isArray(value)) {
                 return `[${value.map(stringify)}]`
             }
 
-            return `{${keys(value)
+            return `{${Objects.keys(value)
                 .map(k => `${k}:${stringify(value[k])}`)
                 .join(',')}}`
         }
 
         return ''
+    }
+
+    /**
+     * @param {string} value
+     * @param {number} length
+     * @return {number}
+     */
+    export const hash = (value: string, length: number): number => {
+        return (
+            (((((((length << 2) ^ charat(value, 0)) << 2) ^ charat(value, 1)) << 2) ^ charat(value, 2)) <<
+                2) ^
+            charat(value, 3)
+        )
+    }
+
+    /**
+     * @param {string} value
+     * @param {number} index
+     * @return {number}
+     */
+    export const charat = (value: string, index: number): number => {
+        return value.charCodeAt(index) | 0
     }
 
     export const spawnAsync = async (command: string, options?: SpawnOptionsWithoutStdio): Promise<any> => {
@@ -218,11 +248,11 @@ export namespace CommonUtils {
             for (const value of values) {
                 if (Array.isArray(value)) {
                     for (const item of value) {
-                        if (isPlainObject(item)) {
+                        if (Checkers.isPlainObject(item)) {
                             addToSet(suggestions, Object.keys(item))
                         }
                     }
-                } else if (isPlainObject(value)) {
+                } else if (Checkers.isPlainObject(value)) {
                     addToSet(suggestions, Object.keys(value))
                 }
             }
@@ -249,7 +279,7 @@ export namespace CommonUtils {
                     for (const item of value) {
                         addValue(item)
                     }
-                } else if (isPlainObject(value)) {
+                } else if (Checkers.isPlainObject(value)) {
                     // eslint-disable-next-line github/array-foreach
                     Object.keys(value).forEach(addValue)
                 } else {
@@ -389,7 +419,7 @@ export namespace CommonUtils {
 
     export const mergeProps = <T>(...obj: any[]): T =>
         mergeWith({}, ...obj, (o, s) => {
-            return isArray(s) && isArray(o) ? union(o, s) : isNull(s) ? o : s
+            return Array.isArray(s) && Array.isArray(o) ? union(o, s) : isNull(s) ? o : s
         })
 
     export async function time<T>(work: () => Promise<T>): Promise<[T, number]> {
