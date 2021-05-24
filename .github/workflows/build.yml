@@ -11,6 +11,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      NODE_OPTIONS: --max-old-space-size=4096
     strategy:
       max-parallel: 2
       matrix:

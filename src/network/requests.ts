@@ -1,5 +1,7 @@
 import fetch from 'isomorphic-unfetch'
 import { parse, stringify } from 'qs'
+import { createReadStream } from 'fs'
+import FormData from 'form-data'
 
 import { Arrays, Checkers, Formats, Logging, Profiles, Strings, URI_REGEX } from '..'
 
@@ -364,17 +366,125 @@ export namespace Requests {
         }
     }
 
-    export const req = async <T>({
+    export interface AuthResponse {
+        data: {
+            token: string
+        }
+    }
+
+    export const login = async (user: string, password: string): Promise<string> => {
+        const basicAuth = Buffer.from(`${user}:${password}`, 'utf-8').toString('base64')
+
+        const auth: AuthResponse = await req({
+            method: 'GET',
+            url: 'https://api.splunk.com/2.0/rest/login/splunk',
+            headers: {
+                Authorization: `Basic ${basicAuth}`,
+            },
+        })
+
+        return auth.data.token
+    }
+
+    export interface StatusResponse {
+        status: 'SUCCESS' | 'PROCESSING'
+        info: {
+            error: number
+            failure: number
+            skipped: number
+            manual_check: number
+            not_applicable: number
+            warning: number
+            success: number
+        }
+    }
+
+    export const qs = (obj: Record<PropertyKey, any>): string =>
+        Object.entries(obj)
+            .map(([name, value]) => `${encodeURIComponent(name)}=${encodeURIComponent(value)}`)
+            .join('&')
+
+    export async function getStatus(data: { request_id: string; token: string }): Promise<StatusResponse> {
+        return req({
+            method: 'GET',
+            url: `https://appinspect.splunk.com/v1/app/validate/status/${encodeURIComponent(
+                data.request_id,
+            )}`,
+            headers: {
+                Authorization: `Bearer ${data.token}`,
+            },
+        })
+    }
+
+    export interface SubmitResponse {
+        request_id: string
+        message: string
+    }
+
+    export async function submit({
+        filePath,
+        includedTags,
+        excludedTags,
+        token,
+    }: {
+        filePath: string
+        token: string
+        includedTags?: string[]
+        excludedTags?: string[]
+    }): Promise<SubmitResponse> {
+        const form = new FormData()
+        form.append('app_package', createReadStream(filePath))
+        if (includedTags) {
+            form.append('included_tags', includedTags.join(','))
+        }
+        if (excludedTags) {
+            form.append('excluded_tags', excludedTags.join(','))
+        }
+        return await req({
+            method: 'POST',
+            url: 'https://appinspect.splunk.com/v1/app/validate',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: form,
+        })
+    }
+
+    export async function getReportInternal<T>({
+        request_id,
+        token,
+        format = 'json',
+    }: {
+        request_id: string
+        token: string
+        format?: 'json' | 'html'
+    }): Promise<T> {
+        const contentType = format === 'html' ? 'text/html' : 'application/json'
+
+        return req({
+            method: 'GET',
+            url: `https://appinspect.splunk.com/v1/app/report/${encodeURIComponent(request_id)}`,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': contentType,
+            },
+            json: format === 'json',
+        })
+    }
+
+    export async function req<T>({
         url,
         method,
         body,
         headers,
+        json = true,
     }: {
         method: 'GET' | 'POST'
         url: string
         headers?: { [k: string]: string }
         body?: any
-    }): Promise<T> => {
+        json?: boolean
+    }): Promise<T> {
         const res = await fetch(url, {
             method,
             body,
@@ -382,23 +492,29 @@ export namespace Requests {
         })
 
         if (!res.ok) {
-            const data = await res.text()
-            errorLogs(`HTTP status ${res.status} from ${url} with response ${data}`)
+            try {
+                const data = await res.text()
+                errorLogs(`HTTP status ${res.status} from ${url} with response ${data}`)
+            } catch (e) {
+                // ignore
+            }
+            throw new Error(`HTTP status ${res.status} from ${url}`)
         }
 
-        return res.json()
+        return json ? res.json() : res.text()
     }
 
     export const isURLImport = (target: string): boolean => {
         try {
             const { origin } = new URL(target)
+
             return !!origin
         } catch (error) {
             return false
         }
     }
 
-    export const stateToQueryString = ({ query, selectedTags, sort, page }): any => {
+    export const stateToQueryString = ({ query, selectedTags, sort, page }: any): any => {
         return stringify(
             {
                 query: query || null,
@@ -414,8 +530,8 @@ export namespace Requests {
         )
     }
 
-    export const ipToNumber = (ip: string): number => {
-        return ip
+    export const ipToNumber = (value: string): number => {
+        return value
             .split('.')
             .map(Number)
             .map((part, i) => Math.pow(256, 4 - i) * part)
@@ -424,6 +540,7 @@ export namespace Requests {
 
     export const getHost2 = ({ hostName, domainName, endpoint, baseUrl }: any): Optional<string> => {
         let host = hostName || domainName
+
         if (!host) {
             try {
                 host = endpoint || baseUrl
@@ -432,6 +549,7 @@ export namespace Requests {
                 host = null
             }
         }
+
         return host
     }
 

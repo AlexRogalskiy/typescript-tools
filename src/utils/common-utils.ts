@@ -1,6 +1,9 @@
 import { isBoolean, isInteger, isNumber, isString, mergeWith, union, isNull } from 'lodash'
 import { spawn, SpawnOptionsWithoutStdio } from 'child_process'
 
+import fs from 'fs-extra'
+import path from 'path'
+
 import { Grid, Point } from '../../typings/domain-types'
 import { Iterator, IteratorStep, Processor } from '../../typings/function-types'
 
@@ -22,6 +25,14 @@ export namespace CommonUtils {
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/no-require-imports
     export const glob = require('util').promisify(require('glob'))
+
+    export async function getPackageJson(sourceFolder = process.cwd()): Promise<string> {
+        return JSON.parse(await fs.readFile(path.join(sourceFolder, 'package.json'), { encoding: 'utf-8' }))
+    }
+
+    export async function setPackageJson(value: any, destFolder = process.cwd()): Promise<string> {
+        return await fs.writeFile(path.join(destFolder, 'package.json'), JSON.stringify(value, null, 4))
+    }
 
     export const esc = (s: any): string => JSON.stringify(s).slice(1, -1)
 

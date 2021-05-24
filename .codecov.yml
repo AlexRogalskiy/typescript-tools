@@ -50,6 +50,7 @@ flags:
   src:
     paths:
       - src
+    carryforward: true
 
 parsers:
   gcov:
