@@ -34,6 +34,22 @@ export namespace Comparators {
         }
     }
 
+    export const compareKeys = (a: any, b: any): boolean => {
+        // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
+        const aKeys = Object.keys(a).sort()
+        // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
+        const bKeys = Object.keys(b).sort()
+
+        return JSON.stringify(aKeys) === JSON.stringify(bKeys)
+    }
+
+    export const objectsHaveSameKeys = (...objects: any[]): boolean => {
+        const allKeys = objects.reduce((keys, object) => keys.concat(Object.keys(object)), [])
+        const union = new Set(allKeys)
+
+        return objects.every(object => union.size === Object.keys(object).length)
+    }
+
     export const cmp = (a: any, b: any): number => {
         const typeA = cmpType(a)
         const typeB = cmpType(b)

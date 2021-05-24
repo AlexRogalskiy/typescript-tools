@@ -29,6 +29,8 @@ import {
 import { buildTimeRegex, githubRegex } from './regexes'
 
 export namespace Strings {
+    const ACCEPTABLE_RANDOM_CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklnopqrstuvwxyz0123456789'
+
     import Helpers = Maths.Helpers
 
     import isString = Checkers.isString
@@ -328,6 +330,22 @@ export namespace Strings {
             })
         }
     })()
+
+    /**
+     * Generates a random string.
+     * @param length Length of string.
+     */
+    export const generateRandomString = (length: number): string => {
+        let result = ''
+
+        const bytes = new Uint32Array(length)
+        const random = window.crypto.getRandomValues(bytes)
+        for (let i = 0; i < length; i += 1) {
+            result += ACCEPTABLE_RANDOM_CHARSET[random[i] % ACCEPTABLE_RANDOM_CHARSET.length]
+        }
+
+        return result
+    }
 
     /**
      * Creates a function which replaces a given path.

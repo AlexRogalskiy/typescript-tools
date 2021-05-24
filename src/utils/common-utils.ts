@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { isBoolean, isInteger, isNumber, isString, mergeWith, union, isNull } from 'lodash'
 import { spawn, SpawnOptionsWithoutStdio } from 'child_process'
 
 import { Grid, Point } from '../../typings/domain-types'
@@ -26,6 +26,17 @@ export namespace CommonUtils {
     export const esc = (s: any): string => JSON.stringify(s).slice(1, -1)
 
     export const nodeMajor = Number(process.versions.node.split('.')[0])
+
+    export const getType = (value: any): string => {
+        if (isNumber(value) && !isInteger(value)) {
+            return isBoolean(value) ? 'boolean' : 'number'
+        }
+        if (isInteger(value)) {
+            return isBoolean(value) ? 'boolean' : 'integer'
+        }
+
+        return isBoolean(value) ? 'boolean' : isString(value) ? 'string' : 'null'
+    }
 
     export const add = (a: any, b: any): any => {
         if (Array.isArray(a) || Array.isArray(b)) {
@@ -342,8 +353,8 @@ export namespace CommonUtils {
     }
 
     export const mergeProps = <T>(...obj: any[]): T =>
-        _.mergeWith({}, ...obj, (o, s) => {
-            return _.isArray(s) && _.isArray(o) ? _.union(o, s) : _.isNull(s) ? o : s
+        mergeWith({}, ...obj, (o, s) => {
+            return isArray(s) && isArray(o) ? union(o, s) : isNull(s) ? o : s
         })
 
     export async function time<T>(work: () => Promise<T>): Promise<[T, number]> {

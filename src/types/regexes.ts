@@ -28,6 +28,9 @@ export const getProps = test => props => {
     return next
 }
 
+export const splitPathRe = /^(.+\/(?!$)|\/)?((?:.+?)?(\.[^.]*)?)$/
+export const inlineTag = /(?:\[(.+?)])?{@(link|linkcode|linkplain)\s+((?:.|\n)+?)}/gi
+
 export const getMargin = getProps(k => MRE.test(k))
 export const omitMargin = getProps(k => !MRE.test(k))
 
@@ -837,4 +840,11 @@ export const matchEntry = (match: RegExpMatchArray): any => {
         input: match.input,
         groups: match.groups || undefined,
     }
+}
+
+export const stripComments = (str: string): string => {
+    return str
+        .replace(/(?:\/\*(?:[\s\S]*?)\*\/)|(?:^\s*\/\/(?:.*)$)/g, ' ')
+        .replace(/\n/g, '')
+        .replace(/^\s+|\s+$|(\s)+/g, '$1')
 }
