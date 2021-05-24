@@ -1,0 +1,11 @@
+github:
+  enabled_merge_buttons:
+    squash: true
+    merge: false
+    rebase: true
+
+notifications:
+  commits: commits@tsdevtools.github.io
+  issues: issues@tsdevtools.github.io
+  pullrequests: issues@tsdevtools.github.io
+  jira_options: link label

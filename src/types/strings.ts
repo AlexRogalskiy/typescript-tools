@@ -351,6 +351,83 @@ export namespace Strings {
         return result
     }
 
+    export const b64EncodeUnicode = (str: string): string => {
+        // first we use encodeURIComponent to get percent-encoded UTF-8,
+        // then we convert the percent encodings into raw bytes which
+        // can be fed into btoa.
+        return btoa(
+            encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (_, p1) => {
+                return String.fromCharCode(Number(`0x${p1}`))
+            }),
+        )
+    }
+
+    export const b64DecodeUnicode = (str: string): string => {
+        // Going backwards: from bytestream, to percent-encoding, to original string.
+        return decodeURIComponent(
+            atob(str)
+                .split('')
+                .map(c => {
+                    return `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`
+                })
+                .join(''),
+        )
+    }
+
+    // LZW-compress a string
+    export const lzw_encode = (value: string): string => {
+        const dict = {}
+        const data = `${value}`.split('')
+        const out: any[] = []
+        let currChar
+        let phrase = data[0]
+        let code = 256
+        for (let i = 1; i < data.length; i++) {
+            currChar = data[i]
+            if (dict[phrase + currChar] != null) {
+                phrase += currChar
+            } else {
+                out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0))
+                dict[phrase + currChar] = code
+                code++
+                phrase = currChar
+            }
+        }
+
+        out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0))
+        for (let i = 0; i < out.length; i++) {
+            out[i] = String.fromCharCode(out[i])
+        }
+
+        return out.join('')
+    }
+
+    // Decompress an LZW-encoded string
+    export const lzw_decode = (value: string): string => {
+        const dict = {}
+        const data = `${value}`.split('')
+        let currChar = data[0]
+        let oldPhrase = currChar
+        const out = [currChar]
+        let code = 256
+        let phrase
+        for (let i = 1; i < data.length; i++) {
+            const currCode = data[i].charCodeAt(0)
+            if (currCode < 256) {
+                phrase = data[i]
+            } else {
+                phrase = dict[currCode] ? dict[currCode] : oldPhrase + currChar
+            }
+            out.push(phrase)
+            currChar = phrase.charAt(0)
+            dict[code] = oldPhrase + currChar
+            code++
+            oldPhrase = phrase
+        }
+
+        return out.join('')
+    }
+
     /**
      * Creates a function which replaces a given path.
      *

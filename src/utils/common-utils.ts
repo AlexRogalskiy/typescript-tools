@@ -26,6 +26,30 @@ export namespace CommonUtils {
     // eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/no-require-imports
     export const glob = require('util').promisify(require('glob'))
 
+    export const joinPath = (p1: string, p2: string): string => {
+        p1 = p1.replace(/\/$/, '')
+        p2 = p2.replace(/^\//, '')
+        return `${p1}/${p2}`
+    }
+
+    export const distinctByProperty = <T>(arr: T[], propertySelector: (item: T) => any): T[] => {
+        const result: T[] = []
+        const set = new Set()
+
+        for (const item of arr.filter(i => i)) {
+            const selector = propertySelector(item)
+
+            if (set.has(selector)) {
+                continue
+            }
+
+            set.add(selector)
+            result.push(item)
+        }
+
+        return result
+    }
+
     export async function getPackageJson(sourceFolder = process.cwd()): Promise<string> {
         return JSON.parse(await fs.readFile(path.join(sourceFolder, 'package.json'), { encoding: 'utf-8' }))
     }
