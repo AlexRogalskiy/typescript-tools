@@ -11,13 +11,7 @@ import yaml from 'js-yaml'
 import { RegexStringPair } from '../../typings/general-types'
 import { LockFile, LockFileEntry } from '../../typings/domain-types'
 import { Optional, OptionalNumber, OptionalString } from '../../typings/standard-types'
-import {
-    BiProcessor,
-    Comparator,
-    Processor,
-    StringProcessor,
-    Supplier
-} from '../../typings/function-types'
+import { BiProcessor, Comparator, Processor, StringProcessor, Supplier } from '../../typings/function-types'
 
 import {
     Errors,
