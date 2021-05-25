@@ -857,3 +857,19 @@ export const stripComments = (str: string): string => {
 export const match = (value: any, pattern: RegExp): any => {
     return (value = pattern.exec(value)) != null ? value[0] : value
 }
+
+/**
+ * Get YamlMime of a yaml document
+ * @returns the yamlMime if no error occurs, otherwise undefined is returned
+ * @param yamlDocument parsed yaml document
+ */
+export const getYamlMime = (yamlDocument: string): Optional<string> => {
+    const regex = /^### YamlMime:([A-Z]\w+)/g
+    const m = regex.exec(yamlDocument)
+
+    if (m !== null) {
+        return m[1]
+    }
+
+    return undefined
+}

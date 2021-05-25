@@ -8,6 +8,14 @@ import { Color } from '../tools/color'
 import { Vector } from '../tools/vector'
 
 // -------------------------------------------------------------------------------------------------
+export interface CodeSnippet {
+    readonly name: string
+    readonly label: string
+    readonly description: string
+    readonly body: string
+}
+
+// -------------------------------------------------------------------------------------------------
 const aliases = {
     inlineCode: 'code',
     thematicBreak: 'hr',
