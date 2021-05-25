@@ -5,3 +5,4 @@ coverage/
 tests/
 docs/
 scripts/
+docker/

@@ -67,3 +67,6 @@ comment:
   require_base: false
   require_head: true
   branches: [ "master" ]
+
+ignore:
+  - "tools"
