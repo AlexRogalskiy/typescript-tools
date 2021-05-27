@@ -24,6 +24,7 @@ export namespace Browsers {
     import isA = Checkers.isA
 
     const { hasOwnProperty: hasOwnProp } = Object.prototype
+    const resourcesCache: { [url: string]: Promise<undefined> } = {}
 
     export interface StyledProps {
         theme: any
@@ -33,8 +34,100 @@ export namespace Browsers {
         color: string
     }
 
+    export const getImages = (node: Element): Array<HTMLImageElement> =>
+        Array.from(node.querySelectorAll('img')).filter(imgNode => !!imgNode.src)
+
+    export const imageLoaded = (imgNode: HTMLImageElement): Promise<void> => {
+        if (imgNode.complete && imgNode.naturalWidth !== 0) {
+            return Promise.resolve()
+        }
+
+        return new Promise(resolve => {
+            imgNode.addEventListener('load', function onLoad() {
+                resolve()
+                imgNode.removeEventListener('load', onLoad)
+            })
+            imgNode.addEventListener('error', function onError() {
+                resolve()
+                imgNode.removeEventListener('error', onError)
+            })
+        })
+    }
+
+    export const allImagesLoaded = (
+        nodes: Array<HTMLImageElement>
+    ): Promise<void[]> => Promise.all(nodes.map(imageLoaded))
+
+    export const allImagesLoadedInContainer = (node: Element): Promise<void[]> =>
+        allImagesLoaded(getImages(node))
+
+    export const loadResource = (url: string): Promise<void> => {
+        if (!resourcesCache[url]) {
+            resourcesCache[url] = new Promise((resolve, reject) => {
+                const howToHandle = Object.keys(resourceNodeCreators).find(regExp =>
+                    new RegExp(regExp).test(url)
+                )
+
+                if (!howToHandle) {
+                    throw new Error(`You can't load resource with this url: ${url}`)
+                }
+
+                const creator = resourceNodeCreators[howToHandle]
+
+                if (creator) {
+                    const node = creator(url, resolve as () => void, reject)
+                    document.head.appendChild(node)
+                }
+            })
+        }
+
+        return resourcesCache[url]
+    }
+
     export const getBlobCodeInner = (el: any): any[] => {
         return [].slice.call(el.getElementsByClassName('blob-code-inner'))
+    }
+
+    export const getScrollNode = (): Element =>
+        document.scrollingElement || document.documentElement
+
+    export const createScript = (
+        src: string,
+        onload: () => void,
+        onerror: () => void
+    ): HTMLScriptElement => {
+        const node = document.createElement('script')
+
+        node.onload = onload
+        node.onerror = onerror
+        node.type = 'text/javascript'
+        node.src = src
+
+        return node
+    }
+
+    export const createStylesheet = (
+        href: string,
+        onload: () => void,
+        onerror: () => void
+    ): HTMLLinkElement => {
+        const node = document.createElement('link')
+
+        node.onload = onload
+        node.onerror = onerror
+        node.rel = 'stylesheet'
+        node.type = 'text/css'
+        node.media = 'all'
+        node.href = href
+
+        return node
+    }
+
+    export const resourceNodeCreators: {
+        [regex: string]: typeof createScript | typeof createStylesheet
+    } = {
+        '\\.js$': createScript,
+        '\\.css$': createStylesheet
     }
 
     export const win = typeof (window as any) !== 'undefined' ? window : {}
@@ -43,6 +136,7 @@ export namespace Browsers {
         const theEvent = evt || window['event']
         let key = theEvent.keyCode || theEvent.which
         key = String.fromCharCode(key)
+
         const regex = /[0-9]|\./
         if (!regex.test(key)) {
             theEvent.returnValue = false
@@ -53,7 +147,7 @@ export namespace Browsers {
         return Array.from(document.querySelectorAll(selector))
     }
 
-    export const storeLocation = (position): { latitude: number; longitude: number } => {
+    export const storeLocation = (position: any): { latitude: number; longitude: number } => {
         const latitude = position.coords.latitude
         const longitude = position.coords.longitude
 
