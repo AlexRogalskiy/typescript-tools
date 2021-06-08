@@ -26,7 +26,7 @@ RUN apt-get update && \
 
 RUN mkdir -p /app
 WORKDIR /app
-COPY .. /app
+COPY ../.. /app
 
 # we could run yarn to compile everything, but the
 # test lib does that too so don't bother
