@@ -224,9 +224,11 @@ export namespace Functions {
         return f.apply(f, args)
     }
 
-    export const composeAsync = async (...funcArgs) => async value =>
-        // eslint-disable-next-line github/no-then
-        await funcArgs.reduce((acc, val) => acc.then(val), Promise.resolve(value))
+    export const composeAsync = async (...funcArgs) => {
+        return async value =>
+            // eslint-disable-next-line github/no-then
+            await funcArgs.reduce((acc, val) => acc.then(val), Promise.resolve(value))
+    }
 
     export const mergeProps = <T>(...obj: unknown[]): T =>
         _.mergeWith({}, ...obj, (o, s) => {

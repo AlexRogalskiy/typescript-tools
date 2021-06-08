@@ -6,6 +6,7 @@ import cryptoRandomString from 'crypto-random-string'
 import { XmlDocument } from 'xmldoc'
 import { createHash, randomBytes } from 'crypto'
 import { promises } from 'fs'
+import { sep, posix } from 'path'
 import yaml from 'js-yaml'
 
 import { RegexStringPair } from '../../typings/general-types'
@@ -50,7 +51,7 @@ export namespace Strings {
     import errorLogs = Logging.errorLogs
     import makeArray3 = Arrays.makeArray3
 
-    const fixedEncode = (value: string, ...pairs: RegexStringPair[]): string => {
+    export const fixedEncode = (value: string, ...pairs: RegexStringPair[]): string => {
         let result = value
 
         for (const pair of pairs) {
@@ -60,8 +61,15 @@ export namespace Strings {
         return result
     }
 
+    export const datePrefix = `[${new Date().toLocaleTimeString()}] `
+
     export const substitute = (value: string): string => {
         return value.replace(/^\W+/, '').replace(/\W+$/, '')
+    }
+
+    // Converts to a POSIX-style path
+    export const posixPath = (p: string): string => {
+        return p.split(sep).join(posix.sep)
     }
 
     export const isMatch = (value: string, ...patterns: string[]): boolean => {

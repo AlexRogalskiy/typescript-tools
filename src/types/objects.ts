@@ -290,7 +290,7 @@ export namespace Objects {
     }
 
     export const randomEnum = <T>(enumType: T): Values<T> => {
-        const values = (Object.values(enumType) as unknown) as Values<T>[]
+        const values = Object.values(enumType) as unknown as Values<T>[]
         const index = Numbers.random(values.length)
 
         return values[index]

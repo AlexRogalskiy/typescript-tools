@@ -43,7 +43,7 @@
         "remark": "remark -q -f .",
         "lint:md": "remark-preset-davidtheclark",
         "format:md": "remark-preset-davidtheclark --format",
-        "docs": "rimraf docs && npm run docs:html",
+        "docs": "npm run docs:html",
         "docs:html": "typedoc --tsconfig tsconfig.json --out docs/html/ --theme minimal --excludePrivate --plugin none",
         "docs:md": "typedoc --tsconfig tsconfig.json --out docs/md/ --theme markdown --excludePrivate --mdHideSources --mdEngine github",
         "codecov": "codecov",

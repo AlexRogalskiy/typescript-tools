@@ -34,10 +34,10 @@ export namespace Browsers {
         color: string
     }
 
-    export const getImages = (node: Element): Array<HTMLImageElement> =>
+    export const getImages = (node: Element): HTMLImageElement[] =>
         Array.from(node.querySelectorAll('img')).filter(imgNode => !!imgNode.src)
 
-    export const imageLoaded = (imgNode: HTMLImageElement): Promise<void> => {
+    export const imageLoaded = async (imgNode: HTMLImageElement): Promise<void> => {
         if (imgNode.complete && imgNode.naturalWidth !== 0) {
             return Promise.resolve()
         }
@@ -54,18 +54,17 @@ export namespace Browsers {
         })
     }
 
-    export const allImagesLoaded = (
-        nodes: Array<HTMLImageElement>
-    ): Promise<void[]> => Promise.all(nodes.map(imageLoaded))
+    export const allImagesLoaded = async (nodes: HTMLImageElement[]): Promise<void[]> =>
+        Promise.all(nodes.map(imageLoaded))
 
-    export const allImagesLoadedInContainer = (node: Element): Promise<void[]> =>
+    export const allImagesLoadedInContainer = async (node: Element): Promise<void[]> =>
         allImagesLoaded(getImages(node))
 
-    export const loadResource = (url: string): Promise<void> => {
+    export const loadResource = async (url: string): Promise<void> => {
         if (!resourcesCache[url]) {
             resourcesCache[url] = new Promise((resolve, reject) => {
                 const howToHandle = Object.keys(resourceNodeCreators).find(regExp =>
-                    new RegExp(regExp).test(url)
+                    new RegExp(regExp).test(url),
                 )
 
                 if (!howToHandle) {
@@ -88,14 +87,9 @@ export namespace Browsers {
         return [].slice.call(el.getElementsByClassName('blob-code-inner'))
     }
 
-    export const getScrollNode = (): Element =>
-        document.scrollingElement || document.documentElement
+    export const getScrollNode = (): Element => document.scrollingElement || document.documentElement
 
-    export const createScript = (
-        src: string,
-        onload: () => void,
-        onerror: () => void
-    ): HTMLScriptElement => {
+    export const createScript = (src: string, onload: () => void, onerror: () => void): HTMLScriptElement => {
         const node = document.createElement('script')
 
         node.onload = onload
@@ -109,7 +103,7 @@ export namespace Browsers {
     export const createStylesheet = (
         href: string,
         onload: () => void,
-        onerror: () => void
+        onerror: () => void,
     ): HTMLLinkElement => {
         const node = document.createElement('link')
 
@@ -127,7 +121,7 @@ export namespace Browsers {
         [regex: string]: typeof createScript | typeof createStylesheet
     } = {
         '\\.js$': createScript,
-        '\\.css$': createStylesheet
+        '\\.css$': createStylesheet,
     }
 
     export const win = typeof (window as any) !== 'undefined' ? window : {}

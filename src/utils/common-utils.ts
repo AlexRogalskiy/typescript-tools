@@ -676,7 +676,8 @@ export namespace CommonUtils {
         if (typeof exp === 'function') {
             return exp
         } else if (typeof exp === 'string') {
-            const _pattern = /^\s*\(?\s*(([a-z_$][a-z0-9_$]*)+([, ]+[a-z_$][a-z0-9_$]*)*)*\s*\)?\s*=>\s*(.*)$/i
+            const _pattern =
+                /^\s*\(?\s*(([a-z_$][a-z0-9_$]*)+([, ]+[a-z_$][a-z0-9_$]*)*)*\s*\)?\s*=>\s*(.*)$/i
             if (_pattern.test(exp)) {
                 const _match = exp.match(_pattern)
                 return new Function(

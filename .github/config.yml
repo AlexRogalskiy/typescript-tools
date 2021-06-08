@@ -58,3 +58,8 @@ lockThreads:
 todo:
   label: '🗒 To-Do'
 # =============================================================================================== #
+contact_links:
+  - name: 🙏 Ask a question
+    url: https://github.com/AlexRogalskiy/typescript-tools/issues/new
+    about: Ask the community for help
+# =============================================================================================== #

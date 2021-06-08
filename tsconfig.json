@@ -60,9 +60,9 @@
         "./src/index.ts"
     ],
     "include": [
-        "./src",
-        "./tools",
-        "./typings",
+        "./src/*",
+        "./tools/*",
+        "./typings/*",
         "./jest.config.js"
     ]
 }

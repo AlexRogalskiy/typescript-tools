@@ -3,6 +3,9 @@ export * from './configuration/profiles'
 
 export * from './constant/constants'
 
+export * from './utils/benchmark-utils'
+export * from './utils/reducer-utils'
+export * from './utils/spring-utils'
 export * from './utils/easing-utils'
 export * from './utils/color-utils'
 export * from './utils/common-utils'
@@ -20,8 +23,8 @@ export * from './datetime/datetimes'
 export * from './datetime/sleep'
 export * from './datetime/time'
 
-export * from './validation/checkers'
-export * from './validation/validators'
+export * from './check/checkers'
+export * from './check/validators'
 
 export * from './math/maths'
 export * from './math/matrices'

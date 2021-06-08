@@ -1,6 +1,8 @@
 const epsilon = 0.01
 
-export const clamp = (a: number, b: number) => (x: number): number => Math.max(a, Math.min(b, x))
+export const clamp = (a: number, b: number) => {
+    return (x: number): number => Math.max(a, Math.min(b, x))
+}
 
 /**
  * step the spring, mutate the state to reflect the state at t+dt
