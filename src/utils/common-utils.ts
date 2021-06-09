@@ -1,6 +1,6 @@
-import { isBoolean, isInteger, isNumber, isString, mergeWith, union, isNull } from 'lodash'
+import * as _ from 'lodash'
+import { isBoolean, isInteger, isNull, isNumber, isString, mergeWith, union } from 'lodash'
 import { spawn, SpawnOptionsWithoutStdio } from 'child_process'
-
 import fs from 'fs-extra'
 import path from 'path'
 
@@ -26,6 +26,70 @@ export namespace CommonUtils {
         p1 = p1.replace(/\/$/, '')
         p2 = p2.replace(/^\//, '')
         return `${p1}/${p2}`
+    }
+
+    export const splitArgs = (args: any[]): any => {
+        const obj = {}
+
+        for (const arg of args) {
+            const split = arg.split('=')
+            obj[split[0].trim()] = split.length > 1 ? split[1].trim() : null
+        }
+
+        return obj
+    }
+
+    const enum OperationMode {
+        REPLACE = 'replace',
+        CONCAT = 'concat',
+        MERGE = 'merge',
+        OR = 'or',
+        AND = 'and',
+        UNION = 'union',
+    }
+
+    export const getFuncByBehaviour = (behaviour: string): any => {
+        if (behaviour === OperationMode.REPLACE) {
+            return (_, y) => y
+        } else if (behaviour === OperationMode.CONCAT) {
+            return function (x, y) {
+                x = _.isArray(x) || _.isString(x) ? x : _.isUndefined(x) ? [] : [x]
+                y = _.isArray(y) || _.isString(y) ? y : _.isUndefined(y) ? [] : [y]
+                return x.concat(y)
+            }
+        } else if (behaviour === OperationMode.UNION) {
+            return function (x, y) {
+                if (!_.isArray(x) && !_.isArray(y)) {
+                    return undefined
+                }
+                x = _.isArray(x) || _.isString(x) ? x : _.isUndefined(x) ? [] : [x]
+                y = _.isArray(y) || _.isString(y) ? y : _.isUndefined(y) ? [] : [y]
+                return _.union(x, y)
+            }
+        } else if (behaviour === OperationMode.MERGE) {
+            return undefined
+        } else if (behaviour === OperationMode.OR) {
+            return function (x, y) {
+                return x || y
+            }
+        } else if (behaviour === OperationMode.AND) {
+            return function (x, y) {
+                return x && y
+            }
+        }
+    }
+
+    export const loadJsonObject = (filename: string): any => {
+        return JSON.parse(fs.readFileSync(filename, 'utf8'))
+    }
+
+    export const stripQuotes = (value: string): string => {
+        if (value) {
+            value = value.replace(/(^")|("$)/g, '')
+            value = value.replace(/(^')|('$)/g, '')
+        }
+
+        return value
     }
 
     export const noConsoleLog = async <T>(callback: () => Promise<T>): Promise<T> => {

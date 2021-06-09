@@ -43,7 +43,7 @@
         "remark": "remark -q -f .",
         "lint:md": "remark-preset-davidtheclark",
         "lint:json": "jsonlint ./package.json --quiet",
-        "lint:docker": "dockerfile_lint -r default_rules.yaml",
+        "lint:docker": "dockerfile_lint -r docker/rules/default_rules.yaml",
         "format:md": "remark-preset-davidtheclark --format",
         "docs": "npm run docs:html",
         "docs:html": "typedoc --tsconfig tsconfig.json --out docs/html/ --theme minimal --excludePrivate --plugin none",

@@ -25,6 +25,7 @@ import {
     REGEX_ENTITY_PAIRS,
     REGEX_CONTROL_PAIRS,
     REGEX_ASCII_PAIRS,
+    TOKEN_WHITESPACE,
 } from '..'
 
 import { buildTimeRegex, githubRegex } from './regexes'
@@ -96,6 +97,29 @@ export namespace Strings {
         const matcher = new Minimatch(glob, options)
 
         return changedFiles.some(file => matcher.match(file))
+    }
+
+    // Takes a single line of text and parses out the cmd and rest,
+    // which are used for dispatching to more exact parsing functions.
+    export const splitCommand = (line: string): any => {
+        // Make sure we get the same results irrespective of leading/trailing spaces
+        const match = line.match(TOKEN_WHITESPACE)
+
+        if (!match) {
+            return {
+                name: line.toUpperCase(),
+                rest: '',
+            }
+        }
+
+        const index = match.index ? match.index : 0
+        const name = line.substr(0, index).toUpperCase()
+        const rest = line.substr(index + match[0].length)
+
+        return {
+            name,
+            rest,
+        }
     }
 
     export const shortHash = (buffer: any): string => {
