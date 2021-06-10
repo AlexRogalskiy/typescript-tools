@@ -111,7 +111,7 @@
         "eslint-plugin-spellcheck": "0.0.8",
         "folio": "^0.3.18",
         "form-data": "^4.0.0",
-        "fs-extra": "^9.1.0",
+        "fs-extra": "10.0.0",
         "github-url-parse": "^0.1.0",
         "got": "^11.8.2",
         "gradient-string": "^1.2.0",
