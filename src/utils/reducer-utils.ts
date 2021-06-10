@@ -1,8 +1,6 @@
 import { Arrays } from '..'
 
 export namespace ReducerUtils {
-    import mapValues = Arrays.mapValues
-
     /**
      * Reducer
      * @desc Type representing reducer handler
@@ -18,7 +16,7 @@ export namespace ReducerUtils {
     // Combine a map of slice reducers into a master reducer.
     export const combineReducers = <S, A>(...reducers: Reducer<S, A>[]): Reducer<S, A> => {
         return (state, action): any => {
-            return mapValues(reducers, (reducer, key) => reducer(state[key], action))
+            return Arrays.mapValues(reducers, (reducer, key) => reducer(state[key], action))
         }
     }
 

@@ -8,6 +8,16 @@ import { Color } from '../tools/color'
 import { Vector } from '../tools/vector'
 
 // -------------------------------------------------------------------------------------------------
+/**
+ * NumberValue
+ * @desc Type representing number value
+ */
+export type NumberValue = number | { valueOf(): number }
+// -------------------------------------------------------------------------------------------------
+/**
+ * CodeSnippet
+ * @desc Type representing code snippet
+ */
 export interface CodeSnippet {
     readonly name: string
     readonly label: string

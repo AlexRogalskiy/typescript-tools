@@ -1,8 +1,7 @@
 name: Integrate
 
 on:
-  push:
-    branches: [ master ]
+  workflow_dispatch:
 
 env:
   FORCE_COLOR: 1

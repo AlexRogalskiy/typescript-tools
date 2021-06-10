@@ -1,6 +1,4 @@
-export namespace SpringUtils {
-
-}
+export namespace SpringUtils {}
 const epsilon = 0.01
 
 export const clamp = (a: number, b: number) => {

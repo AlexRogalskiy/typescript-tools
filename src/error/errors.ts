@@ -80,7 +80,7 @@ export namespace Errors {
         /**
          * Error data by provided {@link ErrorType}
          */
-        readonly data: ErrorData = ErrorCode[this.type]
+        readonly data: ErrorData
         /**
          * Error timestamp
          */
@@ -93,6 +93,8 @@ export namespace Errors {
          */
         constructor(readonly type: ErrorType, readonly message: string) {
             super(message)
+
+            this.data = ErrorCode[this.type]
 
             Object.defineProperty(this, 'message', {
                 configurable: true,

@@ -3,7 +3,7 @@
 Install the dependencies
 
 ```bash
-npm install
+npm install --legacy-peer-deps
 ```
 
 Build the typescript and package it for distribution

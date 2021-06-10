@@ -3,6 +3,20 @@ import { Numeric } from './general-types'
 
 // -------------------------------------------------------------------------------------------------
 /**
+ * An Interpolator factory returns an interpolator function.
+ *
+ * The first generic corresponds to the data type of the interpolation boundaries.
+ * The second generic corresponds to the data type of the return type of the interpolator.
+ */
+/**
+ * Construct a new interpolator function, based on the provided interpolation boundaries.
+ *
+ * @param a Start boundary of the interpolation interval.
+ * @param b End boundary of the interpolation interval.
+ */
+export type InterpolatorFactory<T, U> = (a: T, b: T) => (t: number) => U
+// -------------------------------------------------------------------------------------------------
+/**
  * Dictionary
  * @desc Type representing key {@link string}/value {@link T} record
  */

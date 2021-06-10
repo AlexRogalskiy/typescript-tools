@@ -15,7 +15,7 @@ export namespace ExecUtils {
     export const exec = (command: string, options = { silent: true }): string => {
         const result = shell.exec(command, options)
 
-        return (result.stdout as string).trim()
+        return result.stdout.trim()
     }
 
     export const installDeps = (): void => {

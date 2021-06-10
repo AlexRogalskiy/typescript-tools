@@ -1288,7 +1288,7 @@ export namespace Browsers {
      * @member {Boolean} supportsAddEventListener
      */
     export const supportsAddEventListener = ((): boolean => {
-        return !!(document.documentElement.addEventListener && document.addEventListener)
+        return !!(document.documentElement['addEventListener'] && document.addEventListener)
     })()
 
     /**
@@ -1296,7 +1296,7 @@ export namespace Browsers {
      * @member {Boolean} supportsRemoveEventListener
      */
     export const supportsRemoveEventListener = ((): boolean => {
-        return !!(document.documentElement.removeEventListener && document.removeEventListener)
+        return !!(document.documentElement['addEventListener'] && document.removeEventListener)
     })()
 
     /**
@@ -1306,6 +1306,7 @@ export namespace Browsers {
      */
     export const isCanvasTainted = (canvas): boolean => {
         let isTainted = false
+
         try {
             // We test if the canvas is tainted by retrieving data from it.
             // An exception will be raised if the canvas is tainted.

@@ -2,7 +2,8 @@
     "plugins": [
         "jest",
         "@typescript-eslint",
-        "spellcheck"
+        "spellcheck",
+        "github"
     ],
     "extends": [
         "plugin:github/recommended"
