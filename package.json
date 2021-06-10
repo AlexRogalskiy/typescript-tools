@@ -125,7 +125,7 @@
         "jsdom": "16.4.0",
         "jsdom-global": "3.0.2",
         "json-schemify": "0.0.10",
-        "license-badger": "^0.18.0",
+        "license-badger": "0.19.0",
         "license-checker": "^25.0.1",
         "jsonlint": "^1.6.3",
         "markdown-link-check": "^3.8.6",
