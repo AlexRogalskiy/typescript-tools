@@ -100,7 +100,7 @@
         "dayjs": "^1.10.4",
         "dayjs-precise-range": "^1.0.1",
         "dockerfile_lint": "0.3.4",
-        "es6-promisify": "^6.1.1",
+        "es6-promisify": "7.0.0",
         "eslint": "^7.18.0",
         "eslint-config-prettier": "^6.15.0",
         "eslint-plugin-github": "^4.1.2",
