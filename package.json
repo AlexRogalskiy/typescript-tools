@@ -102,7 +102,7 @@
         "dockerfile_lint": "0.3.4",
         "es6-promisify": "^6.1.1",
         "eslint": "^7.18.0",
-        "eslint-config-prettier": "^6.15.0",
+        "eslint-config-prettier": "8.3.0",
         "eslint-plugin-github": "^4.1.2",
         "eslint-plugin-import": "^2.22.1",
         "eslint-plugin-jest": "^23.20.0",
