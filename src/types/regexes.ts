@@ -33,6 +33,24 @@ export const getProps = test => props => {
     return next
 }
 
+export const commonHtmlStopWords = 'alt br div h1 h2 h3 h4 h5 h6 href img li ol pre src srcset ul'.split(' ')
+export const linkRes = [
+    /<(?:a|area|link)\s[^>]*href\s*=\s*"?([^">\s]+)/giu,
+    /<(?:audio|embed|iframe|img|input|script|source|track|video)\s[^>]*(?:src|srcset)\s*=\s*"?([^">\s]+)/giu,
+    /<object\s[^>]*data\s*=\s*"?([^">\s]+)/giu,
+    /<video\s[^>]*poster\s*=\s*"?([^">\s]+)/giu,
+]
+
+export const getSiteUrl = (req: any): string => `${req.secure ? 'https' : 'http'}://${req.headers.host}`
+
+export const escapeForRegExp = (str: string): string => str.replace(/[-/\\^$*+?.()|[\]{}]/gu, '\\$&')
+export const hostnameTokenEscaped = (hostnameToken: string): string =>
+    `${escapeForRegExp(hostnameToken)}|${escapeForRegExp(encodeURIComponent(hostnameToken))}`
+export const hostnameTokenRe = (hostnameToken: string): RegExp =>
+    new RegExp(hostnameTokenEscaped(hostnameToken), 'gu')
+export const referenceRe = (hostnameToken: string): RegExp =>
+    new RegExp(`(${hostnameTokenEscaped(hostnameToken)})/blog/post/([\\w-]+)`, 'gu')
+
 export const splitPathRe = /^(.+\/(?!$)|\/)?((?:.+?)?(\.[^.]*)?)$/
 export const inlineTag = /(?:\[(.+?)])?{@(link|linkcode|linkplain)\s+((?:.|\n)+?)}/gi
 
