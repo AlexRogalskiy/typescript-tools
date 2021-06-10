@@ -102,6 +102,17 @@ export namespace Arrays {
         }
     }
 
+    export const appendToArray = (sliceSize: number) => (destination, source) => {
+        // NOTE: destination.push(...source) throws "RangeError: Maximum call stack
+        // size exceeded" for sufficiently lengthy source arrays
+        let index = 0
+        let slice = []
+        while ((slice = source.slice(index, index + sliceSize)).length > 0) {
+            destination.push(...slice)
+            index += sliceSize
+        }
+    }
+
     export const arrayEquals = <T>(a: T[], b: T[]): boolean =>
         a.length === b.length && a.every((_, i) => a[i] === b[i])
 
