@@ -27,6 +27,15 @@
     "major": {
         "automerge": false
     },
+    "masterIssue": true,
+    "timezone": "Europe/Moscow",
+    "rangeStrategy": "bump",
+    "commitMessageAction": "Updates",
+    "commitMessageTopic": "{{depName}}",
+    "commitMessagePrefix": ":arrow_up:",
+    "labels": [
+        "npm dependencies"
+    ],
     "packageRules": [
         {
             "updateTypes": [
@@ -36,15 +45,12 @@
                 "digest"
             ],
             "automerge": true
+        },
+        {
+            "depTypeList": [
+                "devDependencies"
+            ],
+            "automerge": true
         }
-    ],
-    "masterIssue": true,
-    "timezone": "Europe/Moscow",
-    "rangeStrategy": "bump",
-    "commitMessageAction": "Updates",
-    "commitMessageTopic": "{{depName}}",
-    "commitMessagePrefix": ":arrow_up:",
-    "labels": [
-        "npm dependencies"
     ]
 }
