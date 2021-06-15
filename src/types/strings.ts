@@ -133,6 +133,9 @@ export namespace Strings {
         return value.trim().split(/\s*,\s*/)
     }
 
+    export const generateSummary = (text: string, maxLength = 120): string =>
+        `${text.replace(/\n/gi, ' ').substring(0, maxLength)}...`
+
     export const getLineFromPos = (str, pos, matchPartial = '', matchValue = ''): number => {
         let offset = 1
 

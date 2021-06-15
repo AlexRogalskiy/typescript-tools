@@ -42,6 +42,7 @@ export * from './types/regexes'
 export * from './types/strings'
 
 export * from './types/files'
+export * from './io/get-files'
 
 export * from './network/requests'
 export * from './network/browsers'

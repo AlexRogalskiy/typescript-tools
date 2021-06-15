@@ -8,6 +8,8 @@ import { Color } from '../tools/color'
 import { Vector } from '../tools/vector'
 
 // -------------------------------------------------------------------------------------------------
+export type Platform = 'macOS' | 'Linux' | 'Windows'
+// -------------------------------------------------------------------------------------------------
 /**
  * NumberValue
  * @desc Type representing number value
