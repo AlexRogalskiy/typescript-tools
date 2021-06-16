@@ -14,6 +14,10 @@ export namespace DateTimes {
         seconds: ['second', 'seconds'],
     }
 
+    export const buildDate = (mOrTimestamp: number, d?: number, y?: number): Date => {
+        return d !== undefined && y !== undefined ? new Date(y, mOrTimestamp, d) : new Date(mOrTimestamp)
+    }
+
     export const getNow = (): string => {
         return new Date().toISOString()
     }
