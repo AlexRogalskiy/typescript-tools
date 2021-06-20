@@ -62,6 +62,8 @@ export namespace Files {
         return null
     }
 
+    export const readFileSync2 = (filename: string): string => readFileSync(filename).toString('utf8')
+
     export const getAbsolutePath = (unresolvedPath: string): string => {
         const { dir, name } = parsePath(unresolvedPath)
         const parts = joinPath(dir, name).split('/')
