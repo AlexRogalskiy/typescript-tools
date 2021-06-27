@@ -21,8 +21,7 @@ export namespace Objects {
         allowMissingNull?: boolean
         allowStringifiedIntegers?: boolean
     }
-
-    export const props = (() => {
+    ;((): void => {
         const props = {
             static: {
                 extends: '__extends__',

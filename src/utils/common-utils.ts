@@ -4,10 +4,11 @@ import { spawn, SpawnOptionsWithoutStdio } from 'child_process'
 import fs from 'fs-extra'
 import path from 'path'
 
-import { Grid, Point } from '../../typings/domain-types'
+import { CellPosition, Grid, IMousePosition, Point } from '../../typings/domain-types'
 import { Iterator, IteratorStep, Processor } from '../../typings/function-types'
 
 import { Checkers, Errors, Objects } from '..'
+import { Optional } from '../../typings/standard-types'
 
 export namespace CommonUtils {
     export type Fn<T> = (key: string) => T
@@ -39,6 +40,10 @@ export namespace CommonUtils {
         return obj
     }
 
+    export const findPosition = (position: CellPosition): ((position: CellPosition) => boolean) => {
+        return p => p.idx === position.idx && p.rowIdx === position.rowIdx
+    }
+
     const enum OperationMode {
         REPLACE = 'replace',
         CONCAT = 'concat',
@@ -46,6 +51,74 @@ export namespace CommonUtils {
         OR = 'or',
         AND = 'and',
         UNION = 'union',
+    }
+
+    export const getDelta = (
+        startPosition: Optional<IMousePosition>,
+        currentPosition: Optional<IMousePosition>,
+    ): Optional<number> => {
+        if (!startPosition || !currentPosition) {
+            return null
+        }
+
+        const xDelta = Math.abs(startPosition.x - currentPosition.x)
+        const yDelta = Math.abs(startPosition.y - currentPosition.y)
+
+        return Math.max(xDelta, yDelta)
+    }
+
+    export const getValue = (value: string | { displayName: string }): string => {
+        if (value === null || value === undefined) {
+            return ''
+        }
+        return typeof value === 'string' ? value : value.displayName
+    }
+
+    export const isValuesEqual = <T extends string | boolean | number>(
+        first: T | null | undefined,
+        second: T | null | undefined,
+        defaultValue?: T,
+    ): boolean => {
+        return (first ?? defaultValue) === (second ?? defaultValue)
+    }
+
+    export const isPropertiesEqual = <T>(first: T, second: T): boolean => {
+        if (first === null || second === null || typeof first !== 'object' || typeof second !== 'object') {
+            return false
+        }
+
+        const firstProperties = Object.entries(first)
+        const secondProperties = Object.entries(second)
+
+        if (firstProperties.length !== secondProperties.length) {
+            return false
+        }
+
+        for (const [key, value] of firstProperties) {
+            if (second[key as keyof T] !== value) {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    export const getMIME = (binary: string): Optional<string> => {
+        if (binary.length === 0) {
+            return null
+        }
+
+        if (binary.startsWith('/')) {
+            return 'image/jpeg'
+        } else if (binary.startsWith('i')) {
+            return 'image/png'
+        } else if (binary.startsWith('R')) {
+            return 'image/gif'
+        } else if (binary.startsWith('U')) {
+            return 'image/webp'
+        }
+
+        return null
     }
 
     export const getFuncByBehaviour = (behaviour: string): any => {

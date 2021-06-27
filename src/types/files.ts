@@ -48,6 +48,13 @@ export namespace Files {
         return join(__dirname, '../', project, 'package.json')
     }
 
+    export const generateFileName = (fileName: string, fileFormat: string): string => {
+        const now = new Date()
+        return `${fileName}_${now.toISOString().slice(0, 10)}_${`0${now.getHours()}`.slice(
+            -2,
+        )}-${`0${now.getMinutes()}`.slice(-2)}-${`0${now.getSeconds()}`.slice(-2)}${fileFormat}`
+    }
+
     // Takes a filename or foldername, strips the extension
     // gets the part between the "[]" brackets.
     // It will return `null` if there are no brackets

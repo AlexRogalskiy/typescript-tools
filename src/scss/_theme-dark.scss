@@ -1,0 +1,60 @@
+$mdc-theme-primary: #2a7cb4;
+$mdc-theme-on-primary: #ffffff;
+$mdc-theme-secondary: #1b1b1d;
+$mdc-theme-on-secondary: #cbcbcb;
+$mdc-theme-surface: #2b2a32;
+$mdc-theme-on-surface: #ffffff;
+$mdc-theme-background: #474551;
+$mdc-theme-error: #e94948;
+
+$color-positive: #52c41a;
+$color-on-positive: #fff;
+$color-negative: #e73e52;
+$color-status: #a08600;
+
+$link-color: $mdc-theme-primary;
+$link-color-focus: #3f96d1;
+
+$input-border: #585958;
+$input-border-disabled: darken($input-border, 10%);
+$input-border-readonly: darken($input-border, 5%);
+$input-background: $mdc-theme-secondary;
+$input-background-disabled: $input-background;
+$input-background-readonly: $input-background;
+
+$mdc-theme-text-colors: (
+    dark: (
+        primary: white,
+        secondary: rgba(white, 0.7),
+        hint: rgba(white, 0.45),
+        disabled: rgba(white, 0.45),
+        icon: rgba(white, 0.45),
+    ),
+    light: (
+        primary: rgba(black, 0.87),
+        secondary: rgba(black, 0.45),
+        hint: rgba(black, 0.45),
+        disabled: rgba(black, 0.20),
+        icon: rgba(black, 0.38),
+    ),
+);
+
+$mdc-ripple-dark-ink-opacities: (
+    hover: 0.04,
+    focus: 0.12,
+    press: 0.12,
+    selected: 0.08,
+    activated: 0.12,
+) !default;
+
+$mdc-ripple-light-ink-opacities: (
+    hover: 0.04,
+    focus: 0.12,
+    press: 0.12,
+    selected: 0.08,
+    activated: 0.12,
+) !default;
+
+$theme-name: "dark";
+
+@import "mixins";

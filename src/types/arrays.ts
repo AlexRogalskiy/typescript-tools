@@ -32,8 +32,7 @@ export namespace Arrays {
     import fromBigInteger = SizeUtils.fromBigInteger
     import interpolateSizes = SizeUtils.interpolateSizes
     import toBigInteger = SizeUtils.toBigInteger
-
-    export const props = (() => {
+    ;((): void => {
         const props = {
             proto: {
                 index: 'index',
@@ -84,6 +83,33 @@ export namespace Arrays {
         }
     })()
 
+    export const arrayToMap = (array: string[]): { [key: string]: boolean } => {
+        return array.reduce(
+            (obj, value) => ({
+                ...obj,
+                [value]: true,
+            }),
+            {},
+        )
+    }
+
+    export const isArraysEqual = <T>(first: T[], second: T[]): boolean => {
+        if (first.length !== second.length) {
+            return false
+        }
+
+        return !first.some(region => !second.includes(region))
+    }
+
+    export const flat = <T extends any[]>(array: T): FlatArray<T, 1>[] => {
+        if (array.flat) {
+            return array.flat()
+        }
+
+        // EDGE workaround
+        return array.reduce((acc, val) => acc.concat(val), [])
+    }
+
     export const addUnique = (arr: any[], items: any[]): any[] => {
         for (const item of items) {
             if (!arr.includes(item)) {
@@ -100,6 +126,14 @@ export namespace Arrays {
         for (let index = 0; index < array.length; index++) {
             await callback(array[index], index, array)
         }
+    }
+
+    export const findMinimalFree = (
+        array: number[],
+        base: number,
+        comparator: Comparator<number> = (a, b) => b - a,
+    ): number => {
+        return array.sort(comparator).reduceRight((prev, cur) => (prev === cur ? prev + 1 : prev), base)
     }
 
     export const appendToArray = (sliceSize: number) => (destination, source) => {

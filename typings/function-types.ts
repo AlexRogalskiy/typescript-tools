@@ -100,6 +100,15 @@ export type RequiredValueCallback<T, U> = GenericValueCallback<T, Required<U>>
 export type NonNullValueCallback<T, U> = GenericValueCallback<T, NonNull<U>>
 // -------------------------------------------------------------------------------------------------
 /**
+ * OptionalRecord
+ * @desc Type representing optional record type in TypeScript
+ * @example
+ *   type OptionalRecord = { value: V, value2: V }
+ */
+export type OptionalRecord<K extends keyof any, V> = Record<K, V>
+
+// -------------------------------------------------------------------------------------------------
+/**
  * IteratorStep
  * @desc Type representing iterator step type in TypeScript
  * @example

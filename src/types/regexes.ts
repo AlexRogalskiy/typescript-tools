@@ -12,12 +12,15 @@ import quote = Strings.quote
 // eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires
 const isRegex = require('is-regex')
 
+export namespace Regexes {
+    // # dockerfile_lint  ignore | # dockerfile_lint  -  ignore  | # dockerfile_lint = ignore
+    export const TOKEN_INLINE_IGNORE = RegExp(/^#.*dockerfile_lint[ ]*\W[ ]*ignore.*$/)
+}
+
 export const MRE = /^m[trblxy]?$/
 export const TOKEN_WHITESPACE = RegExp(/[\t\v\f\r ]+/)
 export const TOKEN_LINE_CONTINUATION = RegExp(/\\[ \t]*$/)
 export const TOKEN_COMMENT = RegExp(/^#.*$/)
-// # dockerfile_lint  ignore | # dockerfile_lint  -  ignore  | # dockerfile_lint = ignore
-export const TOKEN_INLINE_IGNORE = RegExp(/^#.*dockerfile_lint[ ]*\W[ ]*ignore.*$/)
 
 const PROPERTY_REGEX_PATTERN = '[a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_]*)*'
 

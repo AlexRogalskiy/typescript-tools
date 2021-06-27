@@ -62,6 +62,7 @@
     "include": [
         "./src/*",
         "./tools/*",
+        "./tools/promise/*",
         "./typings/*",
         "./jest.config.js"
     ]

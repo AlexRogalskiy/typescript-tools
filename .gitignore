@@ -3,6 +3,7 @@
 
 # BlueJ files
 *.ctxt
+*.iml
 
 # Cache files
 .eslintcache
@@ -40,3 +41,4 @@ log/
 site/
 .cache
 node_modules
+/typescript-tools.iml

@@ -34,6 +34,27 @@ export namespace Browsers {
         color: string
     }
 
+    export const copyToClipboard = (data: string): void => {
+        const activeElement = document.activeElement
+        const shadowElement = document.createElement('textarea')
+        shadowElement.value = data
+        shadowElement.style.position = 'absolute'
+        shadowElement.style.overflow = 'hidden'
+        shadowElement.style.width = '0'
+        shadowElement.style.height = '0'
+        shadowElement.style.top = '0'
+        shadowElement.style.left = '0'
+
+        document.body.appendChild(shadowElement)
+        shadowElement.select()
+        document.execCommand('copy')
+        document.body.removeChild(shadowElement)
+
+        if (activeElement instanceof HTMLElement) {
+            activeElement.focus()
+        }
+    }
+
     export const getImages = (node: Element): HTMLImageElement[] =>
         Array.from(node.querySelectorAll('img')).filter(imgNode => !!imgNode.src)
 

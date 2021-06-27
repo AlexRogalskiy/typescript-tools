@@ -1,0 +1,18 @@
+@import 'theme-light';
+
+@include theme-matcher;
+@include layout-grid;
+@include colors;
+@include tag;
+@include ripple-core-styles;
+@include theme-ripple;
+@include theme-tabs;
+@include table;
+@include button-core-styles;
+@include radio-core-styles;
+@include switch-core-styles;
+@include checkbox-core-styles;
+@include form-controls;
+@include link;
+@include placeholder;
+@include delimiter($mdc-theme-secondary);

@@ -14,6 +14,7 @@ export * from './utils/exec-utils'
 export * from './utils/translation-utils'
 export * from './utils/zip-utils'
 export * from './utils/canvas-utils'
+export * from './utils/theme-utils'
 
 export * from './logging/logging'
 

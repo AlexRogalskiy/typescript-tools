@@ -1,0 +1,7 @@
+$theme-class: "theme-#{$theme-name}";
+
+@mixin theme-matcher() {
+    theme {
+        composes: #{$theme-class} theme-typography from global;
+    }
+}

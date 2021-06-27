@@ -10,6 +10,30 @@ import { Vector } from '../tools/vector'
 // -------------------------------------------------------------------------------------------------
 export type Platform = 'macOS' | 'Linux' | 'Windows'
 // -------------------------------------------------------------------------------------------------
+export interface IResultSetElementKey {
+    readonly row?: number
+    readonly column?: number
+}
+
+// -------------------------------------------------------------------------------------------------
+export interface CellPosition {
+    idx: number
+    rowIdx: number
+}
+
+// -------------------------------------------------------------------------------------------------
+export interface IMousePosition {
+    x: number
+    y: number
+}
+
+// -------------------------------------------------------------------------------------------------
+export interface IDraggingPosition {
+    rowIdx: number
+    colIdx: number
+}
+
+// -------------------------------------------------------------------------------------------------
 /**
  * NumberValue
  * @desc Type representing number value

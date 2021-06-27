@@ -1,0 +1,125 @@
+@mixin theme-tabs($query: mdc-feature-all()) {
+    $feat-structure: mdc-feature-create-target($query, structure);
+
+    tabs-box {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        overflow: hidden;
+    }
+
+    tabs {
+        display: flex;
+        flex-direction: row;
+        flex: 0 0 auto;
+        overflow: auto;
+    }
+
+    tab-panels {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+    }
+
+    tab-fill {
+        flex: 1;
+    }
+
+    Tab {
+        composes: theme-typography--body2 from global;
+        position: relative;
+        outline: none;
+        font-weight: normal;
+        cursor: pointer;
+        padding: 0;
+        white-space: nowrap;
+
+        height: 48px;
+        border-top: solid 2px transparent;
+
+        &:global([aria-selected="true"]) {
+            font-weight: 500;
+            cursor: auto;
+            border-top-color: $color-negative;
+            opacity: 1;
+
+            &:before {
+                display: none;
+            }
+        }
+
+        &:not(:global([aria-selected="true"])) {
+            background-color: transparent !important;
+        }
+    }
+
+    tab-inner {
+        display: grid;
+    }
+
+    tab-container {
+        height: 100%;
+        display: flex;
+        flex-shrink: 0;
+        text-align: left;
+        align-items: center;
+
+        tab-icon {
+            height: 22px;
+            padding-left: 12px;
+
+            StaticImage,
+            IconOrImage,
+            img {
+                width: 22px;
+            }
+
+            placeholder {
+                width: 22px;
+                height: 22px;
+            }
+        }
+
+        tab-title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 12px;
+        }
+
+        tab-title placeholder {
+            width: 80px;
+            height: 16px;
+        }
+
+        tab-action:before {
+            content: "";
+            display: block;
+            left: -4px;
+            top: 0;
+            height: 16px;
+            width: 16px;
+            position: absolute;
+            cursor: pointer;
+        }
+
+        tab-action {
+            position: relative;
+            height: 8px;
+            width: 8px;
+            align-self: flex-start;
+            padding: 4px;
+            padding-left: 0;
+
+            Icon {
+                display: block;
+            }
+        }
+    }
+
+    TabPanel {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+        outline: none;
+    }
+}

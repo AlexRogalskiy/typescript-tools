@@ -17,6 +17,16 @@ export enum ErrorType {
 
 // -------------------------------------------------------------------------------------------------
 /**
+ * OrderType
+ * @desc Type representing order (asc|desc)
+ */
+export enum OrderType {
+    'asc' = 'asc',
+    'desc' = 'desc',
+}
+
+// -------------------------------------------------------------------------------------------------
+/**
  * TokenType
  * @desc Type representing supported tokens
  */

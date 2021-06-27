@@ -62,6 +62,19 @@ export namespace Strings {
         return result
     }
 
+    export const replaceMiddle = (
+        value: string,
+        newMiddle: string,
+        sideLength: number,
+        limiter: number,
+    ): string => {
+        if (value.length < limiter) {
+            return value
+        }
+
+        return value.substr(0, sideLength) + newMiddle + value.substr(value.length - sideLength)
+    }
+
     export const datePrefix = `[${new Date().toLocaleTimeString()}] `
 
     export const substitute = (value: string): string => {
@@ -981,6 +994,41 @@ export namespace Strings {
             return JSON.parse(value)
         } catch (e) {
             return defaultValue
+        }
+    }
+
+    export const declensionOfNumber = (value: number, words: string[]): string => {
+        value = Math.abs(value) % 100
+        const num = value % 10
+        if (value > 10 && value < 20) {
+            return words[2]
+        }
+
+        if (num > 1 && num < 5) {
+            return words[1]
+        }
+
+        if (num === 1) {
+            return words[0]
+        }
+
+        return words[2]
+    }
+
+    export const parseJSONFlat = (
+        object: any,
+        setValue: (key: string, value: any) => void,
+        scope?: string,
+    ): any => {
+        if (typeof object === 'object') {
+            for (const [key, value] of Object.entries<any>(object)) {
+                parseJSONFlat(value, setValue, `${scope ? `${scope}.` : ''}${key}`)
+            }
+            return
+        }
+
+        if (scope) {
+            setValue(scope, object)
         }
     }
 
