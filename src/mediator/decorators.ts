@@ -1,5 +1,5 @@
 import { Functions } from '..'
-
+import { AnnotationDescriptor } from '../../typings/function-types'
 import getFunctionArgs = Functions.getFunctionArgs
 
 export function autoResetStyle() {
@@ -22,7 +22,7 @@ export function autoResetStyle() {
  * Class function introspection decorator
  * @desc logs function parameters and corresponding actual values
  */
-export function introspect<T>() {
+export function introspect<T>(): AnnotationDescriptor<any, PropertyDescriptor> {
     return (target: any, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor => {
         const raw = target[propertyKey]
 

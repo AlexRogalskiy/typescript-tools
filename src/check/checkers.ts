@@ -15,7 +15,7 @@ import {
 
 import { Bools } from '../types/bools'
 import { Optional } from '../../typings/standard-types'
-import { BiPredicate } from '../../typings/function-types'
+import { BiPredicate, ITypedConstructor } from '../../typings/function-types'
 
 export namespace Checkers {
     import valueError = Errors.valueError
@@ -67,6 +67,10 @@ export namespace Checkers {
 
     export const eq = (a: any, b: any): boolean => {
         return Object.is(a, b)
+    }
+
+    export const isConstructor = <T>(obj: T | ITypedConstructor<T>): obj is ITypedConstructor<T> => {
+        return isFunction(obj)
     }
 
     export const in_ = (a: any, b: any): boolean => {

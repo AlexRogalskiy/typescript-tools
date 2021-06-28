@@ -5,10 +5,11 @@ import fs from 'fs-extra'
 import path from 'path'
 
 import { CellPosition, Grid, IMousePosition, Point } from '../../typings/domain-types'
-import { Iterator, IteratorStep, Processor } from '../../typings/function-types'
+import { IServiceInjector, Iterator, IteratorStep, Processor } from '../../typings/function-types'
 
 import { Checkers, Errors, Objects } from '..'
 import { Optional } from '../../typings/standard-types'
+import { createValueToken } from '../../tools/InjectionToken'
 
 export namespace CommonUtils {
     export type Fn<T> = (key: string) => T
@@ -120,6 +121,29 @@ export namespace CommonUtils {
 
         return null
     }
+
+    /**
+     * Help to create unique name for connection
+     * @param  {string} baseName
+     * @param  {string[]} connectionNames
+     * @returns string
+     */
+    export const getUniqueConnectionName = (baseName: string, connectionNames: string[]): string => {
+        let index = 1;
+        let name = baseName;
+
+        while (true) {
+            if (!connectionNames.includes(name)) {
+                break;
+            }
+            name = `${baseName} (${index})`;
+            index++;
+        }
+
+        return name;
+    }
+
+    export const ServiceInjectorToken = createValueToken<IServiceInjector>('IServiceInjector')
 
     export const getFuncByBehaviour = (behaviour: string): any => {
         if (behaviour === OperationMode.REPLACE) {

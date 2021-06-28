@@ -1,5 +1,10 @@
+export * from './annotation/injectable'
+
 export * from './configuration/configs'
 export * from './configuration/profiles'
+export * from './configuration/DIContainer'
+export * from './configuration/RootContainerService'
+export * from './configuration/Entity'
 
 export * from './constant/constants'
 

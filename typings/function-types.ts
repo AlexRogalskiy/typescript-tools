@@ -35,6 +35,58 @@ export type NumberDictionary<T> = Record<number, T>
 export type PropertyDictionary<T> = Record<PropertyKey, T>
 
 // -------------------------------------------------------------------------------------------------
+export interface IDestroyableMixin {
+    destruct: () => void
+}
+// -------------------------------------------------------------------------------------------------
+export type MixinProvider<T extends Record<string, any>> =
+    | ITypedConstructor<T>
+    | {
+          token: InjectionToken<T>
+          value: T
+      }
+
+// -------------------------------------------------------------------------------------------------
+export type AnnotationDescriptor<T, R> = (
+    target: T,
+    propertyKey: string,
+    descriptor: Optional<number | PropertyDescriptor>,
+) => R
+// -------------------------------------------------------------------------------------------------
+export type ITypedConstructor<T> = new (...args: any[]) => T
+export type IParamTypedConstructor<T extends any[], R> = new (...args: T) => R
+// -------------------------------------------------------------------------------------------------
+export interface IServiceInjector {
+    getServiceByClass: <T>(ctor: ITypedConstructor<T>) => T
+    getServiceByToken: <T>(token: ValueToken<T>) => T
+    resolveServiceByClass: <T>(ctor: ITypedConstructor<T>) => T
+}
+// -------------------------------------------------------------------------------------------------
+export interface IServiceCollection {
+    addServiceByToken: <T extends Record<string, any>>(token: any, value: T) => void
+    addServiceByClass: (ctor: ITypedConstructor<any>) => void
+}
+// -------------------------------------------------------------------------------------------------
+export interface IDestructibleController {
+    destruct: () => void
+}
+
+export interface IInitializableController<TArgs extends any[] = any[]> {
+    init: IParamTypedConstructor<TArgs, void>
+}
+// -------------------------------------------------------------------------------------------------
+export type ExtractInitArgs<T> = T extends IInitializableController<infer TArgs> ? TArgs : never
+// -------------------------------------------------------------------------------------------------
+/**
+ * Use this token to inject value as a service
+ */
+export type ValueToken<T> = () => T
+// -------------------------------------------------------------------------------------------------
+/**
+ * there are two types of tokens in the application: tokens for classes and tokens for values (class instances)
+ */
+export type InjectionToken<T> = ITypedConstructor<T> | ValueToken<T>
+// -------------------------------------------------------------------------------------------------
 /**
  * GenericValueCallback
  * @desc Type representing generic value callback function type in TypeScript
