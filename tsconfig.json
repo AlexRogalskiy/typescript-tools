@@ -63,6 +63,8 @@
         "./src/*",
         "./tools/*",
         "./tools/promise/*",
+        "./tools/executor/*",
+        "./tools/extension/*",
         "./typings/*",
         "./jest.config.js"
     ]

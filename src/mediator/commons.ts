@@ -10,9 +10,8 @@ export namespace Commons {
     import defineStaticProperty = CommonUtils.defineStaticProperty
 
     const WINDOW_USER_SCRIPT_VARIABLE = '__USER__'
-    const { hasOwnProperty: hasOwnProp } = Object.prototype
-
-    export const props = (() => {
+    // @ts-ignore
+    const { hasOwnProperty: hasOwnProp } = Object.prototype(() => {
         const props = {
             proto: {
                 equals: 'eqTo',

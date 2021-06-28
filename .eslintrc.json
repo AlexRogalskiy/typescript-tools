@@ -56,6 +56,7 @@
         "no-debugger": "error",
         "array-bracket-spacing": "error",
         "block-spacing": "error",
+        "no-dupe-class-members": "off",
         "keyword-spacing": "error",
         "eslint-comments/no-use": "off",
         "import/no-namespace": "off",

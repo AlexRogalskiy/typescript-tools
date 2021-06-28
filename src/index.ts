@@ -19,6 +19,7 @@ export * from './utils/theme-utils'
 export * from './logging/logging'
 
 export * from './error/errors'
+export * from './error/BaseError'
 
 export * from './datetime/datetimes'
 export * from './datetime/sleep'

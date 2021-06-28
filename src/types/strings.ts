@@ -291,8 +291,7 @@ export namespace Strings {
         }
         return false
     }
-
-    export const props = (() => {
+    ;((): void => {
         const props = {
             proto: {
                 replaceByRegex: 'replaceByRegex',
