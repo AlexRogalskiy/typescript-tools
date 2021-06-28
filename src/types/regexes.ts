@@ -12,6 +12,8 @@ import quote = Strings.quote
 // eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires
 const isRegex = require('is-regex')
 
+export const VERSION_REGEX = /(\d+\.\d+\.\d+)/
+
 export namespace Regexes {
     // # dockerfile_lint  ignore | # dockerfile_lint  -  ignore  | # dockerfile_lint = ignore
     export const TOKEN_INLINE_IGNORE = RegExp(/^#.*dockerfile_lint[ ]*\W[ ]*ignore.*$/)

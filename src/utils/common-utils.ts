@@ -153,7 +153,7 @@ export namespace CommonUtils {
             .slice(0, -2)}`
     }
 
-    export const bindFunctions = <T>(object: T, keys: Array<keyof T>): void => {
+    export const bindFunctions = <T>(object: T, keys: (keyof T)[]): void => {
         for (const key of keys) {
             const value = object[key]
 
