@@ -26,6 +26,11 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> }
 
 // -------------------------------------------------------------------------------------------------
+export type ILocaleProvider = (locale: string) => Promise<string[][]> | string[][]
+export interface Locale {
+    [key: string]: string
+}
+// -------------------------------------------------------------------------------------------------
 export type Platform = 'macOS' | 'Linux' | 'Windows'
 // -------------------------------------------------------------------------------------------------
 export interface IResultSetElementKey {
