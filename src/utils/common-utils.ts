@@ -144,13 +144,33 @@ export namespace CommonUtils {
     }
 
     export const withTimestamp = (version: any): string => {
-        return `${version}.${new Date().toISOString().substr(0, 19).replace('T', '').split(/[-:]+/).join('').slice(0, -2)}`
+        return `${version}.${new Date()
+            .toISOString()
+            .substr(0, 19)
+            .replace('T', '')
+            .split(/[-:]+/)
+            .join('')
+            .slice(0, -2)}`
+    }
+
+    export const bindFunctions = <T>(object: T, keys: Array<keyof T>): void => {
+        for (const key of keys) {
+            const value = object[key]
+
+            if (typeof value === 'function') {
+                object[key] = value.bind(object)
+            }
+        }
     }
 
     export const getFilteredRoles = <T>(roles: T[], filter: string): T[] => {
         return roles
-        .filter(role => role['roleName']?.toLowerCase().includes(filter.toLowerCase()) && role['roleId'] !== 'admin')
-        .sort((a, b) => (a['roleName'] ?? '').localeCompare(b['roleName'] ?? ''));
+            .filter(
+                role =>
+                    role['roleName']?.toLowerCase().includes(filter.toLowerCase()) &&
+                    role['roleId'] !== 'admin',
+            )
+            .sort((a, b) => (a['roleName'] ?? '').localeCompare(b['roleName'] ?? ''))
     }
 
     export const ServiceInjectorToken = createValueToken<IServiceInjector>('IServiceInjector')

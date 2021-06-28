@@ -63,19 +63,19 @@ export interface IServiceInjector {
 }
 // -------------------------------------------------------------------------------------------------
 export interface IConnectionAccessTabState {
-    loading: boolean;
-    loaded: boolean;
-    grantedSubjects: string[];
-    initialGrantedSubjects: string[];
-    editing: boolean;
+    loading: boolean
+    loaded: boolean
+    grantedSubjects: string[]
+    initialGrantedSubjects: string[]
+    editing: boolean
 }
 // -------------------------------------------------------------------------------------------------
 export interface IConnectionAccessState {
-    state: IConnectionAccessTabState;
-    revoke: (subjectIds: string[]) => void;
-    grant: (subjectIds: string[]) => void;
-    edit: () => void;
-    load: () => Promise<void>;
+    state: IConnectionAccessTabState
+    revoke: (subjectIds: string[]) => void
+    grant: (subjectIds: string[]) => void
+    edit: () => void
+    load: () => Promise<void>
 }
 // -------------------------------------------------------------------------------------------------
 export interface IServiceCollection {

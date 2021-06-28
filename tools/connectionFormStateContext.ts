@@ -1,13 +1,13 @@
 export interface IConnectionFormStateInfo {
-    edited: boolean;
-    disabled: boolean;
-    readonly: boolean;
-    statusMessage: string | null;
+    edited: boolean
+    disabled: boolean
+    readonly: boolean
+    statusMessage: string | null
 }
 
 export interface IConnectionFormStateContext extends IConnectionFormStateInfo {
-    markEdited: () => void;
-    setStatusMessage: (message: string | null) => void;
+    markEdited: () => void
+    setStatusMessage: (message: string | null) => void
 }
 
 export function connectionFormStateContext(): IConnectionFormStateContext {
@@ -17,10 +17,10 @@ export function connectionFormStateContext(): IConnectionFormStateContext {
         readonly: false,
         statusMessage: null,
         markEdited() {
-            this.edited = true;
+            this.edited = true
         },
         setStatusMessage(message: string | null) {
-            this.statusMessage = message;
+            this.statusMessage = message
         },
-    };
+    }
 }
