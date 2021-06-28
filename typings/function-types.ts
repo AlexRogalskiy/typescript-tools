@@ -62,6 +62,22 @@ export interface IServiceInjector {
     resolveServiceByClass: <T>(ctor: ITypedConstructor<T>) => T
 }
 // -------------------------------------------------------------------------------------------------
+export interface IConnectionAccessTabState {
+    loading: boolean;
+    loaded: boolean;
+    grantedSubjects: string[];
+    initialGrantedSubjects: string[];
+    editing: boolean;
+}
+// -------------------------------------------------------------------------------------------------
+export interface IConnectionAccessState {
+    state: IConnectionAccessTabState;
+    revoke: (subjectIds: string[]) => void;
+    grant: (subjectIds: string[]) => void;
+    edit: () => void;
+    load: () => Promise<void>;
+}
+// -------------------------------------------------------------------------------------------------
 export interface IServiceCollection {
     addServiceByToken: <T extends Record<string, any>>(token: any, value: T) => void
     addServiceByClass: (ctor: ITypedConstructor<any>) => void

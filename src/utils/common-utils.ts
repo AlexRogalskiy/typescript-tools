@@ -129,18 +129,28 @@ export namespace CommonUtils {
      * @returns string
      */
     export const getUniqueConnectionName = (baseName: string, connectionNames: string[]): string => {
-        let index = 1;
-        let name = baseName;
+        let index = 1
+        let name = baseName
 
         while (true) {
             if (!connectionNames.includes(name)) {
-                break;
+                break
             }
-            name = `${baseName} (${index})`;
-            index++;
+            name = `${baseName} (${index})`
+            index++
         }
 
-        return name;
+        return name
+    }
+
+    export const withTimestamp = (version: any): string => {
+        return `${version}.${new Date().toISOString().substr(0, 19).replace('T', '').split(/[-:]+/).join('').slice(0, -2)}`
+    }
+
+    export const getFilteredRoles = <T>(roles: T[], filter: string): T[] => {
+        return roles
+        .filter(role => role['roleName']?.toLowerCase().includes(filter.toLowerCase()) && role['roleId'] !== 'admin')
+        .sort((a, b) => (a['roleName'] ?? '').localeCompare(b['roleName'] ?? ''));
     }
 
     export const ServiceInjectorToken = createValueToken<IServiceInjector>('IServiceInjector')
