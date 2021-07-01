@@ -753,7 +753,6 @@ export namespace Files {
         process.stdout && process.stdout.on('data', (data: Buffer) => (stdout += data.toString()))
         process.stderr && process.stderr.on('data', (data: Buffer) => (stderr += data.toString()))
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         return new Promise((resolve, _reject) => {
             process.on('exit', (status: number) => {
                 resolve({

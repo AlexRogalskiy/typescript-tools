@@ -6,8 +6,9 @@ import { Optional } from '../../typings/standard-types'
 import { TokenType } from '../../typings/enum-types'
 
 import { Strings } from './strings'
-
+import { CommonUtils } from '../utils/common-utils'
 import quote = Strings.quote
+import pipe = CommonUtils.pipe
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires
 const isRegex = require('is-regex')
@@ -18,6 +19,25 @@ export namespace Regexes {
     // # dockerfile_lint  ignore | # dockerfile_lint  -  ignore  | # dockerfile_lint = ignore
     export const TOKEN_INLINE_IGNORE = RegExp(/^#.*dockerfile_lint[ ]*\W[ ]*ignore.*$/)
 }
+
+export const ESCAPE_REGEX = /[.+\-^${}()|[\]\\]/g // all but * and ?
+export const WILDCARDS_REGEX = /~\*|(?<!~)\*|~\?|(?<!~)\?|~~/g
+
+export const MAP = {
+    '*': '.*',
+    '~*': '\\*',
+    '?': '.{1}',
+    '~?': '\\?',
+    '~~': '~',
+}
+export const mapCharacters = (match: string): string => MAP[match] || match
+export const escapeRegExChacraters = (str: string): string => str.replace(ESCAPE_REGEX, '\\$&')
+export const mapExcelWildCards = (str: string): string => str.replace(WILDCARDS_REGEX, mapCharacters)
+export const boundRegexStr = (str: string): string => `^${str}$`
+export const toRegExStr = pipe(escapeRegExChacraters, mapExcelWildCards)
+export const toBoundedRegExStr = pipe(toRegExStr, boundRegexStr)
+export const toRegExp = (str: string, flags: string): RegExp => new RegExp(toRegExStr(str), flags)
+export const toBoundedRegExp = (str: string): RegExp => new RegExp(toBoundedRegExStr(str))
 
 export const MRE = /^m[trblxy]?$/
 export const TOKEN_WHITESPACE = RegExp(/[\t\v\f\r ]+/)

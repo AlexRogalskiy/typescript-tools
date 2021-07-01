@@ -120,6 +120,8 @@ export namespace Arrays {
         return arr
     }
 
+    export const remove = (index: number, arr: any[]): any => arr.splice(index, 1)[0]
+
     export const uniqueArray = <T>(arr: T[]): T[] => Array.from(new Set(arr))
 
     export const asyncForEach = async (array, callback): Promise<void> => {

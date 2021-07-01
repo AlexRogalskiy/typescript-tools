@@ -738,7 +738,6 @@ export namespace Sorting {
         }
 
         // @ts-ignore
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const siftdown = <T>(data: T[], value: number, cmp: Comparator<T>): void => {
             for (let c, order, i = value; (c = 2 * i) <= data.length; i = c) {
                 if (c + 1 <= data.length && cmp(data[c + 1], data[c]) > 0) {

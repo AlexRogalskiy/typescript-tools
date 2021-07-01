@@ -153,6 +153,33 @@ export namespace CommonUtils {
             .slice(0, -2)}`
     }
 
+    export const isEven = (nr: number): boolean => nr % 2 === 0
+
+    export const asString = (val: any, defval: any): string => (val == null ? defval : `${val}`)
+
+    export const pipe = (...fns): any => {
+        return (val: any): any => {
+            // eslint-disable-next-line github/no-then
+            fns.reduce((p, fn) => p.then(fn), Promise.resolve(val))
+        }
+    }
+
+    export const toDate = (ms: number): Date => new Date(ms)
+
+    export const toCronTab = (date: Date): string => `${date.getMinutes()} ${date.getHours()} * * *`
+
+    export const msToCronTab = pipe(toDate, toCronTab)
+
+    export const _shift = (nr: number, precision: number, reverse: boolean): number => {
+        const numArray = asString(nr, null).split('e')
+        precision = reverse ? -precision : precision
+        // return +(numArray[0] + 'e' + (numArray[1] ? +numArray[1] + precision : precision));
+        return +`${numArray[0]}e${numArray[1] ? +numArray[1] + precision : precision}`
+    }
+
+    export const roundNumber = (nr: number, precision: number): number =>
+        _shift(Math.round(_shift(nr, precision, false)), precision, true)
+
     export const bindFunctions = <T>(object: T, keys: (keyof T)[]): void => {
         for (const key of keys) {
             const value = object[key]
