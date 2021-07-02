@@ -1,5 +1,6 @@
 import * as _ from 'lodash'
 import { isBoolean, isInteger, isNull, isNumber, isString, mergeWith, union } from 'lodash'
+import * as crypto from 'crypto'
 import { spawn, SpawnOptionsWithoutStdio } from 'child_process'
 import fs from 'fs-extra'
 import path from 'path'
@@ -175,6 +176,56 @@ export namespace CommonUtils {
         precision = reverse ? -precision : precision
         // return +(numArray[0] + 'e' + (numArray[1] ? +numArray[1] + precision : precision));
         return +`${numArray[0]}e${numArray[1] ? +numArray[1] + precision : precision}`
+    }
+
+    export const createObj = (keys: PropertyKey[], values: any): any => {
+        const obj = {}
+
+        for (const key of keys) {
+            const index = keys.indexOf(key)
+            if (key != null) {
+                obj[key] = values[index]
+            }
+        }
+
+        return obj
+    }
+
+    export const operators = {
+        '+': nr => {
+            return (value = 0) => value + nr
+        },
+        '-': nr => {
+            return (value = 0) => value - nr
+        },
+        '=': (val: number) => {
+            return (oldval: number) => (oldval == null ? val : oldval)
+        },
+    }
+
+    export const DEF_HASHES = ['sha256', 'sha512', 'sha384', 'md5']
+
+    export const HASH_ALGOS = crypto.getHashes().map(algo => algo.toLowerCase())
+
+    export const DEFAULT_HASH = DEF_HASHES.find(hash => HASH_ALGOS.includes(hash)) || HASH_ALGOS[0]
+
+    export const promisify = (fn: any): any => {
+        return async (...args: any): Promise<any> => {
+            return new Promise((resolve, reject) => {
+                fn.call(fn, ...args, (err, res) => {
+                    if (err) reject(err)
+                    else resolve(res)
+                })
+            })
+        }
+    }
+
+    export const createObjects = (keys: PropertyKey[], values: any[]): any[] =>
+        values.map(vals => createObj(keys, vals))
+
+    export const getParent = (node: any, level: number): any => {
+        const parent = node.parent
+        return parent.level >= level ? getParent(node.parent, level) : parent
     }
 
     export const roundNumber = (nr: number, precision: number): number =>

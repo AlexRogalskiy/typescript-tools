@@ -962,6 +962,19 @@ export namespace Checkers {
         return obj && obj instanceof type
     }
 
+    export const valueOrDefault = (val: any, defval: any): any =>
+        val == null && defval != null ? defval : val
+
+    export const isNr = (val: number): boolean => val != null && !isNaN(val) && isFinite(val)
+
+    export const isPlainObject3 = (value: any): boolean => {
+        const proto = Object.getPrototypeOf(value)
+
+        return proto == null || Object.getPrototypeOf(proto) == null
+    }
+
+    export const areEqualNr = (n1: number, n2: number): boolean => Math.abs(n2 - n1) < 0.00001
+
     export const isBlankString = (value: string): boolean => {
         return !value || /^\s*$/.test(value)
     }

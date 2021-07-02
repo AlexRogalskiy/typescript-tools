@@ -7,6 +7,7 @@ export * from './configuration/RootContainerService'
 export * from './configuration/Entity'
 
 export * from './constant/constants'
+export * from './constant/codes'
 
 export * from './utils/benchmark-utils'
 export * from './utils/reducer-utils'

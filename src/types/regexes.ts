@@ -58,6 +58,41 @@ export const getProps = test => props => {
     return next
 }
 
+export const createRegEx = (searchstr: string, flags?: string): RegExp => {
+    searchstr = searchstr.replace(/([()[\]])/g, '\\$1')
+    searchstr = searchstr.replace(/\*/g, '.*')
+    searchstr = searchstr.replace(/~.(?=\*)/g, '\\')
+    searchstr = searchstr.replace(/~(?=[*?])/g, '\\')
+    searchstr = searchstr.replace(/(?<!\\)\?/g, '.')
+    searchstr = searchstr.replace(/~~/g, '~')
+
+    return new RegExp(`^${searchstr}$`, flags)
+}
+
+export const match2 = (pivot: string): any => {
+    const regex = createRegEx(pivot, 'i')
+    return val => regex.test(val)
+}
+
+export const isBin = /^([-+])?([01]+)$/
+
+export const isDec = /^([-+])?([0-9]+)$/
+
+export const isHex = /^([-+])?([0-9a-f]+)$/i
+
+export const isOct = /^([-+])?([0-7]+)$/
+
+export const isNr = { test: nr => !isNaN(nr) && isFinite(nr) }
+
+export const noMatch = (pivot: string): any => {
+    const _match = match2(pivot)
+    return val => !_match(val)
+}
+
+export const timeregex = new RegExp(/(\d\d?):(\d\d?):?(\d?\d?)\s*(am|pm)?/, 'i')
+
+export const isoregex = /^[+-]?(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\.(\d{3})Z$/
+
 export const commonHtmlStopWords = 'alt br div h1 h2 h3 h4 h5 h6 href img li ol pre src srcset ul'.split(' ')
 export const linkRes = [
     /<(?:a|area|link)\s[^>]*href\s*=\s*"?([^">\s]+)/giu,
@@ -101,7 +136,7 @@ export const nameMatchRegex =
 
 // Regex by Diego Perini from: http://mathiasbynens.be/demo/url-regex
 export const URI_REGEX = new RegExp(
-    '^(?:(?:https?|ftp)://)(?:\\S+(?::\\S*)?@)?(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z¡-￿0-9]-*)*[a-z¡-￿0-9]+)(?:\\.(?:[a-z¡-￿0-9]-*)*[a-z¡-￿0-9]+)*(?:\\.(?:[a-z¡-￿]{2,}))\\.?)(?::\\d{2,5})?(?:[/?#]\\S*)?$',
+    '^(?:https?|ftp)://(?:\\S+(?::\\S*)?@)?(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z¡-￿0-9]-*)*[a-z¡-￿0-9]+)(?:\\.(?:[a-z¡-￿0-9]-*)*[a-z¡-￿0-9]+)*(?:\\.(?:[a-z¡-￿]{2,}))\\.?)(?::\\d{2,5})?(?:[/?#]\\S*)?$',
     'i',
 )
 

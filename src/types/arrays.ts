@@ -120,6 +120,9 @@ export namespace Arrays {
         return arr
     }
 
+    export const splice = (str: string, index: number, deleteCount: number, element: string): string =>
+        str.slice(0, index) + element + str.slice(index + deleteCount)
+
     export const remove = (index: number, arr: any[]): any => arr.splice(index, 1)[0]
 
     export const uniqueArray = <T>(arr: T[]): T[] => Array.from(new Set(arr))

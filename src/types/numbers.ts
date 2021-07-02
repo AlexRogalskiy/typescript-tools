@@ -1,6 +1,6 @@
 import { Optional } from '../../typings/standard-types'
 
-import { Checkers, Errors, Comparators } from '../index'
+import { Checkers, Comparators, Errors } from '../index'
 
 export namespace Numbers {
     import isNumber = Checkers.isNumber
@@ -100,6 +100,42 @@ export namespace Numbers {
 
             return null
         }
+
+        /** @param {number[]} values */
+        export const max = (values: number[]): number =>
+            values.length ? values.reduce((m, v) => (m > v ? m : v), Number.MIN_SAFE_INTEGER) : 0
+
+        /** @param {number[]} values */
+        export const min = (values: number[]): number =>
+            values.length ? values.reduce((m, v) => (m < v ? m : v), Number.MAX_SAFE_INTEGER) : 0
+
+        /** @param {number[]} values */
+        export const product = (values: number[]): number => values.reduce((p, v) => p * v, 1)
+
+        /** @param {number[]} values */
+        export const sum = (values: number[]): number => values.reduce((s, v) => s + v, 0)
+
+        /** @param {number[]} values */
+        export const standardDerivation = (values: number[]): number => {
+            const len = values.length
+            const avg = sum(values) / len
+            const variance = values.reduce((total, curr) => total + (curr - avg) ** 2, 0)
+            return Math.sqrt(variance / (len - 1))
+        }
+
+        export const sign = (nr: number): number => (nr > 0 ? 1 : nr < 0 ? -1 : 0)
+
+        export const trunc = (nr: number, digits: number): number =>
+            Math.trunc(nr * 10 ** digits) / 10 ** digits
+
+        export const ensureIsInRange = (val: number, min: number, max: number): number =>
+            Math.min(max, Math.max(val, min))
+
+        export const reachedEnd = (value: number, end: number, step: number): boolean =>
+            step < 0 ? value < end : value > end
+
+        /** @param {number[]} values */
+        export const avg = (values: number[]): number => (values.length ? sum(values) / values.length : 0)
 
         export const minus = (a: number, b: number): number => {
             if (!isIntNumber(a) || !isIntNumber(b)) {
