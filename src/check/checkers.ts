@@ -1,16 +1,16 @@
 import {
     ALPHA_REGEX,
+    CommonUtils,
     DATE_REGEX,
+    domElementPattern,
     EMAIL_REGEX,
+    Errors,
     MOBILE_NAVIGATOR_CODE_REGEX,
     MOBILE_NAVIGATOR_TYPE_REGEX,
-    PHONE_REGEX,
-    URL_REGEX2,
     Numbers,
-    Errors,
-    domElementPattern,
-    CommonUtils,
+    PHONE_REGEX,
     TOKEN_COMMENT,
+    URL_REGEX2,
 } from '..'
 
 import { Bools } from '../types/bools'
@@ -964,6 +964,10 @@ export namespace Checkers {
 
     export const valueOrDefault = (val: any, defval: any): any =>
         val == null && defval != null ? defval : val
+
+    export const isInRange3 = (value: number, min: number, max: number): boolean => {
+        return !Math.floor((value - min) / (max - min))
+    }
 
     export const isNr = (val: number): boolean => val != null && !isNaN(val) && isFinite(val)
 

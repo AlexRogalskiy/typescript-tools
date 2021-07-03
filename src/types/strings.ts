@@ -6,7 +6,7 @@ import cryptoRandomString from 'crypto-random-string'
 import { XmlDocument } from 'xmldoc'
 import { createHash, randomBytes } from 'crypto'
 import { promises } from 'fs'
-import { sep, posix } from 'path'
+import { posix, sep } from 'path'
 import yaml from 'js-yaml'
 
 import { RegexStringPair } from '../../typings/general-types'
@@ -15,16 +15,16 @@ import { Optional, OptionalNumber, OptionalString } from '../../typings/standard
 import { BiProcessor, Comparator, Processor, StringProcessor, Supplier } from '../../typings/function-types'
 
 import {
-    Errors,
+    Arrays,
     Checkers,
+    CommonUtils,
+    Errors,
+    Logging,
     Maths,
     Numbers,
-    CommonUtils,
-    Logging,
-    Arrays,
-    REGEX_ENTITY_PAIRS,
-    REGEX_CONTROL_PAIRS,
     REGEX_ASCII_PAIRS,
+    REGEX_CONTROL_PAIRS,
+    REGEX_ENTITY_PAIRS,
     TOKEN_WHITESPACE,
 } from '..'
 
@@ -73,6 +73,21 @@ export namespace Strings {
         }
 
         return value.substr(0, sideLength) + newMiddle + value.substr(value.length - sideLength)
+    }
+
+    export const convertStringToArray = (arrayLike: any): string[] => {
+        if (!arrayLike) {
+            return []
+        }
+
+        if (typeof arrayLike === 'object') {
+            return Object.keys(arrayLike).map(itemKey => arrayLike[itemKey])
+        }
+
+        return arrayLike
+            .replace(/\s/g, '')
+            .split(',')
+            .map(itemName => itemName.replace(/_/g, ' ', itemName))
     }
 
     export const datePrefix = `[${new Date().toLocaleTimeString()}] `

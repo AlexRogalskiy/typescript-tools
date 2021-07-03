@@ -210,6 +210,33 @@ export namespace CommonUtils {
             .replace(/\*\/[^/]+$/, '')
     }
 
+    export const dashToCamelCase = (value: string): string => {
+        return value.toLowerCase().replace(/-([a-z])/g, match => match[1].toUpperCase())
+    }
+
+    export const generate = (placeholders: any, string: any): any => {
+        if (typeof string === 'function') {
+            return string(placeholders)
+        }
+
+        return Object.entries(placeholders).reduce((carry, [key, placeholder]) => {
+            const placeholderRegExp = new RegExp(`{{${key}}}`, 'g')
+
+            return carry.replace(placeholderRegExp, placeholder)
+        }, string)
+    }
+
+    export const sortObject = (object: any): any => {
+        // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
+        return Object.keys(object)
+            .sort()
+            .reduce((result, key) => {
+                result[key] = object[key]
+
+                return result
+            }, {})
+    }
+
     export const operators = {
         '+': nr => {
             return (value = 0) => value + nr

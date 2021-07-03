@@ -1,12 +1,15 @@
 import hasha from 'hasha'
 import mkdirp from 'mkdirp'
 import dirSync from 'tmp'
+import YAML from 'json2yaml'
+import beautify from 'js-beautify'
 import {
     accessSync,
     constants,
     existsSync,
     MakeDirectoryOptions,
     mkdirSync,
+    PathLike,
     promises,
     readdirSync,
     readFileSync,
@@ -14,20 +17,19 @@ import {
     statSync,
     unlinkSync,
     writeFileSync,
-    PathLike,
 } from 'fs'
 import { readFile } from 'fs-extra'
 import { isDirectory, isDirectorySync } from 'path-type'
-import { dirname, extname, join, resolve, basename, relative, isAbsolute, parse as parsePath } from 'path'
+import { basename, dirname, extname, isAbsolute, join, parse as parsePath, relative, resolve } from 'path'
 import { randomBytes } from 'crypto'
-import { execSync, spawn, spawnSync, SpawnOptions } from 'child_process'
+import { execSync, spawn, SpawnOptions, spawnSync } from 'child_process'
 
 import { Optional } from '../../typings/standard-types'
 import { Options, Result, ResultMap } from '../../typings/domain-types'
 
 import { Cache } from '../../tools/cache'
 
-import { Strings, Errors, parseJavaVersion, Logging } from '../index'
+import { Errors, Logging, parseJavaVersion, Strings } from '../index'
 
 export namespace Files {
     import uniqueId = Strings.uniqueId
@@ -762,6 +764,28 @@ export namespace Files {
                 })
             })
         })
+    }
+
+    export const writeConfigToFile = (path: string, data: string): any => {
+        const extension = getFileExtension(getFileNameFromPath(path))
+
+        const dataType = {
+            yml: content => YAML.stringify(content),
+            yaml: content => YAML.stringify(content),
+            json: content => beautify(JSON.stringify(content)),
+            none: content => beautify(JSON.stringify(content)),
+            js: content => beautify(`module.exports = ${JSON.stringify(content)}`),
+        }
+
+        return dataType[extension || 'none'](data)
+    }
+
+    export const getFileNameFromPath = (path = ''): string => {
+        return path.replace(/^.*[\\/]/, '')
+    }
+
+    export const getFileExtension = (filename: string): string => {
+        return filename.slice((Math.max(0, filename.lastIndexOf('.')) || Infinity) + 1)
     }
 
     export const isGradleFile = (path: string): boolean => {
