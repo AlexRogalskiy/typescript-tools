@@ -44,6 +44,23 @@ export namespace CommonUtils {
         return `${p1}/${p2}`
     }
 
+    // await asyncForEach(array, async (x: number) => {
+    //     await new Promise((resolve) => {
+    //         setTimeout(() => {
+    //             results.push(x);
+    //             resolve(x);
+    //         }, 1);
+    //     });
+    // });
+    export const asyncForEach = async <T>(
+        arr: T[],
+        callback: (value: T, index: number, array: T[]) => Promise<void>,
+    ): Promise<void> => {
+        for (let i = 0; i < arr.length; i++) {
+            await callback(arr[i], i, arr)
+        }
+    }
+
     export const splitArgs = (args: any[]): any => {
         const obj = {}
 

@@ -780,6 +780,9 @@ export namespace Files {
         return dataType[extension || 'none'](data)
     }
 
+    export const extract = (source: string): string =>
+        existsSync(source) ? readFileSync(source, 'utf-8') : source
+
     export const getFileNameFromPath = (path = ''): string => {
         return path.replace(/^.*[\\/]/, '')
     }
