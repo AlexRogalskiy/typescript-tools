@@ -191,6 +191,16 @@ export namespace CommonUtils {
         return obj
     }
 
+    export function callAsyncFunction<T>(
+        args: any,
+        source: string
+    ): Promise<T> {
+        const fn = new AsyncFunction(...Object.keys(args), source)
+        return fn(...Object.values(args))
+    }
+
+    export const AsyncFunction = Object.getPrototypeOf(async () => null).constructor
+
     export const operators = {
         '+': nr => {
             return (value = 0) => value + nr
