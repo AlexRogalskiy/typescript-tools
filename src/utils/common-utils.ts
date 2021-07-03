@@ -191,10 +191,7 @@ export namespace CommonUtils {
         return obj
     }
 
-    export function callAsyncFunction<T>(
-        args: any,
-        source: string
-    ): Promise<T> {
+    export async function callAsyncFunction<T>(args: any, source: string): Promise<T> {
         const fn = new AsyncFunction(...Object.keys(args), source)
         return fn(...Object.values(args))
     }
