@@ -198,6 +198,18 @@ export namespace CommonUtils {
 
     export const AsyncFunction = Object.getPrototypeOf(async () => null).constructor
 
+    // var tennysonQuote = hereDoc(() => {/*!
+    //   Theirs not to make reply,
+    //   Theirs not to reason why,
+    //   Theirs but to do and die
+    // */})
+    export const hereDoc = (f: any): string => {
+        return f
+            .toString()
+            .replace(/^[^/]+\/\*!?/, '')
+            .replace(/\*\/[^/]+$/, '')
+    }
+
     export const operators = {
         '+': nr => {
             return (value = 0) => value + nr
