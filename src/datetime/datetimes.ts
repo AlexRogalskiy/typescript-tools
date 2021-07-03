@@ -19,8 +19,8 @@ export namespace DateTimes {
     }
 
     export const formatDate3 = (date: Date): string => {
-        const a = ('0' + date.getDate()).slice(-2)
-        const b = ('0' + (date.getMonth() + 1)).slice(-2, date.getFullYear())
+        const a = `0${date.getDate()}`.slice(-2)
+        const b = `0${date.getMonth() + 1}`.slice(-2, date.getFullYear())
 
         return `${a}/${b}`
     }
@@ -73,7 +73,7 @@ export namespace DateTimes {
     export function fromNow(strDate: string | Date): string {
         try {
             const date: Date = new Date(new Date(strDate))
-            const formattedDate = vagueTime.get({to: date}).replace('a couple of', '2')
+            const formattedDate = vagueTime.get({ to: date }).replace('a couple of', '2')
             if (/\d+ years ago|a year ago/.test(formattedDate)) {
                 return `in ${date.getFullYear()}`
             }
