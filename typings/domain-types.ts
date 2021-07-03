@@ -20,6 +20,17 @@ export interface Scalars {
 }
 
 // -------------------------------------------------------------------------------------------------
+export type HTTP_METHODS_LOWERCASE = 'head' | 'get' | 'post' | 'put' | 'patch' | 'delete' | 'options'
+export type GenericValue = string | number | boolean | undefined | null
+export type AnyObject = Record<string, GenericValue | GenericValue[] | unknown>
+export interface IBinaryData {
+    [key: string]: string | undefined
+    data: string
+    mimeType: string
+    fileName?: string
+    fileExtension?: string
+}
+// -------------------------------------------------------------------------------------------------
 export type Maybe<T> = T
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> }

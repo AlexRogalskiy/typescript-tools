@@ -128,6 +128,29 @@ export namespace Numbers {
         export const trunc = (nr: number, digits: number): number =>
             Math.trunc(nr * 10 ** digits) / 10 ** digits
 
+        export const trimLeft = (s: string, c: string): string => {
+            let i = 0
+            while (i < s.length && s[i] === c) {
+                i++
+            }
+
+            return s.substring(i)
+        }
+
+        export const decrementHugeNumberBy1 = (n: string | number): string => {
+            // make sure s is a string, as we can't do math on numbers over a certain size
+            n = n.toString()
+            const allButLast = n.substr(0, n.length - 1)
+            const lastNumber = n.substr(n.length - 1)
+
+            if (lastNumber === '0') {
+                return `${decrementHugeNumberBy1(allButLast)}9`
+            }
+
+            const finalResult = allButLast + (parseInt(lastNumber, 10) - 1).toString()
+            return trimLeft(finalResult, '0')
+        }
+
         export const ensureIsInRange = (val: number, min: number, max: number): number =>
             Math.min(max, Math.max(val, min))
 

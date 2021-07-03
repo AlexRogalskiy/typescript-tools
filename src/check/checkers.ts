@@ -977,6 +977,11 @@ export namespace Checkers {
         return proto == null || Object.getPrototypeOf(proto) == null
     }
 
+    export const isPromise = (promise: unknown): boolean => {
+        // eslint-disable-next-line github/no-then
+        return !!promise && typeof (promise as Promise<string>).then === 'function'
+    }
+
     export const areEqualNr = (n1: number, n2: number): boolean => Math.abs(n2 - n1) < 0.00001
 
     export const isBlankString = (value: string): boolean => {

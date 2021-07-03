@@ -4,6 +4,7 @@ import * as crypto from 'crypto'
 import { spawn, SpawnOptionsWithoutStdio } from 'child_process'
 import fs from 'fs-extra'
 import path from 'path'
+import objectHash from 'node-object-hash'
 
 import { CellPosition, Grid, IMousePosition, Point } from '../../typings/domain-types'
 import { IServiceInjector, Iterator, IteratorStep, Processor } from '../../typings/function-types'
@@ -21,6 +22,18 @@ export namespace CommonUtils {
 
     const isWindowsOS = process.platform.startsWith('win')
     const npm = isWindowsOS ? 'npm.cmd' : 'npm'
+
+    const hasher = objectHash({
+        coerce: false,
+        alg: 'md5',
+        enc: 'hex',
+        sort: {
+            map: true,
+            object: true,
+            array: false,
+            set: false,
+        },
+    })
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/no-require-imports
     export const glob = require('util').promisify(require('glob'))
@@ -224,6 +237,24 @@ export namespace CommonUtils {
 
             return carry.replace(placeholderRegExp, placeholder)
         }, string)
+    }
+
+    export const hashPrimitive = (input: string | number): string => {
+        let key = ''
+        if (typeof input !== 'string') {
+            key = input.toString()
+        } else {
+            key = input
+        }
+        return crypto.createHash('md5').update(key).digest('hex')
+    }
+
+    export const createContentDigest = (input: string | number | unknown): string => {
+        if (typeof input === 'object') {
+            return hasher.hash(input)
+        }
+
+        return hashPrimitive(input as string)
     }
 
     export const sortObject = (object: any): any => {

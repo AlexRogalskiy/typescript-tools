@@ -146,6 +146,7 @@
         "minimatch": "^3.0.4",
         "mkdirp": "^1.0.4",
         "mobx": "^6.3.2",
+        "node-object-hash": "^2.3.7",
         "object-hash": "^2.2.0",
         "opener": "^1.5.2",
         "ow": "^0.24.1",
