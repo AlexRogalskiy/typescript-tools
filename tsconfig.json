@@ -66,6 +66,7 @@
         "./tools/executor/*",
         "./tools/extension/*",
         "./typings/*",
-        "./jest.config.js"
+        "./jest.config.js",
+        "./pr-lint.config.js"
     ]
 }

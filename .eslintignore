@@ -6,3 +6,5 @@ tests/
 docs/
 scripts/
 docker/
+
+pr-lint.config.js
