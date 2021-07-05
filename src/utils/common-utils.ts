@@ -1,19 +1,20 @@
 import * as _ from 'lodash'
-import { isBoolean, isInteger, isNull, isNumber, isString, mergeWith, union } from 'lodash'
+import {isBoolean, isInteger, isNull, isNumber, isString, mergeWith, union} from 'lodash'
 import * as crypto from 'crypto'
-import { spawn, SpawnOptionsWithoutStdio } from 'child_process'
+import {spawn, SpawnOptionsWithoutStdio} from 'child_process'
 import fs from 'fs-extra'
 import path from 'path'
 import objectHash from 'node-object-hash'
 
-import { CellPosition, Grid, IMousePosition, Point } from '../../typings/domain-types'
-import { IServiceInjector, Iterator, IteratorStep, Processor } from '../../typings/function-types'
+import {CellPosition, Grid, IMousePosition, Point} from '../../typings/domain-types'
+import {IServiceInjector, Iterator, IteratorStep, Processor} from '../../typings/function-types'
 
-import { Checkers, Errors, Objects } from '..'
-import { Optional } from '../../typings/standard-types'
-import { createValueToken } from '../../tools/InjectionToken'
+import {Checkers, Errors, Numbers, Objects} from '..'
+import {Optional} from '../../typings/standard-types'
+import {createValueToken} from '../../tools/InjectionToken'
 
 export namespace CommonUtils {
+    import random = Numbers.random;
     export type Fn<T> = (key: string) => T
     export type Color = (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9) & { _tag: '__Color__' }
     export type Empty = 0 & { _tag: '__Empty__' }
@@ -56,6 +57,46 @@ export namespace CommonUtils {
         const value = index > -1 ? process.argv[index + 1] : undefined
 
         return value !== undefined ? String(value) : defaultValue
+    }
+
+    export const nArray = (n: number): any[] => {
+        return [...Array(n).keys()]
+    }
+
+    export const generateGrid = (size: number, cellCallback: any): any[] => {
+        return nArray(size).map((_, y) => (
+            nArray(size).map((__, x) => cellCallback(x, y))
+        ))
+    }
+
+    export const generateField = ({density, offset = 0, width, height}): any => {
+        const pixels = nArray(width * height)
+        return pixels
+        .map((px, i) => {
+            const star = {
+                x: offset + px % width,
+                y: Math.floor(px / width)
+            }
+
+            // Put some colorful points if debug is enabled
+            const isMiddle = i === (width * height) / 2
+            const isLast = i === width * height - 1
+
+            if (isLast) {
+                return Object.assign(star, {color: 'red'})
+            }
+
+            if (isMiddle) {
+                return Object.assign(star, {color: 'blue'})
+            }
+
+            if (random(1) > 1 - density) {
+                return star
+            }
+
+            return null
+        })
+        .filter(Boolean)
     }
 
     export const titleToId = (title: string): string => {
@@ -194,12 +235,12 @@ export namespace CommonUtils {
 
     export const withTimestamp = (version: any): string => {
         return `${version}.${new Date()
-            .toISOString()
-            .substr(0, 19)
-            .replace('T', '')
-            .split(/[-:]+/)
-            .join('')
-            .slice(0, -2)}`
+        .toISOString()
+        .substr(0, 19)
+        .replace('T', '')
+        .split(/[-:]+/)
+        .join('')
+        .slice(0, -2)}`
     }
 
     export const isEven = (nr: number): boolean => nr % 2 === 0
@@ -253,9 +294,9 @@ export namespace CommonUtils {
     // */})
     export const hereDoc = (f: any): string => {
         return f
-            .toString()
-            .replace(/^[^/]+\/\*!?/, '')
-            .replace(/\*\/[^/]+$/, '')
+        .toString()
+        .replace(/^[^/]+\/\*!?/, '')
+        .replace(/\*\/[^/]+$/, '')
     }
 
     export const dashToCamelCase = (value: string): string => {
@@ -295,12 +336,12 @@ export namespace CommonUtils {
     export const sortObject = (object: any): any => {
         // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
         return Object.keys(object)
-            .sort()
-            .reduce((result, key) => {
-                result[key] = object[key]
+        .sort()
+        .reduce((result, key) => {
+            result[key] = object[key]
 
-                return result
-            }, {})
+            return result
+        }, {})
     }
 
     export const operators = {
@@ -355,12 +396,12 @@ export namespace CommonUtils {
 
     export const getFilteredRoles = <T>(roles: T[], filter: string): T[] => {
         return roles
-            .filter(
-                role =>
-                    role['roleName']?.toLowerCase().includes(filter.toLowerCase()) &&
-                    role['roleId'] !== 'admin',
-            )
-            .sort((a, b) => (a['roleName'] ?? '').localeCompare(b['roleName'] ?? ''))
+        .filter(
+            role =>
+                role['roleName']?.toLowerCase().includes(filter.toLowerCase()) &&
+                role['roleId'] !== 'admin',
+        )
+        .sort((a, b) => (a['roleName'] ?? '').localeCompare(b['roleName'] ?? ''))
     }
 
     export const ServiceInjectorToken = createValueToken<IServiceInjector>('IServiceInjector')
@@ -440,7 +481,7 @@ export namespace CommonUtils {
     }
 
     export async function getPackageJson(sourceFolder = process.cwd()): Promise<string> {
-        return JSON.parse(await fs.readFile(path.join(sourceFolder, 'package.json'), { encoding: 'utf-8' }))
+        return JSON.parse(await fs.readFile(path.join(sourceFolder, 'package.json'), {encoding: 'utf-8'}))
     }
 
     export async function setPackageJson(value: any, destFolder = process.cwd()): Promise<string> {
@@ -508,8 +549,8 @@ export namespace CommonUtils {
             }
 
             return `{${Objects.keys(value)
-                .map(k => `${k}:${stringify(value[k])}`)
-                .join(',')}}`
+            .map(k => `${k}:${stringify(value[k])}`)
+            .join(',')}}`
         }
 
         return ''
@@ -596,9 +637,9 @@ export namespace CommonUtils {
 
     export const randomness = (repeat = 6): string =>
         Math.floor(Math.random() * 0x7fffffff)
-            .toString(16)
-            .repeat(repeat)
-            .slice(0, RANDOMNESS_PLACEHOLDER_STRING.length)
+        .toString(16)
+        .repeat(repeat)
+        .slice(0, RANDOMNESS_PLACEHOLDER_STRING.length)
 
     /**
      * Cached fs operation wrapper.
@@ -753,7 +794,7 @@ export namespace CommonUtils {
 
                 while (!isInsideCircle(x, y, r + 0.5)) r++
 
-                cells.push({ x, y, f: r * 100 + a })
+                cells.push({x, y, f: r * 100 + a})
             }
 
         return cells.sort((a, b) => a.f - b.f).slice(0, n)
@@ -786,8 +827,8 @@ export namespace CommonUtils {
         const ys = c.map(p => p.y)
 
         return {
-            max: { x: Math.max(0, ...xs), y: Math.max(0, ...ys) },
-            min: { x: Math.min(0, ...xs), y: Math.min(0, ...ys) },
+            max: {x: Math.max(0, ...xs), y: Math.max(0, ...ys)},
+            min: {x: Math.min(0, ...xs), y: Math.min(0, ...ys)},
         }
     }
 
@@ -859,7 +900,7 @@ export namespace CommonUtils {
         const iterator = {
             next: (): IteratorStep<T> => {
                 const value = items.shift()
-                return { value, done: value === undefined }
+                return {value, done: value === undefined}
             },
         }
 
@@ -895,7 +936,7 @@ export namespace CommonUtils {
     export const defineProperty = (
         obj: any,
         prop: PropertyKey,
-        attrs: PropertyDescriptor = { writable: true, enumerable: true, configurable: true },
+        attrs: PropertyDescriptor = {writable: true, enumerable: true, configurable: true},
     ): any => {
         return Object.defineProperty(obj, prop, attrs)
     }
@@ -983,10 +1024,10 @@ export namespace CommonUtils {
 
     export const qs = (obj: any): string =>
         Object.entries<any>(obj)
-            .map(([name, value]) => `${encodeURIComponent(name)}=${encodeURIComponent(value)}`)
-            .join('&')
+        .map(([name, value]) => `${encodeURIComponent(name)}=${encodeURIComponent(value)}`)
+        .join('&')
 
-    export const copyGrid = ({ width, height, data }: Grid): Grid => ({
+    export const copyGrid = ({width, height, data}: Grid): Grid => ({
         width,
         height,
         data: Uint8Array.from(data),
@@ -994,9 +1035,9 @@ export namespace CommonUtils {
 
     export const toAttribute = (o: any): string =>
         Object.entries(o)
-            .filter(([, value]) => value !== null)
-            .map(([name, value]) => `${name}="${value}"`)
-            .join(' ')
+        .filter(([, value]) => value !== null)
+        .map(([name, value]) => `${name}="${value}"`)
+        .join(' ')
 
     export const removeInterpolatedPositions = <T extends Point>(arr: T[]): T[] =>
         arr.filter((u, i, arr) => {
@@ -1015,9 +1056,9 @@ export namespace CommonUtils {
 
     export const gridEquals = (a: Grid, b: Grid): boolean => a.data.every((_, i) => a.data[i] === b.data[i])
 
-    export const getCellsFromGrid = ({ width, height }: Grid): any =>
-        Array.from({ length: width }, (_, x) =>
-            Array.from({ length: height }, (_, y) => ({
+    export const getCellsFromGrid = ({width, height}: Grid): any =>
+        Array.from({length: width}, (_, x) =>
+            Array.from({length: height}, (_, y) => ({
                 x,
                 y,
             })),
