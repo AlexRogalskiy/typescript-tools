@@ -58,6 +58,10 @@ export namespace CommonUtils {
         return value !== undefined ? String(value) : defaultValue
     }
 
+    export const titleToId = (title: string): string => {
+        return title.toLowerCase().replace(/[^a-z]+/g, '-')
+    }
+
     // await asyncForEach(array, async (x: number) => {
     //     await new Promise((resolve) => {
     //         setTimeout(() => {

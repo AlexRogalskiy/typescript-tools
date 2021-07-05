@@ -20,6 +20,7 @@
         "version:new": "yarn version --no-git-tag-version",
         "prepublishOnly": "npm run check:all && npm run build",
         "preinstall": "npm run clean",
+        "update-lock": "npx yarn-deduplicate",
         "prebuild": "rimraf dist coverage .cache || true",
         "build": "tsdx build",
         "watch": "tsdx watch",
