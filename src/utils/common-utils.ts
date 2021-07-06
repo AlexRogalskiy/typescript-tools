@@ -1,5 +1,6 @@
 import * as _ from 'lodash'
 import { isBoolean, isInteger, isNull, isNumber, isString, mergeWith, union } from 'lodash'
+import { CpuInfo, cpus } from 'os'
 import * as crypto from 'crypto'
 import { spawn, SpawnOptionsWithoutStdio } from 'child_process'
 import fs from 'fs-extra'
@@ -95,6 +96,119 @@ export namespace CommonUtils {
                 return null
             })
             .filter(Boolean)
+    }
+
+    /**
+     * Gets the environment variable
+     * @param {string} name the name of the environment variable
+     * @param defaultValue default value for the environment variable
+     */
+    export const getEnvVar = (name: string, defaultValue?: any): any => {
+        return process.env[name] ? process.env[name] : defaultValue
+    }
+
+    /**
+     * Gets the environment variable as number
+     * @param {string} name the name of the environment variable
+     * @param defaultValue default value for the environment variable
+     */
+    export const getNumericEnvVar = (name: string, defaultValue?: number): number => {
+        return parseInt(getEnvVar(name, defaultValue), 10)
+    }
+
+    /**
+     * Sets the environment variable
+     * @param {string} name the name of the environment variable
+     * @param value the value of the environment variable
+     */
+    export const setEnvVar = (name: string, value: any): void => {
+        process.env[name] = value
+    }
+
+    /**
+     * Deletes/removes the environment variable
+     * @param name the name of the environment variable
+     */
+    export const deleteEnvVar = (name: string): void => {
+        delete process.env[name]
+    }
+
+    export const getCircularReplacer = (): ((key: string, value: any) => any) => {
+        const seen: WeakSet<any> = new WeakSet<any>()
+
+        return (_: string, value: any) => {
+            if (typeof value === 'object' && value !== null) {
+                if (seen.has(value)) {
+                    return
+                }
+                seen.add(value)
+            }
+            return value
+        }
+    }
+
+    /**
+     * Measures and gets the CPU usage metrics
+     * @return the CPU usage metrics
+     */
+    export const getCpuUsage = (): any => {
+        const cpu: CpuInfo[] = cpus()
+        const procCpuUsage: NodeJS.CpuUsage = process.cpuUsage()
+        const procCpuUsed = procCpuUsage.user + procCpuUsage.system
+
+        let sysCpuTotal = 0
+        let sysCpuIdle = 0
+
+        for (const c of cpu) {
+            sysCpuTotal += c.times.user + c.times.nice + c.times.sys + c.times.idle + c.times.irq
+            sysCpuIdle += c.times.idle
+        }
+
+        const sysCpuUsed = sysCpuTotal - sysCpuIdle
+
+        return {
+            procCpuUsed,
+            sysCpuUsed,
+            sysCpuTotal,
+        }
+    }
+
+    /**
+     * Measures and gets the CPU load metrics
+     * @param start CPU usage metrics on start
+     * @param end CPU usage metrics on end
+     * @param {number} clockTick the number of CPU clock ticks per second
+     * @return the CPU load metrics
+     */
+    export const getCpuLoad = (start: any, end: any, clockTick: number): any => {
+        const sysCpuTotalDif = end.sysCpuTotal - start.sysCpuTotal
+
+        let procCpuLoad = (end.procCpuUsed - start.procCpuUsed) / clockTick / sysCpuTotalDif
+        let sysCpuLoad = (end.sysCpuUsed - start.sysCpuUsed) / sysCpuTotalDif
+        procCpuLoad = Number.isNaN(procCpuLoad) ? 0.0 : procCpuLoad
+        sysCpuLoad = Number.isNaN(sysCpuLoad) ? 0.0 : sysCpuLoad
+
+        return {
+            procCpuLoad: Math.min(procCpuLoad, sysCpuLoad),
+            sysCpuLoad,
+        }
+    }
+
+    export const copyProperties = (src: any, srcProps: any[], dest: any, destProps: any[]): any => {
+        if (!src || !dest || typeof src !== 'object') {
+            return
+        }
+
+        if (srcProps.length !== destProps.length) {
+            return
+        }
+
+        for (let i = 0; i < srcProps.length; i++) {
+            const srcProp = srcProps[i]
+            const destProp = destProps[i]
+
+            dest[destProp] = src[srcProp]
+        }
     }
 
     export const titleToId = (title: string): string => {

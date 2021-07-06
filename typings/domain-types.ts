@@ -31,6 +31,46 @@ export interface IBinaryData {
     fileExtension?: string
 }
 // -------------------------------------------------------------------------------------------------
+export interface NetworkInterfaceBase {
+    address: string
+    netmask: string
+    mac: string
+    internal: boolean
+    cidr: string | null
+}
+
+export interface NetworkInterfaceInfoIPv4 extends NetworkInterfaceBase {
+    family: 'IPv4'
+}
+
+export interface NetworkInterfaceInfoIPv6 extends NetworkInterfaceBase {
+    family: 'IPv6'
+    scopeid: number
+}
+
+export type NetworkInterfaceInfo = NetworkInterfaceInfoIPv4 | NetworkInterfaceInfoIPv6
+// -------------------------------------------------------------------------------------------------
+/**
+ * Interface for implementations which decide
+ * whether or not sampling should be done
+ *
+ * @param <T> type of the argument to be used for sampling decision
+ */
+export interface Sampler<T> {
+    /**
+     * Checks whether or not sampling should be done.
+     *
+     * @param arg to be used for sampling decision
+     * @return {@code true} if sampling should be done,
+     *         {@code false} otherwise
+     */
+    isSampled(arg?: T): boolean
+}
+// -------------------------------------------------------------------------------------------------
+export type SignalConstants = {
+    [key in NodeJS.Signals]: number
+}
+// -------------------------------------------------------------------------------------------------
 export type Maybe<T> = T
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> }

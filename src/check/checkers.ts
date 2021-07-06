@@ -977,6 +977,18 @@ export namespace Checkers {
         return proto == null || Object.getPrototypeOf(proto) == null
     }
 
+    /**
+     * Checks whether the given response is a valid HTTP response
+     * @param response the response to be checked
+     * @return {boolean} {@code true} if the given response is a valid HTTP response, {@code false} otherwise
+     */
+    export const isValidHTTPResponse = (response: any): boolean => {
+        if (!response) {
+            return false
+        }
+        return response.statusCode && typeof response.statusCode === 'number'
+    }
+
     export const isPromise = (promise: unknown): boolean => {
         // eslint-disable-next-line github/no-then
         return !!promise && typeof (promise as Promise<string>).then === 'function'
