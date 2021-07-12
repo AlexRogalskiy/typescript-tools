@@ -103,11 +103,11 @@ export namespace Strings {
      */
     export const slugify2 = (inputString: string): string => {
         return inputString
-        .toLowerCase()
-        .replace(/[^a-z0-9 -]/g, ' ') // remove invalid chars
-        .replace(/^\s+|\s+$/g, '') // trim
-        .replace(/\s+/g, '-') // collapse whitespace and replace by -
-        .replace(/-+/g, '-'); // collapse dashes
+            .toLowerCase()
+            .replace(/[^a-z0-9 -]/g, ' ') // remove invalid chars
+            .replace(/^\s+|\s+$/g, '') // trim
+            .replace(/\s+/g, '-') // collapse whitespace and replace by -
+            .replace(/-+/g, '-') // collapse dashes
     }
 
     // Converts to a POSIX-style path
