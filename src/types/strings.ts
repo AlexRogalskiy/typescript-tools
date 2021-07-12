@@ -96,6 +96,20 @@ export namespace Strings {
         return value.replace(/^\W+/, '').replace(/\W+$/, '')
     }
 
+    /**
+     * Slugify a given string.
+     * @param {string} inputString
+     * @return {string} The slugified string.
+     */
+    export const slugify2 = (inputString: string): string => {
+        return inputString
+        .toLowerCase()
+        .replace(/[^a-z0-9 -]/g, ' ') // remove invalid chars
+        .replace(/^\s+|\s+$/g, '') // trim
+        .replace(/\s+/g, '-') // collapse whitespace and replace by -
+        .replace(/-+/g, '-'); // collapse dashes
+    }
+
     // Converts to a POSIX-style path
     export const posixPath = (p: string): string => {
         return p.split(sep).join(posix.sep)
