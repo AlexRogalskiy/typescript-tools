@@ -1,11 +1,11 @@
 import boxen from 'boxen'
 
-import {ObjectMap, Optional, Primitive, PropertyRecord, StringRecord} from './standard-types'
-import {Profile} from './enum-types'
+import { ObjectMap, Optional, Primitive, PropertyRecord, StringRecord } from './standard-types'
+import { Profile } from './enum-types'
 
-import {Camera} from '../tools/camera'
-import {Color} from '../tools/color'
-import {Vector} from '../tools/vector'
+import { Camera } from '../tools/camera'
+import { Color } from '../tools/color'
+import { Vector } from '../tools/vector'
 
 // -------------------------------------------------------------------------------------------------
 /** All built-in and custom scalars, mapped to their actual values */
