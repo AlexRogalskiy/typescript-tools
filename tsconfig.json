@@ -62,6 +62,7 @@
     "include": [
         "./src/*",
         "./tools/*",
+        "./idioms/*",
         "./tools/promise/*",
         "./tools/executor/*",
         "./tools/extension/*",
