@@ -50,6 +50,66 @@ export interface NetworkInterfaceInfoIPv6 extends NetworkInterfaceBase {
 
 export type NetworkInterfaceInfo = NetworkInterfaceInfoIPv4 | NetworkInterfaceInfoIPv6
 // -------------------------------------------------------------------------------------------------
+export type IpLogger = {
+    ip: string | null
+}
+
+// -------------------------------------------------------------------------------------------------
+export type User = {
+    email?: string
+    id: string
+}
+
+export type TrackSegmentEvent = {
+    active?: boolean
+    event: string
+    properties?: Record<string, unknown>
+    user: User
+}
+// -------------------------------------------------------------------------------------------------
+export type File = {
+    branch: string | null
+    content: string
+    id: string
+    is_deleted: boolean
+    is_read_only: boolean
+    path: string
+    team_id: string
+}
+
+export type FormattedVariables = { [name: string]: string }
+
+export type Email = {
+    created_at?: string
+    from: string
+    html: string
+    id: string
+    is_outbound: boolean
+    subject: string
+    team_id: string
+    text: string
+    to: string
+}
+
+export type Environment = {
+    created_at?: string
+    id: string
+    name: string
+    team_id: string
+    updated_at?: string
+}
+
+export type EnvironmentVariable = {
+    created_at?: string
+    environment_id: string
+    id: string
+    is_system?: boolean
+    name: string
+    team_id: string
+    value: string
+    updated_at?: string
+}
+// -------------------------------------------------------------------------------------------------
 export type GenericClassDecorator<T> = (target: T) => void
 // -------------------------------------------------------------------------------------------------
 /**

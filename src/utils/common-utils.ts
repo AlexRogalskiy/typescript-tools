@@ -2,16 +2,21 @@ import * as _ from 'lodash'
 import { isBoolean, isInteger, isNull, isNumber, isString, mergeWith, union } from 'lodash'
 import { CpuInfo, cpus } from 'os'
 import * as crypto from 'crypto'
+import { randomBytes, scrypt } from 'crypto'
 import { spawn, SpawnOptionsWithoutStdio } from 'child_process'
 import fs from 'fs-extra'
 import path from 'path'
 import objectHash from 'node-object-hash'
+import buildCuid from 'cuid'
+import { v4 as uuidv4 } from 'uuid'
+import { Readable } from 'stream'
 
-import { CellPosition, Grid, IMousePosition, Point } from '../../typings/domain-types'
+import { CellPosition, Grid, IMousePosition, Point, Location } from '../../typings/domain-types'
 import { IServiceInjector, Iterator, IteratorStep, Processor } from '../../typings/function-types'
 
 import { Checkers, Errors, Numbers, Objects } from '..'
 import { Optional } from '../../typings/standard-types'
+
 import { createValueToken } from '../../tools/InjectionToken'
 
 export namespace CommonUtils {
@@ -21,6 +26,8 @@ export namespace CommonUtils {
     export type Empty = 0 & { _tag: '__Empty__' }
 
     const RANDOMNESS_PLACEHOLDER_STRING = 'RANDOMNESS_PLACEHOLDER'
+
+    const EARTH_RADIUS_KM = 6371
 
     const isWindowsOS = process.platform.startsWith('win')
     const npm = isWindowsOS ? 'npm.cmd' : 'npm'
@@ -67,6 +74,8 @@ export namespace CommonUtils {
     export const generateGrid = (size: number, cellCallback: any): any[] => {
         return nArray(size).map((_, y) => nArray(size).map((__, x) => cellCallback(x, y)))
     }
+
+    export const cuid = (): string => buildCuid()
 
     export const generateField = ({ density, offset = 0, width, height }): any => {
         const pixels = nArray(width * height)
@@ -192,6 +201,31 @@ export namespace CommonUtils {
             procCpuLoad: Math.min(procCpuLoad, sysCpuLoad),
             sysCpuLoad,
         }
+    }
+
+    // https://dev.to/farnabaz/hash-your-passwords-with-scrypt-using-nodejs-crypto-module-316k
+    export const buildDigest = async (code: string): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const salt = randomBytes(16).toString('hex')
+
+            scrypt(code, salt, 64, (error, derivedKey) => {
+                if (error) reject(error)
+                resolve(`${salt}:${derivedKey.toString('hex')}`)
+            })
+        })
+    }
+
+    export const buildApiKey = (prefix = ''): string => {
+        // remove dashes
+        const uuid = uuidv4().split('-').join('')
+
+        return `${prefix}${uuid}`
+    }
+
+    export const randomChoice = <T>(items: T[] | string): T | string => {
+        const randomIndex = Math.floor(Math.random() * items.length)
+
+        return items[randomIndex]
     }
 
     export const copyProperties = (src: any, srcProps: any[], dest: any, destProps: any[]): any => {
@@ -860,6 +894,54 @@ export namespace CommonUtils {
         }
 
         return set
+    }
+
+    export const toRadians = (degrees: number): number => {
+        return (degrees * Math.PI) / 180
+    }
+
+    // https://stackoverflow.com/a/18883819
+    export const calculateDistance = (location1: Location, location2: Location): number => {
+        const dLatitude = toRadians(location2.latitude - location1.latitude)
+        const dLongitude = toRadians(location2.longitude - location1.longitude)
+
+        const a =
+            Math.sin(dLatitude / 2) * Math.sin(dLatitude / 2) +
+            Math.cos(toRadians(location1.latitude)) *
+                Math.cos(toRadians(location2.latitude)) *
+                Math.sin(dLongitude / 2) *
+                Math.sin(dLongitude / 2)
+
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+
+        return c * EARTH_RADIUS_KM
+    }
+
+    export const sortLocationsByDistance = (
+        locations: Location[],
+        userLocation: Location,
+    ): ((a: string, b: string) => number) => {
+        return (a: string, b: string): number => {
+            const locationA = locations[a]
+            const locationB = locations[b]
+
+            return calculateDistance(userLocation, locationA) - calculateDistance(userLocation, locationB)
+        }
+    }
+
+    export const streamToString = async (stream: Readable): Promise<string> => {
+        return await new Promise((resolve, reject) => {
+            const chunks: Uint8Array[] = []
+            stream.on('data', chunk => chunks.push(chunk))
+            stream.on('error', reject)
+            stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf-8')))
+        })
+    }
+
+    export const formatIp = (ip: string | null): string | null => {
+        if (!ip) return null
+
+        return new URL(`https://${ip}`).hostname
     }
 
     export const lerp = (k: number, a: number, b: number): number => (1 - k) * a + k * b

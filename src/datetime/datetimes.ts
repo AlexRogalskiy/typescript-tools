@@ -29,6 +29,17 @@ export namespace DateTimes {
         return new Date().toISOString()
     }
 
+    export const daysFromNow = (days = 0, existingDate?: number): string => {
+        const date = existingDate ? new Date(existingDate) : new Date()
+        date.setDate(date.getDate() + days)
+
+        return date.toISOString()
+    }
+
+    export const minutesFromNow = (minutes = 0): string => {
+        return new Date(Date.now() + minutes * 60000).toISOString()
+    }
+
     export const formatDate2 = (input: Date | string): string => {
         const currentDate = new Date(input)
 
