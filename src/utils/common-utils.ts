@@ -929,6 +929,15 @@ export namespace CommonUtils {
         }
     }
 
+    export const buildSendDate = (headers: string): string => {
+        const timestamp = headers.split('Date:')[1]?.split('\n')[0]
+
+        let date = new Date(timestamp)
+        if (isNaN(date.getTime())) date = new Date()
+
+        return date.toISOString()
+    }
+
     export const streamToString = async (stream: Readable): Promise<string> => {
         return await new Promise((resolve, reject) => {
             const chunks: Uint8Array[] = []

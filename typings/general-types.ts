@@ -2,6 +2,15 @@ import { NonNull, Optional } from './standard-types'
 import { Profile } from './enum-types'
 // -------------------------------------------------------------------------------------------------
 /**
+ * Size
+ * @desc Type representing supported size settings
+ */
+export type Size = {
+    height: number
+    width: number
+}
+// -------------------------------------------------------------------------------------------------
+/**
  * BufferEncoding
  * @desc Type representing supported buffer encoding settings
  */

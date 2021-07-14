@@ -1,7 +1,7 @@
 import 'jsdom-global/register'
 
 import { DomElement, Optional } from '../../typings/standard-types'
-import { Keys } from '../../typings/general-types'
+import { Keys, Size } from '../../typings/general-types'
 
 import { Checkers, ColorsUtils, CommonUtils, Errors, Formats, Strings, URL_REGEX4 } from '..'
 
@@ -53,6 +53,34 @@ export namespace Browsers {
         if (activeElement instanceof HTMLElement) {
             activeElement.focus()
         }
+    }
+
+    export const getCanvasSize = (canvasSize: Size, { height, width }: Size): Size => {
+        let finalHeight = canvasSize.height
+        let finalWidth = canvasSize.width
+        const aspectRatio = canvasSize.width / canvasSize.height
+
+        if (height < finalHeight) {
+            finalHeight = height
+            finalWidth = aspectRatio * height
+        }
+        if (width < finalWidth) {
+            finalWidth = width
+            finalHeight = width / aspectRatio
+        }
+
+        return { height: Math.round(finalHeight), width: Math.round(finalWidth) }
+    }
+
+    export const getShareLink = (): string => {
+        const noQueryUrl = window.location.href.split('?')[0]
+        // videojs adds an additional div, so need to find video element
+        const video = document.querySelector('#video video') as HTMLVideoElement
+
+        const timestamp = video ? Math.floor(video.currentTime) : null
+        const timestampQuery = timestamp ? `?t=${timestamp}` : ''
+
+        return `${noQueryUrl}${timestampQuery}`
     }
 
     export const getImages = (node: Element): HTMLImageElement[] =>
