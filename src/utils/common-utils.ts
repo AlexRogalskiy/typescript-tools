@@ -940,11 +940,11 @@ export namespace CommonUtils {
 
     export const basePath = (path: string): string => {
         let p = path || ''
-        if (!p.startsWith("/")) {
+        if (!p.startsWith('/')) {
             p = `/${p}`
         }
 
-        if (p.endsWith("/")) {
+        if (p.endsWith('/')) {
             p = p.substring(0, p.length - 1)
         }
 
