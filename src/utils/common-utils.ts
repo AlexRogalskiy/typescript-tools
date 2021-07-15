@@ -938,6 +938,19 @@ export namespace CommonUtils {
         return date.toISOString()
     }
 
+    export const basePath = (path: string): string => {
+        let p = path || ''
+        if (!p.startsWith("/")) {
+            p = `/${p}`
+        }
+
+        if (p.endsWith("/")) {
+            p = p.substring(0, p.length - 1)
+        }
+
+        return p
+    }
+
     export const streamToString = async (stream: Readable): Promise<string> => {
         return await new Promise((resolve, reject) => {
             const chunks: Uint8Array[] = []
