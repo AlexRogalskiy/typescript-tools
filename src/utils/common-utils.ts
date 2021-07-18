@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Readable } from 'stream'
 
 import { CellPosition, Grid, IMousePosition, Location, Point } from '../../typings/domain-types'
-import { IServiceInjector, Iterator, IteratorStep, Processor } from '../../typings/function-types'
+import { IServiceInjector, Iterator, IteratorStep, Predicate, Processor } from '../../typings/function-types'
 
 import { Checkers, Errors, Numbers, Objects } from '..'
 import { Optional } from '../../typings/standard-types'
@@ -972,6 +972,177 @@ export namespace CommonUtils {
             fn === last ? fn() : fn(next)
         }
         next()
+    }
+
+    // const customCoalesce = coalesceFactory(
+    //     v => ![null, undefined, '', NaN].includes(v)
+    // );
+    // customCoalesce(undefined, null, NaN, '', 'Waldo'); // 'Waldo'
+    export const coalesceFactory = (valid: Predicate<any>): any => {
+        return (...args) => args.find(valid)
+    }
+
+    export const coalesce = (...args: any[]): any => args.find(v => ![undefined, null].includes(v))
+
+    // const isEven = num => num % 2 === 0;
+    // const isOdd = complement(isEven);
+    // isOdd(2); // false
+    // isOdd(3); // true
+    export const complement = (fn: any): any => {
+        return (...args) => !fn(...args)
+    }
+
+    // const add5 = x => x + 5;
+    // const multiply = (x, y) => x * y;
+    // const multiplyAndAdd5 = compose(
+    //     add5,
+    //     multiply
+    // );
+    // multiplyAndAdd5(5, 2); // 15
+    export const composeLeft = (...fns: any[]): any =>
+        fns.reduce(
+            (f, g) =>
+                (...args) =>
+                    f(g(...args)),
+        )
+
+    // const handler = data => console.log(data);
+    // const hub = createEventHub();
+    // let increment = 0;
+    //
+    // Subscribe: listen for different types of events
+    //     hub.on('message', handler);
+    //     hub.on('message', () => console.log('Message event fired'));
+    //     hub.on('increment', () => increment++);
+
+    // Publish: emit events to invoke all handlers subscribed to them, passing the data to them as an argument
+    //     hub.emit('message', 'hello world'); // logs 'hello world' and 'Message event fired'
+    //     hub.emit('message', { hello: 'world' }); // logs the object and 'Message event fired'
+    //     hub.emit('increment'); // `increment` variable is now 1
+
+    // Unsubscribe: stop a specific handler from listening to the 'message' event
+    //     hub.off('message', handler);
+    export const createEventHub = (): any => ({
+        hub: Object.create(null),
+        emit(event, data): void {
+            for (const handler of this.hub[event] || []) {
+                handler(data)
+            }
+        },
+        on(event, handler): void {
+            if (!this.hub[event]) this.hub[event] = []
+            this.hub[event].push(handler)
+        },
+        off(event, handler): void {
+            const i = (this.hub[event] || []).findIndex(h => h === handler)
+            if (i > -1) this.hub[event].splice(i, 1)
+            if (this.hub[event].length === 0) delete this.hub[event]
+        },
+    })
+
+    // const a = { foo: 'bar', obj: { a: 1, b: 2 } };
+    // const b = deepClone(a); // a !== b, a.obj !== b.obj
+    export const deepClone = (obj: any): any => {
+        if (obj === null) return null
+        const clone = Object.assign({}, obj)
+
+        for (const key of Object.keys(clone)) {
+            clone[key] = typeof obj[key] === 'object' ? deepClone(obj[key]) : obj[key]
+        }
+
+        if (Array.isArray(obj)) {
+            clone.length = obj.length
+            return Array.from(clone)
+        }
+
+        return clone
+    }
+
+    // curry(Math.pow)(2)(10); // 1024
+    // curry(Math.min, 3)(10)(50)(2); // 2
+    export const curry = (fn: any, arity = fn.length, ...args: any[]): any => {
+        return arity <= args.length ? fn(...args) : curry.bind(null, fn, arity, ...args)
+    }
+
+    // const average = converge((a, b) => a / b, [
+    //     arr => arr.reduce((a, v) => a + v, 0),
+    //     arr => arr.length
+    // ]);
+    // average([1, 2, 3, 4, 5, 6, 7]); // 4
+    export const converge = (converger, fns) => {
+        return (...args) => converger(...fns.map(fn => fn(...args)))
+    }
+
+    // const add = (x, y) => x + y;
+    // const square = x => x * x;
+    // const addAndSquare = composeRight(add, square);
+    // addAndSquare(1, 2); // 9
+    export const composeRight = (...fns: any[]): any =>
+        fns.reduce(
+            (f, g) =>
+                (...args) =>
+                    g(f(...args)),
+        )
+
+    // const obj = {
+    //     a: null,
+    //     b: false,
+    //     c: true,
+    //     d: 0,
+    //     e: 1,
+    //     f: '',
+    //     g: 'a',
+    //     h: [null, false, '', true, 1, 'a'],
+    //     i: { j: 0, k: false, l: 'a' }
+    // };
+    // compactObject(obj);
+    export const compactObject = (val: any): any => {
+        const data = Array.isArray(val) ? val.filter(Boolean) : val
+
+        return Object.keys(data).reduce(
+            (acc, key) => {
+                const value = data[key]
+                if (value) acc[key] = typeof value === 'object' ? compactObject(value) : value
+                return acc
+            },
+            Array.isArray(val) ? [] : {},
+        )
+    }
+
+    // console.log(colorize('foo').red); // 'foo' (red letters)
+    // console.log(colorize('foo', 'bar').bgBlue); // 'foo bar' (blue background)
+    // console.log(colorize(colorize('foo').yellow, colorize('foo').green).bgWhite);
+    // 'foo bar' (first word in yellow letters, second word in green letters, white background for both)
+    export const colorize = (...args: any): any => ({
+        black: `\x1b[30m${args.join(' ')}`,
+        red: `\x1b[31m${args.join(' ')}`,
+        green: `\x1b[32m${args.join(' ')}`,
+        yellow: `\x1b[33m${args.join(' ')}`,
+        blue: `\x1b[34m${args.join(' ')}`,
+        magenta: `\x1b[35m${args.join(' ')}`,
+        cyan: `\x1b[36m${args.join(' ')}`,
+        white: `\x1b[37m${args.join(' ')}`,
+        bgBlack: `\x1b[40m${args.join(' ')}\x1b[0m`,
+        bgRed: `\x1b[41m${args.join(' ')}\x1b[0m`,
+        bgGreen: `\x1b[42m${args.join(' ')}\x1b[0m`,
+        bgYellow: `\x1b[43m${args.join(' ')}\x1b[0m`,
+        bgBlue: `\x1b[44m${args.join(' ')}\x1b[0m`,
+        bgMagenta: `\x1b[45m${args.join(' ')}\x1b[0m`,
+        bgCyan: `\x1b[46m${args.join(' ')}\x1b[0m`,
+        bgWhite: `\x1b[47m${args.join(' ')}\x1b[0m`,
+    })
+
+    // const Pall = collectInto(Promise.all.bind(Promise));
+    // let p1 = Promise.resolve(1);
+    // let p2 = Promise.resolve(2);
+    // let p3 = new Promise(resolve => setTimeout(resolve, 2000, 3));
+    // Pall(p1, p2, p3).then(console.log); // [1, 2, 3] (after about 2 seconds)
+    export const collectInto = (fn: any): any => {
+        return (...args) => fn(args)
+    }
+
+    export const merge = (...args: any[]): any => {
+        return Object.assign({}, ...args)
     }
 
     export const capitalizeEveryWord = (str: string): string =>

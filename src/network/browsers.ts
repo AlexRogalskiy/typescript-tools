@@ -104,6 +104,70 @@ export namespace Browsers {
         }
     }
 
+    export const currentURL = (): string => window.location.href
+
+    // const el = createElement(
+    // );
+    // console.log(el.className); // 'container'
+    export const createElement = (str: string): any => {
+        const el = document.createElement('div')
+        el.innerHTML = str
+
+        return el.firstElementChild
+    }
+
+    export const detectDeviceType = (): 'Mobile' | 'Desktop' =>
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+            ? 'Mobile'
+            : 'Desktop'
+
+    // counter('#my-id', 1, 1000, 5, 2000);
+    // Creates a 2-second timer for the element with id="my-id"
+    export const counter = (selector: any, start: number, end: number, step = 1, duration = 2000): any => {
+        let current = start
+        const _step = (end - start) * step < 0 ? -step : step
+        const timer = setInterval(() => {
+            current += _step
+            document.querySelector(selector).innerHTML = current
+            if (current >= end) document.querySelector(selector).innerHTML = end
+            if (current >= end) clearInterval(timer)
+        }, Math.abs(Math.floor(duration / (end - start))))
+
+        return timer
+    }
+
+    export const detectLanguage = (defaultLang = 'en-US'): string =>
+        navigator.language || (Array.isArray(navigator.languages) && navigator.languages[0]) || defaultLang
+
+    export const copyToClipboard2 = (str: string): void => {
+        const el = document.createElement('textarea')
+        el.value = str
+        el.setAttribute('readonly', '')
+        el.style.position = 'absolute'
+        el.style.left = '-9999px'
+
+        document.body.appendChild(el)
+
+        const selected =
+            document.getSelection()!.rangeCount > 0 ? document.getSelection()!.getRangeAt(0) : false
+        el.select()
+        document.execCommand('copy')
+        document.body.removeChild(el)
+
+        if (selected) {
+            document.getSelection()!.removeAllRanges()
+            document.getSelection()!.addRange(selected)
+        }
+    }
+
+    export const getPercentageFn = (element: Element): any => {
+        const { width, left } = element.getBoundingClientRect()
+        const ratio = 100 / width || 0.15
+        const elementLeft = left + window.scrollX
+
+        return x => (x - elementLeft) * ratio
+    }
+
     export const bottomVisible = (): boolean =>
         document.documentElement.clientHeight + window.scrollY >=
         (document.documentElement.scrollHeight || document.documentElement.clientHeight)

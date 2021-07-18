@@ -8,6 +8,18 @@ export namespace ColorsUtils {
         backgroundImage: string
     }
 
+    export const DIMENS = {
+        spaceTiny: '5px',
+        spaceSmall: '10px',
+        spaceMedium: '22px',
+        spaceLarge: '32px',
+        spaceHuge: '42px',
+
+        animationDurationQuick: '100ms',
+        animationDurationNormal: '200ms',
+        animationDurationSlow: '400ms',
+    }
+
     /**
      * @private
      */
@@ -25,6 +37,20 @@ export namespace ColorsUtils {
         '#a700ff',
         '#d300e7',
     ]
+
+    export const getElevationPseudoElementStyle = (dy: string, blur: string, opacity: string): any => {
+        return {
+            'display': 'block',
+            'position': 'absolute',
+            'left': '0',
+            'top': '0',
+            'right': '0',
+            'bottom': '0',
+            '-webkit-box-shadow': `0 ${dy} ${blur} 0 rgba(0,0,0,${opacity})`,
+            '-moz-box-shadow': `0 ${dy} ${blur} 0 rgba(0,0,0,${opacity})`,
+            'box-shadow': `0 ${dy} ${blur} 0 rgba(0,0,0,${opacity})`,
+        }
+    }
 
     export const RGBToHSL = (r: number, g: number, b: number): number[] => {
         r /= 255

@@ -40,6 +40,18 @@ export namespace DateTimes {
         return new Date(Date.now() + minutes * 60000).toISOString()
     }
 
+    // countWeekDaysBetween(new Date('Oct 05, 2020'), new Date('Oct 06, 2020')); // 1
+    // countWeekDaysBetween(new Date('Oct 05, 2020'), new Date('Oct 14, 2020')); // 7
+    export const countWeekDaysBetween = (startDate: Date, endDate: Date): any =>
+        Array.from({ length: (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24) }).reduce(
+            (count: number) => {
+                if (startDate.getDay() % 6 !== 0) count++
+                startDate = new Date(startDate.setDate(startDate.getDate() + 1))
+                return count
+            },
+            0,
+        )
+
     export const addWeekDays = (startDate: Date, count: number): any =>
         Array.from({ length: count }).reduce((date: Date) => {
             date = new Date(date.setDate(date.getDate() + 1))
@@ -47,6 +59,35 @@ export namespace DateTimes {
                 date = new Date(date.setDate(date.getDate() + (date.getDay() / 6 + 1)))
             return date
         }, startDate)
+
+    // daysInMonth(2020, 12)); // 31
+    // daysInMonth(2024, 2)); // 29
+    export const daysInMonth = (year: number, month: number): number => new Date(year, month, 0).getDate()
+
+    // daysFromNow(5); // 2020-10-13 (if current date is 2020-10-08)
+    export const daysFromNow2 = (n: number): string => {
+        const d = new Date()
+        d.setDate(d.getDate() + Math.abs(n))
+
+        return d.toISOString().split('T')[0]
+    }
+
+    // daysAgo(20); // 2020-09-16 (if current date is 2020-10-06)
+    export const daysAgo2 = (n: number): string => {
+        const d = new Date()
+        d.setDate(d.getDate() - Math.abs(n))
+
+        return d.toISOString().split('T')[0]
+    }
+
+    // dayName(new Date()); // 'Saturday'
+    // dayName(new Date('09/23/2020'), 'de-DE'); // 'Samstag'
+    export const dayName = (date: Date, locale: string): string =>
+        date.toLocaleDateString(locale, { weekday: 'long' })
+
+    // dayOfYear(new Date()); // 272
+    export const dayOfYear = (date: Date): number =>
+        Math.floor((date.getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / 1000 / 60 / 60 / 24)
 
     export const addMinutesToDate = (date: number | string | Date, n: number): string => {
         const d = new Date(date)

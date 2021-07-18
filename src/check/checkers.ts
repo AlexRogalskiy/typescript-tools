@@ -323,6 +323,8 @@ export namespace Checkers {
         return isNotNull(value) && isNotUndefined(value)
     }
 
+    export const containsWhitespace = (str: string): boolean => /\s/.test(str)
+
     export const isDNSName = (str: string): boolean => {
         const regExp = /^[A-Za-z0-9][A-Za-z0-9-.]*[A-Za-z0-9]$/
         return regExp.test(str)

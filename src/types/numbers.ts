@@ -146,6 +146,19 @@ export namespace Numbers {
         export const average = (...nums: number[]): number =>
             nums.reduce((acc, val) => acc + val, 0) / nums.length
 
+        export const degreesToRads = (deg: number): number => (deg * Math.PI) / 180.0
+
+        export const copySign = (x: number, y: number): number => (Math.sign(x) === Math.sign(y) ? x : -x)
+
+        export const distance = (x0: number, y0: number, x1: number, y1: number): number =>
+            Math.hypot(x1 - x0, y1 - y0)
+
+        export const divmod = (x: number, y: number): number[] => [Math.floor(x / y), x % y]
+
+        // digitize(123); // [1, 2, 3]
+        // digitize(-123); // [1, 2, 3]
+        export const digitize = (n: number): number[] => [...`${Math.abs(n)}`].map(i => parseInt(i))
+
         // clampNumber(2, 3, 5); // 3
         // clampNumber(1, -1, -5); // -1
         export const clampNumber = (num: number, a: number, b: number): number =>

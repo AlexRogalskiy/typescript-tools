@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { Keys, KeyValue, Values } from '../../typings/general-types'
 import { ObjectMap, Optional } from '../../typings/standard-types'
 
-import { Numbers, Checkers, Errors, CommonUtils } from '..'
+import { Checkers, CommonUtils, Errors, Numbers } from '..'
 
 export namespace Objects {
     import isFunction = Checkers.isFunction
@@ -91,6 +91,92 @@ export namespace Objects {
             }
             return picked
         }, {})
+    }
+
+    // let index = 2;
+    // const data = {
+    //     foo: {
+    //         foz: [1, 2, 3],
+    //         bar: {
+    //             baz: ['a', 'b', 'c']
+    //         }
+    //     }
+    // };
+    // deepGet(data, ['foo', 'foz', index]); // get 3
+    // deepGet(data, ['foo', 'bar', 'baz', 8, 'foz']); // null
+    export const deepGet = (obj: any, keys: string[]): any =>
+        keys.reduce((xs, x) => (xs && xs[x] !== null && xs[x] !== undefined ? xs[x] : null), obj)
+
+    // const data = {
+    //     level1: {
+    //         level2: {
+    //             level3: 'some data'
+    //         }
+    //     }
+    // };
+    // dig(data, 'level3'); // 'some data'
+    // dig(data, 'level4'); // undefined
+    export const dig = (obj: any, target: PropertyKey): any => {
+        if (target in obj) {
+            return obj[target]
+        }
+
+        return Object.values(obj).reduce((acc, val) => {
+            if (acc !== undefined) return acc
+            if (typeof val === 'object') return dig(val, target)
+        }, undefined)
+    }
+
+    // deepMerge(
+    //     { a: true, b: { c: [1, 2, 3] } },
+    //     { a: false, b: { d: [1, 2, 3] } },
+    //     (key, a, b) => (key === 'a' ? a && b : Object.assign({}, a, b))
+    // );
+    export const deepMerge = (a: any, b: any, fn: any): any =>
+        [...new Set([...Object.keys(a), ...Object.keys(b)])].reduce(
+            (acc, key) => ({ ...acc, [key]: fn(key, a[key], b[key]) }),
+            {},
+        )
+
+    // defaults({ a: 1 }, { b: 2 }, { b: 6 }, { a: 3 }); // { a: 1, b: 2 }
+    export const defaults = (obj: any, ...defs: any[]): any => Object.assign({}, obj, ...defs.reverse(), obj)
+
+    // const obj = {
+    //     foo: '1',
+    //     nested: {
+    //         child: {
+    //             withArray: [
+    //                 {
+    //                     grandChild: ['hello']
+    //                 }
+    //             ]
+    //         }
+    //     }
+    // };
+    // const upperKeysObj = deepMapKeys(obj, key => key.toUpperCase());
+    export const deepMapKeys = (obj: any, fn: any): any => {
+        if (Array.isArray(obj)) {
+            return obj.map(val => deepMapKeys(val, fn))
+        }
+
+        if (typeof obj === 'object') {
+            return Object.keys(obj).reduce((acc, current) => {
+                const key = fn(current)
+                const val = obj[current]
+                acc[key] = val !== null && typeof val === 'object' ? deepMapKeys(val, fn) : val
+                return acc
+            }, {})
+        }
+
+        return obj
+    }
+
+    export const deepFreeze4 = (obj: any): any => {
+        for (const prop of Object.keys(obj)) {
+            if (typeof obj[prop] === 'object') deepFreeze4(obj[prop])
+        }
+
+        return Object.freeze(obj)
     }
 
     // const x = new Set([1, 2, 1, 3, 4, 1, 2, 5]);

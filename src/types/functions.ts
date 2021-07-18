@@ -33,6 +33,80 @@ export namespace Functions {
         integer: parseInt,
     }
 
+    // Example A:
+    // defer(console.log, 'a'), console.log('b'); // logs 'b' then 'a'
+    // Example B:
+    //     document.querySelector('#someElement').innerHTML = 'Hello';
+    //     longRunningFunction();
+    // Browser will not update the HTML until this has finished
+    //     defer(longRunningFunction);
+    // Browser will update the HTML then run the function
+    export const defer = (fn: any, ...args: any[]): NodeJS.Timeout => delay(fn, 1, ...args)
+
+    export const delay = (fn: any, ms: number, ...args: any[]): NodeJS.Timeout => setTimeout(fn, ms, ...args)
+
+    // const isEven = num => num % 2 === 0;
+    // const isPositive = num => num > 0;
+    // const isPositiveOrEven = either(isPositive, isEven);
+    // isPositiveOrEven(4); // true
+    // isPositiveOrEven(3); // true
+    export const either = (f: any, g: any): any => {
+        return (...args) => f(...args) || g(...args)
+    }
+
+    // const fn = arg => new Promise(resolve => {
+    //     setTimeout(resolve, 1000, ['resolved', arg]);
+    // });
+    // const debounced = debouncePromise(fn, 200);
+    // debounced('foo').then(console.log);
+    // debounced('bar').then(console.log);
+    // Will log ['resolved', 'bar'] both times
+    export const debouncePromise = (fn: any, ms = 0): any => {
+        let timeoutId
+        const pending: any[] = []
+
+        return async (...args) =>
+            new Promise((res, rej) => {
+                clearTimeout(timeoutId)
+                timeoutId = setTimeout(() => {
+                    const currentPending = [...pending]
+                    pending.length = 0
+
+                    // eslint-disable-next-line github/no-then
+                    Promise.resolve(fn.apply(fn, args)).then(
+                        data => {
+                            for (const { resolve } of currentPending) {
+                                resolve(data)
+                            }
+                        },
+                        error => {
+                            for (const { reject } of currentPending) {
+                                reject(error)
+                            }
+                        },
+                    )
+                }, ms)
+
+                pending.push({ resolve: res, reject: rej })
+            })
+    }
+
+    // window.addEventListener(
+    //     'resize',
+    //     debounce(() => {
+    //         console.log(window.innerWidth);
+    //         console.log(window.innerHeight);
+    //     }, 250)
+    // ); // Will log the window dimensions at most every 250ms
+    export const debounce2 = (fn: any, ms = 0): any => {
+        let timeoutId
+
+        return (...args): void => {
+            clearTimeout(timeoutId)
+            timeoutId = setTimeout(() => fn.apply(fn, args), ms)
+        }
+    }
+
     export const overrideThresholds = (key: string, ...args: any[]): any => {
         let thresholds = {}
 
@@ -287,6 +361,7 @@ export namespace Functions {
     // let testDebounce = debounce(() => console.log(new Date().toString()), 1000);
     export const debounce = (func: any, timeout: number): Executor => {
         let timerId
+
         return () => {
             if (timerId) {
                 clearTimeout(timerId)

@@ -94,6 +94,21 @@ export namespace Strings {
 
     export const byteSize = (str: string): number => new Blob([str]).size
 
+    export const compactWhitespace = (str: string): string => str.replace(/\s{2,}/g, ' ')
+
+    export const decapitalize = ([first, ...rest], upperRest = false): string =>
+        first.toLowerCase() + (upperRest ? rest.join('').toUpperCase() : rest.join(''))
+
+    export const countSubstrings = (str: string, searchValue: string): number => {
+        let count = 0,
+            i = 0
+        while (true) {
+            const r = str.indexOf(searchValue, i)
+            if (r !== -1) [count, i] = [count + 1, r + 1]
+            else return count
+        }
+    }
+
     export const convertStringToArray = (arrayLike: any): string[] => {
         if (!arrayLike) {
             return []

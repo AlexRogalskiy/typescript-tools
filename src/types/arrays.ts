@@ -1,8 +1,8 @@
 import _ from 'lodash'
 
-import { Consumer, Predicate, Processor, Comparator, BiProcessor } from '../../typings/function-types'
+import { BiProcessor, Comparator, Consumer, Predicate, Processor } from '../../typings/function-types'
 
-import { Numbers, Checkers, Errors, Maths, Sorting, CommonUtils, Objects } from '..'
+import { Checkers, CommonUtils, Errors, Maths, Numbers, Objects, Sorting } from '..'
 
 import { SizeUtils } from '../utils/size-utils'
 
@@ -94,7 +94,114 @@ export namespace Arrays {
         )
     }
 
-    export const coalesce = (...args: any[]): any => args.find(v => ![undefined, null].includes(v))
+    // const x = [
+    //     { id: 1, name: 'John' },
+    //     { id: 2, name: 'Maria' }
+    // ];
+    // const y = [
+    //     { id: 1, age: 28 },
+    //     { id: 3, age: 26 },
+    //     { age: 3}
+    // ];
+    // combine(x, y, 'id');
+    export const combine = (a: any[], b: any[], prop: PropertyKey): any =>
+        Object.values(
+            [...a, ...b].reduce((acc, v) => {
+                if (v[prop]) acc[v[prop]] = acc[v[prop]] ? { ...acc[v[prop]], ...v } : { ...v }
+                return acc
+            }, {}),
+        )
+
+    // countBy([6.1, 4.2, 6.3], Math.floor); // {4: 1, 6: 2}
+    // countBy(['one', 'two', 'three'], 'length'); // {3: 2, 5: 1}
+    // countBy([{ count: 5 }, { count: 10 }, { count: 5 }], x => x.count)
+    // {5: 2, 10: 1}
+    export const countBy2 = (arr: any, fn: any): any =>
+        arr.map(typeof fn === 'function' ? fn : val => val[fn]).reduce((acc, val) => {
+            acc[val] = (acc[val] || 0) + 1
+            return acc
+        }, {})
+
+    // deepFlatten([1, [2], [[3], 4], 5]); // [1, 2, 3, 4, 5]
+    export const deepFlatten = (arr: any[]): any =>
+        [].concat(...arr.map(v => (Array.isArray(v) ? deepFlatten(v) : v)))
+
+    // [...dateRangeGenerator(new Date('2021-06-01'), new Date('2021-06-04'))];
+    // [ 2021-06-01, 2021-06-02, 2021-06-03 ]
+    export function* dateRangeGenerator(start: Date, end: Date, step = 1): any {
+        const d = start
+        while (d < end) {
+            yield new Date(d)
+            d.setDate(d.getDate() + step)
+        }
+    }
+
+    // const binaryCycle = cycleGenerator([0, 1]);
+    // binaryCycle.next(); // { value: 0, done: false }
+    // binaryCycle.next(); // { value: 1, done: false }
+    // binaryCycle.next(); // { value: 0, done: false }
+    // binaryCycle.next(); // { value: 1, done: false }
+    export function* cycleGenerator(arr: any[]): any {
+        let i = 0
+        while (true) {
+            yield arr[i % arr.length]
+            i++
+        }
+    }
+
+    // differenceWith(
+    //     [1, 1.2, 1.5, 3, 0],
+    //     [1.9, 3, 0],
+    //     (a, b) => Math.round(a) === Math.round(b)
+    // ); // [1, 1.2]
+    // differenceWith([1, 1.2, 1.3], [1, 1.3, 1.5]); // [1.2]
+    export const differenceWith = (arr: any[], val: any[], comp = (a, b) => a === b): any[] =>
+        arr.filter(a => val.findIndex(b => comp(a, b)) === -1)
+
+    // differenceBy([2.1, 1.2], [2.3, 3.4], Math.floor); // [1]
+    // differenceBy([{ x: 2 }, { x: 1 }], [{ x: 1 }], v => v.x); // [2]
+    export const differenceBy = (a: any, b: any, fn: any): any => {
+        const s = new Set(b.map(fn))
+
+        return a.map(fn).filter(el => !s.has(el))
+    }
+
+    // drop([1, 2, 3]); // [2, 3]
+    // drop([1, 2, 3], 2); // [3]
+    // drop([1, 2, 3], 42); // []
+    export const drop = (arr: any[], n = 1): any[] => arr.slice(n)
+
+    // dropRight([1, 2, 3]); // [1, 2]
+    // dropRight([1, 2, 3], 2); // [1]
+    // dropRight([1, 2, 3], 42); // []
+    export const dropRight = (arr: any[], n = 1): any[] => arr.slice(0, -n)
+
+    // dropWhile([1, 2, 3, 4], n => n >= 3); // [3, 4]
+    export const dropWhile = (arr: any[], func: Predicate<any>): any => {
+        while (arr.length > 0 && !func(arr[0])) arr = arr.slice(1)
+
+        return arr
+    }
+
+    // dropRightWhile([1, 2, 3, 4], n => n < 3); // [1, 2]
+    export const dropRightWhile = (arr: any[], func: Predicate<any>): any => {
+        let rightIndex = arr.length
+        while (rightIndex-- && !func(arr[rightIndex]));
+
+        return arr.slice(0, rightIndex + 1)
+    }
+
+    // difference([1, 2, 3, 3], [1, 2, 4]); // [3, 3]
+    export const difference = (a: any, b: any): any => {
+        const s = new Set(b)
+
+        return a.filter(x => !s.has(x))
+    }
+
+    export const countOccurrences = (arr: any[], val: any): number =>
+        arr.reduce((a, v) => (v === val ? a + 1 : a), 0)
+
+    export const compact = (arr: any[]): any[] => arr.filter(Boolean)
 
     export const castArray = (val: any): any => (Array.isArray(val) ? val : [val])
 
