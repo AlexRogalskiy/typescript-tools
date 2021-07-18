@@ -11,7 +11,7 @@ import buildCuid from 'cuid'
 import { v4 as uuidv4 } from 'uuid'
 import { Readable } from 'stream'
 
-import { CellPosition, Grid, IMousePosition, Point, Location } from '../../typings/domain-types'
+import { CellPosition, Grid, IMousePosition, Location, Point } from '../../typings/domain-types'
 import { IServiceInjector, Iterator, IteratorStep, Processor } from '../../typings/function-types'
 
 import { Checkers, Errors, Numbers, Objects } from '..'
@@ -20,7 +20,6 @@ import { Optional } from '../../typings/standard-types'
 import { createValueToken } from '../../tools/InjectionToken'
 
 export namespace CommonUtils {
-    import random = Numbers.random
     export type Fn<T> = (key: string) => T
     export type Color = (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9) & { _tag: '__Color__' }
     export type Empty = 0 & { _tag: '__Empty__' }
@@ -98,7 +97,7 @@ export namespace CommonUtils {
                     return Object.assign(star, { color: 'blue' })
                 }
 
-                if (random(1) > 1 - density) {
+                if (Numbers.random(1) > 1 - density) {
                     return star
                 }
 
@@ -938,6 +937,29 @@ export namespace CommonUtils {
         return date.toISOString()
     }
 
+    // CSVToJSON('col1,col2\na,b\nc,d');
+    // CSVToJSON('col1;col2\na;b\nc;d', ';');
+    export const CSVToJSON = (data: string, delimiter = ','): any => {
+        const titles = data.slice(0, data.indexOf('\n')).split(delimiter)
+
+        return data
+            .slice(data.indexOf('\n') + 1)
+            .split('\n')
+            .map(v => {
+                const values = v.split(delimiter)
+                return titles.reduce((obj, title, index) => ((obj[title] = values[index]), obj), {})
+            })
+    }
+
+    // CSVToArray('a,b\nc,d'); // [['a', 'b'], ['c', 'd']];
+    // CSVToArray('a;b\nc;d', ';'); // [['a', 'b'], ['c', 'd']];
+    // CSVToArray('col1,col2\na,b\nc,d', ',', true); // [['a', 'b'], ['c', 'd']];
+    export const CSVToArray = (data: string, delimiter = ',', omitFirstRow = false): any[] =>
+        data
+            .slice(omitFirstRow ? data.indexOf('\n') + 1 : 0)
+            .split('\n')
+            .map(v => v.split(delimiter))
+
     export const basePath = (path: string): string => {
         let p = path || ''
         if (!p.startsWith('/')) {
@@ -1148,6 +1170,88 @@ export namespace CommonUtils {
             get: fn,
         })
     }
+
+    // const freddy = {
+    //     user: 'fred',
+    //     greet: function(greeting, punctuation) {
+    //         return greeting + ' ' + this.user + punctuation;
+    //     }
+    // };
+    // const freddyBound = bindKey(freddy, 'greet');
+    // console.log(freddyBound('hi', '!')); // 'hi fred!'
+    export const bindKey = (context: any, fn: any, ...boundArgs: any[]): any => {
+        return (...args) => context[fn].apply(context, [...boundArgs, ...args])
+    }
+
+    // var view = {
+    //     label: 'docs',
+    //     click: function() {
+    //         console.log('clicked ' + this.label);
+    //     }
+    // };
+    // bindAll(view, 'click');
+    // document.body.addEventListener('click', view.click);
+    // Log 'clicked docs' when clicked.
+    export const bindAll = (obj: any, ...fns: any[]): void =>
+        // eslint-disable-next-line github/array-foreach
+        fns.forEach(fn => {
+            const f = obj[fn]
+            obj[fn] = function () {
+                return f.apply(obj)
+            }
+        })
+
+    // function greet(greeting, punctuation) {
+    //     return greeting + ' ' + this.user + punctuation;
+    // }
+    // const freddy = { user: 'fred' };
+    // const freddyBound = bind(greet, freddy);
+    // console.log(freddyBound('hi', '!')); // 'hi fred!'
+    export const bind = (fn: any, context: any, ...boundArgs: any[]): any => {
+        return (...args) => fn.apply(context, [...boundArgs, ...args])
+    }
+
+    export const binarySearch = (arr: any[], item: any): number => {
+        let l = 0,
+            r = arr.length - 1
+
+        while (l <= r) {
+            const mid = Math.floor((l + r) / 2)
+            const guess = arr[mid]
+            if (guess === item) return mid
+            if (guess > item) r = mid - 1
+            else l = mid + 1
+        }
+
+        return -1
+    }
+
+    // ['2', '1', '0'].map(binary(Math.max)); // [2, 1, 2]
+    export const binary = (fn: any): any => {
+        return (a, b) => fn(a, b)
+    }
+
+    // var elements = attempt(function(selector) {
+    //     return document.querySelectorAll(selector);
+    // }, '>_>');
+    // if (elements instanceof Error) elements = []; // elements = []
+    export const attempt = (fn: any, ...args: any[]): any => {
+        try {
+            return fn(...args)
+        } catch (e) {
+            return e instanceof Error ? e : new Error(e)
+        }
+    }
+
+    // const firstTwoMax = ary(Math.max, 2);
+    // [[2, 6, 'a'], [6, 4, 8], [10]].map(x => firstTwoMax(...x)); // [6, 6, 10]
+    export const ary = (fn: any, n: number): any => {
+        return (...args) => fn(...args.slice(0, n))
+    }
+
+    export const allOf = (arr: any[], fn = Boolean): boolean => arr.every(fn)
+
+    export const anyOf = (arr: any[], fn = Boolean): boolean => arr.some(fn)
 
     export const defineProperty = (
         obj: any,

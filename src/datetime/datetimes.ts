@@ -40,6 +40,28 @@ export namespace DateTimes {
         return new Date(Date.now() + minutes * 60000).toISOString()
     }
 
+    export const addWeekDays = (startDate: Date, count: number): any =>
+        Array.from({ length: count }).reduce((date: Date) => {
+            date = new Date(date.setDate(date.getDate() + 1))
+            if (date.getDay() % 6 === 0)
+                date = new Date(date.setDate(date.getDate() + (date.getDay() / 6 + 1)))
+            return date
+        }, startDate)
+
+    export const addMinutesToDate = (date: number | string | Date, n: number): string => {
+        const d = new Date(date)
+        d.setTime(d.getTime() + n * 60000)
+
+        return d.toISOString().split('.')[0].replace('T', ' ')
+    }
+
+    export const addDaysToDate = (date: number | string | Date, n: number): string => {
+        const d = new Date(date)
+        d.setDate(d.getDate() + n)
+
+        return d.toISOString().split('T')[0]
+    }
+
     export const formatDate2 = (input: Date | string): string => {
         const currentDate = new Date(input)
 

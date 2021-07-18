@@ -93,6 +93,52 @@ export namespace Arrays {
         )
     }
 
+    // bifurcateBy(['beep', 'boop', 'foo', 'bar'], x => x[0] === 'b');
+    // [ ['beep', 'boop', 'bar'], ['foo'] ]
+    export const bifurcateBy = (arr: any[], fn: any): any[][] =>
+        arr.reduce((acc, val, i) => (acc[fn(val, i) ? 0 : 1].push(val), acc), [[], []])
+
+    // bifurcate(['beep', 'boop', 'foo', 'bar'], [true, true, false, true]);
+    // [ ['beep', 'boop', 'bar'], ['foo'] ]
+    export const bifurcate = (arr: any[], filter: boolean[]): any[][] =>
+        arr.reduce((acc, val, i) => (acc[filter[i] ? 0 : 1].push(val), acc), [[], []])
+
+    // arrayToHTMLList(['item 1', 'item 2'], 'myListID');
+    export const arrayToHTMLList = (arr: any[], listID: string): string => {
+        const items = document.querySelector(`#${listID}`)
+        if (!items) {
+            return ''
+        }
+
+        return (items.innerHTML += arr.map(item => `<li>${item}</li>`).join(''))
+    }
+
+    export const arrayToCSV = (arr: any[], delimiter = ','): string =>
+        arr.map(v => v.map(x => (isNaN(x) ? `"${x.replace(/"/g, '""')}"` : x)).join(delimiter)).join('\n')
+
+    // aperture(2, [1, 2, 3, 4]); // [[1, 2], [2, 3], [3, 4]]
+    // aperture(3, [1, 2, 3, 4]); // [[1, 2, 3], [2, 3, 4]]
+    // aperture(5, [1, 2, 3, 4]); // []
+    export const aperture = (n: number, arr: any[]): any[] =>
+        n > arr.length ? [] : arr.slice(n - 1).map((_, i) => arr.slice(i, i + n))
+
+    // allUniqueBy([1.2, 2.4, 2.9], Math.round);
+    // allUniqueBy([1.2, 2.3, 2.4], Math.round);
+    export const allUniqueBy = (arr: any[], fn: (value: any, index: number, array: any[]) => any): boolean =>
+        arr.length === new Set(arr.map(fn)).size
+
+    export const allUnique = (arr: any[]): boolean => arr.length === new Set(arr).size
+
+    // allEqualBy([1.1, 1.2, 1.3], Math.round);
+    // allEqualBy([1.1, 1.3, 1.6], Math.round);
+    export const allEqualBy = (arr: any[], fn: any): boolean => {
+        const eql = fn(arr[0])
+
+        return arr.every(val => fn(val) === eql)
+    }
+
+    export const allEqual = (arr: any[]): boolean => arr.every(val => val === arr[0])
+
     export const isArraysEqual = <T>(first: T[], second: T[]): boolean => {
         if (first.length !== second.length) {
             return false

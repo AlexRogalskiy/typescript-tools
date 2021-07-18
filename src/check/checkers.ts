@@ -13,16 +13,11 @@ import {
     URL_REGEX2,
 } from '..'
 
-import { Bools } from '../types/bools'
+import { Bools } from '../types/Bools'
 import { Optional } from '../../typings/standard-types'
 import { BiPredicate, ITypedConstructor } from '../../typings/function-types'
 
 export namespace Checkers {
-    import valueError = Errors.valueError
-    import validationError = Errors.validationError
-    import addToSet = CommonUtils.addToSet
-    import bool = Bools.bool
-
     const { hasOwnProperty: hasOwnProp } = Object.prototype
 
     /**
@@ -31,7 +26,7 @@ export namespace Checkers {
      * @private
      */
     const class2type = {
-        '[object Boolean]': 'boolean',
+        '[object boolean]': 'boolean',
         '[object Number]': 'number',
         '[object String]': 'string',
         '[object Function]': 'function',
@@ -93,6 +88,11 @@ export namespace Checkers {
         return pattern === null || pattern === undefined
     }
 
+    // assertValidKeys({ id: 10, name: 'apple' }, ['id', 'name']); // true
+    // assertValidKeys({ id: 10, name: 'apple' }, ['id', 'type']); // false
+    export const assertValidKeys = (obj: any, keys: PropertyKey[]): boolean =>
+        Object.keys(obj).every(key => keys.includes(key))
+
     export const pick = (current: any, ref: BiPredicate<any, any>): any => {
         if (!current) {
             return undefined
@@ -131,7 +131,7 @@ export namespace Checkers {
         const fn = typeof getter === 'function' ? getter : current => getPropertyValue(current, getter)
 
         if (Array.isArray(value)) {
-            return [...value.reduce((set, item) => addToSet(set, fn(item)), new Set())]
+            return [...value.reduce((set, item) => CommonUtils.addToSet(set, fn(item)), new Set())]
         }
 
         return value !== undefined ? fn(value) : value
@@ -140,25 +140,25 @@ export namespace Checkers {
     export const mapRecursive = (value, getter): any => {
         const result = new Set()
 
-        addToSet(result, map(value, getter))
+        CommonUtils.addToSet(result, map(value, getter))
 
         for (const current of result) {
-            addToSet(result, map(current, getter))
+            CommonUtils.addToSet(result, map(current, getter))
         }
 
         return [...result]
     }
 
     export const some = (value: any, fn: any): boolean => {
-        return Array.isArray(value) ? value.some(current => bool(fn(current))) : bool(fn(value))
+        return Array.isArray(value) ? value.some(current => Bools.bool(fn(current))) : Bools.bool(fn(value))
     }
 
     export const filter = (value: any, fn: any): boolean[] => {
         if (Array.isArray(value)) {
-            return value.filter(current => bool(fn(current)))
+            return value.filter(current => Bools.bool(fn(current)))
         }
 
-        return bool(fn(value)) ? value : undefined
+        return Bools.bool(fn(value)) ? value : undefined
     }
 
     export const slice = (value, from = 0, to = value && value.length, step = 1): any => {
@@ -281,7 +281,7 @@ export namespace Checkers {
         args = [].slice.call(args)
         for (let i = 0; i < types.length; ++i) {
             if (getType(args[i]) !== types[i]) {
-                throw validationError(`param [${i}] must be of type [${types[i]}]`)
+                throw Errors.validationError(`param [${i}] must be of type [${types[i]}]`)
             }
         }
     }
@@ -359,7 +359,7 @@ export namespace Checkers {
     /**
      * isValidSymbol checks to see if the symbol is of correct type and format
      * @param  {String} symbol the symbol being checked
-     * @return {Boolean} returns true if symbol is a string and valid format
+     * @return {boolean} returns true if symbol is a string and valid format
      */
     export const isValidSymbol = (symbol: any): boolean => {
         return typeof symbol === 'string' && ALPHA_REGEX.test(symbol)
@@ -431,7 +431,7 @@ export namespace Checkers {
         checkNumber(max)
 
         if (min > max) {
-            throw valueError(`incorrect arguments: lower border < ${min} >, upper border < ${max} >`)
+            throw Errors.valueError(`incorrect arguments: lower border < ${min} >, upper border < ${max} >`)
         }
 
         return includeBounds ? num <= max && num >= min : num < max && num > min
@@ -529,7 +529,7 @@ export namespace Checkers {
 
     export const inRange = (value: number, { min, max, inclusive = true }): boolean => {
         if (min > max) {
-            throw valueError('Max value must be bigger then min value')
+            throw Errors.valueError('Max value must be bigger then min value')
         }
 
         return inclusive ? min <= value && value <= max : min < value && value < max
@@ -597,7 +597,9 @@ export namespace Checkers {
             ? obj[prop] < low || obj[prop] > high
             : obj[prop] <= low || obj[prop] >= high
         if (value) {
-            throw validationError(`incorrect property value=${obj[prop]}, is out of range: ${low}-${high}`)
+            throw Errors.validationError(
+                `incorrect property value=${obj[prop]}, is out of range: ${low}-${high}`,
+            )
         }
     }
 
@@ -614,7 +616,7 @@ export namespace Checkers {
         return isNotNull(value) && typeof value === 'function' && value.constructor && value.apply
     }
 
-    export const isBoolean = (value: any): boolean => {
+    export const isboolean = (value: any): boolean => {
         return isNotNull(value) && (typeof value === 'boolean' || getType(value) === 'boolean')
     }
 
@@ -749,7 +751,7 @@ export namespace Checkers {
 
     export const checkProperty = (obj: any, prop: PropertyKey): void => {
         if (!hasProperty(obj, prop)) {
-            throw validationError(`Invalid property=${String(prop)} on object=${obj}`)
+            throw Errors.validationError(`Invalid property=${String(prop)} on object=${obj}`)
         }
     }
 
@@ -757,7 +759,7 @@ export namespace Checkers {
      * Returns a boolean indicating whether the object has the specified property.
      * @param {Object} obj An object.
      * @param {String} prop A property name.
-     * @returns {Boolean}
+     * @returns {boolean}
      */
     export const hasProperty = (obj: any, prop: PropertyKey): boolean => {
         if (isNullOrUndefined(obj)) return false
@@ -784,7 +786,7 @@ export namespace Checkers {
      */
     export const checkType = (obj: any, type: any): void => {
         if (!is(obj, type)) {
-            throw validationError(`Invalid parameter type: ${obj}. Expected type: ${type}`)
+            throw Errors.validationError(`Invalid parameter type: ${obj}. Expected type: ${type}`)
         }
     }
 
@@ -795,7 +797,7 @@ export namespace Checkers {
         checkType(obj, 'number')
 
         if (!isIntNumber(obj)) {
-            throw validationError(`invalid integer number: ${obj}`)
+            throw Errors.validationError(`invalid integer number: ${obj}`)
         }
     }
 
@@ -806,7 +808,7 @@ export namespace Checkers {
         checkType(obj, 'number')
 
         if (!isFloat(obj)) {
-            throw validationError(`invalid float number: ${obj}`)
+            throw Errors.validationError(`invalid float number: ${obj}`)
         }
     }
 
@@ -857,7 +859,7 @@ export namespace Checkers {
     /**
      * Checks for an object to be of the boolean type; if not throws an Error.
      */
-    export const checkBoolean = (obj: any): void => {
+    export const checkboolean = (obj: any): void => {
         checkType(obj, 'boolean')
     }
 
@@ -900,7 +902,7 @@ export namespace Checkers {
         checkNumber(index)
 
         if (index < 0 || index >= array.length) {
-            throw validationError(`Invalid index: ${index}. not in range: ${array}`)
+            throw Errors.validationError(`Invalid index: ${index}. not in range: ${array}`)
         }
     }
 
@@ -934,7 +936,7 @@ export namespace Checkers {
      * Determines whether an object is instance of a given type.
      * @param {Object} obj An object.
      * @param {Function} type The type to check.
-     * @returns {Boolean}
+     * @returns {boolean}
      */
     export const is = (obj: any, type: any): boolean => {
         if (isNumber(obj)) {
@@ -943,7 +945,7 @@ export namespace Checkers {
             return type === 'string'
         } else if (isFunction(obj)) {
             return type === 'function'
-        } else if (isBoolean(obj)) {
+        } else if (isboolean(obj)) {
             return type === 'boolean'
         } else if (isObject(obj)) {
             return type === 'object'

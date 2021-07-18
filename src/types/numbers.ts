@@ -123,6 +123,40 @@ export namespace Numbers {
             return Math.sqrt(variance / (len - 1))
         }
 
+        export const binomialCoefficient = (n: number, k: number): number => {
+            if (Number.isNaN(n) || Number.isNaN(k)) return NaN
+
+            if (k < 0 || k > n) return 0
+            if (k === 0 || k === n) return 1
+            if (k === 1 || k === n - 1) return n
+
+            if (n - k < k) k = n - k
+            let res = n
+            for (let j = 2; j <= k; j++) res *= (n - j + 1) / j
+
+            return Math.round(res)
+        }
+
+        // averageBy([{ n: 4 }, { n: 2 }, { n: 8 }, { n: 6 }], o => o.n); // 5
+        // averageBy([{ n: 4 }, { n: 2 }, { n: 8 }, { n: 6 }], 'n'); // 5
+        export const averageBy = (arr: any, fn: any): number =>
+            arr.map(typeof fn === 'function' ? fn : val => val[fn]).reduce((acc, val) => acc + val, 0) /
+            arr.length
+
+        export const average = (...nums: number[]): number =>
+            nums.reduce((acc, val) => acc + val, 0) / nums.length
+
+        // arithmeticProgression(5, 25); // [5, 10, 15, 20, 25]
+        export const arithmeticProgression = (n: number, lim: number): number[] =>
+            Array.from({ length: Math.ceil(lim / n) }, (_, i) => (i + 1) * n)
+
+        // approximatelyEqual(Math.PI / 2.0, 1.5708); // true
+        export const approximatelyEqual = (v1: number, v2: number, epsilon = 0.001): boolean =>
+            Math.abs(v1 - v2) < epsilon
+
+        export const accumulate = (...nums: number[]): number[] =>
+            nums.reduce((acc, n) => [...acc, n + +acc.slice(-1)], [])
+
         export const sign = (nr: number): number => (nr > 0 ? 1 : nr < 0 ? -1 : 0)
 
         export const trunc = (nr: number, digits: number): number =>

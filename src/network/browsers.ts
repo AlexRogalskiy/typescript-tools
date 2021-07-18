@@ -72,6 +72,45 @@ export namespace Browsers {
         return { height: Math.round(finalHeight), width: Math.round(finalWidth) }
     }
 
+    // addAllEventListeners(document.querySelectorAll('a'), 'click', () =>
+    //     console.log('Clicked a link')
+    // );
+    export const addEventListenerAll = (
+        targets: any,
+        type: string,
+        listener: any,
+        options: any,
+        useCapture: any,
+    ): void => {
+        for (const target of targets) {
+            target.addEventListener(type, listener, options, useCapture)
+        }
+    }
+
+    // addMultipleListeners(
+    //     document.querySelector('.my-element'),
+    //     ['click', 'mousedown'],
+    //     () => { console.log('hello!') }
+    // );
+    export const addMultipleListeners = (
+        el: any,
+        types: string[],
+        listener: any,
+        options: any,
+        useCapture: any,
+    ): void => {
+        for (const type of types) {
+            el.addEventListener(type, listener, options, useCapture)
+        }
+    }
+
+    // addStyles(document.getElementById('my-element'), {
+    //     background: 'red',
+    //     color: '#ffff00',
+    //     fontSize: '3rem'
+    // });
+    export const addStyles = (el: any, styles: any): any => Object.assign(el.style, styles)
+
     export const getShareLink = (): string => {
         const noQueryUrl = window.location.href.split('?')[0]
         // videojs adds an additional div, so need to find video element

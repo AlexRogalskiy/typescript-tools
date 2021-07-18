@@ -50,6 +50,20 @@ export namespace Files {
         return join(__dirname, '../', project, 'package.json')
     }
 
+    export const JSONtoCSV = (arr: any[], columns: string[], delimiter = ','): string =>
+        [
+            columns.join(delimiter),
+            ...arr.map(obj =>
+                columns.reduce(
+                    (acc, key) => `${acc}${!acc.length ? '' : delimiter}"${!obj[key] ? '' : obj[key]}"`,
+                    '',
+                ),
+            ),
+        ].join('\n')
+
+    export const JSONToFile = (obj: any, filename: string): void =>
+        writeFileSync(`${filename}.json`, JSON.stringify(obj, null, 2))
+
     export const generateFileName = (fileName: string, fileFormat: string): string => {
         const now = new Date()
         return `${fileName}_${now.toISOString().slice(0, 10)}_${`0${now.getHours()}`.slice(

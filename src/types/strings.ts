@@ -75,6 +75,21 @@ export namespace Strings {
         return value.substr(0, sideLength) + newMiddle + value.substr(value.length - sideLength)
     }
 
+    export const UUIDGeneratorNode = (): string =>
+        (1e7 + -1e3 + -4e3 + -8e3 + -1e11).toString().replace(/[018]/g, c => {
+            const v = parseInt(c)
+            return (v ^ (randomBytes(1)[0] & (15 >> (v / 4)))).toString(16)
+        })
+
+    export const UUIDGeneratorBrowser = (): string =>
+        (1e7 + -1e3 + -4e3 + -8e3 + -1e11).toString().replace(/[018]/g, c => {
+            const v = parseInt(c)
+            return (v ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (v / 4)))).toString(16)
+        })
+
+    // atob('Zm9vYmFy'); // 'foobar'
+    export const atob = (str: string): string => Buffer.from(str, 'base64').toString('binary')
+
     export const convertStringToArray = (arrayLike: any): string[] => {
         if (!arrayLike) {
             return []

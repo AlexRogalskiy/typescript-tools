@@ -17,6 +17,16 @@ export const normalizePathname = (pathname: string): string => {
     return normalizedPathname
 }
 
+export const URLJoin = (...args: string[]): string =>
+    args
+        .join('/')
+        .replace(/[/]+/g, '/')
+        .replace(/^(.+):\//, '$1://')
+        .replace(/^file:/, 'file:/')
+        .replace(/\/(\?|&|#[^!])/g, '$1')
+        .replace(/\?/g, '&')
+        .replace('&', '?')
+
 export const normalizeLocation = ({ pathname, ...otherProps }: Location): Location => {
     return {
         pathname: normalizePathname(pathname),
