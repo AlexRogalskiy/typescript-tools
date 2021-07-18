@@ -951,6 +951,57 @@ export namespace CommonUtils {
             })
     }
 
+    // chainAsync([
+    //     next => {
+    //         console.log('0 seconds');
+    //         setTimeout(next, 1000);
+    //     },
+    //     next => {
+    //         console.log('1 second');
+    //         setTimeout(next, 1000);
+    //     },
+    //     () => {
+    //         console.log('2 second');
+    //     }
+    // ]);
+    export const chainAsync = (fns: any[]): any => {
+        let curr = 0
+        const last = fns[fns.length - 1]
+        const next = (): void => {
+            const fn = fns[curr++]
+            fn === last ? fn() : fn(next)
+        }
+        next()
+    }
+
+    export const capitalizeEveryWord = (str: string): string =>
+        str.replace(/\b[a-z]/g, char => char.toUpperCase())
+
+    // capitalize('fooBar'); // 'FooBar'
+    // capitalize('fooBar', true); // 'Foobar'
+    export const capitalize = ([first, ...rest], lowerRest = false): string =>
+        first.toUpperCase() + (lowerRest ? rest.join('').toLowerCase() : rest.join(''))
+
+    // Promise.resolve([1, 2, 3])
+    // .then(call('map', x => 2 * x))
+    // .then(console.log); // [ 2, 4, 6 ]
+    // const map = call.bind(null, 'map');
+    // Promise.resolve([1, 2, 3])
+    // .then(map(x => 2 * x))
+    // .then(console.log); // [ 2, 4, 6 ]
+    export const call = (key: PropertyKey, ...args: any[]): any => {
+        return context => context[key](...args)
+    }
+
+    // const isEven = num => num % 2 === 0;
+    // const isPositive = num => num > 0;
+    // const isPositiveEven = both(isEven, isPositive);
+    // isPositiveEven(4); // true
+    // isPositiveEven(-2); // false
+    export const both = (f: any, g: any): any => {
+        return (...args) => f(...args) && g(...args)
+    }
+
     // CSVToArray('a,b\nc,d'); // [['a', 'b'], ['c', 'd']];
     // CSVToArray('a;b\nc;d', ';'); // [['a', 'b'], ['c', 'd']];
     // CSVToArray('col1,col2\na,b\nc,d', ',', true); // [['a', 'b'], ['c', 'd']];

@@ -93,6 +93,20 @@ export namespace Objects {
         }, {})
     }
 
+    // const x = new Set([1, 2, 1, 3, 4, 1, 2, 5]);
+    // [...chunkify(x, 2)]; // [[1, 2], [3, 4], [5]]
+    export function* chunkify(itr, size): any {
+        let chunk: any[] = []
+        for (const v of itr) {
+            chunk.push(v)
+            if (chunk.length === size) {
+                yield chunk
+                chunk = []
+            }
+        }
+        if (chunk.length) yield chunk
+    }
+
     export const deepFreeze3 = (val: any): any => {
         if (isObject(val) && !Object.isFrozen(val)) {
             for (const [key, value] of Object.entries<any>(val)) {

@@ -26,12 +26,13 @@ export namespace Arrays {
     import lambda = CommonUtils.lambda
     import defineStaticProperty = CommonUtils.defineStaticProperty
     import isUndefined = Checkers.isUndefined
-    import notNullOrUndefined = Checkers.notNullOrUndefined
     import isNullOrUndefined = Checkers.isNullOrUndefined
 
     import fromBigInteger = SizeUtils.fromBigInteger
     import interpolateSizes = SizeUtils.interpolateSizes
     import toBigInteger = SizeUtils.toBigInteger
+
+    import isNotNullOrUndefined = Checkers.isNotNullOrUndefined
     ;((): void => {
         const props = {
             proto: {
@@ -92,6 +93,18 @@ export namespace Arrays {
             {},
         )
     }
+
+    export const coalesce = (...args: any[]): any => args.find(v => ![undefined, null].includes(v))
+
+    export const castArray = (val: any): any => (Array.isArray(val) ? val : [val])
+
+    // chunk([1, 2, 3, 4, 5], 2); // [[1, 2], [3, 4], [5]]
+    export const chunk = (arr: any[], size: number): any[] =>
+        Array.from({ length: Math.ceil(arr.length / size) }, (_, i) => arr.slice(i * size, i * size + size))
+
+    // cartesianProduct(['x', 'y'], [1, 2]);
+    export const cartesianProduct = (a: any[], b: any[]): any[] =>
+        a.reduce((p, x) => [...p, ...b.map(y => [x, y])], [])
 
     // bifurcateBy(['beep', 'boop', 'foo', 'bar'], x => x[0] === 'b');
     // [ ['beep', 'boop', 'bar'], ['foo'] ]
@@ -229,7 +242,7 @@ export namespace Arrays {
     export const flatMap = <T>(arr: any, selector: BiProcessor<any, number, T>): T[] => {
         return arr.reduce((result, item, i) => {
             const mappedValue = selector(item, i)
-            if (notNullOrUndefined(mappedValue)) {
+            if (isNotNullOrUndefined(mappedValue)) {
                 if (Array.isArray(mappedValue)) {
                     result.push(...mappedValue)
                 } else {

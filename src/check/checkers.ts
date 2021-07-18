@@ -88,6 +88,27 @@ export namespace Checkers {
         return pattern === null || pattern === undefined
     }
 
+    // const lengthIs4 = checkProp(l => l === 4, 'length');
+    // lengthIs4([]); // false
+    // lengthIs4([1, 2, 3, 4]); // true
+    // lengthIs4(new Set([1, 2, 3, 4])); // false (Set uses Size, not length)
+    //
+    // const session = { user: {} };
+    // const validUserSession = checkProp(u => u.active && !u.disabled, 'user');
+    //
+    // validUserSession(session); // false
+    //
+    // session.user.active = true;
+    // validUserSession(session); // true
+    //
+    // const noLength = checkProp(l => l === undefined, 'length');
+    // noLength([]); // false
+    // noLength({}); // true
+    // noLength(new Set()); // true
+    export const checkProp = (predicate: any, prop: PropertyKey): any => {
+        return obj => !!predicate(obj[prop])
+    }
+
     // assertValidKeys({ id: 10, name: 'apple' }, ['id', 'name']); // true
     // assertValidKeys({ id: 10, name: 'apple' }, ['id', 'type']); // false
     export const assertValidKeys = (obj: any, keys: PropertyKey[]): boolean =>
@@ -298,6 +319,10 @@ export namespace Checkers {
         return !isNull(value)
     }
 
+    export const isNotNullOrUndefined = (value: any): boolean => {
+        return isNotNull(value) && isNotUndefined(value)
+    }
+
     export const isDNSName = (str: string): boolean => {
         const regExp = /^[A-Za-z0-9][A-Za-z0-9-.]*[A-Za-z0-9]$/
         return regExp.test(str)
@@ -343,10 +368,6 @@ export namespace Checkers {
 
     export const isFalsy = (value: any): boolean => {
         return !value
-    }
-
-    export const notNullOrUndefined = (value: any): boolean => {
-        return isNotNull(value) && isNotUndefined(value)
     }
 
     export const isMobileBrowser = (navigator: string): boolean => {
@@ -422,7 +443,7 @@ export namespace Checkers {
     }
 
     export const isObjectWith = (obj: any, prop: PropertyKey): boolean => {
-        return isNotNull(obj[prop]) && typeof obj[prop] === 'object' && !Array.isArray(obj[prop])
+        return isNotNullOrUndefined(obj[prop]) && typeof obj[prop] === 'object' && !Array.isArray(obj[prop])
     }
 
     export const isInRange = (num: number, min: number, max: number, includeBounds = false): boolean => {
@@ -471,12 +492,14 @@ export namespace Checkers {
     }
 
     export const isIterable = (value: any): boolean => {
-        return isNotNull(value) && typeof value[Symbol.iterator] === 'function'
+        return isNotNullOrUndefined(value) && typeof value[Symbol.iterator] === 'function'
     }
 
     export const isNumber = (value: any): boolean => {
         return (
-            isNotNull(value) && (typeof value === 'number' || getType(value) === 'number') && isFinite(value)
+            isNotNullOrUndefined(value) &&
+            (typeof value === 'number' || getType(value) === 'number') &&
+            isFinite(value)
         )
     }
 
@@ -500,12 +523,12 @@ export namespace Checkers {
     }
 
     export const isString = (value: any): boolean => {
-        return isNotNull(value) && (typeof value === 'string' || getType(value) === 'string')
+        return isNotNullOrUndefined(value) && (typeof value === 'string' || getType(value) === 'string')
     }
 
     export const isArray = (value: any): boolean => {
         // return myArray.constructor.toString().indexOf("Array") > -1;
-        return isNotNull(value) && isA('Array', value)
+        return isNotNullOrUndefined(value) && isA('Array', value)
     }
 
     export const isArray2 =
@@ -515,7 +538,7 @@ export namespace Checkers {
         })
 
     export const isJSON = (value: any): boolean => {
-        return isNotNull(value) && isA('JSON', value)
+        return isNotNullOrUndefined(value) && isA('JSON', value)
     }
 
     export const isValidJson = (value: string): boolean => {
@@ -573,15 +596,17 @@ export namespace Checkers {
     }
 
     export const isObject = (value: any): boolean => {
-        return isNotNull(value) && isA('Object', value)
+        return isNotNullOrUndefined(value) && isA('Object', value)
     }
 
     export const isArrayBuffer = (value: any): boolean => {
-        return isNotNull(value) && isNotUndefined(value) && isA('ArrayBuffer', value.buffer || value)
+        return (
+            isNotNullOrUndefined(value) && isNotUndefined(value) && isA('ArrayBuffer', value.buffer || value)
+        )
     }
 
     export const isDate = (value: any): boolean => {
-        return isNotNull(value) && isA('Date', value) && isFinite(value)
+        return isNotNullOrUndefined(value) && isA('Date', value) && isFinite(value)
     }
 
     export const isPropertyInRange = (
@@ -613,17 +638,16 @@ export namespace Checkers {
     }
 
     export const isFunction = (value: any): boolean => {
-        return isNotNull(value) && typeof value === 'function' && value.constructor && value.apply
+        return isNotNullOrUndefined(value) && typeof value === 'function' && value.constructor && value.apply
     }
 
-    export const isboolean = (value: any): boolean => {
-        return isNotNull(value) && (typeof value === 'boolean' || getType(value) === 'boolean')
+    export const isBoolean = (value: any): boolean => {
+        return isNotNullOrUndefined(value) && (typeof value === 'boolean' || getType(value) === 'boolean')
     }
 
     export const isDomElement = (value: any): boolean => {
         return (
-            isNotNull(value) &&
-            isNotUndefined(value) &&
+            isNotNullOrUndefined(value) &&
             value.nodeName &&
             value === document.documentElement &&
             (value instanceof Element || value instanceof Node)
@@ -638,11 +662,11 @@ export namespace Checkers {
     }
 
     export const isRegExp = (value: any): boolean => {
-        return isNotNull(value) && getType(value) === 'regexp'
+        return isNotNullOrUndefined(value) && getType(value) === 'regexp'
     }
 
     export const isSet = (value: any): boolean => {
-        return isNotNull(value) && isNotUndefined(value)
+        return isNotNullOrUndefined(value) && isNotUndefined(value)
     }
 
     export const isDigit = (chr: string): boolean => {
@@ -945,7 +969,7 @@ export namespace Checkers {
             return type === 'string'
         } else if (isFunction(obj)) {
             return type === 'function'
-        } else if (isboolean(obj)) {
+        } else if (isBoolean(obj)) {
             return type === 'boolean'
         } else if (isObject(obj)) {
             return type === 'object'

@@ -55,6 +55,14 @@ export namespace ColorsUtils {
         return [60 * (h < 0 ? h + 6 : h), v && (n / v) * 100, v * 100]
     }
 
+    export const changeLightness = (delta: string, hslStr: string): string => {
+        const [hue, saturation, lightness] = hslStr.match(/\d+/g)!.map(Number)
+
+        const newLightness = Math.max(0, Math.min(100, lightness + parseFloat(delta)))
+
+        return `hsl(${hue}, ${saturation}%, ${newLightness}%)`
+    }
+
     export const HSLToRGB = (h: number, s: number, l: number): number[] => {
         s /= 100
         l /= 100

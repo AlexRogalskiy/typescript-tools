@@ -48,6 +48,10 @@ const PROPERTY_REGEX_PATTERN = '[a-zA-Z_][a-zA-Z0-9_]*(?:\\.[a-zA-Z_][a-zA-Z0-9_
 
 const regex = (str: string): RegExp => new RegExp(str, 'g')
 
+// const regExp = /lorem ipsum/gi;
+// const regExp2 = cloneRegExp(regExp); // regExp !== regExp2
+export const cloneRegExp = (regExp: RegExp): RegExp => new RegExp(regExp.source, regExp.flags)
+
 export const getProps = test => props => {
     const next = {}
     for (const key in props) {

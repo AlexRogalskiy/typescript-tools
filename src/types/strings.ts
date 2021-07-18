@@ -90,6 +90,10 @@ export namespace Strings {
     // atob('Zm9vYmFy'); // 'foobar'
     export const atob = (str: string): string => Buffer.from(str, 'base64').toString('binary')
 
+    export const btoa = (str: string): string => Buffer.from(str, 'binary').toString('base64')
+
+    export const byteSize = (str: string): number => new Blob([str]).size
+
     export const convertStringToArray = (arrayLike: any): string[] => {
         if (!arrayLike) {
             return []

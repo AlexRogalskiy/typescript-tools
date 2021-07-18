@@ -146,6 +146,13 @@ export namespace Numbers {
         export const average = (...nums: number[]): number =>
             nums.reduce((acc, val) => acc + val, 0) / nums.length
 
+        // clampNumber(2, 3, 5); // 3
+        // clampNumber(1, -1, -5); // -1
+        export const clampNumber = (num: number, a: number, b: number): number =>
+            Math.max(Math.min(num, Math.max(a, b)), Math.min(a, b))
+
+        export const celsiusToFahrenheit = (degrees: number): number => 1.8 * degrees + 32
+
         // arithmeticProgression(5, 25); // [5, 10, 15, 20, 25]
         export const arithmeticProgression = (n: number, lim: number): number[] =>
             Array.from({ length: Math.ceil(lim / n) }, (_, i) => (i + 1) * n)

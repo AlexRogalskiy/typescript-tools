@@ -104,6 +104,10 @@ export namespace Browsers {
         }
     }
 
+    export const bottomVisible = (): boolean =>
+        document.documentElement.clientHeight + window.scrollY >=
+        (document.documentElement.scrollHeight || document.documentElement.clientHeight)
+
     // addStyles(document.getElementById('my-element'), {
     //     background: 'red',
     //     color: '#ffff00',

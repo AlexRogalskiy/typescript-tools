@@ -4,13 +4,13 @@ import { Comparator, ComparatorMode, PropertyComparator } from '../../typings/fu
 import { Checkers, Errors, Files, Logging } from '..'
 
 export namespace Comparators {
-    import notNullOrUndefined = Checkers.notNullOrUndefined
     import errorLogs = Logging.errorLogs
     import isString = Checkers.isString
     import isObject = Checkers.isObject
     import valueError = Errors.valueError
     import isFunction = Checkers.isFunction
     import getSegmentName = Files.getSegmentName
+    import isNotNullOrUndefined = Checkers.isNotNullOrUndefined
 
     const TYPE_BOOLEAN = 1
     const TYPE_NAN = 2
@@ -534,7 +534,7 @@ export namespace Comparators {
             return (
                 [compareByCollator, compareByLocale]
                     .map(func => func.call(null, a_, b_))
-                    .find(notNullOrUndefined) || 0
+                    .find(isNotNullOrUndefined) || 0
             )
         }
     })({ locale: 'en', options: { sensitivity: 'base' } })
