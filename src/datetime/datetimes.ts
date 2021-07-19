@@ -94,6 +94,13 @@ export namespace DateTimes {
     // getTimestamp(); // 1602162242
     export const getTimestamp = (date = new Date()): number => Math.floor(date.getTime() / 1000)
 
+    // quarterOfYear(new Date('07/10/2018')); // [ 3, 2018 ]
+    // quarterOfYear(); // [ 4, 2020 ]
+    export const quarterOfYear = (date = new Date()): [number, number] => [
+        Math.ceil((date.getMonth() + 1) / 3),
+        date.getFullYear(),
+    ]
+
     // const dates = [
     //     new Date(2017, 4, 13),
     //     new Date(2018, 2, 12),

@@ -442,6 +442,166 @@ export namespace Arrays {
         })
     }
 
+    // let myArray = ['a', 'b', 'c', 'a', 'b', 'c'];
+    // pull(myArray, 'a', 'c'); // myArray = [ 'b', 'b' ]
+    export const pull = (arr: any[], ...args: any[]): any => {
+        const argState = Array.isArray(args[0]) ? args[0] : args
+        const pulled = arr.filter(v => !argState.includes(v))
+        arr.length = 0
+
+        for (const v of pulled) {
+            arr.push(v)
+        }
+    }
+
+    // reduceWhich([1, 3, 2]); // 1
+    // reduceWhich([1, 3, 2], (a, b) => b - a); // 3
+    // reduceWhich(
+    //     [
+    //         { name: 'Tom', age: 12 },
+    //         { name: 'Jack', age: 18 },
+    //         { name: 'Lucy', age: 9 }
+    //     ],
+    //     (a, b) => a.age - b.age
+    // ); // {name: 'Lucy', age: 9}
+    export const reduceWhich = (arr: any[], comparator = (a, b) => a - b): any[] =>
+        arr.reduce((a, b) => (comparator(a, b) >= 0 ? b : a))
+
+    // const data = [
+    //     {
+    //         id: 1,
+    //         name: 'john',
+    //         age: 24
+    //     },
+    //     {
+    //         id: 2,
+    //         name: 'mike',
+    //         age: 50
+    //     }
+    // ];
+    // reducedFilter(data, ['id', 'name'], item => item.age > 24);
+    // [{ id: 2, name: 'mike'}]
+    export const reducedFilter = (data: any[], keys: any[], fn: any): any =>
+        data.filter(fn).map(el =>
+            keys.reduce((acc, key) => {
+                acc[key] = el[key]
+                return acc
+            }, {}),
+        )
+
+    // remove([1, 2, 3, 4], n => n % 2 === 0); // [2, 4]
+    export const remove2 = (arr: any[], func: any): any[] => {
+        if (Array.isArray(arr)) {
+            return arr.filter(func).reduce((acc, val) => {
+                arr.splice(arr.indexOf(val), 1)
+                return acc.concat(val)
+            }, [])
+        }
+
+        return []
+    }
+
+    // reject(x => x % 2 === 0, [1, 2, 3, 4, 5]); // [1, 3, 5]
+    // reject(word => word.length > 4, ['Apple', 'Pear', 'Kiwi', 'Banana']);
+    // ['Pear', 'Kiwi']
+    export const reject = (pred: any, array: any[]): any[] => array.filter((...args) => !pred(...args))
+
+    // reduceSuccessive([1, 2, 3, 4, 5, 6], (acc, val) => acc + val, 0);
+    // [0, 1, 3, 6, 10, 15, 21]
+    export const reduceSuccessive = <T>(arr: T[], fn: any, acc: T): T[] =>
+        arr.reduce((res, val, i, arr) => (res.push(fn(res.slice(-1)[0], val, i, arr)), res), [acc])
+
+    // randomIntArrayInRange(12, 35, 10); // [ 34, 14, 27, 17, 30, 27, 20, 26, 21, 14 ]
+    export const randomIntArrayInRange = (min: number, max: number, n = 1): number[] =>
+        Array.from({ length: n }, () => Math.floor(Math.random() * (max - min + 1)) + min)
+
+    // var myArray = [{ x: 1 }, { x: 2 }, { x: 3 }, { x: 1 }];
+    // pullBy(myArray, [{ x: 1 }, { x: 3 }], o => o.x); // myArray = [{ x: 2 }]
+    export const pullBy = (arr: any[], ...args: any[]): void => {
+        const length = args.length
+        let fn = length > 1 ? args[length - 1] : undefined
+
+        fn = typeof fn == 'function' ? (args.pop(), fn) : undefined
+
+        const argState = (Array.isArray(args[0]) ? args[0] : args).map(val => fn(val))
+        const pulled = arr.filter((v, _) => !argState.includes(fn(v)))
+        arr.length = 0
+
+        for (const v of pulled) {
+            arr.push(v)
+        }
+    }
+
+    // let myArray = ['a', 'b', 'c', 'd'];
+    // let pulled = pullAtValue(myArray, ['b', 'd']);
+    // myArray = [ 'a', 'c' ] , pulled = [ 'b', 'd' ]
+    export const pullAtValue = (arr: any[], pullArr: any[]): any[] => {
+        const removed: any[] = []
+        for (const v of arr) {
+            pullArr.includes(v) ? removed.push(v) : v
+        }
+        const mutateTo = arr.filter((v, _) => !pullArr.includes(v))
+        arr.length = 0
+
+        for (const v of mutateTo) {
+            arr.push(v)
+        }
+
+        return removed
+    }
+
+    // let myArray = ['a', 'b', 'c', 'd'];
+    // let pulled = pullAtIndex(myArray, [1, 3]);
+    // myArray = [ 'a', 'c' ] , pulled = [ 'b', 'd' ]
+    export const pullAtIndex = (arr: any[], pullArr: any[]): any[] => {
+        const removed: any[] = []
+        const pulled = arr
+            .map((v, i) => (pullArr.includes(i) ? removed.push(v) : v))
+            .filter((_, i) => !pullArr.includes(i))
+        arr.length = 0
+
+        for (const v of pulled) {
+            arr.push(v)
+        }
+
+        return removed
+    }
+
+    // prod(1, 2, 3, 4); // 24
+    // prod(...[1, 2, 3, 4]); // 24
+    export const prod = (...arr: number[]): number => [...arr].reduce((acc, val) => acc * val, 1)
+
+    // powerset([1, 2]); // [[], [1], [2], [2, 1]]
+    export const powerset = (arr: any[]): any[] =>
+        arr.reduce((a, v) => a.concat(a.map(r => [v].concat(r))), [[]])
+
+    // const simpsons = [
+    //     { name: 'lisa', age: 8 },
+    //     { name: 'homer', age: 36 },
+    //     { name: 'marge', age: 34 },
+    //     { name: 'bart', age: 10 }
+    // ];
+    // pluck2(simpsons, 'age'); // [8, 36, 34, 10]
+    export const pluck2 = (arr: any[], key: PropertyKey): any => arr.map(i => i[key])
+
+    // permutations([1, 33, 5]);
+    // [ [1, 33, 5], [1, 5, 33], [33, 1, 5], [33, 5, 1], [5, 1, 33], [5, 33, 1] ]
+    export const permutations = (arr: any[]): any[] => {
+        if (arr.length <= 2) return arr.length === 2 ? [arr, [arr[1], arr[0]]] : arr
+
+        return arr.reduce(
+            (acc, item, i) =>
+                acc.concat(
+                    permutations([...arr.slice(0, i), ...arr.slice(i + 1)]).map(val => [item, ...val]),
+                ),
+            [],
+        )
+    }
+
+    // percentile([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 6); // 55
+    export const percentile = (arr: any[], val: any): number =>
+        (100 * arr.reduce((acc, v) => acc + (v < val ? 1 : 0) + (v === val ? 0.5 : 0), 0)) / arr.length
+
     // objectToPairs({ a: 1, b: 2 }); // [ ['a', 1], ['b', 2] ]
     export const objectToPairs = (obj: any): any[] => Object.entries(obj)
 

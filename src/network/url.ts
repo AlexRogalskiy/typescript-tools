@@ -43,6 +43,10 @@ export const httpsRedirect = (): void => {
 // isAbsoluteURL('/foo/bar'); // false
 export const isAbsoluteURL = (str: string): boolean => /^[a-z][a-z0-9+.-]*:/.test(str)
 
+// redirect('https://google.com');
+export const redirect = (url: string, asLink = true): string | void =>
+    asLink ? (window.location.href = url) : window.location.replace(url)
+
 // objectToQueryString({ page: '1', size: '2kg', key: undefined });
 // '?page=1&size=2kg'
 export const objectToQueryString = (queryParameters: any): string => {

@@ -176,6 +176,59 @@ export namespace Numbers {
             return end == null ? n >= 0 && n < start : n >= start && n < end
         }
 
+        // for (let i of rangeGenerator(6, 10)) console.log(i);
+        // Logs 6, 7, 8, 9
+        export function* rangeGenerator(start: number, end: number, step = 1): any {
+            let i = start
+            while (i < end) {
+                yield i
+                i += step
+            }
+        }
+
+        // randomNumberInRange(2, 10); // 6.0211363285087005
+        export const randomNumberInRange = (min: number, max: number): number =>
+            Math.random() * (max - min) + min
+
+        // randomIntegerInRange(0, 5); // 2
+        export const randomIntegerInRange = (min: number, max: number): number =>
+            Math.floor(Math.random() * (max - min + 1)) + min
+
+        export const randomBoolean = (): boolean => Math.random() >= 0.5
+
+        // radsToDegrees(Math.PI / 2); // 90
+        export const radsToDegrees = (rad: number): number => (rad * 180.0) / Math.PI
+
+        // primes(10); // [2, 3, 5, 7]
+        export const primes = (num: number): number[] => {
+            let arr = Array.from({ length: num - 1 }).map((_, i) => i + 2)
+            const sqroot = Math.floor(Math.sqrt(num))
+            const numsTillSqroot = Array.from({ length: sqroot - 1 }).map((_, i) => i + 2)
+
+            for (const x of numsTillSqroot) {
+                arr = arr.filter(y => y % x !== 0 || y === x)
+            }
+
+            return arr
+        }
+
+        // primeFactors(147); // [3, 7, 7]
+        export const primeFactors = (n: number): number[] => {
+            const a: number[] = []
+            let f = 2
+
+            while (n > 1) {
+                if (n % f === 0) {
+                    a.push(f)
+                    n /= f
+                } else {
+                    f++
+                }
+            }
+
+            return a
+        }
+
         export const milesToKm = (miles: number): number => miles * 1.609344
 
         // nthRoot(32, 5); // 2

@@ -272,8 +272,39 @@ export namespace Objects {
         return observer
     }
 
+    // pick({ a: 1, b: '2', c: 3 }, ['a', 'c']); // { 'a': 1, 'c': 3 }
+    export const pick2 = (obj: any, arr: any[]): any =>
+        arr.reduce((acc, curr) => (curr in obj && (acc[curr] = obj[curr]), acc), {})
+
     // objectFromPairs([['a', 1], ['b', 2]]); // {a: 1, b: 2}
     export const objectFromPairs = (arr: any[]): any => arr.reduce((a, [key, val]) => ((a[key] = val), a), {})
+
+    // queryStringToObject('https://google.com?page=1&count=10');
+    // {page: '1', count: '10'}
+    export const queryStringToObject = (url: string): any =>
+        [...new URLSearchParams(url.split('?')[1])[Symbol.iterator]].reduce(
+            (a, [k, v]) => ((a[k] = v), a),
+            {},
+        )
+
+    // const obj = { name: 'Bobo', job: 'Front-End Master', shoeSize: 100 };
+    // renameKeys({ name: 'firstName', job: 'passion' }, obj);
+    // { firstName: 'Bobo', passion: 'Front-End Master', shoeSize: 100 }
+    export const renameKeys = (keysMap: any[], obj: any): any =>
+        Object.keys(obj).reduce(
+            (acc, key) => ({
+                ...acc,
+                ...{ [keysMap[key] || key]: obj[key] },
+            }),
+            {},
+        )
+
+    // pickBy({ a: 1, b: '2', c: 3 }, x => typeof x === 'number');
+    // { 'a': 1, 'c': 3 }
+    export const pickBy = (obj: any, fn: any): any =>
+        Object.keys(obj)
+            .filter(k => fn(obj[k], k))
+            .reduce((acc, key) => ((acc[key] = obj[key]), acc), {})
 
     // const object = {
     //     a: [{ x: 2 }, { y: 4 }],

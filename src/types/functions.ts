@@ -124,6 +124,98 @@ export namespace Functions {
         return (...args) => args.slice(n)[0]
     }
 
+    // const greet = (greeting, name) => greeting + ' ' + name + '!';
+    // const greetHello = partial(greet, 'Hello');
+    // greetHello('John'); // 'Hello John!'
+    export const partial = (fn: any, ...partials: any[]): any => {
+        return (...args) => fn(...partials, ...args)
+    }
+
+    // const greet = (greeting, name) => greeting + ' ' + name + '!';
+    // const greetJohn = partialRight(greet, 'John');
+    // greetJohn('Hello'); // 'Hello John!'
+    export const partialRight = (fn: any, ...partials: any[]): any => {
+        return (...args) => fn(...args, ...partials)
+    }
+
+    // const numbers = [1, 1, 3, 3, 4, 5, 5, 5];
+    // partitionBy(numbers, n => n % 2 === 0); // [[1, 1, 3, 3], [4], [5, 5, 5]]
+    // partitionBy(numbers, n => n); // [[1, 1], [3, 3], [4], [5, 5, 5]]
+    export const partitionBy = (arr: any[], fn: any): any =>
+        arr.reduce(
+            ({ res, last }, v, i, a) => {
+                const next = fn(v, i, a)
+                if (next !== last) res.push([v])
+                else res[res.length - 1].push(v)
+                return { res, last: next }
+            },
+            { res: [] },
+        ).res
+
+    // const sum = pipeAsyncFunctions(
+    //     x => x + 1,
+    //     x => new Promise(resolve => setTimeout(() => resolve(x + 2), 1000)),
+    //     x => x + 3,
+    //     async x => (await x) + 4
+    // );
+    // (async() => {
+    //     console.log(await sum(5)); // 15 (after one second)
+    // })();
+    export const pipeAsyncFunctions = (...fns: any[]): any => {
+        // eslint-disable-next-line github/no-then
+        return arg => fns.reduce((p, f) => p.then(f), Promise.resolve(arg))
+    }
+
+    // var rearged = rearg(
+    //     function(a, b, c) {
+    //         return [a, b, c];
+    //     },
+    //     [2, 0, 1]
+    // );
+    // rearged('b', 'c', 'a'); // ['a', 'b', 'c']
+    export const rearg = (fn: any, indexes: any[]): any => {
+        return (...args) => fn(...indexes.map(i => args[i]))
+    }
+
+    // const delay = promisify((d, cb) => setTimeout(cb, d));
+    // delay(2000).then(() => console.log('Hi!')); // Promise resolves after 2s
+    export const promisify2 = (func: any): any => {
+        return async (...args) =>
+            new Promise((resolve, reject) =>
+                func(...args, (err, result) => (err ? reject(err) : resolve(result))),
+            )
+    }
+
+    // const add5 = x => x + 5;
+    // const multiply = (x, y) => x * y;
+    // const multiplyAndAdd5 = pipeFunctions(multiply, add5);
+    // multiplyAndAdd5(5, 2); // 15
+    export const pipeFunctions = (...fns: any[]): any => {
+        return fns.reduce(
+            (f, g) =>
+                (...args) =>
+                    g(f(...args)),
+        )
+    }
+
+    // const users = [
+    //     { user: 'barney', age: 36, active: false },
+    //     { user: 'fred', age: 40, active: true },
+    // ];
+    // partition(users, o => o.active);
+    // [
+    //   [{ user: 'fred', age: 40, active: true }],
+    //   [{ user: 'barney', age: 36, active: false }]
+    // ]
+    export const partition = (arr: any[], fn: any): any[] =>
+        arr.reduce(
+            (acc, val, i, arr) => {
+                acc[fn(val, i, arr) ? 0 : 1].push(val)
+                return acc
+            },
+            [[], []],
+        )
+
     // const minMax = overOf(Math.min, Math.max);
     // minMax(1, 2, 3, 4, 5); // [1, 5]
     export const overOf = (...fns: any[]) => {

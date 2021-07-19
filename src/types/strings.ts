@@ -126,6 +126,61 @@ export namespace Strings {
             .map((c, i) => fn(c, i, str))
             .join('')
 
+    // pluralize(0, 'apple'); // 'apples'
+    // pluralize(1, 'apple'); // 'apple'
+    // pluralize(2, 'apple'); // 'apples'
+    // pluralize(2, 'person', 'people'); // 'people'
+    //
+    // const PLURALS = {
+    //     person: 'people',
+    //     radius: 'radii'
+    // };
+    // const autoPluralize = pluralize(PLURALS);
+    // autoPluralize(2, 'person'); // 'people'
+    export const pluralize = (val: any, word: any, plural = `${word}s`): any => {
+        const _pluralize = (num, word, plural = `${word}s`): string =>
+            [1, -1].includes(Number(num)) ? word : plural
+
+        if (typeof val === 'object') return (num, word) => _pluralize(num, word, val[word])
+
+        return _pluralize(val, word, plural)
+    }
+
+    // prettyBytes(1000); // '1 KB'
+    // prettyBytes(-27145424323.5821, 5); // '-27.145 GB'
+    // prettyBytes(123456789, 3, false); // '123MB'
+    export const prettyBytes = (num: number, precision = 3, addSpace = true): string => {
+        const UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+
+        if (Math.abs(num) < 1) return num + (addSpace ? ' ' : '') + UNITS[0]
+
+        const exponent = Math.min(Math.floor(Math.log10(num < 0 ? -num : num) / 3), UNITS.length - 1)
+
+        const n = Number(((num < 0 ? -num : num) / 1000 ** exponent).toPrecision(precision))
+
+        return (num < 0 ? '-' : '') + n + (addSpace ? ' ' : '') + UNITS[exponent]
+    }
+
+    // removeAccents('Antoine de Saint-Exupéry'); // 'Antoine de Saint-Exupery'
+    export const removeAccents = (str: string): string => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+
+    // removeNonASCII('äÄçÇéÉêlorem-ipsumöÖÐþúÚ'); // 'lorem-ipsum'
+    export const removeNonASCII = (str: string): string => str.replace(/[^\x20-\x7E]/g, '')
+
+    export const removeWhitespace = (str: string): string => str.replace(/\s+/g, '')
+
+    // randomAlphaNumeric(5); // '0afad'
+    export const randomAlphaNumeric = (length: number): string => {
+        let s = ''
+
+        Array.from({ length }).some(() => {
+            s += Math.random().toString(36).slice(2)
+            return s.length >= length
+        })
+
+        return s.slice(0, length)
+    }
+
     // padNumber(1234, 6); // '001234'
     export const padNumber = (n: number, l: number): string => `${n}`.padStart(l, '0')
 

@@ -38,6 +38,12 @@ export namespace ColorsUtils {
         '#d300e7',
     ]
 
+    export const randomHexColorCode = (): string => {
+        const n = (Math.random() * 0xfffff * 1000000).toString(16)
+
+        return `#${n.slice(0, 6)}`
+    }
+
     // hexToRGB('#27ae60ff'); // 'rgba(39, 174, 96, 255)'
     // hexToRGB('27ae60'); // 'rgb(39, 174, 96)'
     // hexToRGB('#fff'); // 'rgb(255, 255, 255)'

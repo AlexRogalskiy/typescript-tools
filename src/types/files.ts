@@ -61,6 +61,9 @@ export namespace Files {
             ),
         ].join('\n')
 
+    export const readFileLines = (filename: string): string[] =>
+        readFileSync(filename).toString('utf-8').split('\n')
+
     export const JSONToFile = (obj: any, filename: string): void =>
         writeFileSync(`${filename}.json`, JSON.stringify(obj, null, 2))
 

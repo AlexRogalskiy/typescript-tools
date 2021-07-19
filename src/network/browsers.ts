@@ -247,6 +247,124 @@ export namespace Browsers {
         if (opts['target']) return delegatorFn
     }
 
+    // removeClass(document.querySelector('p.special'), 'special');
+    // The paragraph will not have the 'special' class anymore
+    export const removeClass3 = (el: any, token: string): void => el.classList.remove(token)
+
+    // removeElement(document.querySelector('#my-element'));
+    // Removes #my-element from the DOM
+    export const removeElement = (el: any): void => el.parentNode.removeChild(el)
+
+    // const myElement = {
+    //     type: 'button',
+    //     props: {
+    //         type: 'button',
+    //         className: 'btn',
+    //         onClick: () => alert('Clicked'),
+    //         children: [{ props: { nodeValue: 'Click me' } }]
+    //     }
+    // };
+    //
+    // renderElement(myElement, document.body);
+    export const renderElement = ({ type, props = {} }: any, container: any): void => {
+        const isTextElement = !type
+        const element = isTextElement ? document.createTextNode('') : document.createElement(type)
+
+        const isListener = (p: string): boolean => p.startsWith('on')
+        const isAttribute = (p: string): boolean => !isListener(p) && p !== 'children'
+
+        for (const p of Object.keys(props)) {
+            if (isAttribute(p)) element[p] = props[p]
+            if (!isTextElement && isListener(p)) element.addEventListener(p.toLowerCase().slice(2), props[p])
+        }
+
+        if (!isTextElement && props['children'] && props['children'].length)
+            for (const childElement of props['children']) {
+                renderElement(childElement, element)
+            }
+
+        container.appendChild(element)
+    }
+
+    // const linkListener = () => console.log('Clicked a link');
+    // document.querySelector('a').addEventListener('click', linkListener);
+    // removeEventListenerAll(document.querySelectorAll('a'), 'click', linkListener);
+    export const removeEventListenerAll = (
+        targets: any,
+        type: any,
+        listener: any,
+        options: any,
+        useCapture: any,
+    ): void => {
+        for (const target of targets) {
+            target.removeEventListener(type, listener, options, useCapture)
+        }
+    }
+
+    export const prefersLightColorScheme = (): boolean =>
+        window && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches
+
+    // const cb = () => console.log('Animation frame fired');
+    // const recorder = recordAnimationFrames(cb);
+    // logs 'Animation frame fired' on each animation frame
+    // recorder.stop(); // stops logging
+    // recorder.start(); // starts again
+    // const recorder2 = recordAnimationFrames(cb, false);
+    // `start` needs to be explicitly called to begin recording frames
+    export const recordAnimationFrames = (callback: any, autoStart = true): any => {
+        let running = false,
+            raf
+
+        const stop = (): void => {
+            if (!running) return
+            running = false
+            cancelAnimationFrame(raf)
+        }
+
+        const start = (): void => {
+            if (running) return
+            running = true
+            run()
+        }
+
+        const run = (): void => {
+            raf = requestAnimationFrame(() => {
+                callback()
+                if (running) run()
+            })
+        }
+
+        if (autoStart) start()
+
+        return { start, stop }
+    }
+
+    // prefix('appearance');
+    // 'appearance' on a supported browser, otherwise 'webkitAppearance', 'mozAppearance', 'msAppearance' or 'oAppearance'
+    export const prefix = (prop: string): string | null => {
+        const capitalizedProp = prop.charAt(0).toUpperCase() + prop.slice(1)
+        const prefixes = ['', 'webkit', 'moz', 'ms', 'o']
+        const i = prefixes.findIndex(
+            prefix => typeof document.body.style[prefix ? prefix + capitalizedProp : prop] !== 'undefined',
+        )
+
+        return i !== -1 ? (i === 0 ? prop : prefixes[i] + capitalizedProp) : null
+    }
+
+    export const prefersDarkColorScheme = (): boolean =>
+        window && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+
+    // parseCookie('foo=bar; equation=E%3Dmc%5E2');
+    // { foo: 'bar', equation: 'E=mc^2' }
+    export const parseCookie = (str: string): any =>
+        str
+            .split(';')
+            .map(v => v.split('='))
+            .reduce((acc, v) => {
+                acc[decodeURIComponent(v[0].trim())] = decodeURIComponent(v[1].trim())
+                return acc
+            }, {})
+
     // const fn = () => console.log('!');
     // document.body.addEventListener('click', fn);
     // off(document.body, 'click', fn); // no longer logs '!' upon clicking on the page
