@@ -43,6 +43,22 @@ export const httpsRedirect = (): void => {
 // isAbsoluteURL('/foo/bar'); // false
 export const isAbsoluteURL = (str: string): boolean => /^[a-z][a-z0-9+.-]*:/.test(str)
 
+// objectToQueryString({ page: '1', size: '2kg', key: undefined });
+// '?page=1&size=2kg'
+export const objectToQueryString = (queryParameters: any): string => {
+    if (queryParameters) {
+        return Object.entries(queryParameters).reduce((queryString, [key, val], _) => {
+            const symbol = queryString.length === 0 ? '?' : '&'
+            if (typeof val === 'string') {
+                queryString += `${symbol}${key}=${val}`
+            }
+            return queryString
+        }, '')
+    }
+
+    return ''
+}
+
 // const data = JSON.stringify({
 //     id: 1,
 //     title: 'foo',

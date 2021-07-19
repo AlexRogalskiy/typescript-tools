@@ -362,6 +362,129 @@ export namespace Arrays {
         return -1
     }
 
+    // const comments = [
+    //     { id: 1, parent_id: null },
+    //     { id: 2, parent_id: 1 },
+    //     { id: 3, parent_id: 1 },
+    //     { id: 4, parent_id: 2 },
+    //     { id: 5, parent_id: 4 }
+    // ];
+    // const nestedComments = nest(comments);
+    // [{ id: 1, parent_id: null, children: [...] }]
+    export const nest = (items: any[], id = null, link = 'parent_id'): any[] =>
+        items
+            .filter(item => item[link] === id)
+            .map(item => ({ ...item, children: nest(items, item.id, link) }))
+
+    // nodeListToArray(document.childNodes); // [ <!DOCTYPE html>, html ]
+    export const nodeListToArray = (nodeList: any): any[] => [...nodeList]
+
+    // nthElement(['a', 'b', 'c'], 1); // 'b'
+    // nthElement(['a', 'b', 'b'], -3); // 'a'
+    export const nthElement = (arr: any[], n = 0): any => (n === -1 ? arr.slice(n) : arr.slice(n, n + 1))[0]
+
+    // offset([1, 2, 3, 4, 5], 2); // [3, 4, 5, 1, 2]
+    // offset([1, 2, 3, 4, 5], -2); // [4, 5, 1, 2, 3]
+    export const offset = (arr: any[], offset: number): any[] => [
+        ...arr.slice(offset),
+        ...arr.slice(0, offset),
+    ]
+
+    // const users = [
+    //     { name: 'fred', age: 48 },
+    //     { name: 'barney', age: 36 },
+    //     { name: 'fred', age: 40 },
+    // ];
+    // orderBy(users, ['name', 'age'], ['asc', 'desc']);
+    // [{name: 'barney', age: 36}, {name: 'fred', age: 48}, {name: 'fred', age: 40}]
+    //     orderBy(users, ['name', 'age']);
+    // [{name: 'barney', age: 36}, {name: 'fred', age: 40}, {name: 'fred', age: 48}]
+    export const orderBy = (arr: any[], props: string[], orders: string[]): any =>
+        [...arr].sort((a, b) =>
+            props.reduce((acc, prop, i) => {
+                if (acc === 0) {
+                    const [p1, p2] = orders && orders[i] === 'desc' ? [b[prop], a[prop]] : [a[prop], b[prop]]
+                    acc = p1 > p2 ? 1 : p1 < p2 ? -1 : 0
+                }
+                return acc
+            }, 0),
+        )
+
+    // const users = [
+    //     { name: 'fred', language: 'Javascript' },
+    //     { name: 'barney', language: 'TypeScript' },
+    //     { name: 'frannie', language: 'Javascript' },
+    //     { name: 'anna', language: 'Java' },
+    //     { name: 'jimmy' },
+    //     { name: 'nicky', language: 'Python' },
+    // ];
+    // orderWith(users, 'language', ['Javascript', 'TypeScript', 'Java']);
+    /*
+    [
+      { name: 'fred', language: 'Javascript' },
+      { name: 'frannie', language: 'Javascript' },
+      { name: 'barney', language: 'TypeScript' },
+      { name: 'anna', language: 'Java' },
+      { name: 'jimmy' },
+      { name: 'nicky', language: 'Python' }
+    ]
+    */
+    export const orderWith = (arr: any[], prop: PropertyKey, order: string[]): any[] => {
+        const orderValues = order.reduce((acc, v, i) => {
+            acc[v] = i
+            return acc
+        }, {})
+
+        return [...arr].sort((a, b) => {
+            if (orderValues[a[prop]] === undefined) return 1
+            if (orderValues[b[prop]] === undefined) return -1
+            return orderValues[a[prop]] - orderValues[b[prop]]
+        })
+    }
+
+    // objectToPairs({ a: 1, b: 2 }); // [ ['a', 1], ['b', 2] ]
+    export const objectToPairs = (obj: any): any[] => Object.entries(obj)
+
+    // objectToEntries({ a: 1, b: 2 }); // [ ['a', 1], ['b', 2] ]
+    export const objectToEntries = (obj: any): any => Object.keys(obj).map(k => [k, obj[k]])
+
+    // none([0, 1, 3, 0], x => x == 2); // true
+    // none([0, 0, 0]); // true
+    export const noneOf = (arr: any[], fn = Boolean): boolean => !arr.some(fn)
+
+    // mostPerformant([
+    //     () => {
+    //         Loops through the entire array before returning `false`
+    // [1, 2, 3, 4, 5, 6, 7, 8, 9, '10'].every(el => typeof el === 'number');
+    // },
+    // () => {
+    //     Only needs to reach index `1` before returning `false`
+    // [1, '2', 3, 4, 5, 6, 7, 8, 9, 10].every(el => typeof el === 'number');
+    // }
+    // ]); // 1
+    export const mostPerformant = (fns: any[], iterations = 10000): number => {
+        const times = fns.map(fn => {
+            const before = performance.now()
+            for (let i = 0; i < iterations; i++) fn()
+            return performance.now() - before
+        })
+
+        return times.indexOf(Math.min(...times))
+    }
+
+    // mostFrequent(['a', 'b', 'a', 'c', 'a', 'a', 'b']); // 'a'
+    export const mostFrequent = (arr: any[]): any =>
+        Object.entries<any>(
+            arr.reduce((a, v) => {
+                a[v] = a[v] ? a[v] + 1 : 1
+                return a
+            }, {}),
+        ).reduce<any>((a, v) => (v[1] >= a[1] ? v : a), [null, 0])[0]
+
+    // minN([1, 2, 3]); // [1]
+    // minN([1, 2, 3], 2); // [1, 2]
+    export const minN = (arr: any[], n = 1): any[] => [...arr].sort((a, b) => a - b).slice(0, n)
+
     export const lastOf = (arr: any[]): any => (arr && arr.length ? arr[arr.length - 1] : undefined)
 
     // intersectionWith(

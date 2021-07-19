@@ -1,6 +1,7 @@
 import {
     ALPHA_REGEX,
-    CommonUtils, Comparators,
+    CommonUtils,
+    Comparators,
     DATE_REGEX,
     domElementPattern,
     EMAIL_REGEX,
@@ -310,6 +311,22 @@ export namespace Checkers {
     export const isNull = (value: any): boolean => {
         return value === null
     }
+
+    export const not = (a: any): boolean => !a
+
+    export const or = (a: any, b: any): boolean => a || b
+
+    // palindrome('taco cat'); // true
+    export const palindrome = (str: string): boolean => {
+        const s = str.toLowerCase().replace(/[\W_]/g, '')
+
+        return s === [...s].reverse().join('')
+    }
+
+    // nor(true, true); // false
+    // nor(true, false); // false
+    // nor(false, false); // true
+    export const nor = (a: any, b: any): boolean => !(a || b)
 
     export const isUndefined = (value: any): boolean => {
         return value === undefined

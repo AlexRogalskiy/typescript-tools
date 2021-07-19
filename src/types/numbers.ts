@@ -178,6 +178,9 @@ export namespace Numbers {
 
         export const milesToKm = (miles: number): number => miles * 1.609344
 
+        // nthRoot(32, 5); // 2
+        export const nthRoot = (x: number, n: number): number => Math.pow(x, 1 / n)
+
         // midpoint([2, 2], [4, 4]); // [3, 3]
         // midpoint([4, 4], [6, 6]); // [5, 5]
         // midpoint([1, 3], [2, 4]); // [1.5, 3.5]

@@ -100,6 +100,15 @@ export namespace DateTimes {
     //     new Date(2016, 0, 10),
     //     new Date(2016, 0, 9)
     // ];
+    // minDate(...dates); // 2016-01-08T22:00:00.000Z
+    export const minDate = (...dates: Date[]): Date => new Date(Math.min(...dates.map(v => v.getTime())))
+
+    // const dates = [
+    //     new Date(2017, 4, 13),
+    //     new Date(2018, 2, 12),
+    //     new Date(2016, 0, 10),
+    //     new Date(2016, 0, 9)
+    // ];
     // maxDate(...dates); // 2018-03-11T22:00:00.000Z
     export const maxDate = (...dates: Date[]): Date => new Date(Math.max(...dates.map(v => v.getTime())))
 

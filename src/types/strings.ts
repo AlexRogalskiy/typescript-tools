@@ -126,6 +126,22 @@ export namespace Strings {
             .map((c, i) => fn(c, i, str))
             .join('')
 
+    // padNumber(1234, 6); // '001234'
+    export const padNumber = (n: number, l: number): string => `${n}`.padStart(l, '0')
+
+    // pad('cat', 8); // '  cat   '
+    // pad(String(42), 6, '0'); // '004200'
+    // pad('foobar', 3); // 'foobar'
+    export const pad = (str: string, length: number, char = ' '): string =>
+        str.padStart((str.length + length) / 2, char).padEnd(length, char)
+
+    // normalizeLineEndings('This\r\nis a\nmultiline\nstring.\r\n');
+    // 'This\r\nis a\r\nmultiline\r\nstring.\r\n'
+    //     normalizeLineEndings('This\r\nis a\nmultiline\nstring.\r\n', '\n');
+    // 'This\nis a\nmultiline\nstring.\n'
+    export const normalizeLineEndings = (str: string, normalized = '\r\n'): string =>
+        str.replace(/\r?\n/g, normalized)
+
     // mask(1234567890); // '******7890'
     // mask(1234567890, 3); // '*******890'
     // mask(1234567890, -4, '$'); // '$$$$567890'

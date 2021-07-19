@@ -231,6 +231,50 @@ export namespace Objects {
             return acc
         }, {})
 
+    // omit({ a: 1, b: '2', c: 3 }, ['b']); // { 'a': 1, 'c': 3 }
+    export const omit = (obj: any, arr: PropertyKey[]): any =>
+        Object.keys(obj)
+            .filter(k => !arr.includes(k))
+            .reduce((acc, key) => ((acc[key] = obj[key]), acc), {})
+
+    // omitBy({ a: 1, b: '2', c: 3 }, x => typeof x === 'number'); // { b: '2' }
+    export const omitBy = (obj: any, fn: any): any =>
+        Object.keys(obj)
+            .filter(k => !fn(obj[k], k))
+            .reduce((acc, key) => ((acc[key] = obj[key]), acc), {})
+
+    // const obs = observeMutations(document, console.log);
+    // Logs all mutations that happen on the page
+    //     obs.disconnect();
+    // Disconnects the observer and stops logging mutations on the page
+    export const observeMutations = (element: any, callback: any, options: any): MutationObserver => {
+        const observer = new MutationObserver(mutations => {
+            for (const m of mutations) {
+                callback(m)
+            }
+        })
+
+        observer.observe(
+            element,
+            Object.assign(
+                {
+                    childList: true,
+                    attributes: true,
+                    attributeOldValue: true,
+                    characterData: true,
+                    characterDataOldValue: true,
+                    subtree: true,
+                },
+                options,
+            ),
+        )
+
+        return observer
+    }
+
+    // objectFromPairs([['a', 1], ['b', 2]]); // {a: 1, b: 2}
+    export const objectFromPairs = (arr: any[]): any => arr.reduce((a, [key, val]) => ((a[key] = val), a), {})
+
     // const object = {
     //     a: [{ x: 2 }, { y: 4 }],
     //     b: 1

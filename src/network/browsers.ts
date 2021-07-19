@@ -187,6 +187,72 @@ export namespace Browsers {
         }
     }
 
+    // onClickOutside('#my-element', () => console.log('Hello'));
+    // Will log 'Hello' whenever the user clicks outside of #my-element
+    export const onClickOutside = (element: any, callback: any): void => {
+        document.addEventListener('click', e => {
+            if (!element.contains(e.target)) callback()
+        })
+    }
+
+    // onScrollStop(() => {
+    //     console.log('The user has stopped scrolling');
+    // });
+    export const onScrollStop = (callback: any): void => {
+        let isScrolling
+
+        window.addEventListener(
+            'scroll',
+            _ => {
+                clearTimeout(isScrolling)
+                isScrolling = setTimeout(() => {
+                    callback()
+                }, 150)
+            },
+            false,
+        )
+    }
+
+    // onUserInputChange(type => {
+    //     console.log('The user is now using', type, 'as an input method.');
+    // });
+    export const onUserInputChange = (callback: any): void => {
+        let type = 'mouse',
+            lastTime = 0
+
+        const mousemoveHandler = (): void => {
+            const now = performance.now()
+            if (now - lastTime < 20)
+                (type = 'mouse'), callback(type), document.removeEventListener('mousemove', mousemoveHandler)
+            lastTime = now
+        }
+
+        document.addEventListener('touchstart', () => {
+            if (type === 'touch') return
+            ;(type = 'touch'), callback(type), document.addEventListener('mousemove', mousemoveHandler)
+        })
+    }
+
+    // const fn = () => console.log('!');
+    // on(document.body, 'click', fn); // logs '!' upon clicking the body
+    // on(document.body, 'click', fn, { target: 'p' });
+    // logs '!' upon clicking a `p` element child of the body
+    // on(document.body, 'click', fn, { options: true });
+    // use capturing instead of bubbling
+    export const on = (el: any, evt: any, fn: any, opts = {}): any => {
+        const delegatorFn = (e: any): any => e.target.matches(opts['target']) && fn.call(e.target, e)
+
+        el.addEventListener(evt, opts['target'] ? delegatorFn : fn, opts['options'] || false)
+
+        if (opts['target']) return delegatorFn
+    }
+
+    // const fn = () => console.log('!');
+    // document.body.addEventListener('click', fn);
+    // off(document.body, 'click', fn); // no longer logs '!' upon clicking on the page
+    export const off = (el: any, evt: any, fn: any, opts = false): void =>
+        el.removeEventListener(evt, fn, opts)
+
     // injectCSS('body { background-color: #000 }');
     export const injectCSS = (css: string): any => {
         const el = document.createElement('style')

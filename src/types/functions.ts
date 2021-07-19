@@ -110,6 +110,49 @@ export namespace Functions {
     export const listenOnce = (el: any, evt: any, fn: any): void =>
         el.addEventListener(evt, fn, { once: true })
 
+    // [1, 2, 3, 4, 5, 6].filter(negate(n => n % 2 === 0)); // [ 1, 3, 5 ]
+    export const negate = (func: any): any => {
+        return (...args) => !func(...args)
+    }
+
+    // const third = nthArg(2);
+    // third(1, 2, 3); // 3
+    // third(1, 2); // undefined
+    // const last = nthArg(-1);
+    // last(1, 2, 3, 4, 5); // 5
+    export const nthArg = (n: number): any => {
+        return (...args) => args.slice(n)[0]
+    }
+
+    // const minMax = overOf(Math.min, Math.max);
+    // minMax(1, 2, 3, 4, 5); // [1, 5]
+    export const overOf = (...fns: any[]) => {
+        return (...args) => fns.map(fn => fn(...args))
+    }
+
+    // const square = n => n * n;
+    // const double = n => n * 2;
+    // const fn = overArgs((x, y) => [x, y], [square, double]);
+    // fn(9, 3); // [81, 6]
+    export const overArgs = (fn: any, transforms: any[]) => {
+        return (...args) => fn(...args.map((val, i) => transforms[i](val)))
+    }
+
+    // const startApp = function(event) {
+    //     console.log(this, event); // document.body, MouseEvent
+    // };
+    // document.body.addEventListener('click', once(startApp));
+    // only runs `startApp` once upon click
+    export const once = (fn: any): any => {
+        let called = false
+
+        return function (...args): any {
+            if (called) return
+            called = true
+            return fn.apply(fn, args)
+        }
+    }
+
     // See the `anagrams` snippet.
     // const anagramsCached = memoize(anagrams);
     // anagramsCached('javascript'); // takes a long time
