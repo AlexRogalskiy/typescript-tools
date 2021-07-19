@@ -455,6 +455,120 @@ export namespace Commons {
             .join('')
     }
 
+    // const data = [[0, 0], [0, 1], [1, 3], [2, 0]];
+    // const labels = [0, 1, 1, 0];
+    // kNearestNeighbors(data, labels, [1, 2], 2); // 1
+    // kNearestNeighbors(data, labels, [1, 0], 2); // 0
+    export const kNearestNeighbors = (data: any, labels: number[], point: any, k = 3): any => {
+        const kNearest = data
+            .map((el, i) => ({
+                dist: Math.hypot(...Object.keys(el).map(key => point[key] - el[key])),
+                label: labels[i],
+            }))
+            .sort((a, b) => a.dist - b.dist)
+            .slice(0, k)
+
+        return kNearest.reduce(
+            (acc, { label }, _) => {
+                acc.classCounts[label] = Object.keys(acc.classCounts).includes(label)
+                    ? acc.classCounts[label] + 1
+                    : 1
+                if (acc.classCounts[label] > acc.topClassCount) {
+                    acc.topClassCount = acc.classCounts[label]
+                    acc.topClass = label
+                }
+                return acc
+            },
+            {
+                classCounts: {},
+                topClass: kNearest[0].label,
+                topClassCount: 0,
+            },
+        ).topClass
+    }
+
+    // luhnCheck('4485275742308327'); // true
+    // luhnCheck(6011329933655299); //  false
+    // luhnCheck(123456789); // false
+    export const luhnCheck = (num: string | number): boolean => {
+        const arr = `${num}`
+            .split('')
+            .reverse()
+            .map(x => parseInt(x))
+        const lastDigit = arr.splice(0, 1)[0]
+        let sum = arr.reduce((acc, val, i) => (i % 2 !== 0 ? acc + val : acc + ((val * 2) % 9) || 9), 0)
+        sum += lastDigit
+
+        return sum % 10 === 0
+    }
+
+    // levenshteinDistance('duck', 'dark'); // 2
+    export const levenshteinDistance = (s: string, t: string): number => {
+        if (!s.length) return t.length
+        if (!t.length) return s.length
+
+        const calculateDist = (i: number, j: number, arr: number[]): number => {
+            if (i === 0) {
+                return j
+            }
+
+            return Math.min(
+                arr[i - 1][j] + 1,
+                arr[i][j - 1] + 1,
+                arr[i - 1][j - 1] + (s[j - 1] === t[i - 1] ? 0 : 1),
+            )
+        }
+
+        const arr: any[] = []
+        for (let i = 0; i <= t.length; i++) {
+            arr[i] = [i]
+            for (let j = 1; j <= s.length; j++) {
+                arr[i][j] = calculateDist(i, j, arr)
+            }
+        }
+
+        return arr[t.length][s.length]
+    }
+
+    // kMeans([[0, 0], [0, 1], [1, 3], [2, 0]], 2); // [0, 1, 1, 0]
+    export const kMeans = (data: any, k = 1): any => {
+        const centroids = data.slice(0, k)
+        const distances = Array.from({ length: data.length }, () => Array.from({ length: k }, () => 0))
+        const classes = Array.from({ length: data.length }, () => -1)
+        let itr = true
+
+        while (itr) {
+            itr = false
+
+            for (const d in data) {
+                for (let c = 0; c < k; c++) {
+                    distances[d][c] = Math.hypot(
+                        ...Object.keys(data[0]).map(key => data[d][key] - centroids[c][key]),
+                    )
+                }
+                const m = distances[d].indexOf(Math.min(...distances[d]))
+                if (classes[d] !== m) itr = true
+                classes[d] = m
+            }
+
+            for (let c = 0; c < k; c++) {
+                centroids[c] = Array.from({ length: data[0].length }, () => 0)
+                const size = data.reduce((acc, _, d) => {
+                    if (classes[d] === c) {
+                        acc++
+                        for (const i in data[0]) centroids[c][i] += data[d][i]
+                    }
+                    return acc
+                }, 0)
+                for (const i in data[0]) {
+                    centroids[c][i] = parseFloat(Number(centroids[c][i] / size).toFixed(2))
+                }
+            }
+        }
+
+        return classes
+    }
+
     export const isEmpty = (value: any): boolean => {
         return (
             value === void 0 ||

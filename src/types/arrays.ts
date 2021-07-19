@@ -264,6 +264,200 @@ export namespace Arrays {
     // hasMany([1, 2], x => x % 2); // false
     export const hasMany = (arr: any[], fn: any): boolean => arr.filter(fn).length > 1
 
+    export const head = (arr: any[]): any => (arr && arr.length ? arr[0] : undefined)
+
+    export const includesAny = (arr: any[], values: any[]): boolean => values.some(v => arr.includes(v))
+
+    export const includesAll = (arr: any[], values: any[]): boolean => values.every(v => arr.includes(v))
+
+    // indexBy([
+    //     { id: 10, name: 'apple' },
+    //     { id: 20, name: 'orange' }
+    // ], x => x.id);
+    // { '10': { id: 10, name: 'apple' }, '20': { id: 20, name: 'orange' } }
+    export const indexBy = (arr: any[], fn: any): any =>
+        arr.reduce((obj, v, i) => {
+            obj[fn(v, i, arr)] = v
+            return obj
+        }, {})
+
+    // initializeNDArray(1, 3); // [1, 1, 1]
+    // initializeNDArray(5, 2, 2, 2); // [[[5, 5], [5, 5]], [[5, 5], [5, 5]]]
+    export const initializeNDArray = (val: any, ...args: any[]): boolean =>
+        args.length === 0
+            ? val
+            : Array.from({ length: args[0] }).map(() => initializeNDArray(val, ...args.slice(1)))
+
+    // join(['pen', 'pineapple', 'apple', 'pen'],',','&'); // 'pen,pineapple,apple&pen'
+    // join(['pen', 'pineapple', 'apple', 'pen'], ','); // 'pen,pineapple,apple,pen'
+    // join(['pen', 'pineapple', 'apple', 'pen']); // 'pen,pineapple,apple,pen'
+    export const join = (arr: any[], separator = ',', end = separator): string =>
+        arr.reduce((acc, val, i) => {
+            if (i === arr.length - 2) {
+                return acc + val + end
+            }
+
+            return i === arr.length - 1 ? acc + val : acc + val + separator
+        }, '')
+
+    // mergeSortedArrays([1, 4, 5], [2, 3, 6]); // [1, 2, 3, 4, 5, 6]
+    export const mergeSortedArrays = (a: any[], b: any[]): any[] => {
+        const _a = [...a],
+            _b = [...b]
+
+        return Array.from({ length: _a.length + _b.length }, () => {
+            if (!_a.length) return _b.shift()
+            else if (!_b.length) return _a.shift()
+            else return _a[0] > _b[0] ? _b.shift() : _a.shift()
+        })
+    }
+
+    // minBy([{ n: 4 }, { n: 2 }, { n: 8 }, { n: 6 }], x => x.n); // 2
+    // minBy([{ n: 4 }, { n: 2 }, { n: 8 }, { n: 6 }], 'n'); // 2
+    export const minBy = (arr: number[], fn: any): number =>
+        Math.min(...arr.map<number>(typeof fn === 'function' ? fn : val => val[fn]))
+
+    // mergeSort([5, 1, 4, 2, 3]); // [1, 2, 3, 4, 5]
+    export const mergeSort = (arr: number[]): (number | undefined)[] => {
+        if (arr.length < 2) return arr
+        const mid = Math.floor(arr.length / 2)
+        const l = mergeSort(arr.slice(0, mid))
+        const r = mergeSort(arr.slice(mid, arr.length))
+
+        return Array.from({ length: l.length + r.length }, () => {
+            if (!l.length) return r.shift()
+            else if (!r.length) return l.shift()
+            else return l[0] && r[0] && l[0] > r[0] ? r.shift() : l.shift()
+        })
+    }
+
+    // median([5, 6, 50, 1, -5]); // 5
+    export const median = (arr: number[]): number => {
+        const mid = Math.floor(arr.length / 2),
+            nums = [...arr].sort((a, b) => a - b)
+        return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2
+    }
+
+    // maxN([1, 2, 3]); // [3]
+    // maxN([1, 2, 3], 2); // [3, 2]
+    export const maxN = (arr: any[], n = 1): any => [...arr].sort((a, b) => b - a).slice(0, n)
+
+    // maxBy([{ n: 4 }, { n: 2 }, { n: 8 }, { n: 6 }], x => x.n); // 8
+    // maxBy([{ n: 4 }, { n: 2 }, { n: 8 }, { n: 6 }], 'n'); // 8
+    export const maxBy = (arr: number[], fn: any): number =>
+        Math.max(...arr.map<number>(typeof fn === 'function' ? fn : val => val[fn]))
+
+    // mapConsecutive([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 3, x => x.join('-'));
+    // ['1-2-3', '2-3-4', '3-4-5', '4-5-6', '5-6-7', '6-7-8', '7-8-9', '8-9-10'];
+    export const mapConsecutive = (arr: any[], n: number, fn: any): any[] =>
+        arr.slice(n - 1).map((_, i) => fn(arr.slice(i, i + n)))
+
+    // linearSearch([2, 9, 9], 9); // 1
+    // linearSearch([2, 9, 9], 7); // -1
+    export const linearSearch = (arr: any[], item: any): number => {
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i] === item) return +i
+        }
+
+        return -1
+    }
+
+    export const lastOf = (arr: any[]): any => (arr && arr.length ? arr[arr.length - 1] : undefined)
+
+    // intersectionWith(
+    //     [1, 1.2, 1.5, 3, 0],
+    //     [1.9, 3, 0, 3.9],
+    //     (a, b) => Math.round(a) === Math.round(b)
+    // ); // [1.5, 3, 0]
+    export const intersectionWith = (a: any[], b: any[], comp: any): any[] =>
+        a.filter(x => b.findIndex(y => comp(x, y)) !== -1)
+
+    // isContainedIn([1, 4], [2, 4, 1]); // true
+    export const isContainedIn = (a: any[], b: any[]): boolean => {
+        for (const v of new Set(a)) {
+            if (!b.some(e => e === v) || a.filter(e => e === v).length > b.filter(e => e === v).length)
+                return false
+        }
+        return true
+    }
+
+    // intersectionBy([2.1, 1.2], [2.3, 3.4], Math.floor); // [2.1]
+    // intersectionBy(
+    //     [{ title: 'Apple' }, { title: 'Orange' }],
+    //     [{ title: 'Orange' }, { title: 'Melon' }],
+    //     x => x.title
+    // ); // [{ title: 'Orange' }]
+    export const intersectionBy = (a: any[], b: any[], fn: any): any[] => {
+        const s = new Set(b.map(fn))
+
+        return [...new Set(a)].filter(x => s.has(fn(x)))
+    }
+
+    // intersection([1, 2, 3], [4, 3, 2]); // [2, 3]
+    export const intersection = (a: any[], b: any[]): any[] => {
+        const s = new Set(b)
+
+        return [...new Set(a)].filter(x => s.has(x))
+    }
+
+    // let myArray = [1, 2, 3, 4];
+    // insertAt(myArray, 2, 5); // myArray = [1, 2, 3, 5, 4]
+    //
+    // let otherArray = [2, 10];
+    // insertAt(otherArray, 0, 4, 6, 8); // otherArray = [2, 4, 6, 8, 10]
+    export const insertAt = (arr: any[], i: number, ...v: any[]): any[] => {
+        arr.splice(i + 1, 0, ...v)
+        return arr
+    }
+
+    // initializeArrayWithValues(5, 2); // [2, 2, 2, 2, 2]
+    export const initializeArrayWithValues = (n: number, val = 0): number[] =>
+        Array.from<number>({ length: n }).fill(val)
+
+    // initializeArrayWithRangeRight(5); // [5, 4, 3, 2, 1, 0]
+    // initializeArrayWithRangeRight(7, 3); // [7, 6, 5, 4, 3]
+    // initializeArrayWithRangeRight(9, 0, 2); // [8, 6, 4, 2, 0]
+    export const initializeArrayWithRangeRight = (end: number, start = 0, step = 1): number[] =>
+        Array.from({ length: Math.ceil((end + 1 - start) / step) }).map(
+            (_, i, arr) => (arr.length - i - 1) * step + start,
+        )
+
+    // initializeArrayWithRange(5); // [0, 1, 2, 3, 4, 5]
+    // initializeArrayWithRange(7, 3); // [3, 4, 5, 6, 7]
+    // initializeArrayWithRange(9, 0, 2); // [0, 2, 4, 6, 8]
+    export const initializeArrayWithRange = (end: number, start = 0, step = 1): number[] =>
+        Array.from({ length: Math.ceil((end - start + 1) / step) }, (_, i) => i * step + start)
+
+    // initialize2DArray(2, 2, 0); // [[0, 0], [0, 0]]
+    export const initialize2DArray = (w: number, h: number, val = null): any[][] =>
+        Array.from({ length: h }).map(() => Array.from({ length: w }).fill(val))
+
+    export const initial = (arr: any[]): any[] => arr.slice(0, -1)
+
+    // indexOn([
+    //     { id: 10, name: 'apple' },
+    //     { id: 20, name: 'orange' }
+    // ], x => x.id);
+    // { '10': { name: 'apple' }, '20': { name: 'orange' } }
+    export const indexOn = (arr: any[], key: any): any =>
+        arr.reduce((obj, v) => {
+            const { [key]: id, ...data } = v
+            obj[id] = data
+            return obj
+        }, {})
+
+    // indexOfAll([1, 2, 3, 1, 2, 3], 1); // [0, 3]
+    // indexOfAll([1, 2, 3], 4); // []
+    export const indexOfAll = (arr: any[], val: any): any =>
+        arr.reduce((acc, el, i) => (el === val ? [...acc, i] : acc), [])
+
+    // haveSameContents([1, 2, 4], [2, 4, 1]); // true
+    export const haveSameContents = (a: any[], b: any[]): boolean => {
+        for (const v of new Set([...a, ...b]))
+            if (a.filter(e => e === v).length !== b.filter(e => e === v).length) return false
+        return true
+    }
+
     // node myScript.js -s --test --cool=true
     // hasFlags('-s'); // true
     // hasFlags('--test', 'cool=true', '-s'); // true

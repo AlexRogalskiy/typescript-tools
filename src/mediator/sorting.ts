@@ -90,6 +90,52 @@ export namespace Sorting {
         return array
     }
 
+    export const heapsort = (arr: any[]): any[] => {
+        const a = [...arr]
+        let l = a.length
+
+        const heapify = (a, i): void => {
+            const left = 2 * i + 1
+            const right = 2 * i + 2
+            let max = i
+            if (left < l && a[left] > a[max]) max = left
+            if (right < l && a[right] > a[max]) max = right
+            if (max !== i) {
+                ;[a[max], a[i]] = [a[i], a[max]]
+                heapify(a, max)
+            }
+        }
+
+        for (let i = Math.floor(l / 2); i >= 0; i -= 1) heapify(a, i)
+        for (let i = a.length - 1; i > 0; i--) {
+            ;[a[0], a[i]] = [a[i], a[0]]
+            l--
+            heapify(a, 0)
+        }
+        return a
+    }
+
+    // insertionSort([6, 3, 4, 1]); // [1, 3, 4, 6]
+    export const insertionSort3 = (arr: any[]): any[] =>
+        arr.reduce((acc, x) => {
+            if (!acc.length) return [x]
+
+            acc.some((y, j) => {
+                if (x <= y) {
+                    acc.splice(j, 0, x)
+                    return true
+                }
+                if (x > y && j === acc.length - 1) {
+                    acc.splice(j + 1, 0, x)
+                    return true
+                }
+
+                return false
+            })
+
+            return acc
+        }, [])
+
     /**
      * @public
      * @module sorting

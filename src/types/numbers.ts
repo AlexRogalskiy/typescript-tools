@@ -170,6 +170,46 @@ export namespace Numbers {
         export const hammingDistance = (num1: number, num2: number): number =>
             ((num1 ^ num2).toString(2).match(/1/g) || '').length
 
+        export const inRange = (n: number, start: number, end?: number): boolean => {
+            if (end && start > end) [end, start] = [start, end]
+
+            return end == null ? n >= 0 && n < start : n >= start && n < end
+        }
+
+        export const milesToKm = (miles: number): number => miles * 1.609344
+
+        // midpoint([2, 2], [4, 4]); // [3, 3]
+        // midpoint([4, 4], [6, 6]); // [5, 5]
+        // midpoint([1, 3], [2, 4]); // [1.5, 3.5]
+        export const midpoint = ([x1, y1]: number[], [x2, y2]: number[]): number[] => [
+            (x1 + x2) / 2,
+            (y1 + y2) / 2,
+        ]
+
+        // mapNumRange(5, 0, 10, 0, 100); // 50
+        export const mapNumRange = (
+            num: number,
+            inMin: number,
+            inMax: number,
+            outMin: number,
+            outMax: number,
+        ): number => ((num - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin
+
+        // logBase(10, 10); // 1
+        // logBase(100, 10); // 2
+        export const logBase = (n: number, base: number): number => Math.log(n) / Math.log(base)
+
+        // lcm(12, 7); // 84
+        // lcm(...[1, 3, 4, 5]); // 60
+        export const lcm = (...arr: number[]): number => {
+            const gcd = (x, y): number => (!y ? x : gcd(y, x % y))
+            const _lcm = (x, y): number => (x * y) / gcd(x, y)
+
+            return [...arr].reduce((a, b) => _lcm(a, b))
+        }
+
+        export const kmToMiles = (km: number): number => km * 0.621371
+
         // gcd(8, 36); // 4
         // gcd(...[12, 8, 32]); // 4
         export const gcd = (...arr: any[]): any[] => {

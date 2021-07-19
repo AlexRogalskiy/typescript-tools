@@ -1,6 +1,6 @@
 import {
     ALPHA_REGEX,
-    CommonUtils,
+    CommonUtils, Comparators,
     DATE_REGEX,
     domElementPattern,
     EMAIL_REGEX,
@@ -323,12 +323,242 @@ export namespace Checkers {
         return isNotNull(value) && isNotUndefined(value)
     }
 
+    // isOf(Array, [1]); // true
+    // isOf(ArrayBuffer, new ArrayBuffer(1)); // true
+    // isOf(Map, new Map()); // true
+    // isOf(RegExp, /./g); // true
+    // isOf(Set, new Set()); // true
+    // isOf(WeakMap, new WeakMap()); // true
+    // isOf(WeakSet, new WeakSet()); // true
+    // isOf(String, ''); // true
+    // isOf(String, String('')); // true
+    // isOf(Number, 1); // true
+    // isOf(Number, Number(1)); // true
+    // isOf(Boolean, true); // true
+    // isOf(Boolean, Boolean(true)); // true
+    export const isOf = (type: any, val: any): boolean =>
+        ![undefined, null].includes(val) && val.constructor === type
+
+    // isAfterDate(new Date(2010, 10, 21), new Date(2010, 10, 20)); // true
+    export const isAfterDate = (dateA: Date, dateB: Date): boolean => dateA > dateB
+
+    // isAlpha('sampleInput'); // true
+    // isAlpha('this Will fail'); // false
+    // isAlpha('123'); // false
+    export const isAlpha = (str: string): boolean => /^[a-zA-Z]*$/.test(str)
+
+    // isAlphaNumeric('hello123'); // true
+    // isAlphaNumeric('123'); // true
+    // isAlphaNumeric('hello 123'); // false (space character is not alphanumeric)
+    // isAlphaNumeric('#$hello'); // false
+    export const isAlphaNumeric2 = (str: string): boolean => /^[a-z0-9]+$/gi.test(str)
+
     export const containsWhitespace = (str: string): boolean => /\s/.test(str)
+
+    // isObjectLike({}); // true
+    // isObjectLike([1, 2, 3]); // true
+    // isObjectLike(x => x); // false
+    // isObjectLike(null); // false
+    export const isObjectLike = (val: any): boolean => val !== null && typeof val === 'object'
+
+    // isPlainObject({ a: 1 }); // true
+    // isPlainObject(new Map()); // false
+    export const isPlainObject4 = (val: any): boolean =>
+        !!val && typeof val === 'object' && val.constructor === Object
+
+    // isPowerOfTen(1); // true
+    // isPowerOfTen(10); // true
+    // isPowerOfTen(20); // false
+    export const isPowerOfTen = (n: number): boolean => Math.log10(n) % 1 === 0
+
+    // const fs = require('fs');
+    // isReadableStream(fs.createReadStream('test.txt')); // true
+    export const isReadableStream = (val: any): boolean =>
+        val !== null &&
+        typeof val === 'object' &&
+        typeof val.pipe === 'function' &&
+        typeof val._read === 'function' &&
+        typeof val._readableState === 'object'
+
+    // const origin = new URL('https://www.30secondsofcode.org/about');
+    // const destination = new URL('https://www.30secondsofcode.org/contact');
+    // isSameOrigin(origin, destination); // true
+    // const other = new URL('https://developer.mozilla.org);
+    // isSameOrigin(origin, other); // false
+    export const isSameOrigin = (origin: Location, destination: Location): boolean =>
+        origin.protocol === destination.protocol && origin.host === destination.host
+
+    // const fs = require('fs');
+    // isStream(fs.createReadStream('test.txt')); // true
+    export const isStream = (val: any): boolean =>
+        val !== null && typeof val === 'object' && typeof val.pipe === 'function'
+
+    export const isTravisCI = (): boolean => 'TRAVIS' in process.env && 'CI' in process.env
+
+    // isUpperCase('ABC'); // true
+    // isUpperCase('A3@$'); // true
+    // isUpperCase('aB4'); // false
+    export const isUpperCase = (str: string): boolean => str === str.toUpperCase()
+
+    // matches({ age: 25, hair: 'long', beard: true }, { hair: 'long', beard: true });
+    // true
+    // matches({ hair: 'long', beard: true }, { age: 25, hair: 'long', beard: true });
+    // false
+    export const matches = (obj: any, source: any): boolean =>
+        Object.keys(source).every(key => obj.hasOwnProperty(key) && obj[key] === source[key])
+
+    // const isGreeting = val => /^h(?:i|ello)$/.test(val);
+    // matchesWith(
+    //     { greeting: 'hello' },
+    //     { greeting: 'hi' },
+    //     (oV, sV) => isGreeting(oV) && isGreeting(sV)
+    // ); // true
+    export const matchesWith = (obj: any, source: any, fn: any): boolean =>
+        Object.keys(source).every(
+            key =>
+                obj.hasOwnProperty(key) &&
+                (typeof fn === 'function'
+                    ? fn(obj[key], source[key], key, obj, source)
+                    : obj[key] == source[key]),
+        )
+
+    // const fs = require('fs');
+    // isWritableStream(fs.createWriteStream('test.txt')); // true
+    export const isWritableStream = (val: any): boolean =>
+        val !== null &&
+        typeof val === 'object' &&
+        typeof val.pipe === 'function' &&
+        typeof val._write === 'function' &&
+        typeof val._writableState === 'object'
+
+    export const isWeekday = (d = new Date()): boolean => d.getDay() % 6 !== 0
+
+    export const isWeekend = (d = new Date()): boolean => d.getDay() % 6 === 0
+
+    // isValidJSON('{"name":"Adam","age":20}'); // true
+    // isValidJSON('{"name":"Adam",age:"20"}'); // false
+    // isValidJSON(null); // true
+    export const isValidJSON = (str: string): boolean => {
+        try {
+            JSON.parse(str)
+            return true
+        } catch (e) {
+            return false
+        }
+    }
+
+    // isSorted([0, 1, 2, 2]); // 1
+    // isSorted([4, 3, 2]); // -1
+    // isSorted([4, 3, 5]); // 0
+    // isSorted([4]); // 0
+    export const isSorted = (arr: number[]): number => {
+        if (arr.length <= 1) return 0
+        const direction = arr[1] - arr[0]
+        for (let i = 2; i < arr.length; i++) {
+            if ((arr[i] - arr[i - 1]) * direction < 0) return 0
+        }
+
+        return Math.sign(direction)
+    }
+
+    export const isSessionStorageEnabled = (): boolean => {
+        try {
+            const key = '__storage__test'
+            window.sessionStorage.setItem(key, 'null')
+            window.sessionStorage.removeItem(key)
+            return true
+        } catch (e) {
+            return false
+        }
+    }
+
+    // isSameDate(new Date(2010, 10, 20), new Date(2010, 10, 20)); // true
+    export const isSameDate = (dateA: Date, dateB: Date): boolean =>
+        dateA.toISOString() === dateB.toISOString()
+
+    // isPromiseLike({
+    //     then: function() {
+    //         return '';
+    //     }
+    // }); // true
+    // isPromiseLike(null); // false
+    // isPromiseLike({}); // false
+    export const isPromiseLike = (obj: any): boolean =>
+        obj !== null &&
+        (typeof obj === 'object' || typeof obj === 'function') &&
+        // eslint-disable-next-line github/no-then
+        typeof obj.then === 'function'
+
+    // isPrimitive(null); // true
+    // isPrimitive(undefined); // true
+    // isPrimitive(50); // true
+    // isPrimitive('Hello!'); // true
+    // isPrimitive(false); // true
+    // isPrimitive(Symbol()); // true
+    // isPrimitive([]); // false
+    // isPrimitive({}); // false
+    export const isPrimitive = (val: any): boolean => Object(val) !== val
+
+    // isPrime(11); // true
+    export const isPrime = (num: number): boolean => {
+        const boundary = Math.floor(Math.sqrt(num))
+        for (let i = 2; i <= boundary; i++) if (num % i === 0) return false
+
+        return num >= 2
+    }
+
+    // isPowerOfTwo(0); // false
+    // isPowerOfTwo(1); // true
+    // isPowerOfTwo(8); // true
+    export const isPowerOfTwo2 = (n: number): boolean => !!n && (n & (n - 1)) == 0
+
+    // isAnagram('iceman', 'cinema'); // true
+    export const isAnagram = (str1: string, str2: string): boolean => {
+        const normalize = (str: string): string =>
+            str
+                .toLowerCase()
+                .replace(/[^a-z0-9]/gi, '')
+                .split('')
+                .sort(Comparators.cmp)
+                .join('')
+
+        return normalize(str1) === normalize(str2)
+    }
+
+    // isArrayLike([1, 2, 3]); // true
+    // isArrayLike(document.querySelectorAll('.className')); // true
+    // isArrayLike('abc'); // true
+    // isArrayLike(null); // false
+    export const isArrayLike2 = (obj: any): boolean =>
+        obj != null && typeof obj[Symbol.iterator] === 'function'
 
     export const isDNSName = (str: string): boolean => {
         const regExp = /^[A-Za-z0-9][A-Za-z0-9-.]*[A-Za-z0-9]$/
         return regExp.test(str)
     }
+
+    // isBeforeDate(new Date(2010, 10, 20), new Date(2010, 10, 21)); // true
+    export const isBeforeDate = (dateA: Date, dateB: Date): boolean => dateA < dateB
+
+    // isBetweenDates(
+    //     new Date(2010, 11, 20),
+    //     new Date(2010, 11, 30),
+    //     new Date(2010, 11, 19)
+    // ); // false
+    // isBetweenDates(
+    //     new Date(2010, 11, 20),
+    //     new Date(2010, 11, 30),
+    //     new Date(2010, 11, 25)
+    // ); // true
+    export const isBetweenDates = (dateStart: Date, dateEnd: Date, date: Date): boolean =>
+        date > dateStart && date < dateEnd
+
+    export const isBrowser = (): boolean => ![typeof window, typeof document].includes('undefined')
+
+    // isAsyncFunction(function() {}); // false
+    // isAsyncFunction(async function() {}); // true
+    export const isAsyncFunction = (val: any): boolean =>
+        Object.prototype.toString.call(val) === '[object AsyncFunction]'
 
     export const hasDuplicates = (arr: any[]): boolean => new Set(arr).size !== arr.length
 
@@ -340,14 +570,90 @@ export namespace Checkers {
         return isNumber(value) && value >= 1 && value <= 65536
     }
 
+    // isDisjoint(new Set([1, 2]), new Set([3, 4])); // true
+    // isDisjoint(new Set([1, 2]), new Set([1, 3])); // false
+    export const isDisjoint = (a: any, b: any): boolean => {
+        const sA = new Set(a),
+            sB = new Set(b)
+
+        return [...sA].every(v => !sB.has(v))
+    }
+
+    export const isLocalStorageEnabled = (): boolean => {
+        try {
+            const key = '__storage__test'
+            window.localStorage.setItem(key, 'null')
+            window.localStorage.removeItem(key)
+            return true
+        } catch (e) {
+            return false
+        }
+    }
+
+    export const isLowerCase = (str: string): boolean => str === str.toLowerCase()
+
+    // isLeapYear(2019); // false
+    // isLeapYear(2020); // true
+    export const isLeapYear = (year: number): boolean => new Date(year, 1, 29).getMonth() === 1
+
+    // isISOString('2020-10-12T10:10:10.000Z'); // true
+    // isISOString('2020-10-12'); // false
+    export const isISOString = (val: string): boolean => {
+        const d = new Date(val)
+
+        return !Number.isNaN(d.valueOf()) && d.toISOString() === val
+    }
+
+    // isGeneratorFunction(function() {}); // false
+    // isGeneratorFunction(function*() {}); // true
+    export const isGeneratorFunction = (val: any): boolean =>
+        Object.prototype.toString.call(val) === '[object GeneratorFunction]'
+
+    export const isObject2 = (obj: any): boolean => obj === Object(obj)
+
+    // isNumber(1); // true
+    // isNumber('1'); // false
+    // isNumber(NaN); // false
+    export const isNumber2 = (val: any): boolean => typeof val === 'number' && val === val
+
+    export const isNode = (): boolean =>
+        typeof process !== 'undefined' && !!process.versions && !!process.versions.node
+
+    // isEmpty([]); // true
+    // isEmpty({}); // true
+    // isEmpty(''); // true
+    // isEmpty([1, 2]); // false
+    // isEmpty({ a: 1, b: 2 }); // false
+    // isEmpty('text'); // false
+    // isEmpty(123); // true - type is not considered a collection
+    // isEmpty(true); // true - type is not considered a collection
+    export const isEmpty = (val: any): boolean => val == null || !(Object.keys(val) || val).length
+
+    // const Stream = require('stream');
+    // isDuplexStream(new Stream.Duplex()); // true
+    export const isDuplexStream = (val: any): boolean =>
+        val !== null &&
+        typeof val === 'object' &&
+        typeof val.pipe === 'function' &&
+        typeof val._read === 'function' &&
+        typeof val._readableState === 'object' &&
+        typeof val._write === 'function' &&
+        typeof val._writableState === 'object'
+
+    export const isDivisible = (dividend: number, divisor: number): boolean => dividend % divisor === 0
+
+    // const x = Object.freeze({ a: 1 });
+    // const y = Object.freeze({ b: { c: 2 } });
+    // isDeepFrozen(x); // true
+    // isDeepFrozen(y); // false
+    export const isDeepFrozen = (obj: any): boolean =>
+        Object.isFrozen(obj) &&
+        Object.keys(obj).every(prop => typeof obj[prop] !== 'object' || isDeepFrozen(obj[prop]))
+
     export const isIP = (str: string): boolean => {
         const regExp =
             /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
         return regExp.test(str)
-    }
-
-    export const isLowerCase = (str: string): boolean => {
-        return str.toLowerCase() === str
     }
 
     export const escapeRegExp = (str: string): string => {
@@ -364,10 +670,6 @@ export namespace Checkers {
 
     export const splice = (str: string, start: number, end: number, replacement = ''): string => {
         return `${str.substr(0, start)}${replacement}${str.substr(end)}`
-    }
-
-    export const isUpperCase = (str: string): boolean => {
-        return str.toUpperCase() === str
     }
 
     export const isNotUndefined = (value: any): boolean => {

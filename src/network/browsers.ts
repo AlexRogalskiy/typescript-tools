@@ -181,6 +181,28 @@ export namespace Browsers {
     // getStyle(document.querySelector('p'), 'font-size'); // '16px'
     export const getStyle2 = (el: any, ruleName: string): any => getComputedStyle(el)[ruleName]
 
+    export const hide = (...el: any[]): void => {
+        for (const e of el) {
+            e.style.display = 'none'
+        }
+    }
+
+    // injectCSS('body { background-color: #000 }');
+    export const injectCSS = (css: string): any => {
+        const el = document.createElement('style')
+        el.innerText = css
+        document.head.appendChild(el)
+
+        return el
+    }
+
+    export const isBrowserTabFocused = (): boolean => !document.hidden
+
+    // insertBefore(document.getElementById('myId'), '<p>before</p>');
+    // <p>before</p> <div id="myId">...</div>
+    export const insertBefore = (el: any, htmlString: string): void =>
+        el.insertAdjacentHTML('beforebegin', htmlString)
+
     // getSiblings(document.querySelector('head')); // ['body']
     export const getSiblings = (el: any): any[] => [...el.parentNode.childNodes].filter(node => node !== el)
 

@@ -38,6 +38,23 @@ export namespace ColorsUtils {
         '#d300e7',
     ]
 
+    // hexToRGB('#27ae60ff'); // 'rgba(39, 174, 96, 255)'
+    // hexToRGB('27ae60'); // 'rgb(39, 174, 96)'
+    // hexToRGB('#fff'); // 'rgb(255, 255, 255)'
+    export const hexToRGB = (hex: string): string => {
+        let alpha = false,
+            h = hex.slice(hex.startsWith('#') ? 1 : 0)
+        if (h.length === 3) h = [...h].map(x => x + x).join('')
+        else if (h.length === 8) alpha = true
+        const value = parseInt(h, 16)
+
+        return `rgb${alpha ? 'a' : ''}(${value >>> (alpha ? 24 : 16)}, ${
+            (value & (alpha ? 0x00ff0000 : 0x00ff00)) >>> (alpha ? 16 : 8)
+        }, ${(value & (alpha ? 0x0000ff00 : 0x0000ff)) >>> (alpha ? 8 : 0)}${
+            alpha ? `, ${value & 0x000000ff}` : ''
+        })`
+    }
+
     // extendHex('#03f'); // '#0033ff'
     // extendHex('05a'); // '#0055aa'
     export const extendHex = (shortHex: string): string =>

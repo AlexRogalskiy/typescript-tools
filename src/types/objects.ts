@@ -202,6 +202,78 @@ export namespace Objects {
                 .reduce((prev, cur) => prev && prev[cur], from),
         )
 
+    // invertKeyValues({ a: 1, b: 2, c: 1 }); // { 1: [ 'a', 'c' ], 2: [ 'b' ] }
+    // invertKeyValues({ a: 1, b: 2, c: 1 }, value => 'group' + value);
+    // { group1: [ 'a', 'c' ], group2: [ 'b' ] }
+    export const invertKeyValues = (obj: any, fn: any): any =>
+        Object.keys(obj).reduce((acc, key) => {
+            const val = fn ? fn(obj[key]) : obj[key]
+            acc[val] = acc[val] || []
+            acc[val].push(key)
+            return acc
+        }, {})
+
+    // longestItem('this', 'is', 'a', 'testcase'); // 'testcase'
+    // longestItem(...['a', 'ab', 'abc']); // 'abc'
+    // longestItem(...['a', 'ab', 'abc'], 'abcd'); // 'abcd'
+    // longestItem([1, 2, 3], [1, 2], [1, 2, 3, 4, 5]); // [1, 2, 3, 4, 5]
+    // longestItem([1, 2, 3], 'foobar'); // 'foobar'
+    export const longestItem = (...vals: any[]): any => vals.reduce((a, x) => (x.length > a.length ? x : a))
+
+    // const users = {
+    //     fred: { user: 'fred', age: 40 },
+    //     pebbles: { user: 'pebbles', age: 1 }
+    // };
+    // mapValues(users, u => u.age); // { fred: 40, pebbles: 1 }
+    export const mapValues = (obj: any, fn: any): any =>
+        Object.keys(obj).reduce((acc, k) => {
+            acc[k] = fn(obj[k], k, obj)
+            return acc
+        }, {})
+
+    // const object = {
+    //     a: [{ x: 2 }, { y: 4 }],
+    //     b: 1
+    // };
+    // const other = {
+    //     a: { z: 3 },
+    //     b: [2, 3],
+    //     c: 'foo'
+    // };
+    // mergeOf(object, other);
+    // { a: [ { x: 2 }, { y: 4 }, { z: 3 } ], b: [ 1, 2, 3 ], c: 'foo' }
+    export const mergeOf = (...objs: any[]): any =>
+        [...objs].reduce(
+            (acc, obj) =>
+                Object.keys(obj).reduce((_, k) => {
+                    acc[k] = acc.hasOwnProperty(k) ? [].concat(acc[k]).concat(obj[k]) : obj[k]
+                    return acc
+                }, {}),
+            {},
+        )
+
+    // mapObject([1, 2, 3], a => a * a); // { 1: 1, 2: 4, 3: 9 }
+    export const mapObject = (arr: any, fn: any): any =>
+        arr.reduce((acc, el, i) => {
+            acc[el] = fn(el, i, arr)
+            return acc
+        }, {})
+
+    // mapKeys({ a: 1, b: 2 }, (val, key) => key + val); // { a1: 1, b2: 2 }
+    export const mapKeys = (obj: any, fn: any): any =>
+        Object.keys(obj).reduce((acc, k) => {
+            acc[fn(obj[k], k, obj)] = obj[k]
+            return acc
+        }, {})
+
+    // const myObj = { Name: 'Adam', sUrnAME: 'Smith' };
+    // const myObjLower = lowercaseKeys(myObj); // {name: 'Adam', surname: 'Smith'};
+    export const lowercaseKeys = (obj: any): any =>
+        Object.keys(obj).reduce((acc, key) => {
+            acc[key.toLowerCase()] = obj[key]
+            return acc
+        }, {})
+
     // let obj = {
     //     a: 1,
     //     b: { c: 4 },

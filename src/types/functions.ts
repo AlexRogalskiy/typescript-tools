@@ -71,6 +71,61 @@ export namespace Functions {
         return values.filter(key => typeof obj[key] === 'function')
     }
 
+    // const numbers = Array(10000).fill().map((_, i) => i);
+    //
+    // const sumReduce = () => numbers.reduce((acc, n) => acc + n, 0);
+    // const sumForLoop = () => {
+    //     let sum = 0;
+    //     for (let i = 0; i < numbers.length; i++) sum += numbers[i];
+    //     return sum;
+    // };
+    //
+    // Math.round(hz(sumReduce)); // 572
+    // Math.round(hz(sumForLoop)); // 4784
+    export const hz = (fn: any, iterations = 100): number => {
+        const before = performance.now()
+        for (let i = 0; i < iterations; i++) fn()
+
+        return (1000 * iterations) / (performance.now() - before)
+    }
+
+    // juxt(
+    //     x => x + 1,
+    //     x => x - 1,
+    //     x => x * 10
+    // )(1, 2, 3); // [[2, 3, 4], [0, 1, 2], [10, 20, 30]]
+    // juxt(
+    //     s => s.length,
+    //     s => s.split(' ').join('-')
+    // )('30 seconds of code'); // [[18], ['30-seconds-of-code']]
+    export const juxt = (...fns: any[]): any => {
+        return (...args) => [...fns].map(fn => [...args].map(fn))
+    }
+
+    // listenOnce(
+    //     document.getElementById('my-id'),
+    //     'click',
+    //     () => console.log('Hello world')
+    // ); // 'Hello world' will only be logged on the first click
+    export const listenOnce = (el: any, evt: any, fn: any): void =>
+        el.addEventListener(evt, fn, { once: true })
+
+    // See the `anagrams` snippet.
+    // const anagramsCached = memoize(anagrams);
+    // anagramsCached('javascript'); // takes a long time
+    // anagramsCached('javascript'); // returns virtually instantly since it's cached
+    // console.log(anagramsCached.cache); // The cached anagrams map
+    export const memoize = (fn: any): any => {
+        const cache = new Map()
+
+        const cached = (val: any): any => {
+            return cache.has(val) ? cache.get(val) : cache.set(val, fn.call(fn, val)) && cache.get(val)
+        }
+        cached.cache = cache
+
+        return cached
+    }
+
     // let a = { name: 'John Smith' };
     // let b = {};
     // const mergeFrom = flip(Object.assign);

@@ -109,6 +109,64 @@ export namespace Strings {
         }
     }
 
+    // hashNode(JSON.stringify({ a: 'a', b: [1, 2, 3, 4], foo: { c: 'bar' } })).then(
+    //     console.log
+    // );
+    export const hashNode = async (val: any): Promise<string> =>
+        new Promise(resolve => setTimeout(() => resolve(createHash('sha256').update(val).digest('hex')), 0))
+
+    // insertAfter(document.getElementById('myId'), '<p>after</p>');
+    export const insertAfter = (el: any, htmlString: string): void =>
+        el.insertAdjacentHTML('afterend', htmlString)
+
+    // mapString('lorem ipsum', c => c.toUpperCase()); // 'LOREM IPSUM'
+    export const mapString = (str: string, fn: any): string =>
+        str
+            .split('')
+            .map((c, i) => fn(c, i, str))
+            .join('')
+
+    // mask(1234567890); // '******7890'
+    // mask(1234567890, 3); // '*******890'
+    // mask(1234567890, -4, '$'); // '$$$$567890'
+    export const mask = (cc: any, num = 4, mask = '*'): string =>
+        `${cc}`.slice(-num).padStart(`${cc}`.length, mask)
+
+    // [...indexOfSubstrings('tiktok tok tok tik tok tik', 'tik')]; // [0, 15, 23]
+    // [...indexOfSubstrings('tutut tut tut', 'tut')]; // [0, 2, 6, 10]
+    // [...indexOfSubstrings('hello', 'hi')]; // []
+    export function* indexOfSubstrings(str: string, searchValue: string): any {
+        let i = 0
+        while (true) {
+            const r = str.indexOf(searchValue, i)
+            if (r !== -1) {
+                yield r
+                i = r + 1
+            } else return
+        }
+    }
+
+    // indentString('Lorem\nIpsum', 2); // '  Lorem\n  Ipsum'
+    // indentString('Lorem\nIpsum', 2, '_'); // '__Lorem\n__Ipsum'
+    export const indentString = (str: string, count: number, indent = ' '): string =>
+        str.replace(/^/gm, indent.repeat(count))
+
+    // hashBrowser(
+    //     JSON.stringify({ a: 'a', b: [1, 2, 3, 4], foo: { c: 'bar' } })
+    // ).then(console.log);
+    export const hashBrowser = async (val: any): Promise<string> =>
+        crypto.subtle
+            .digest('SHA-256', new TextEncoder().encode(val))
+            // eslint-disable-next-line github/no-then
+            .then(h => {
+                const hexes: any[] = [],
+                    view = new DataView(h)
+                for (let i = 0; i < view.byteLength; i += 4)
+                    hexes.push(`00000000${view.getUint32(i).toString(16)}`.slice(-8))
+
+                return hexes.join('')
+            })
+
     // fromCamelCase('someDatabaseFieldName', ' '); // 'some database field name'
     // fromCamelCase('someLabelThatNeedsToBeDecamelized', '-');
     // 'some-label-that-needs-to-be-decamelized'

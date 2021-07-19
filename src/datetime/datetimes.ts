@@ -94,6 +94,22 @@ export namespace DateTimes {
     // getTimestamp(); // 1602162242
     export const getTimestamp = (date = new Date()): number => Math.floor(date.getTime() / 1000)
 
+    // const dates = [
+    //     new Date(2017, 4, 13),
+    //     new Date(2018, 2, 12),
+    //     new Date(2016, 0, 10),
+    //     new Date(2016, 0, 9)
+    // ];
+    // maxDate(...dates); // 2018-03-11T22:00:00.000Z
+    export const maxDate = (...dates: Date[]): Date => new Date(Math.max(...dates.map(v => v.getTime())))
+
+    // lastDateOfMonth(new Date('2015-08-11')); // '2015-08-30'
+    export const lastDateOfMonth = (date = new Date()): string => {
+        const d = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+
+        return d.toISOString().split('T')[0]
+    }
+
     // formatSeconds(200); // '00:03:20'
     // formatSeconds(-200); // '-00:03:20'
     // formatSeconds(99999); // '27:46:39'
