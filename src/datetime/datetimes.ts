@@ -52,6 +52,95 @@ export namespace DateTimes {
             0,
         )
 
+    // getMeridiemSuffixOfInteger(0); // '12am'
+    // getMeridiemSuffixOfInteger(11); // '11am'
+    // getMeridiemSuffixOfInteger(13); // '1pm'
+    // getMeridiemSuffixOfInteger(25); // '1pm'
+    export const getMeridiemSuffixOfInteger = (num: number): string => {
+        if (num === 0 || num === 24) {
+            return `${12}am`
+        }
+
+        if (num === 12) {
+            return `${12}pm`
+        }
+
+        return num < 12 ? `${num % 12}am` : `${num % 12}pm`
+    }
+
+    // getMinutesDiffBetweenDates(
+    //     new Date('2021-04-24 01:00:15'),
+    //     new Date('2021-04-24 02:00:15')
+    // ); // 60
+    export const getMinutesDiffBetweenDates = (dateInitial: Date, dateFinal: Date): number =>
+        (dateFinal.getTime() - dateInitial.getTime()) / (1000 * 60)
+
+    // getMonthsDiffBetweenDates(new Date('2017-12-13'), new Date('2018-04-29')); // 4
+    export const getMonthsDiffBetweenDates = (dateInitial: Date, dateFinal: Date): number =>
+        Math.max(
+            (dateFinal.getFullYear() - dateInitial.getFullYear()) * 12 +
+                dateFinal.getMonth() -
+                dateInitial.getMonth(),
+            0,
+        )
+
+    // getSecondsDiffBetweenDates(
+    //     new Date('2020-12-24 00:00:15'),
+    //     new Date('2020-12-24 00:00:17')
+    // ); // 2
+    export const getSecondsDiffBetweenDates = (dateInitial: Date, dateFinal: Date): number =>
+        (dateFinal.getTime() - dateInitial.getTime()) / 1000
+
+    // getTimestamp(); // 1602162242
+    export const getTimestamp = (date = new Date()): number => Math.floor(date.getTime() / 1000)
+
+    // formatSeconds(200); // '00:03:20'
+    // formatSeconds(-200); // '-00:03:20'
+    // formatSeconds(99999); // '27:46:39'
+    export const formatSeconds = (s: number): string => {
+        const [hour, minute, second, sign] =
+            s > 0 ? [s / 3600, (s / 60) % 60, s % 60, ''] : [-s / 3600, (-s / 60) % 60, -s % 60, '-']
+
+        return sign + [hour, minute, second].map(v => `${Math.floor(v)}`.padStart(2, '0')).join(':')
+    }
+
+    // getHoursDiffBetweenDates(
+    //     new Date('2021-04-24 10:25:00'),
+    //     new Date('2021-04-25 10:25:00')
+    // ); // 24
+    export const getHoursDiffBetweenDates = (dateInitial: Date, dateFinal: Date): number =>
+        (dateFinal.getTime() - dateInitial.getTime()) / (1000 * 3600)
+
+    // getDaysDiffBetweenDates(new Date('2017-12-13'), new Date('2017-12-22')); // 9
+    export const getDaysDiffBetweenDates = (dateInitial: Date, dateFinal: Date): number =>
+        (dateFinal.getTime() - dateInitial.getTime()) / (1000 * 3600 * 24)
+
+    // getColonTimeFromDate(new Date()); // '08:38:00'
+    export const getColonTimeFromDate = (date: Date): string => date.toTimeString().slice(0, 8)
+
+    // fromTimestamp(1602162242); // 2020-10-08T13:04:02.000Z
+    export const fromTimestamp = (timestamp: number): Date => new Date(timestamp * 1000)
+
+    // formatDuration(1001); // '1 second, 1 millisecond'
+    // formatDuration(34325055574);
+    // '397 days, 6 hours, 44 minutes, 15 seconds, 574 milliseconds'
+    export const formatDuration = (ms: number): string => {
+        if (ms < 0) ms = -ms
+
+        const time = {
+            day: Math.floor(ms / 86400000),
+            hour: Math.floor(ms / 3600000) % 24,
+            minute: Math.floor(ms / 60000) % 60,
+            second: Math.floor(ms / 1000) % 60,
+            millisecond: Math.floor(ms) % 1000,
+        }
+
+        return Object.entries(time)
+            .filter(val => val[1] !== 0)
+            .map(([key, val]) => `${val} ${key}${val !== 1 ? 's' : ''}`)
+            .join(', ')
+    }
+
     export const addWeekDays = (startDate: Date, count: number): any =>
         Array.from({ length: count }).reduce((date: Date) => {
             date = new Date(date.setDate(date.getDate() + 1))

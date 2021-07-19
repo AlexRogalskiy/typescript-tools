@@ -109,6 +109,35 @@ export namespace Strings {
         }
     }
 
+    // fromCamelCase('someDatabaseFieldName', ' '); // 'some database field name'
+    // fromCamelCase('someLabelThatNeedsToBeDecamelized', '-');
+    // 'some-label-that-needs-to-be-decamelized'
+    // fromCamelCase('someJavascriptProperty', '_'); // 'some_javascript_property'
+    // fromCamelCase('JSONToCSV', '.'); // 'json.to.csv'
+    export const fromCamelCase = (str: string, separator = '_'): string =>
+        str
+            .replace(/([a-z\d])([A-Z])/g, `$1${separator}$2`)
+            .replace(/([A-Z]+)([A-Z][a-z\d]+)/g, `$1${separator}$2`)
+            .toLowerCase()
+
+    export const expandTabs = (str: string, count: number): string => str.replace(/\t/g, ' '.repeat(count))
+
+    export const escapeRegExp3 = (str: string): string => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+    // escapeHTML('<a href="#">Me & you</a>');
+    export const escapeHTML = (str: string): string =>
+        str.replace(
+            /[&<>'"]/g,
+            tag =>
+                ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    "'": '&#39;',
+                    '"': '&quot;',
+                }[tag] || tag),
+        )
+
     export const convertStringToArray = (arrayLike: any): string[] => {
         if (!arrayLike) {
             return []

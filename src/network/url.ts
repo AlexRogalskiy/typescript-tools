@@ -34,6 +34,20 @@ export const normalizeLocation = ({ pathname, ...otherProps }: Location): Locati
     }
 }
 
+// getURLParameters('google.com'); // {}
+// getURLParameters('http://url.com/page?name=Adam&surname=Smith');
+// {name: 'Adam', surname: 'Smith'}
+export const getURLParameters = (url: string): any =>
+    (url.match(/([^?=&]+)(=([^&]*))/g) || []).reduce(
+        (a, v) => ((a[v.slice(0, v.indexOf('='))] = v.slice(v.indexOf('=') + 1)), a),
+        {},
+    )
+
+export const getProtocol = (): string => window.location.protocol
+
+// getBaseURL('http://url.com/page?name=Adam&surname=Smith');
+export const getBaseURL = (url: string): string => url.replace(/[?#].*$/, '')
+
 export const parseUrl = (urlStr: string): Location => {
     const url = new URL(urlStr)
 

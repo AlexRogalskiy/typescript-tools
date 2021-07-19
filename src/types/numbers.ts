@@ -148,7 +148,44 @@ export namespace Numbers {
 
         export const degreesToRads = (deg: number): number => (deg * Math.PI) / 180.0
 
+        export const factorial = (n: number): number => {
+            if (n < 0) {
+                ;(() => {
+                    throw new TypeError('Negative numbers are not allowed!')
+                })()
+            }
+
+            return n <= 1 ? 1 : n * factorial(n - 1)
+        }
+
+        export const formatNumber = (num: number): string => num.toLocaleString()
+
+        export const fibonacci = (n: number): number[] =>
+            Array.from<number>({ length: n }).reduce(
+                (acc: number[], _, i) => acc.concat(i > 1 ? acc[i - 1] + acc[i - 2] : i),
+                [],
+            )
+
+        // hammingDistance(2, 3); // 1
+        export const hammingDistance = (num1: number, num2: number): number =>
+            ((num1 ^ num2).toString(2).match(/1/g) || '').length
+
+        // gcd(8, 36); // 4
+        // gcd(...[12, 8, 32]); // 4
+        export const gcd = (...arr: any[]): any[] => {
+            const _gcd = (x, y): number => (!y ? x : gcd(y, x % y))
+
+            return [...arr].reduce((a, b) => _gcd(a, b))
+        }
+
+        export const fahrenheitToCelsius = (degrees: number): number => ((degrees - 32) * 5) / 9
+
         export const copySign = (x: number, y: number): number => (Math.sign(x) === Math.sign(y) ? x : -x)
+
+        // euclideanDistance([1, 1], [2, 3]); // ~2.2361
+        // euclideanDistance([1, 1, 1], [2, 3, 2]); // ~2.4495
+        export const euclideanDistance = (a: number[], b: number[]): number =>
+            Math.hypot(...Object.keys(a).map(k => b[k] - a[k]))
 
         export const distance = (x0: number, y0: number, x1: number, y1: number): number =>
             Math.hypot(x1 - x0, y1 - y0)

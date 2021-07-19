@@ -183,6 +183,154 @@ export namespace Arrays {
         return arr
     }
 
+    export const filterNonUnique = (arr: any[]): any[] =>
+        [...new Set(arr)].filter(i => arr.indexOf(i) === arr.lastIndexOf(i))
+
+    export const everyNth = (arr: any[], nth: number): any => arr.filter((_, i) => i % nth === nth - 1)
+
+    // filterNonUniqueBy(
+    //     [
+    //         { id: 0, value: 'a' },
+    //         { id: 1, value: 'b' },
+    //         { id: 2, value: 'c' },
+    //         { id: 1, value: 'd' },
+    //         { id: 0, value: 'e' }
+    //     ],
+    //     (a, b) => a.id === b.id
+    // ); // [ { id: 2, value: 'c' } ]
+    export const filterNonUniqueBy = (arr: any[], fn: any): any[] =>
+        arr.filter((v, i) => arr.every((x, j) => (i === j) === fn(v, x, i, j)))
+
+    // filterUnique([1, 2, 2, 3, 4, 4, 5]); // [2, 4]
+    export const filterUnique = (arr: any[]): any[] =>
+        [...new Set(arr)].filter(i => arr.indexOf(i) !== arr.lastIndexOf(i))
+
+    // filterUniqueBy(
+    //     [
+    //         { id: 0, value: 'a' },
+    //         { id: 1, value: 'b' },
+    //         { id: 2, value: 'c' },
+    //         { id: 3, value: 'd' },
+    //         { id: 0, value: 'e' }
+    //     ],
+    //     (a, b) => a.id == b.id
+    // ); // [ { id: 0, value: 'a' }, { id: 0, value: 'e' } ]
+    export const filterUniqueBy = (arr: any[], fn: any): any[] =>
+        arr.filter((v, i) => arr.some((x, j) => (i !== j) === fn(v, x, i, j)))
+
+    // findFirstN([1, 2, 4, 6], n => n % 2 === 0, 2); // [2, 4]
+    // findFirstN([1, 2, 4, 6], n => n % 2 === 0, 5); // [2, 4, 6]
+    export const findFirstN = (arr: any[], matcher: any, n = 1): any[] => {
+        const res: any[] = []
+
+        for (let i = 0; i < arr.length; i++) {
+            const el = arr[i]
+            const match = matcher(el, i, arr)
+            if (match) res.push(el)
+            if (res.length === n) return res
+        }
+
+        return res
+    }
+
+    // findLastN([1, 2, 4, 6], n => n % 2 === 0, 2); // [4, 6]
+    // findLastN([1, 2, 4, 6], n => n % 2 === 0, 5); // [2, 4, 6]
+    export const findLastN = (arr: any[], matcher: any, n = 1): any => {
+        const res: any[] = []
+
+        for (let i = arr.length - 1; i >= 0; i--) {
+            const el = arr[i]
+            const match = matcher(el, i, arr)
+            if (match) res.unshift(el)
+            if (res.length === n) return res
+        }
+
+        return res
+    }
+
+    // groupBy([6.1, 4.2, 6.3], Math.floor); // {4: [4.2], 6: [6.1, 6.3]}
+    // groupBy(['one', 'two', 'three'], 'length'); // {3: ['one', 'two'], 5: ['three']}
+    export const groupBy3 = (arr: any, fn: any): any =>
+        arr.map(typeof fn === 'function' ? fn : val => val[fn]).reduce((acc, val, i) => {
+            acc[val] = (acc[val] || []).concat(arr[i])
+            return acc
+        }, {})
+
+    // hasOne([1, 2], x => x % 2); // true
+    // hasOne([1, 3], x => x % 2); // false
+    export const hasOne = (arr: any[], fn: any): boolean => arr.filter(fn).length === 1
+
+    // hasMany([1, 3], x => x % 2); // true
+    // hasMany([1, 2], x => x % 2); // false
+    export const hasMany = (arr: any[], fn: any): boolean => arr.filter(fn).length > 1
+
+    // node myScript.js -s --test --cool=true
+    // hasFlags('-s'); // true
+    // hasFlags('--test', 'cool=true', '-s'); // true
+    // hasFlags('special'); // false
+    export const hasFlags = (...flags: string[]): boolean =>
+        flags.every(flag => process.argv.includes(/^-{1,2}/.test(flag) ? flag : `--${flag}`))
+
+    // geometricProgression(256); // [1, 2, 4, 8, 16, 32, 64, 128, 256]
+    // geometricProgression(256, 3); // [3, 6, 12, 24, 48, 96, 192]
+    // geometricProgression(256, 1, 4); // [1, 4, 16, 64, 256]
+    export const geometricProgression = (end: number, start = 1, step = 2): number[] =>
+        Array.from({
+            length: Math.floor(Math.log(end / start) / Math.log(step)) + 1,
+        }).map((_, i) => start * step ** i)
+
+    // const s = new Set([1, 2, 1, 3, 1, 4]);
+    // generatorToArray(s.entries()); // [[ 1, 1 ], [ 2, 2 ], [ 3, 3 ], [ 4, 4 ]]
+    export const generatorToArray = (gen: any): any[] => [...gen]
+
+    // generateItems(10, Math.random);
+    // [0.21, 0.08, 0.40, 0.96, 0.96, 0.24, 0.19, 0.96, 0.42, 0.70]
+    export const generateItems = (n: number, fn: any): number[] => Array.from({ length: n }, (_, i) => fn(i))
+
+    // frequencies(['a', 'b', 'a', 'c', 'a', 'a', 'b']); // { a: 4, b: 2, c: 1 }
+    // frequencies([...'ball']); // { b: 1, a: 1, l: 2 }
+    export const frequencies = (arr: any[]): any[] =>
+        arr.reduce((a, v) => {
+            a[v] = a[v] ? a[v] + 1 : 1
+            return a
+        }, {})
+
+    // forEachRight([1, 2, 3, 4], val => console.log(val)); // '4', '3', '2', '1'
+    export const forEachRight = (arr: any[], callback: any): void => {
+        for (const item of arr.slice().reverse()) {
+            callback(item)
+        }
+    }
+
+    // flatten2([1, [2], 3, 4]); // [1, 2, 3, 4]
+    // flatten2([1, [2, [3, [4, 5], 6], 7], 8], 2); // [1, 2, 3, [4, 5], 6, 7, 8]
+    export const flatten2 = (arr: any[], depth = 1): any[] =>
+        arr.reduce((a, v) => a.concat(depth > 1 && Array.isArray(v) ? flatten2(v, depth - 1) : v), [])
+
+    // findLastKey(
+    //     {
+    //         barney: { age: 36, active: true },
+    //         fred: { age: 40, active: false },
+    //         pebbles: { age: 1, active: true }
+    //     },
+    //     x => x['active']
+    // ); // 'pebbles'
+    export const findLastKey = (obj: any, fn: any): any =>
+        Object.keys(obj)
+            .reverse()
+            .find(key => fn(obj[key], key, obj))
+
+    // findLastIndex([1, 2, 3, 4], n => n % 2 === 1); // 2 (index of the value 3)
+    // findLastIndex([1, 2, 3, 4], n => n === 5); // -1 (default value when not found)
+    export const findLastIndex = (arr: any[], fn: any): any =>
+        (arr
+            .map((val, i) => [i, val])
+            .filter(([i, val]) => fn(val, i, arr))
+            .pop() || [-1])[0]
+
+    // findLast([1, 2, 3, 4], n => n % 2 === 1); // 3
+    export const findLast = (arr: any[], fn: any): any => arr.filter(fn).pop()
+
     // dropRightWhile([1, 2, 3, 4], n => n < 3); // [1, 2]
     export const dropRightWhile = (arr: any[], func: Predicate<any>): any => {
         let rightIndex = arr.length

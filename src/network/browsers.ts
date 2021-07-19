@@ -136,6 +136,113 @@ export namespace Browsers {
         return timer
     }
 
+    // findClosestAnchor(document.querySelector('a > span')); // a
+    export const findClosestAnchor = (node: any): any => {
+        for (let n = node; n.parentNode; n = n.parentNode) {
+            if (n.nodeName.toLowerCase() === 'a') return n
+        }
+        return null
+    }
+
+    // findClosestMatchingNode(document.querySelector('span'), 'body'); // body
+    export const findClosestMatchingNode = (node: any, selector: any): any => {
+        for (let n = node; n.parentNode; n = n.parentNode) {
+            if (n.matches && n.matches(selector)) return n
+        }
+        return null
+    }
+
+    // getElementsBiggerThanViewport(); // <div id="ultra-wide-item" />
+    export const getElementsBiggerThanViewport = (): any[] => {
+        const docWidth = document.documentElement.offsetWidth
+
+        return [...document.querySelectorAll('*')[Symbol.iterator]].filter(el => el.offsetWidth > docWidth)
+    }
+
+    export const getScrollPosition = (el = window): any => ({
+        x: el.pageXOffset !== undefined ? el.pageXOffset : el['scrollLeft'],
+        y: el.pageYOffset !== undefined ? el.pageYOffset : el['scrollTop'],
+    })
+
+    export const getVerticalOffset = (el: any): number => {
+        let offset = el.offsetTop,
+            _el = el
+        while (_el.offsetParent) {
+            _el = _el.offsetParent
+            offset += _el.offsetTop
+        }
+
+        return offset
+    }
+
+    // hasClass(document.querySelector('p.special'), 'special'); // true
+    export const hasClass2 = (el: any, className: string): boolean => el.classList.contains(className)
+
+    // getStyle(document.querySelector('p'), 'font-size'); // '16px'
+    export const getStyle2 = (el: any, ruleName: string): any => getComputedStyle(el)[ruleName]
+
+    // getSiblings(document.querySelector('head')); // ['body']
+    export const getSiblings = (el: any): any[] => [...el.parentNode.childNodes].filter(node => node !== el)
+
+    export const getSelectedText = (): string => window.getSelection()!.toString()
+
+    // getParentsUntil(document.querySelector('#home-link'), 'header');
+    // [header, nav, ul, li]
+    export const getParentsUntil = (el: any, selector: any): any[] => {
+        const parents: any[] = []
+
+        let _el = el.parentNode
+        while (_el && typeof _el.matches === 'function') {
+            parents.unshift(_el)
+            if (_el.matches(selector)) return parents
+            else _el = _el.parentNode
+        }
+
+        return []
+    }
+
+    // getImages(document, true); // ['image1.jpg', 'image2.png', 'image1.png', '...']
+    // getImages(document, false); // ['image1.jpg', 'image2.png', '...']
+    export const getImages2 = (el: any, includeDuplicates = false): any[] => {
+        const images = [...el.getElementsByTagName('img')].map(img => img.getAttribute('src'))
+
+        return includeDuplicates ? images : [...new Set(images)]
+    }
+
+    // getAncestors(document.querySelector('nav'));
+    export const getAncestors = (el: any): any[] => {
+        const ancestors: any = []
+
+        while (el) {
+            ancestors.unshift(el)
+            el = el.parentNode
+        }
+
+        return ancestors
+    }
+
+    export const fullscreen = (mode = true, el = 'body'): any =>
+        mode ? document.querySelector(el)!.requestFullscreen() : document.exitFullscreen()
+
+    export const elementIsVisibleInViewport = (el: any, partiallyVisible = false): boolean => {
+        const { top, left, bottom, right } = el.getBoundingClientRect()
+        const { innerHeight, innerWidth } = window
+        return partiallyVisible
+            ? ((top > 0 && top < innerHeight) || (bottom > 0 && bottom < innerHeight)) &&
+                  ((left > 0 && left < innerWidth) || (right > 0 && right < innerWidth))
+            : top >= 0 && left >= 0 && bottom <= innerHeight && right <= innerWidth
+    }
+
+    export const elementIsFocused = (el: Element): boolean => el === document.activeElement
+
+    // elementContains(
+    //     document.querySelector('head'),
+    //     document.querySelector('title')
+    // );
+    // elementContains(document.querySelector('body'), document.querySelector('body'));
+    export const elementContains = (parent: any, child: any): boolean =>
+        parent !== child && parent.contains(child)
+
     export const detectLanguage = (defaultLang = 'en-US'): string =>
         navigator.language || (Array.isArray(navigator.languages) && navigator.languages[0]) || defaultLang
 

@@ -38,6 +38,15 @@ export namespace ColorsUtils {
         '#d300e7',
     ]
 
+    // extendHex('#03f'); // '#0033ff'
+    // extendHex('05a'); // '#0055aa'
+    export const extendHex = (shortHex: string): string =>
+        `#${shortHex
+            .slice(shortHex.startsWith('#') ? 1 : 0)
+            .split('')
+            .map(x => x + x)
+            .join('')}`
+
     export const getElevationPseudoElementStyle = (dy: string, blur: string, opacity: string): any => {
         return {
             'display': 'block',

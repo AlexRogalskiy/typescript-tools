@@ -330,6 +330,12 @@ export namespace Checkers {
         return regExp.test(str)
     }
 
+    export const hasDuplicates = (arr: any[]): boolean => new Set(arr).size !== arr.length
+
+    // getType(new Set([1, 2, 3])); // 'Set'
+    export const getType2 = (v: any): string =>
+        v === undefined ? 'undefined' : v === null ? 'null' : v.constructor.name
+
     export const isPortNumber = (value: number): boolean => {
         return isNumber(value) && value >= 1 && value <= 65536
     }

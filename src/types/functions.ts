@@ -3,7 +3,7 @@ import minimatch from 'minimatch'
 
 import { Callback, Executor, GenericValueCallback, Processor, Supplier } from '../../typings/function-types'
 
-import { Checkers, Errors, CommonUtils } from '..'
+import { Checkers, CommonUtils, Errors } from '..'
 
 export namespace Functions {
     import normalize = CommonUtils.normalize
@@ -52,6 +52,34 @@ export namespace Functions {
     // isPositiveOrEven(3); // true
     export const either = (f: any, g: any): any => {
         return (...args) => f(...args) || g(...args)
+    }
+
+    export const functionName = (fn: any): void => (console.debug(fn.name), fn)
+
+    // function Foo() {
+    //     this.a = () => 1;
+    //     this.b = () => 2;
+    // }
+    // Foo.prototype.c = () => 3;
+    // functions(new Foo()); // ['a', 'b']
+    // functions(new Foo(), true); // ['a', 'b', 'c']
+    export const functions = (obj: any, inherited = false): any[] => {
+        const values = inherited
+            ? [...Object.keys(obj), ...Object.keys(Object.getPrototypeOf(obj))]
+            : Object.keys(obj)
+
+        return values.filter(key => typeof obj[key] === 'function')
+    }
+
+    // let a = { name: 'John Smith' };
+    // let b = {};
+    // const mergeFrom = flip(Object.assign);
+    // let mergePerson = mergeFrom.bind(null, a);
+    // mergePerson(b); // == b
+    // b = {};
+    // Object.assign(b, a); // == b
+    export const flip = (fn: any): any => {
+        return (first, ...rest) => fn(...rest, first)
     }
 
     // const fn = arg => new Promise(resolve => {

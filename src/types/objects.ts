@@ -127,6 +127,104 @@ export namespace Objects {
         }, undefined)
     }
 
+    // equals(
+    //     { a: [2, { e: 3 }], b: [4], c: 'foo' },
+    //     { a: [2, { e: 3 }], b: [4], c: 'foo' }
+    // ); // true
+    // equals([1, 2, 3], { 0: 1, 1: 2, 2: 3 }); // true
+    export const equals = (a: any, b: any): boolean => {
+        if (a === b) return true
+        if (a instanceof Date && b instanceof Date) return a.getTime() === b.getTime()
+        if (!a || !b || (typeof a !== 'object' && typeof b !== 'object')) return a === b
+        if (a.prototype !== b.prototype) return false
+        const keys = Object.keys(a)
+        if (keys.length !== Object.keys(b).length) return false
+
+        return keys.every(k => equals(a[k], b[k]))
+    }
+
+    // findKey(
+    //     {
+    //         barney: { age: 36, active: true },
+    //         fred: { age: 40, active: false },
+    //         pebbles: { age: 1, active: true }
+    //     },
+    //     x => x['active']
+    // ); // 'barney'
+    export const findKey = (obj: any, fn: any): any => Object.keys(obj).find(key => fn(obj[key], key, obj))
+
+    // const ages = {
+    //     Leo: 20,
+    //     Zoey: 21,
+    //     Jane: 20,
+    // };
+    // findKeys(ages, 20); // [ 'Leo', 'Jane' ]
+    export const findKeys = (obj: any, val: any): any => Object.keys(obj).filter(key => obj[key] === val)
+
+    // flattenObject({ a: { b: { c: 1 } }, d: 1 }); // { 'a.b.c': 1, d: 1 }
+    export const flattenObject = (obj: any, prefix = ''): any =>
+        Object.keys(obj).reduce((acc, k) => {
+            const pre = prefix.length ? `${prefix}.` : ''
+
+            if (typeof obj[k] === 'object' && obj[k] !== null && Object.keys(obj[k]).length > 0)
+                Object.assign(acc, flattenObject(obj[k], pre + k))
+            else acc[pre + k] = obj[k]
+
+            return acc
+        }, {})
+
+    // forOwn({ foo: 'bar', a: 1 }, v => console.log(v)); // 'bar', 1
+    export const forOwn = (obj: any, fn: any): any => {
+        for (const key of Object.keys(obj)) {
+            fn(obj[key], key, obj)
+        }
+    }
+
+    // forOwnRight({ foo: 'bar', a: 1 }, v => console.log(v)); // 1, 'bar'
+    export const forOwnRight = (obj: any, fn: any): void => {
+        for (const key of Object.keys(obj).reverse()) {
+            fn(obj[key], key, obj)
+        }
+    }
+
+    // const obj = {
+    //     selector: { to: { val: 'val to select' } },
+    //     target: [1, 2, { a: 'test' }],
+    // };
+    // get(obj, 'selector.to.val', 'target[0]', 'target[2].a');
+    // ['val to select', 1, 'test']
+    export const get = (from: any, ...selectors: string[]): any[] =>
+        [...selectors].map(s =>
+            s
+                .replace(/\[([^[\]]*)]/g, '.$1.')
+                .split('.')
+                .filter(t => t !== '')
+                .reduce((prev, cur) => prev && prev[cur], from),
+        )
+
+    // let obj = {
+    //     a: 1,
+    //     b: { c: 4 },
+    //     'b.d': 5
+    // };
+    // hasKey(obj, ['a']); // true
+    // hasKey(obj, ['b']); // true
+    // hasKey(obj, ['b', 'c']); // true
+    // hasKey(obj, ['b.d']); // true
+    // hasKey(obj, ['d']); // false
+    // hasKey(obj, ['c']); // false
+    // hasKey(obj, ['b', 'f']); // false
+    export const hasKey = (obj: any, keys: string[]): boolean => {
+        return (
+            keys.length > 0 &&
+            keys.every(key => {
+                if (typeof obj !== 'object' || !obj.hasOwnProperty(key)) return false
+                obj = obj[key]
+                return true
+            })
+        )
+    }
+
     // deepMerge(
     //     { a: true, b: { c: [1, 2, 3] } },
     //     { a: false, b: { d: [1, 2, 3] } },
