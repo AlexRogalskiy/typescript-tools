@@ -199,6 +199,31 @@ export namespace Numbers {
         // radsToDegrees(Math.PI / 2); // 90
         export const radsToDegrees = (rad: number): number => (rad * 180.0) / Math.PI
 
+        // round(1.005, 2); // 1.01
+        export const round = (n: number, decimals = 0): number =>
+            Number(`${Math.round(parseFloat(`${n}e${decimals}`))}e-${decimals}`)
+
+        // standardDeviation([10, 2, 38, 23, 38, 23, 21]); // 13.284434142114991 (sample)
+        // standardDeviation([10, 2, 38, 23, 38, 23, 21], true);
+        // 12.29899614287479 (population)
+        export const standardDeviation = (arr: any[], usePopulation = false): number => {
+            const mean = arr.reduce((acc, val) => acc + val, 0) / arr.length
+
+            return Math.sqrt(
+                arr
+                    .reduce((acc, val) => acc.concat((val - mean) ** 2), [])
+                    .reduce((acc, val) => acc + val, 0) /
+                    (arr.length - (usePopulation ? 0 : 1)),
+            )
+        }
+
+        // reverseNumber(981); // 189
+        // reverseNumber(-500); // -5
+        // reverseNumber(73.6); // 6.37
+        // reverseNumber(-5.23); // -32.5
+        export const reverseNumber = (n: number): number =>
+            parseFloat(`${n}`.split('').reverse().join('')) * Math.sign(n)
+
         // primes(10); // [2, 3, 5, 7]
         export const primes = (num: number): number[] => {
             let arr = Array.from({ length: num - 1 }).map((_, i) => i + 2)
@@ -211,6 +236,79 @@ export namespace Numbers {
 
             return arr
         }
+
+        // toSafeInteger('3.2'); // 3
+        // toSafeInteger(Infinity); // 9007199254740991
+        export const toSafeInteger = (num: number): number =>
+            Math.round(Math.max(Math.min(num, Number.MAX_SAFE_INTEGER), Number.MIN_SAFE_INTEGER))
+
+        // weightedAverage([1, 2, 3], [0.6, 0.2, 0.3]); // 1.72727
+        export const weightedAverage = (nums: number[], weights: number[]): number => {
+            const [sum, weightSum] = weights.reduce(
+                (acc, w, i) => {
+                    acc[0] = acc[0] + nums[i] * w
+                    acc[1] = acc[1] + w
+                    return acc
+                },
+                [0, 0],
+            )
+
+            return sum / weightSum
+        }
+
+        // toRomanNumeral(3); // 'III'
+        // toRomanNumeral(11); // 'XI'
+        // toRomanNumeral(1998); // 'MCMXCVIII'
+        export const toRomanNumeral = (num: number): string => {
+            const lookup: [string, number][] = [
+                ['M', 1000],
+                ['CM', 900],
+                ['D', 500],
+                ['CD', 400],
+                ['C', 100],
+                ['XC', 90],
+                ['L', 50],
+                ['XL', 40],
+                ['X', 10],
+                ['IX', 9],
+                ['V', 5],
+                ['IV', 4],
+                ['I', 1],
+            ]
+
+            return lookup.reduce((acc, [k, v]) => {
+                acc += k.repeat(Math.floor(num / v))
+                num = num % v
+                return acc
+            }, '')
+        }
+
+        // toOrdinalSuffix('123'); // '123rd'
+        export const toOrdinalSuffix = (num: string): string => {
+            const int = parseInt(num),
+                digits = [int % 10, int % 100],
+                ordinals = ['st', 'nd', 'rd', 'th'],
+                oPattern = [1, 2, 3, 4],
+                tPattern = [11, 12, 13, 14, 15, 16, 17, 18, 19]
+
+            return oPattern.includes(digits[0]) && !tPattern.includes(digits[1])
+                ? int + ordinals[digits[0] - 1]
+                : int + ordinals[3]
+        }
+
+        // toDecimalMark(12305030388.9087); // '12,305,030,388.909'
+        export const toDecimalMark = (num: number): string => num.toLocaleString('en-US')
+
+        // sumPower(10); // 385
+        // sumPower(10, 3); // 3025
+        // sumPower(10, 3, 5); // 2925
+        export const sumPower = (end: number, power = 2, start = 1): number =>
+            Array(end + 1 - start)
+                .fill(0)
+                .map((_, i) => (i + start) ** power)
+                .reduce((a, b) => a + b, 0)
+
+        export const sumN = (n: number): number => (n * (n + 1)) / 2
 
         // primeFactors(147); // [3, 7, 7]
         export const primeFactors = (n: number): number[] => {

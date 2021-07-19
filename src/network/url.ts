@@ -47,6 +47,19 @@ export const isAbsoluteURL = (str: string): boolean => /^[a-z][a-z0-9+.-]*:/.tes
 export const redirect = (url: string, asLink = true): string | void =>
     asLink ? (window.location.href = url) : window.location.replace(url)
 
+// slugify('Hello World!'); // 'hello-world'
+export const slugify = (str: string): string =>
+    str
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_-]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+
+// serializeCookie('foo', 'bar'); // 'foo=bar'
+export const serializeCookie = (name: string | number | boolean, val: string | number | boolean): string =>
+    `${encodeURIComponent(name)}=${encodeURIComponent(val)}`
+
 // objectToQueryString({ page: '1', size: '2kg', key: undefined });
 // '?page=1&size=2kg'
 export const objectToQueryString = (queryParameters: any): string => {

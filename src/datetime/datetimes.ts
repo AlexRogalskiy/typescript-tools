@@ -94,6 +94,41 @@ export namespace DateTimes {
     // getTimestamp(); // 1602162242
     export const getTimestamp = (date = new Date()): number => Math.floor(date.getTime() / 1000)
 
+    // weekOfYear(new Date('2021-06-18')); // 23
+    export const weekOfYear = (date: Date): number => {
+        const startOfYear = new Date(date.getFullYear(), 0, 1)
+        startOfYear.setDate(startOfYear.getDate() + (startOfYear.getDay() % 7))
+
+        return Math.round((date.getTime() - startOfYear.getTime()) / (7 * 24 * 3600 * 1000))
+    }
+
+    export const yesterday = (): string => {
+        const d = new Date()
+        d.setDate(d.getDate() - 1)
+
+        return d.toISOString().split('T')[0]
+    }
+
+    export const tomorrow = (): string => {
+        const d = new Date()
+        d.setDate(d.getDate() + 1)
+
+        return d.toISOString().split('T')[0]
+    }
+
+    // toISOStringWithTimezone(new Date()); // '2020-10-06T20:43:33-04:00'
+    export const toISOStringWithTimezone = (date: Date): string => {
+        const tzOffset = -date.getTimezoneOffset()
+        const diff = tzOffset >= 0 ? '+' : '-'
+        const pad = (n: number): string => `${Math.floor(Math.abs(n))}`.padStart(2, '0')
+
+        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(
+            date.getHours(),
+        )}:${pad(date.getMinutes())}:${pad(date.getSeconds())}${diff}${pad(tzOffset / 60)}:${pad(
+            tzOffset % 60,
+        )}`
+    }
+
     // quarterOfYear(new Date('07/10/2018')); // [ 3, 2018 ]
     // quarterOfYear(); // [ 4, 2020 ]
     export const quarterOfYear = (date = new Date()): [number, number] => [

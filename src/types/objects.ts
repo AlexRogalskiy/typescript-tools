@@ -272,6 +272,125 @@ export namespace Objects {
         return observer
     }
 
+    // export const requireUncached = module => {
+    //     delete require.cache[require.resolve(module)];
+    //     return require(module);
+    // }
+
+    // const a = { x: true, y: 1 };
+    // const b = shallowClone(a); // a !== b
+    export const shallowClone = (obj: any): any => Object.assign({}, obj)
+
+    // symbolizeKeys({ id: 10, name: 'apple' });
+    // { [Symbol(id)]: 10, [Symbol(name)]: 'apple' }
+    export const symbolizeKeys = (obj: any): any =>
+        Object.keys(obj).reduce((acc, key) => ({ ...acc, [Symbol(key)]: obj[key] }), {})
+
+    // truthCheckCollection(
+    //     [
+    //         { user: 'Tinky-Winky', sex: 'male' },
+    //         { user: 'Dipsy', sex: 'male' },
+    //     ],
+    //     'sex'
+    // ); // true
+    export const truthCheckCollection = (collection: any[], pre: PropertyKey): boolean =>
+        collection.every(obj => obj[pre])
+
+    // const obj = {
+    //     a: 10,
+    //     b: 20,
+    //     c: {
+    //         d: 10,
+    //         e: 20,
+    //         f: [30, 40]
+    //     },
+    //     g: [
+    //         {
+    //             h: 10,
+    //             i: 20
+    //         },
+    //         {
+    //             j: 30
+    //         },
+    //         40
+    //     ]
+    // };
+    // [...walkThrough(obj)];
+    /*
+    [
+      [['a'], 10],
+      [['b'], 20],
+      [['c', 'd'], 10],
+      [['c', 'e'], 20],
+      [['c', 'f', '0'], 30],
+      [['c', 'f', '1'], 40],
+      [['g', '0', 'h'], 10],
+      [['g', '0', 'i'], 20],
+      [['g', '1', 'j'], 30],
+      [['g', '2'], 40]
+    ]
+    */
+    export function* walkThrough(obj: any): any {
+        function* walk(x: any, previous: any[] = []): any {
+            for (const key of Object.keys(x)) {
+                if (typeof x[key] === 'object') yield* walk(x[key], [...previous, key])
+                else yield [[...previous, key], x[key]]
+            }
+        }
+
+        yield* walk(obj)
+    }
+
+    // zipObject(['a', 'b', 'c'], [1, 2]); // {a: 1, b: 2, c: undefined}
+    // zipObject(['a', 'b'], [1, 2, 3]); // {a: 1, b: 2}
+    export const zipObject = (props: any[], values: any[]): any =>
+        props.reduce((obj, prop, index) => ((obj[prop] = values[index]), obj), {})
+
+    // unflattenObject({ 'a.b.c': 1, d: 1 }); // { a: { b: { c: 1 } }, d: 1 }
+    // unflattenObject({ 'a.b': 1, 'a.c': 2, d: 3 }); // { a: { b: 1, c: 2 }, d: 3 }
+    // unflattenObject({ 'a.b.0': 8, d: 3 }); // { a: { b: [ 8 ] }, d: 3 }
+    export const unflattenObject = (obj: any): any =>
+        Object.keys(obj).reduce((res, k) => {
+            k.split('.').reduce(
+                (acc, e, i, keys) =>
+                    acc[e] ||
+                    (acc[e] = isNaN(Number(keys[i + 1])) ? (keys.length - 1 === i ? obj[k] : {}) : []),
+                res,
+            )
+
+            return res
+        }, {})
+
+    // const obj = { n: 42 };
+    // obj.obj = obj;
+    // stringifyCircularJSON(obj); // '{"n": 42}'
+    export const stringifyCircularJSON = (obj: any): string => {
+        const seen = new WeakSet()
+
+        return JSON.stringify(obj, (_, v) => {
+            if (v !== null && typeof v === 'object') {
+                if (seen.has(v)) return
+                seen.add(v)
+            }
+
+            return v
+        })
+    }
+
+    // size([1, 2, 3, 4, 5]); // 5
+    // size('size'); // 4
+    // size({ one: 1, two: 2, three: 3 }); // 3
+    export const size = (val: any): number => {
+        if (Array.isArray(val)) {
+            return val.length
+        }
+        if (val && typeof val === 'object') {
+            return val.size || val.length || Object.keys(val).length
+        }
+
+        return typeof val === 'string' ? new Blob([val]).size : 0
+    }
+
     // pick({ a: 1, b: '2', c: 3 }, ['a', 'c']); // { 'a': 1, 'c': 3 }
     export const pick2 = (obj: any, arr: any[]): any =>
         arr.reduce((acc, curr) => (curr in obj && (acc[curr] = obj[curr]), acc), {})

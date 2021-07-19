@@ -136,6 +136,25 @@ export namespace Sorting {
             return acc
         }, [])
 
+    // selectionSort([5, 1, 4, 2, 3]); // [1, 2, 3, 4, 5]
+    export const selectionSort2 = (arr: any[]): any[] => {
+        const a = [...arr]
+        for (let i = 0; i < a.length; i++) {
+            const min = a.slice(i + 1).reduce((acc, val, j) => (val < a[acc] ? j + i + 1 : acc), i)
+            if (min !== i) [a[i], a[min]] = [a[min], a[i]]
+        }
+
+        return a
+    }
+
+    // const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    // const stable = stableSort(arr, () => 0); // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    export const stableSort = (arr: any[], compare: any): any[] =>
+        arr
+            .map((item, index) => ({ item, index }))
+            .sort((a, b) => compare(a.item, b.item) || a.index - b.index)
+            .map(({ item }) => item)
+
     // quickSort([1, 6, 1, 5, 3, 2, 1, 4]); // [1, 1, 1, 2, 3, 4, 5, 6]
     export const quickSort2 = (arr: number[]): number[] => {
         const a = [...arr]

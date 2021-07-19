@@ -530,6 +530,18 @@ export namespace Commons {
         return arr[t.length][s.length]
     }
 
+    // vectorAngle([3, 4], [4, 3]); // 0.283794109208328
+    export const vectorAngle = (x: number[], y: number[]): number => {
+        const mX = Math.sqrt(x.reduce((acc, n) => acc + Math.pow(n, 2), 0))
+        const mY = Math.sqrt(y.reduce((acc, n) => acc + Math.pow(n, 2), 0))
+
+        return Math.acos(x.reduce((acc, n, i) => acc + n * y[i], 0) / (mX * mY))
+    }
+
+    // vectorDistance([10, 0, 5], [20, 0, 10]); // 11.180339887498949
+    export const vectorDistance = (x: number[], y: number[]): number =>
+        Math.sqrt(x.reduce((acc, val, i) => acc + Math.pow(val - y[i], 2), 0))
+
     // kMeans([[0, 0], [0, 1], [1, 3], [2, 0]], 2); // [0, 1, 1, 0]
     export const kMeans = (data: any, k = 1): any => {
         const centroids = data.slice(0, k)

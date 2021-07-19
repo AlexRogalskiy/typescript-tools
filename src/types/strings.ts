@@ -146,6 +146,239 @@ export namespace Strings {
         return _pluralize(val, word, plural)
     }
 
+    export const reverseString = (str: string): string => [...str].reverse().join('')
+
+    // sdbm('name'); // -3521204949
+    export const sdbm = (str: string): number => {
+        const arr = str.split('')
+
+        return arr.reduce(
+            (hashCode, currentVal) =>
+                (hashCode = currentVal.charCodeAt(0) + (hashCode << 6) + (hashCode << 16) - hashCode),
+            0,
+        )
+    }
+
+    //     toCurrency(123456.789, 'EUR');
+    // €123,456.79  | currency: Euro | currencyLangFormat: Local
+    //     toCurrency(123456.789, 'USD', 'en-us');
+    // $123,456.79  | currency: US Dollar | currencyLangFormat: English (United States)
+    //     toCurrency(123456.789, 'USD', 'fa');
+    // ۱۲۳٬۴۵۶٫۷۹ ؜$ | currency: US Dollar | currencyLangFormat: Farsi
+    //     toCurrency(322342436423.2435, 'JPY');
+    // ¥322,342,436,423 | currency: Japanese Yen | currencyLangFormat: Local
+    //     toCurrency(322342436423.2435, 'JPY', 'fi');
+    // 322 342 436 423 ¥ | currency: Japanese Yen | currencyLangFormat: Finnish
+    export const toCurrency = (n: number, curr: string, LanguageFormat = undefined): string =>
+        Intl.NumberFormat(LanguageFormat, {
+            style: 'currency',
+            currency: curr,
+        }).format(n)
+
+    export const toCharArray = (s: string): string[] => [...s]
+
+    // toKebabCase('camelCase'); // 'camel-case'
+    // toKebabCase('some text'); // 'some-text'
+    // toKebabCase('some-mixed_string With spaces_underscores-and-hyphens');
+    // 'some-mixed-string-with-spaces-underscores-and-hyphens'
+    // toKebabCase('AllThe-small Things'); // 'all-the-small-things'
+    // toKebabCase('IAmEditingSomeXMLAndHTML');
+    // 'i-am-editing-some-xml-and-html'
+    export const toKebabCase = (str: string): string =>
+        str &&
+        str
+            .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)!
+            .map(x => x.toLowerCase())
+            .join('-')
+
+    // toSnakeCase('camelCase'); // 'camel_case'
+    // toSnakeCase('some text'); // 'some_text'
+    // toSnakeCase('some-mixed_string With spaces_underscores-and-hyphens');
+    // 'some_mixed_string_with_spaces_underscores_and_hyphens'
+    // toSnakeCase('AllThe-small Things'); // 'all_the_small_things'
+    // toKebabCase('IAmEditingSomeXMLAndHTML');
+    // 'i_am_editing_some_xml_and_html'
+    export const toSnakeCase2 = (str: string): string =>
+        str &&
+        str
+            .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)!
+            .map(x => x.toLowerCase())
+            .join('_')
+
+    // toTitleCase('some_database_field_name'); // 'Some Database Field Name'
+    // toTitleCase('Some label that needs to be title-cased');
+    // 'Some Label That Needs To Be Title Cased'
+    // toTitleCase('some-package-name'); // 'Some Package Name'
+    // toTitleCase('some-mixed_string with spaces_underscores-and-hyphens');
+    // 'Some Mixed String With Spaces Underscores And Hyphens'
+    export const toTitleCase2 = (str: string): string =>
+        str
+            .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)!
+            .map(x => x.charAt(0).toUpperCase() + x.slice(1))
+            .join(' ')
+
+    // untildify('~/node'); // '/Users/aUser/node'
+    // export const untildify = (str: string): string =>
+    //     str.replace(/^~($|\/|\\)/, `${require('os').homedir()}$1`)
+
+    // wordWrap(
+    //     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce tempus.',
+    //     32
+    // );
+    // 'Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit.\nFusce tempus.'
+    //     wordWrap(
+    //         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce tempus.',
+    //         32,
+    //         '\r\n'
+    //     );
+    // 'Lorem ipsum dolor sit amet,\r\nconsectetur adipiscing elit.\r\nFusce tempus.'
+    export const wordWrap2 = (str: string, max: number, br = '\n'): string =>
+        str.replace(new RegExp(`(?![^\\n]{1,${max}}$)([^\\n]{1,${max}})\\s`, 'g'), `$1${br}`)
+
+    // words('I love javaScript!!'); // ['I', 'love', 'javaScript']
+    // words('python, javaScript & coffee'); // ['python', 'javaScript', 'coffee']
+    export const words = (str: string, pattern = /[^a-zA-Z-]+/): string[] =>
+        str.split(pattern).filter(Boolean)
+
+    /**
+     * Converts a slug to a SEO-friendly representation.
+     * Steps:
+     *  - Kebab-case
+     *  - Add a '/' in the front
+     * @param {string} str - The string to be converted.
+     */
+    export const convertToSeoSlug = (str: string): string => `/${toKebabCase(str)}`
+
+    /**
+     * Adds a trailing `/` to a slug, if necessary.
+     * @param {string} str - The string to be converted.
+     * */
+    export const addTrailingSlashToSlug = (str: string): string => {
+        if (str.includes('?')) return str.includes('/?') ? str : str.replace('?', '/?')
+
+        return str.endsWith('/') ? str : `${str}/`
+    }
+
+    /**
+     * Optimizes nodes in an HTML string.
+     * @param {string} data - The HTML string to be optimized.
+     * @param {RegExp} regexp - The matcher for the optimization.
+     * @param {string} replacer - The replacement for the matches.
+     */
+    export const optimizeNodes = (data: any, regexp: any, replacer: any): any => {
+        let count = 0
+        let output = data
+
+        do {
+            output = output.replace(regexp, replacer)
+            count = 0
+            while (regexp.exec(output) !== null) ++count
+        } while (count > 0)
+
+        return output
+    }
+
+    export const stripMarkdownFormat = (str: string): string => {
+        return str
+            .replace(/[`*]/g, '')
+            .replace(/\n/g, '')
+            .replace(/\[(.*)]\(.*\)/g, '$1')
+            .replace(/_(.*?)_/g, '$1')
+    }
+
+    // yesNo('Y'); // true
+    // yesNo('yes'); // true
+    // yesNo('No'); // false
+    // yesNo('Foo', true); // true
+    export const yesNo = (val: string, def = false): boolean =>
+        /^(y|yes)$/i.test(val) ? true : /^(n|no)$/i.test(val) ? false : def
+
+    // unescapeHTML('&lt;a href=&quot;#&quot;&gt;Me &amp; you&lt;/a&gt;');
+    // '<a href="#">Me & you</a>'
+    export const unescapeHTML = (str: string): string =>
+        str.replace(
+            /&amp;|&lt;|&gt;|&#39;|&quot;/g,
+            tag =>
+                ({
+                    '&amp;': '&',
+                    '&lt;': '<',
+                    '&gt;': '>',
+                    '&#39;': "'",
+                    '&quot;': '"',
+                }[tag] || tag),
+        )
+
+    // truncateStringAtWhitespace('short', 10); // 'short'
+    // truncateStringAtWhitespace('not so short', 10); // 'not so...'
+    // truncateStringAtWhitespace('trying a thing', 10); // 'trying...'
+    // truncateStringAtWhitespace('javascripting', 10); // 'javascr...'
+    export const truncateStringAtWhitespace = (str: string, lim: number, ending = '...'): string => {
+        if (str.length <= lim) return str
+        const lastSpace = str.slice(0, lim - ending.length + 1).lastIndexOf(' ')
+
+        return str.slice(0, lastSpace > 0 ? lastSpace : lim - ending.length) + ending
+    }
+
+    // truncateString('boomerang', 7); // 'boom...'
+    export const truncateString = (str: string, num: number): string =>
+        str.length > num ? `${str.slice(0, num > 3 ? num - 3 : num)}...` : str
+
+    // toCamelCase('some_database_field_name'); // 'someDatabaseFieldName'
+    // toCamelCase('Some label that needs to be camelized');
+    // 'someLabelThatNeedsToBeCamelized'
+    //     toCamelCase('some-javascript-property'); // 'someJavascriptProperty'
+    //     toCamelCase('some-mixed_string with spaces_underscores-and-hyphens');
+    // 'someMixedStringWithSpacesUnderscoresAndHyphens'
+    export const toCamelCase2 = (str: string): string => {
+        const s =
+            str &&
+            str
+                .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)!
+                .map(x => x.slice(0, 1).toUpperCase() + x.slice(1).toLowerCase())
+                .join('')
+
+        return s.slice(0, 1).toLowerCase() + s.slice(1)
+    }
+
+    export const stripHTMLTags = (str: string): string => str.replace(/<[^>]*>/g, '')
+
+    // swapCase('Hello world!'); // 'hELLO WORLD!'
+    export const swapCase = (str: string): string =>
+        [...str].map(c => (c === c.toLowerCase() ? c.toUpperCase() : c.toLowerCase())).join('')
+
+    // stringPermutations('abc'); // ['abc', 'acb', 'bac', 'bca', 'cab', 'cba']
+    export const stringPermutations = (str: string): string[] => {
+        if (str.length <= 2) return str.length === 2 ? [str, str[1] + str[0]] : [str]
+
+        return str
+            .split('')
+            .reduce<string[]>(
+                (acc, letter, i) =>
+                    acc.concat(
+                        stringPermutations(str.slice(0, i) + str.slice(i + 1)).map(val => letter + val),
+                    ),
+                [],
+            )
+    }
+
+    export const splitLines = (str: string): string[] => str.split(/\r?\n/)
+
+    // replaceLast('abcabdef', 'ab', 'gg'); // 'abcggdef'
+    // replaceLast('abcabdef', /ab/, 'gg'); // 'abcggdef'
+    // replaceLast('abcabdef', 'ad', 'gg'); // 'abcabdef'
+    // replaceLast('abcabdef', /ad/, 'gg'); // 'abcabdef'
+    export const replaceLast = (str: string, pattern: any, replacement: string): string => {
+        const match =
+            typeof pattern === 'string'
+                ? pattern
+                : (str.match(new RegExp(pattern.source, 'g')) || []).slice(-1)[0]
+
+        if (!match) return str
+        const last = str.lastIndexOf(match)
+
+        return last !== -1 ? `${str.slice(0, last)}${replacement}${str.slice(last + match.length)}` : str
+    }
+
     // prettyBytes(1000); // '1 KB'
     // prettyBytes(-27145424323.5821, 5); // '-27.145 GB'
     // prettyBytes(123456789, 3, false); // '123MB'

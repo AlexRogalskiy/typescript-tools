@@ -286,6 +286,67 @@ export namespace Browsers {
         container.appendChild(element)
     }
 
+    // const longRunningFunction = () => {
+    //     let result = 0;
+    //     for (let i = 0; i < 1000; i++)
+    //         for (let j = 0; j < 700; j++)
+    //             for (let k = 0; k < 300; k++) result = result + i + j + k;
+    //
+    //     return result;
+    // };
+    // runAsync(longRunningFunction).then(console.log); // 209685000000
+    // runAsync(() => 10 ** 3).then(console.log); // 1000
+    // let outsideVariable = 50;
+    // runAsync(() => typeof outsideVariable).then(console.log); // 'undefined'
+    export const runAsync = async (fn: any): Promise<any> => {
+        const worker = new Worker(URL.createObjectURL(new Blob([`postMessage((${fn})());`])))
+
+        return new Promise((res, rej) => {
+            worker.onmessage = ({ data }): void => {
+                res(data), worker.terminate()
+            }
+            worker.onerror = (err: any): void => {
+                rej(err), worker.terminate()
+            }
+        })
+    }
+
+    export const scrollToTop = (): void => {
+        const c = document.documentElement.scrollTop || document.body.scrollTop
+        if (c > 0) {
+            window.requestAnimationFrame(scrollToTop)
+            window.scrollTo(0, c - c / 8)
+        }
+    }
+
+    export const supportsTouchEvents = (): boolean => window && 'ontouchstart' in window
+
+    // toggleClass(document.querySelector('p.special'), 'special');
+    // The paragraph will not have the 'special' class anymore
+    export const toggleClass = (el: any, className: string): void => el.classList.toggle(className)
+
+    // triggerEvent(document.getElementById('myId'), 'click');
+    // triggerEvent(document.getElementById('myId'), 'click', { username: 'bob' });
+    export const triggerEvent = (el: any, eventType: any, detail: any): void =>
+        el.dispatchEvent(new CustomEvent(eventType, { detail }))
+
+    export const smoothScroll = (element: any): any =>
+        document.querySelector(element).scrollIntoView({
+            behavior: 'smooth',
+        })
+
+    // show(...document.querySelectorAll('img'));
+    // Shows all <img> elements on the page
+    export const show = (...el: any[]): void => {
+        for (const e of el) {
+            e.style.display = ''
+        }
+    }
+
+    // setStyle(document.querySelector('p'), 'font-size', '20px');
+    // The first <p> element on the page will have a font-size of 20px
+    export const setStyle = (el: any, rule: any, val: any): any => (el.style[rule] = val)
+
     // const linkListener = () => console.log('Clicked a link');
     // document.querySelector('a').addEventListener('click', linkListener);
     // removeEventListenerAll(document.querySelectorAll('a'), 'click', linkListener);

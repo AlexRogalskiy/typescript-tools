@@ -323,10 +323,24 @@ export namespace Checkers {
         return s === [...s].reverse().join('')
     }
 
+    // xor(true, true); // false
+    // xor(true, false); // true
+    // xor(false, true); // true
+    // xor(false, false); // false
+    export const xor = (a: any, b: any): boolean => (a || b) && !(a && b)
+
     // nor(true, true); // false
     // nor(true, false); // false
     // nor(false, false); // true
     export const nor = (a: any, b: any): boolean => !(a || b)
+
+    // validateNumber('10'); // true
+    // validateNumber('a'); // false
+    export const validateNumber = (n: string): boolean => {
+        const num = parseFloat(n)
+
+        return !Number.isNaN(num) && Number.isFinite(num) && Number(n).toString() === n
+    }
 
     export const isUndefined = (value: any): boolean => {
         return value === undefined

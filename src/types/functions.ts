@@ -152,6 +152,101 @@ export namespace Functions {
             { res: [] },
         ).res
 
+    // const delay = d => new Promise(r => setTimeout(r, d));
+    // runPromisesInSeries(() => delay(1000), () => delay(2000));
+    // Executes each promise sequentially, taking a total of 3 seconds to complete
+    export const runPromisesInSeries = (...ps: any[]): any =>
+        // eslint-disable-next-line github/no-then
+        ps.reduce((p, next) => p.then(next), Promise.resolve())
+
+    // const arrayMax = spreadOver(Math.max);
+    // arrayMax([1, 2, 3]); // 3
+    export const spreadOver = (fn: any): any => {
+        return argsArr => fn(...argsArr)
+    }
+
+    // window.addEventListener(
+    //     'resize',
+    //     throttle(function(evt) {
+    //         console.log(window.innerWidth);
+    //         console.log(window.innerHeight);
+    //     }, 250)
+    // ); // Will log the window dimensions at most every 250ms
+    export const throttle = (fn: any, wait: number): any => {
+        let inThrottle, lastFn, lastTime
+
+        return function (...args) {
+            if (!inThrottle) {
+                fn.apply(fn, args)
+                lastTime = Date.now()
+                inThrottle = true
+            } else {
+                clearTimeout(lastFn)
+                lastFn = setTimeout(function () {
+                    if (Date.now() - lastTime >= wait) {
+                        fn.apply(fn, args)
+                        lastTime = Date.now()
+                    }
+                }, Math.max(wait - (Date.now() - lastTime), 0))
+            }
+        }
+    }
+
+    // transform(
+    //     { a: 1, b: 2, c: 1 },
+    //     (r, v, k) => {
+    //         (r[v] || (r[v] = [])).push(k);
+    //         return r;
+    //     },
+    //     {}
+    // ); // { '1': ['a', 'c'], '2': ['b'] }
+    export const transform = (obj: any, fn: any, acc: any): any =>
+        Object.keys(obj).reduce((a, k) => fn(a, obj[k], k, obj), acc)
+
+    // var output = '';
+    // times(5, i => (output += i));
+    // console.log(output); // 01234
+    export const times = (n: number, fn: any, context = undefined): any => {
+        let i = 0
+        while (fn.call(context, i) !== false && ++i < n);
+    }
+
+    // const doubleEvenNumbers = when(x => x % 2 === 0, x => x * 2);
+    // doubleEvenNumbers(2); // 4
+    // doubleEvenNumbers(1); // 1
+    export const when = (pred: any, whenTrue: any): any => {
+        return x => (pred(x) ? whenTrue(x) : x)
+    }
+
+    // const add = x => y => z => x + y + z;
+    // const uncurriedAdd = uncurry(add, 3);
+    // uncurriedAdd(1, 2, 3); // 6
+    export const uncurry = (fn: any, n = 1): any => {
+        return (...args) => {
+            const next = (acc: any): any => {
+                return args => args.reduce((x, y) => x(y), acc)
+            }
+
+            if (n > args.length) throw new RangeError('Arguments too few!')
+
+            return next(fn)(args.slice(0, n))
+        }
+    }
+
+    // ['6', '8', '10'].map(unary(parseInt)); // [6, 8, 10]
+    export const unary = (fn: any): any => {
+        return val => fn(val)
+    }
+
+    // timeTaken(() => Math.pow(2, 10)); // 1024, (logged): timeTaken: 0.02099609375ms
+    export const timeTaken = (callback: any): any => {
+        console.time('timeTaken')
+        const r = callback()
+        console.timeEnd('timeTaken')
+
+        return r
+    }
+
     // const sum = pipeAsyncFunctions(
     //     x => x + 1,
     //     x => new Promise(resolve => setTimeout(() => resolve(x + 2), 1000)),

@@ -550,6 +550,388 @@ export namespace Arrays {
         return removed
     }
 
+    export const sample = (arr: any[]): any => arr[Math.floor(Math.random() * arr.length)]
+
+    // similarity([1, 2, 3], [1, 2, 4]); // [1, 2]
+    export const similarity = (arr: any[], values: any[]): any[] => arr.filter(v => values.includes(v))
+
+    // sortedLastIndexBy([{ x: 4 }, { x: 5 }], { x: 4 }, o => o.x); // 1
+    export const sortedLastIndexBy = (arr: any[], n: number, fn: any): number => {
+        const isDescending = fn(arr[0]) > fn(arr[arr.length - 1])
+        const val = fn(n)
+        const index = arr
+            .map<any>(fn)
+            .reverse()
+            .findIndex(el => (isDescending ? val <= el : val >= el))
+
+        return index === -1 ? 0 : arr.length - index
+    }
+
+    // symmetricDifferenceBy([2.1, 1.2], [2.3, 3.4], Math.floor); // [ 1.2, 3.4 ]
+    // symmetricDifferenceBy(
+    //     [{ id: 1 }, { id: 2 }, { id: 3 }],
+    //     [{ id: 1 }, { id: 2 }, { id: 4 }],
+    //     i => i.id
+    // );
+    // [{ id: 3 }, { id: 4 }]
+    export const symmetricDifferenceBy = (a: any[], b: any[], fn: any): any[] => {
+        const sA = new Set(a.map(v => fn(v))),
+            sB = new Set(b.map(v => fn(v)))
+
+        return [...a.filter(x => !sB.has(fn(x))), ...b.filter(x => !sA.has(fn(x)))]
+    }
+
+    export const tail = (arr: any[]): any[] => (arr.length > 1 ? arr.slice(1) : arr)
+
+    export const take = (arr: any[], n = 1): any[] => arr.slice(0, n)
+
+    // toHash([4, 3, 2, 1]); // { 0: 4, 1: 3, 2: 2, 3: 1 }
+    // toHash([{ a: 'label' }], 'a'); // { label: { a: 'label' } }
+    // A more in depth example:
+    // let users = [
+    //     { id: 1, first: 'Jon' },
+    //     { id: 2, first: 'Joe' },
+    //     { id: 3, first: 'Moe' },
+    // ];
+    // let managers = [{ manager: 1, employees: [2, 3] }];
+    // We use function here because we want a bindable reference,
+    // but a closure referencing the hash would work, too.
+    // managers.forEach(
+    //     manager =>
+    //         (manager.employees = manager.employees.map(function(id) {
+    //             return this[id];
+    //         }, toHash(users, 'id')))
+    // );
+    // managers;
+    // [ {manager:1, employees: [ {id: 2, first: 'Joe'}, {id: 3, first: 'Moe'} ] } ]
+    export const toHash = (object: any, key: string): string =>
+        Array.prototype.reduce.call(
+            object,
+            (acc, data, index) => ((acc[!key ? index : data[key]] = data), acc),
+            {},
+        )
+
+    // unionBy([2.1], [1.2, 2.3], Math.floor); // [2.1, 1.2]
+    // unionBy([{ id: 1 }, { id: 2 }], [{ id: 2 }, { id: 3 }], x => x.id)
+    // [{ id: 1 }, { id: 2 }, { id: 3 }]
+    export const unionBy = (a: any[], b: any[], fn: any): any[] => {
+        const s = new Set(a.map(fn))
+
+        return Array.from(new Set([...a, ...b.filter(x => !s.has(fn(x)))]))
+    }
+
+    // uniqueElementsBy(
+    //     [
+    //         { id: 0, value: 'a' },
+    //         { id: 1, value: 'b' },
+    //         { id: 2, value: 'c' },
+    //         { id: 1, value: 'd' },
+    //         { id: 0, value: 'e' }
+    //     ],
+    //     (a, b) => a.id == b.id
+    // ); // [ { id: 0, value: 'a' }, { id: 1, value: 'b' }, { id: 2, value: 'c' } ]
+    export const uniqueElementsBy = (arr: any[], fn: any): any[] =>
+        arr.reduce((acc, v) => {
+            if (!acc.some(x => fn(v, x))) acc.push(v)
+            return acc
+        }, [])
+
+    // uniqueSymmetricDifference([1, 2, 3], [1, 2, 4]); // [3, 4]
+    // uniqueSymmetricDifference([1, 2, 2], [1, 3, 1]); // [2, 3]
+    export const uniqueSymmetricDifference = (a: any[], b: any[]): any[] => [
+        ...new Set([...a.filter(v => !b.includes(v)), ...b.filter(v => !a.includes(v))]),
+    ]
+
+    // unzip([['a', 1, true], ['b', 2, false]]); // [['a', 'b'], [1, 2], [true, false]]
+    // unzip([['a', 1, true], ['b', 2]]); // [['a', 'b'], [1, 2], [true]]
+    export const unzip = (arr: any[]): any[] =>
+        arr.reduce(
+            (acc, val) => {
+                for (const [v, i] of val) {
+                    acc[i].push(v)
+                }
+                return acc
+            },
+            Array.from({
+                length: Math.max(...arr.map(x => x.length)),
+            }).map(_ => []),
+        )
+
+    // zipWith([1, 2], [10, 20], [100, 200], (a, b, c) => a + b + c); // [111, 222]
+    // zipWith(
+    //     [1, 2, 3],
+    //     [10, 20],
+    //     [100, 200],
+    //     (a, b, c) =>
+    //         (a != null ? a : 'a') + (b != null ? b : 'b') + (c != null ? c : 'c')
+    // ); // [111, 222, '3bc']
+    export const zipWith = (...array: any[]): any[] => {
+        const fn = typeof array[array.length - 1] === 'function' ? array.pop() : undefined
+
+        return Array.from({ length: Math.max(...array.map(a => a.length)) }, (_, i) =>
+            fn ? fn(...array.map(a => a[i])) : array.map(a => a[i]),
+        )
+    }
+
+    // zip(['a', 'b'], [1, 2], [true, false]); // [['a', 1, true], ['b', 2, false]]
+    // zip(['a'], [1, 2], [true, false]); // [['a', 1, true], [undefined, 2, false]]
+    export const zip = (...arrays: any[]): any[] => {
+        const maxLength = Math.max(...arrays.map(x => x.length))
+
+        return Array.from({ length: maxLength }).map((_, i) => {
+            return Array.from({ length: arrays.length }, (_, k) => arrays[k][i])
+        })
+    }
+
+    // xProd([1, 2], ['a', 'b']); // [[1, 'a'], [1, 'b'], [2, 'a'], [2, 'b']]
+    export const xProd = (a: any[], b: any[]): any[] =>
+        a.reduce((acc, x) => acc.concat(b.map(y => [x, y])), [])
+
+    // without([2, 1, 2, 3], 1, 2); // [3]
+    export const without = (arr: any[], ...args: any[]): any[] => arr.filter(v => !args.includes(v))
+
+    // weightedSample([3, 7, 9, 11], [0.1, 0.2, 0.6, 0.1]); // 9
+    export const weightedSample = (arr: any[], weights: any[]): number => {
+        const roll = Math.random()
+
+        return arr[
+            weights
+                .reduce((acc, w, i) => (i === 0 ? [w] : [...acc, acc[acc.length - 1] + w]), [])
+                .findIndex((v, i, s) => roll >= (i === 0 ? 0 : s[i - 1]) && roll < v)
+        ]
+    }
+
+    // unzipWith(
+    //     [
+    //         [1, 10, 100],
+    //         [2, 20, 200],
+    //     ],
+    //     (...args) => args.reduce((acc, v) => acc + v, 0)
+    // );
+    // [3, 30, 300]
+    export const unzipWith = (arr: any[], fn: any): any[] =>
+        arr
+            .reduce(
+                (acc, val) => {
+                    for (const [v, i] of val) {
+                        acc[i].push(v)
+                    }
+                    return acc
+                },
+                Array.from({
+                    length: Math.max(...arr.map(x => x.length)),
+                }).map(x => []),
+            )
+            .map(val => fn(...val))
+
+    // uniqueElementsByRight(
+    //     [
+    //         { id: 0, value: 'a' },
+    //         { id: 1, value: 'b' },
+    //         { id: 2, value: 'c' },
+    //         { id: 1, value: 'd' },
+    //         { id: 0, value: 'e' }
+    //     ],
+    //     (a, b) => a.id == b.id
+    // ); // [ { id: 0, value: 'e' }, { id: 1, value: 'd' }, { id: 2, value: 'c' } ]
+    export const uniqueElementsByRight = (arr: any[], fn: any): any[] =>
+        arr.reduceRight((acc, v) => {
+            if (!acc.some(x => fn(v, x))) acc.push(v)
+            return acc
+        }, [])
+
+    // uniqueElements([1, 2, 2, 3, 4, 4, 5]); // [1, 2, 3, 4, 5]
+    export const uniqueElements = (arr: any[]): any[] => [...new Set(arr)]
+
+    // unionWith(
+    //     [1, 1.2, 1.5, 3, 0],
+    //     [1.9, 3, 0, 3.9],
+    //     (a, b) => Math.round(a) === Math.round(b)
+    // );
+    // [1, 1.2, 1.5, 3, 0, 3.9]
+    export const unionWith = (a: any[], b: any[], comp: any): any[] =>
+        Array.from(new Set([...a, ...b.filter(x => a.findIndex(y => comp(x, y)) === -1)]))
+
+    // union([1, 2, 3], [4, 3, 2]); // [1, 2, 3, 4]
+    export const union2 = (a: any[], b: any[]): any[] => Array.from(new Set([...a, ...b]))
+
+    // var f = n => (n > 50 ? false : [-n, n + 10]);
+    // unfold(f, 10); // [-10, -20, -30, -40, -50]
+    export const unfold = (fn: any, seed: any): any => {
+        const result: any[] = []
+        let val = [null, seed]
+        while ((val = fn(val[1]))) result.push(val[0])
+
+        return result
+    }
+
+    // toPairs({ a: 1, b: 2 }); // [['a', 1], ['b', 2]]
+    // toPairs([2, 4, 8]); // [[0, 2], [1, 4], [2, 8]]
+    // toPairs('shy'); // [['0', 's'], ['1', 'h'], ['2', 'y']]
+    // toPairs(new Set(['a', 'b', 'c', 'a'])); // [['a', 'a'], ['b', 'b'], ['c', 'c']]
+    export const toPairs = (obj: any): any[] =>
+        obj[Symbol.iterator] instanceof Function && obj.entries instanceof Function
+            ? Array.from(obj.entries())
+            : Object.entries(obj)
+
+    // takeWhile([1, 2, 3, 4], n => n < 3); // [1, 2]
+    export const takeWhile = (arr: any[], fn: any): any[] => {
+        for (const [i, val] of arr.entries()) if (!fn(val)) return arr.slice(0, i)
+
+        return arr
+    }
+
+    // takeUntil([1, 2, 3, 4], n => n >= 3); // [1, 2]
+    export const takeUntil = (arr: any[], fn: any): any[] => {
+        for (const [i, val] of arr.entries()) {
+            if (fn(val)) return arr.slice(0, i)
+        }
+
+        return arr
+    }
+
+    // takeRightWhile([1, 2, 3, 4], n => n >= 3); // [3, 4]
+    export const takeRightWhile = (arr: any[], fn: any): any[] => {
+        for (const [i, val] of [...arr].reverse().entries()) if (!fn(val)) return i === 0 ? [] : arr.slice(-i)
+
+        return arr
+    }
+
+    // takeRightUntil([1, 2, 3, 4], n => n < 3); // [3, 4]
+    export const takeRightUntil = (arr: any[], fn: any): any[] => {
+        for (const [i, val] of [...arr].reverse().entries()) if (fn(val)) return i === 0 ? [] : arr.slice(-i)
+
+        return arr
+    }
+
+    // takeRight([1, 2, 3], 2); // [ 2, 3 ]
+    // takeRight([1, 2, 3]); // [3]
+    export const takeRight = (arr: any[], n = 1): any[] => arr.slice(arr.length - n, arr.length)
+
+    // symmetricDifferenceWith(
+    //     [1, 1.2, 1.5, 3, 0],
+    //     [1.9, 3, 0, 3.9],
+    //     (a, b) => Math.round(a) === Math.round(b)
+    // ); // [1, 1.2, 3.9]
+    export const symmetricDifferenceWith = (arr: any[], val: any[], comp: any): any => [
+        ...arr.filter(a => val.findIndex(b => comp(a, b)) === -1),
+        ...val.filter(a => arr.findIndex(b => comp(a, b)) === -1),
+    ]
+
+    // symmetricDifference([1, 2, 3], [1, 2, 4]); // [3, 4]
+    // symmetricDifference([1, 2, 2], [1, 3, 1]); // [2, 2, 3]
+    export const symmetricDifference = (a: any[], b: any[]): any[] => {
+        const sA = new Set(a),
+            sB = new Set(b)
+
+        return [...a.filter(x => !sB.has(x)), ...b.filter(x => !sA.has(x))]
+    }
+
+    // superSet(new Set([1, 2, 3, 4]), new Set([1, 2])); // true
+    // superSet(new Set([1, 2, 3, 4]), new Set([1, 5])); // false
+    export const superSet = (a: any[], b: any[]): boolean => {
+        const sA = new Set(a),
+            sB = new Set(b)
+
+        return [...sB].every(v => sA.has(v))
+    }
+
+    // sumBy([{ n: 4 }, { n: 2 }, { n: 8 }, { n: 6 }], x => x.n); // 20
+    // sumBy([{ n: 4 }, { n: 2 }, { n: 8 }, { n: 6 }], 'n'); // 20
+    export const sumBy2 = (arr: number[], fn: any): number =>
+        arr.map<number>(typeof fn === 'function' ? fn : val => val[fn]).reduce((acc, val) => acc + val, 0)
+
+    // sum(1, 2, 3, 4); // 10
+    // sum(...[1, 2, 3, 4]); // 10
+    export const sum = (...arr: number[]): number => [...arr].reduce((acc, val) => acc + val, 0)
+
+    // subSet(new Set([1, 2]), new Set([1, 2, 3, 4])); // true
+    // subSet(new Set([1, 5]), new Set([1, 2, 3, 4])); // false
+    export const subSet = (a: any[], b: any[]): boolean => {
+        const sA = new Set(a),
+            sB = new Set(b)
+
+        return [...sA].every(v => sB.has(v))
+    }
+
+    // sortedLastIndex([10, 20, 30, 30, 40], 30); // 4
+    export const sortedLastIndex = (arr: any[], n: number): number => {
+        const isDescending = arr[0] > arr[arr.length - 1]
+        const index = arr.reverse().findIndex(el => (isDescending ? n <= el : n >= el))
+
+        return index === -1 ? 0 : arr.length - index
+    }
+
+    // sortedIndexBy([{ x: 4 }, { x: 5 }], { x: 4 }, o => o.x); // 0
+    export const sortedIndexBy = (arr: any[], n: number, fn: any): number => {
+        const isDescending = fn(arr[0]) > fn(arr[arr.length - 1])
+        const val = fn(n)
+        const index = arr.findIndex(el => (isDescending ? val >= fn(el) : val <= fn(el)))
+
+        return index === -1 ? arr.length : index
+    }
+
+    // sortedIndex([5, 3, 2, 1], 4); // 1
+    // sortedIndex([30, 50], 40); // 1
+    export const sortedIndex = (arr: any[], n: number): number => {
+        const isDescending = arr[0] > arr[arr.length - 1]
+        const index = arr.findIndex(el => (isDescending ? n >= el : n <= el))
+
+        return index === -1 ? arr.length : index
+    }
+
+    // sortCharactersInString('cabbage'); // 'aabbceg'
+    export const sortCharactersInString = (str: string): string =>
+        [...str].sort((a, b) => a.localeCompare(b)).join('')
+
+    // const foo = [1, 2, 3];
+    // shuffle(foo); // [2, 3, 1], foo = [1, 2, 3]
+    export const shuffle4 = (...arr: any[]): any[] => {
+        let m = arr.length
+        while (m) {
+            const i = Math.floor(Math.random() * m--)
+            ;[arr[m], arr[i]] = [arr[i], arr[m]]
+        }
+
+        return arr
+    }
+
+    // const names = ['alpha', 'bravo', 'charlie'];
+    // const namesAndDelta = shank(names, 1, 0, 'delta');
+    // [ 'alpha', 'delta', 'bravo', 'charlie' ]
+    // const namesNoBravo = shank(names, 1, 1); // [ 'alpha', 'charlie' ]
+    // console.log(names); // ['alpha', 'bravo', 'charlie']
+    export const shank = (arr: any[], index = 0, delCount = 0, ...elements: any[]): any[] =>
+        arr
+            .slice(0, index)
+            .concat(elements)
+            .concat(arr.slice(index + delCount))
+
+    // sampleSize([1, 2, 3], 2); // [3, 1]
+    // sampleSize([1, 2, 3], 4); // [2, 3, 1]
+    export const sampleSize = ([...arr], n = 1): any[] => {
+        let m = arr.length
+        while (m) {
+            const i = Math.floor(Math.random() * m--)
+            ;[arr[m], arr[i]] = [arr[i], arr[m]]
+        }
+
+        return arr.slice(0, n)
+    }
+
+    // const repeater = repeatGenerator(5);
+    // repeater.next(); // { value: 5, done: false }
+    // repeater.next(); // { value: 5, done: false }
+    // repeater.next(4); // { value: 4, done: false }
+    // repeater.next(); // { value: 4, done: false }
+    export function* repeatGenerator(val: any): any {
+        let v = val
+        while (true) {
+            const newV = yield v
+            if (newV !== undefined) v = newV
+        }
+    }
+
     // let myArray = ['a', 'b', 'c', 'd'];
     // let pulled = pullAtIndex(myArray, [1, 3]);
     // myArray = [ 'a', 'c' ] , pulled = [ 'b', 'd' ]

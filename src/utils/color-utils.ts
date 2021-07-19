@@ -38,6 +38,26 @@ export namespace ColorsUtils {
         '#d300e7',
     ]
 
+    // toRGBObject('rgb(255, 12, 0)'); // {red: 255, green: 12, blue: 0}
+    export const toRGBObject = (rgbStr: string): any => {
+        const [red, green, blue] = toRGBArray(rgbStr)
+
+        return { red, green, blue }
+    }
+
+    // toRGBArray('rgb(255, 12, 0)'); // [255, 12, 0]
+    export const toRGBArray = (rgbStr: string): number[] => rgbStr.match(/\d+/g)!.map(Number)
+
+    // toHSLObject('hsl(50, 10%, 10%)'); // { hue: 50, saturation: 10, lightness: 10 }
+    export const toHSLObject = (hslStr: string): any => {
+        const [hue, saturation, lightness] = hslStr.match(/\d+/g)!.map(Number)
+
+        return { hue, saturation, lightness }
+    }
+
+    // toHSLArray('hsl(50, 10%, 10%)'); // [50, 10, 10]
+    export const toHSLArray = (hslStr: string): number[] => hslStr.match(/\d+/g)!.map(Number)
+
     export const randomHexColorCode = (): string => {
         const n = (Math.random() * 0xfffff * 1000000).toString(16)
 
