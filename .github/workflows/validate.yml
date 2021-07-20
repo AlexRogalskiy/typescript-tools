@@ -32,7 +32,7 @@ jobs:
             npm-v14-${{ runner.os }}-refs/heads/master-
 
       - name: Install Node.js and npm
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2.3.0
         with:
           node-version: 14.x
 
@@ -86,7 +86,7 @@ jobs:
             npm-v14-${{ runner.os }}-refs/heads/master-
 
       - name: Install Node.js and npm
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2.3.0
         with:
           node-version: 14.x
 
@@ -119,7 +119,7 @@ jobs:
             npm-v12-${{ runner.os }}-refs/heads/master-
 
       - name: Install Node.js and npm
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2.3.0
         with:
           node-version: 12.x
 
@@ -152,7 +152,7 @@ jobs:
             npm-v10-${{ runner.os }}-refs/heads/master-
 
       - name: Install Node.js and npm
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2.3.0
         with:
           node-version: 10.x
 
