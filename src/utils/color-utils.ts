@@ -1,7 +1,10 @@
-import { Arrays, Errors, Numbers, Checkers, Strings } from '..'
+import { Arrays, Checkers, CommonUtils, Errors, Numbers, Strings } from '..'
 import { Optional } from '../../typings/standard-types'
 
 export namespace ColorsUtils {
+    import clamp = CommonUtils.clamp
+    import NumberOperations = Numbers.NumberOperations
+
     export type PageTheme = {
         colors: string[]
         shape: string
@@ -38,11 +41,57 @@ export namespace ColorsUtils {
         '#d300e7',
     ]
 
+    export const wobble = (x1: number, y1: number, x2: number, y2: number): any => {
+        //assert(_.every([x1,x2,y1,y2], _.isFinite), 'x1,x2,y1,y2 must be numeric');
+
+        // Wobble no more than 1/25 of the line length
+        const factor = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) / 25
+
+        // Distance along line where the control points are
+        // Clamp between 20% and 80% so any arrow heads aren't angled too much
+        const r1 = clamp(Math.random(), 0.2, 0.8)
+        const r2 = clamp(Math.random(), 0.2, 0.8)
+
+        const xfactor = NumberOperations.randomBoolean() ? factor : -factor
+        const yfactor = NumberOperations.randomBoolean() ? factor : -factor
+
+        const p1 = {
+            x: (x2 - x1) * r1 + x1 + xfactor,
+            y: (y2 - y1) * r1 + y1 + yfactor,
+        }
+
+        const p2 = {
+            x: (x2 - x1) * r2 + x1 - xfactor,
+            y: (y2 - y1) * r2 + y1 - yfactor,
+        }
+
+        return `C${p1.x.toFixed(1)},${
+            p1.y.toFixed(1) // start control point
+        } ${p2.x.toFixed(1)},${
+            p2.y.toFixed(1) // end control point
+        } ${x2.toFixed(1)},${y2.toFixed(1)}` // end point
+    }
+
+    export const handRect = (x: number, y: number, w: number, h: number): any => {
+        //assert(_.every([x, y, w, h], _.isFinite), 'x, y, w, h must be numeric')
+        return `M${x},${y}${wobble(x, y, x + w, y)}${wobble(x + w, y, x + w, y + h)}${wobble(
+            x + w,
+            y + h,
+            x,
+            y + h,
+        )}${wobble(x, y + h, x, y)}`
+    }
+
     // toRGBObject('rgb(255, 12, 0)'); // {red: 255, green: 12, blue: 0}
     export const toRGBObject = (rgbStr: string): any => {
         const [red, green, blue] = toRGBArray(rgbStr)
 
         return { red, green, blue }
+    }
+
+    export const handLine = (x1: number, y1: number, x2: number, y2: number): any => {
+        //assert(_.every([x1,x2,y1,y2], _.isFinite), 'x1,x2,y1,y2 must be numeric')
+        return `M${x1.toFixed(1)},${y1.toFixed(1)}${wobble(x1, y1, x2, y2)}`
     }
 
     // toRGBArray('rgb(255, 12, 0)'); // [255, 12, 0]
