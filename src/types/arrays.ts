@@ -657,6 +657,16 @@ export namespace Arrays {
             }).map(_ => []),
         )
 
+    export const map = (arr: any[], callback: any): any[] => {
+        const result: any = []
+
+        for (let i = 0; i < arr.length; i++) {
+            result.push(callback(arr[i], i))
+        }
+
+        return result
+    }
+
     // zipWith([1, 2], [10, 20], [100, 200], (a, b, c) => a + b + c); // [111, 222]
     // zipWith(
     //     [1, 2, 3],

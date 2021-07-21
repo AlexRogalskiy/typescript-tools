@@ -196,6 +196,14 @@ export namespace Numbers {
 
         export const randomBoolean = (): boolean => Math.random() >= 0.5
 
+        export const fibonacci2 = (n: number): number[] =>
+            [...Array(n)].reduce(
+                (acc, _, i) => acc.concat(i > 1 ? acc[i - 1] + acc[i - 2] : i),
+                []
+            )
+
+        export const approxEqual = (n1: number, n2: number, epsilon = 0.0001): boolean => Math.abs(n1 - n2) < epsilon
+
         // radsToDegrees(Math.PI / 2); // 90
         export const radsToDegrees = (rad: number): number => (rad * 180.0) / Math.PI
 

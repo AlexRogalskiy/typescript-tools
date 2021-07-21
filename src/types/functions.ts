@@ -233,6 +233,10 @@ export namespace Functions {
         }
     }
 
+    export const bind = (fn: any, context: any): any => {
+        return (...args) => fn.apply(context, args)
+    }
+
     // ['6', '8', '10'].map(unary(parseInt)); // [6, 8, 10]
     export const unary = (fn: any): any => {
         return val => fn(val)
