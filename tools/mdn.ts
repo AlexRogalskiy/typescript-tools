@@ -13,14 +13,14 @@ interface TranslatedMDNInfo {
 }
 
 export const normalizeMdnResource = (res: MDNJSONRes): TranslatedMDNInfo[] => {
-    const {locale, title, summary, mdn_url} = res.doc
+    const { locale, title, summary, mdn_url } = res.doc
     return [
         {
             locale,
             title,
             summary,
-            url: mdn_url
-        }
+            url: mdn_url,
+        },
     ]
 }
 
@@ -32,7 +32,7 @@ export const fetchMdnResource = async (path: string): Promise<TranslatedMDNInfo[
 
         return normalizeMdnResource(json)
     } catch (error) {
-        console.error(`an error occurred while fetching mdn resource`, error)
+        console.error('an error occurred while fetching mdn resource', error)
         throw error
     }
 }
