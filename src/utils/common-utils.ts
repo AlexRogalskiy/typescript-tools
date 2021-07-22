@@ -1251,6 +1251,20 @@ export namespace CommonUtils {
         )
     }
 
+    /**
+     * Convert a ratio to percentage, applying a predefined rounding.
+     */
+    export const ratioToPercentage = (ratio: number): number => {
+        return Math.round(ratio * 1000) / 10
+    }
+
+    /**
+     * Compute completion percentage.
+     */
+    export const computeCompletion = (answerCount: number, totalCount: number): number => {
+        return ratioToPercentage(answerCount / totalCount)
+    }
+
     export const normalizeBy = (name: string): string => {
         if (!Checkers.isString(name)) {
             name = String(name)

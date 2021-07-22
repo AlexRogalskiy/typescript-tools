@@ -1,13 +1,19 @@
 import _ from 'lodash'
 import minimatch from 'minimatch'
 
-import { Callback, Executor, GenericValueCallback, Processor, Supplier } from '../../typings/function-types'
+import {
+    Callback,
+    Executor,
+    GenericValueCallback,
+    Processor,
+    Supplier
+} from '../../typings/function-types'
 
-import { Checkers, CommonUtils, Errors } from '..'
+import {Checkers, CommonUtils, Errors} from '..'
 
 export namespace Functions {
-    import normalize = CommonUtils.normalize
-    import defineProperty = CommonUtils.defineProperty
+    import normalize = CommonUtils.normalize;
+    import defineProperty = CommonUtils.defineProperty;
 
     export interface EnumObject {
         [enumValue: number]: string
@@ -108,7 +114,7 @@ export namespace Functions {
     //     () => console.log('Hello world')
     // ); // 'Hello world' will only be logged on the first click
     export const listenOnce = (el: any, evt: any, fn: any): void =>
-        el.addEventListener(evt, fn, { once: true })
+        el.addEventListener(evt, fn, {once: true})
 
     // [1, 2, 3, 4, 5, 6].filter(negate(n => n % 2 === 0)); // [ 1, 3, 5 ]
     export const negate = (func: any): any => {
@@ -143,13 +149,13 @@ export namespace Functions {
     // partitionBy(numbers, n => n); // [[1, 1], [3, 3], [4], [5, 5, 5]]
     export const partitionBy = (arr: any[], fn: any): any =>
         arr.reduce(
-            ({ res, last }, v, i, a) => {
+            ({res, last}, v, i, a) => {
                 const next = fn(v, i, a)
                 if (next !== last) res.push([v])
                 else res[res.length - 1].push(v)
-                return { res, last: next }
+                return {res, last: next}
             },
-            { res: [] },
+            {res: []},
         ).res
 
     // const delay = d => new Promise(r => setTimeout(r, d));
@@ -208,7 +214,7 @@ export namespace Functions {
     // console.log(output); // 01234
     export const times = (n: number, fn: any, context = undefined): any => {
         let i = 0
-        while (fn.call(context, i) !== false && ++i < n);
+        while (fn.call(context, i) !== false && ++i < n) ;
     }
 
     // const doubleEvenNumbers = when(x => x % 2 === 0, x => x * 2);
@@ -231,6 +237,10 @@ export namespace Functions {
 
             return next(fn)(args.slice(0, n))
         }
+    }
+
+    export const pipe = (...fns: any[]): any => {
+        return x => fns.reduce((v, fn) => fn(v), x)
     }
 
     export const bind = (fn: any, context: any): any => {
@@ -392,19 +402,19 @@ export namespace Functions {
                     // eslint-disable-next-line github/no-then
                     Promise.resolve(fn.apply(fn, args)).then(
                         data => {
-                            for (const { resolve } of currentPending) {
+                            for (const {resolve} of currentPending) {
                                 resolve(data)
                             }
                         },
                         error => {
-                            for (const { reject } of currentPending) {
+                            for (const {reject} of currentPending) {
                                 reject(error)
                             }
                         },
                     )
                 }, ms)
 
-                pending.push({ resolve: res, reject: rej })
+                pending.push({resolve: res, reject: rej})
             })
     }
 
@@ -429,7 +439,7 @@ export namespace Functions {
 
         // First match wins
         Object.keys(args).some(pattern => {
-            if (minimatch(normalize(key), pattern, { dot: true })) {
+            if (minimatch(normalize(key), pattern, {dot: true})) {
                 thresholds = args[pattern]
                 return true
             }
@@ -444,7 +454,7 @@ export namespace Functions {
 
         for (const key of covObj) {
             const found = patterns.some(pattern => {
-                return minimatch(normalize(key), pattern, { dot: true })
+                return minimatch(normalize(key), pattern, {dot: true})
             })
 
             // if no patterns match, keep the key
@@ -470,40 +480,40 @@ export namespace Functions {
     }
 
     export const coersions = (): Record<string, (arg: string) => unknown> => {
-        return {
-            boolean: (val: string): boolean => {
-                if (val === 'true' || val === '') {
-                    return true
-                }
-                if (val === 'false') {
-                    return false
-                }
-                throw new Error(`Invalid boolean value: expected 'true' or 'false', but got '${val}'`)
-            },
-            array: (val: string): string[] => {
-                if (val === '') {
-                    return []
-                }
-                try {
-                    return JSON.parse(val)
-                } catch (err) {
-                    return val.split(',').map(el => el.trim())
-                }
-            },
-            object: (val: string): any => {
-                if (val === '') {
-                    return {}
-                }
-                try {
-                    return JSON.parse(val)
-                } catch (err) {
-                    throw new Error(`Invalid JSON value: '${val}'`)
-                }
-            },
-            string: (val: string): string => val,
-            integer: parseInt,
+            return {
+                boolean: (val: string): boolean => {
+                    if (val === 'true' || val === '') {
+                        return true
+                    }
+                    if (val === 'false') {
+                        return false
+                    }
+                    throw new Error(`Invalid boolean value: expected 'true' or 'false', but got '${val}'`)
+                },
+                array: (val: string): string[] => {
+                    if (val === '') {
+                        return []
+                    }
+                    try {
+                        return JSON.parse(val)
+                    } catch (err) {
+                        return val.split(',').map(el => el.trim())
+                    }
+                },
+                object: (val: string): any => {
+                    if (val === '') {
+                        return {}
+                    }
+                    try {
+                        return JSON.parse(val)
+                    } catch (err) {
+                        throw new Error(`Invalid JSON value: '${val}'`)
+                    }
+                },
+                string: (val: string): string => val,
+                integer: parseInt,
+            }
         }
-    }
     ;((): void => {
         const props = {
             proto: {
@@ -668,7 +678,7 @@ export namespace Functions {
     export const substitute = <T>(prevValue: any, newValue: any, property: string, array: T[]): any =>
         array.map(item => {
             if (item[property] === prevValue) {
-                const result = { ...item }
+                const result = {...item}
                 result[property] = newValue
                 return result
             }
@@ -807,9 +817,9 @@ export namespace Functions {
 
         // Split the arguments string into an array comma delimited.
         return args
-            .split(',')
-            .map(arg => arg.replace(/\/\*.*\*\//, '').trim())
-            .filter(arg => arg)
+        .split(',')
+        .map(arg => arg.replace(/\/\*.*\*\//, '').trim())
+        .filter(arg => arg)
     }
 
     export const getFunctionArgTypes = (func): string[] => {
@@ -818,9 +828,9 @@ export namespace Functions {
 
         // Split the arguments string into an array comma delimited.
         return args
-            .split(',')
-            .map(arg => arg.replace(/\/\*.*\*\//, '').trim())
-            .filter(arg => arg)
+        .split(',')
+        .map(arg => arg.replace(/\/\*.*\*\//, '').trim())
+        .filter(arg => arg)
     }
 
     export const polymorph = (...args: any[]): any => {

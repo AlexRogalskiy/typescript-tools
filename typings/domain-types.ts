@@ -132,6 +132,18 @@ export interface IToken {
     readonly scopes: string[]
 }
 // -------------------------------------------------------------------------------------------------
+export interface GitHub {
+    id: string
+    name: string
+    full_name?: string
+    description: string
+    url: string
+    stars: number
+    forks?: number
+    opened_issues?: number
+    homepage: string
+}
+// -------------------------------------------------------------------------------------------------
 export type GenericClassDecorator<T> = (target: T) => void
 // -------------------------------------------------------------------------------------------------
 /**
