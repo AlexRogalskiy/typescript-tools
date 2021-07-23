@@ -4,19 +4,25 @@ import {
     Comparators,
     DATE_REGEX,
     domElementPattern,
+    EitherType,
     EMAIL_REGEX,
     Errors,
+    Left,
     MOBILE_NAVIGATOR_CODE_REGEX,
     MOBILE_NAVIGATOR_TYPE_REGEX,
     Numbers,
     PHONE_REGEX,
+    Right,
     TOKEN_COMMENT,
     URL_REGEX2,
 } from '..'
 
+import { OptionType } from '../configuration/Option'
+
 import { Bools } from '../types/Bools'
 import { Optional } from '../../typings/standard-types'
-import { BiPredicate, ITypedConstructor } from '../../typings/function-types'
+import { BiPredicate, ITypedConstructor, Predicate } from '../../typings/function-types'
+import { WithId, WithName } from '../../typings/domain-types'
 
 export namespace Checkers {
     const { hasOwnProperty: hasOwnProp } = Object.prototype
@@ -36,6 +42,11 @@ export namespace Checkers {
         '[object RegExp]': 'regexp',
         '[object Object]': 'object',
     }
+
+    type Validation<A> = (a: A, onError: Error) => EitherType<Error, A>
+
+    export const isEmpty3: Validation<string> = (str: string, onError: Error): EitherType<Error, string> =>
+        str !== '' ? Right(str) : Left(onError)
 
     export const safeCharCodeAt = (source: string, offset: number): number =>
         offset < source.length ? source.charCodeAt(offset) : 0
@@ -333,6 +344,20 @@ export namespace Checkers {
     // nor(true, false); // false
     // nor(false, false); // true
     export const nor = (a: any, b: any): boolean => !(a || b)
+
+    export const withId = (id: number): Predicate<WithId> => {
+        return (item: WithId) => item.id === id
+    }
+
+    export const withName = (name: string): Predicate<WithName> => {
+        return (item: WithName) => item.name === name
+    }
+
+    export const extractFromString = (str: string): OptionType<number> => {
+        const match = str.match(/.*?attribute.id=(\d+?)"/)
+
+        return OptionType(match).map(results => +results[1])
+    }
 
     // validateNumber('10'); // true
     // validateNumber('a'); // false

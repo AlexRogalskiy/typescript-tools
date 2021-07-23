@@ -31,6 +31,7 @@ import {
 import { buildTimeRegex, githubRegex } from './regexes'
 
 export namespace Strings {
+    import isEmpty = Checkers.isEmpty
     const ACCEPTABLE_RANDOM_CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklnopqrstuvwxyz0123456789'
 
     import Helpers = Maths.Helpers
@@ -249,6 +250,11 @@ export namespace Strings {
      */
     export const convertToSeoSlug = (str: string): string => `/${toKebabCase(str)}`
 
+    export const lines = (str: string): string[] =>
+        str
+            .split('\n')
+            .filter(item => !isEmpty(item))
+            .map(s => s.trim())
     /**
      * Adds a trailing `/` to a slug, if necessary.
      * @param {string} str - The string to be converted.

@@ -11,15 +11,26 @@ import buildCuid from 'cuid'
 import { v4 as uuidv4 } from 'uuid'
 import { Readable } from 'stream'
 
-import { CellPosition, Grid, IMousePosition, Location, Point } from '../../typings/domain-types'
+import {
+    CellPosition,
+    Grid,
+    IMousePosition,
+    Location,
+    Point,
+    WithId,
+    WithName,
+} from '../../typings/domain-types'
 import { IServiceInjector, Iterator, IteratorStep, Predicate, Processor } from '../../typings/function-types'
 
-import { Checkers, Errors, Numbers, Objects } from '..'
+import { Checkers, Errors, Numbers, Objects, OptionType } from '..'
 import { Optional } from '../../typings/standard-types'
 
 import { createValueToken } from '../../tools/InjectionToken'
+import { List, find } from '../configuration/List'
 
 export namespace CommonUtils {
+    import withName = Checkers.withName
+    import withId = Checkers.withId
     export type Fn<T> = (key: string) => T
     export type Color = (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9) & { _tag: '__Color__' }
     export type Empty = 0 & { _tag: '__Empty__' }
@@ -1257,6 +1268,12 @@ export namespace CommonUtils {
     export const ratioToPercentage = (ratio: number): number => {
         return Math.round(ratio * 1000) / 10
     }
+
+    export const findWithId = <A extends WithId>(id: number, items: List<A>): OptionType<A> =>
+        find<A>(withId(id), items)
+
+    export const findWithName = <A extends WithName>(name: string, items: List<A>): OptionType<A> =>
+        find<A>(withName(name), items)
 
     /**
      * Compute completion percentage.

@@ -23,13 +23,16 @@ export interface Scalars {
 export type HTTP_METHODS_LOWERCASE = 'head' | 'get' | 'post' | 'put' | 'patch' | 'delete' | 'options'
 export type GenericValue = string | number | boolean | undefined | null
 export type AnyObject = Record<string, GenericValue | GenericValue[] | unknown>
+
 export interface IBinaryData {
     [key: string]: string | undefined
+
     data: string
     mimeType: string
     fileName?: string
     fileExtension?: string
 }
+
 // -------------------------------------------------------------------------------------------------
 export interface NetworkInterfaceBase {
     address: string
@@ -55,7 +58,7 @@ export type IpLogger = {
 }
 
 // -------------------------------------------------------------------------------------------------
-export type User = {
+export type UserData = {
     email?: string
     id: string
 }
@@ -64,7 +67,7 @@ export type TrackSegmentEvent = {
     active?: boolean
     event: string
     properties?: Record<string, unknown>
-    user: User
+    user: UserData
 }
 // -------------------------------------------------------------------------------------------------
 export type File = {
@@ -114,7 +117,9 @@ export type EnvironmentVariable = {
 export interface IStackElement {
     _stackElementBrand: void
     readonly depth: number
+
     clone(): IStackElement
+
     equals(other: IStackElement): boolean
 }
 
@@ -131,6 +136,16 @@ export interface IToken {
     readonly endIndex: number
     readonly scopes: string[]
 }
+
+// -------------------------------------------------------------------------------------------------
+export interface WithId {
+    readonly id: number
+}
+
+export interface WithName {
+    readonly name: string
+}
+
 // -------------------------------------------------------------------------------------------------
 export interface GitHub {
     id: string
@@ -143,8 +158,10 @@ export interface GitHub {
     opened_issues?: number
     homepage: string
 }
+
 // -------------------------------------------------------------------------------------------------
 export type GenericClassDecorator<T> = (target: T) => void
+
 // -------------------------------------------------------------------------------------------------
 /**
  * Interface for implementations which decide
@@ -162,6 +179,7 @@ export interface Sampler<T> {
      */
     isSampled(arg?: T): boolean
 }
+
 // -------------------------------------------------------------------------------------------------
 export type SignalConstants = {
     [key in NodeJS.Signals]: number
@@ -174,11 +192,41 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Mayb
 
 // -------------------------------------------------------------------------------------------------
 export type ILocaleProvider = (locale: string) => Promise<string[][]> | string[][]
+
 export interface Locale {
     [key: string]: string
 }
+
+// -------------------------------------------------------------------------------------------------
+export interface UserType extends WithId, WithName {}
+
+export const User = (id: number, name: string): UserType => ({ id, name })
+
+export interface IssueType extends WithId, WithName {}
+
+export const Issue = (id: number, name: string): IssueType => ({ id, name })
+
+export interface CategoryType extends WithId, WithName {}
+
+export const Category = (id: number, name: string): CategoryType => ({ id, name })
+
+export interface VersionType extends WithId, WithName {}
+
+export const Version = (id: number, name: string): VersionType => ({ id, name })
+
+export interface PriorityType extends WithId, WithName {}
+
+export const Priority = (id: number, name: string): PriorityType => ({ id, name })
+
+export interface FieldItemType extends WithId, WithName {}
+
+export const FieldItem = (id: number, name: string): FieldItemType => ({ id, name })
+// -------------------------------------------------------------------------------------------------
+export const notNull = <T, _>(t: T): boolean => t != null
+export const isEmpty = (str: string): boolean => str === ''
 // -------------------------------------------------------------------------------------------------
 export type Platform = 'macOS' | 'Linux' | 'Windows'
+
 // -------------------------------------------------------------------------------------------------
 export interface IResultSetElementKey {
     readonly row?: number
@@ -209,6 +257,7 @@ export interface IDraggingPosition {
  * @desc Type representing number value
  */
 export type NumberValue = number | { valueOf(): number }
+
 // -------------------------------------------------------------------------------------------------
 /**
  * CodeSnippet
