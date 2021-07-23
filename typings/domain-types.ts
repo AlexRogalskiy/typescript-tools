@@ -58,6 +58,12 @@ export type IpLogger = {
 }
 
 // -------------------------------------------------------------------------------------------------
+export type TrieLeafValue = string | string[]
+
+export type TrieValue = TrieData | TrieLeafValue | undefined
+
+export type TrieData = Map<string | RegExp, TrieValue>
+// -------------------------------------------------------------------------------------------------
 export type UserData = {
     email?: string
     id: string

@@ -9,6 +9,7 @@ export * from './configuration/List'
 export * from './configuration/Option'
 export * from './configuration/Either'
 export * from './configuration/resources'
+export * from './configuration/Trie'
 
 export * from './constant/constants'
 export * from './constant/codes'
