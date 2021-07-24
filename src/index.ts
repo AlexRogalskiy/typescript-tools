@@ -15,6 +15,7 @@ export * from './configuration/jsonFileUtility'
 export * from './configuration/mimeUtility'
 export * from './configuration/modifierPair'
 export * from './configuration/vscodeFiles'
+export * from './configuration/decorator'
 
 export * from './constant/constants'
 export * from './constant/codes'
