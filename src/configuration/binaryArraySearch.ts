@@ -2,7 +2,12 @@ export type Comparator<T> = {
     (item: T, value: number): -1 | 0 | 1
 }
 
-export function findIndexOfClosestSmallerOrEqual<T>(items: T[], value: number, comparator: Comparator<T>, start = 0): number {
+export function findIndexOfClosestSmallerOrEqual<T>(
+    items: T[],
+    value: number,
+    comparator: Comparator<T>,
+    start = 0,
+): number {
     let end = items.length - 1
 
     while (start <= end) {
@@ -33,7 +38,12 @@ export function findClosestSmallerOrEqual<T>(items: T[], value: number, comparat
     return items[findIndexOfClosestSmallerOrEqual(items, value, comparator)]
 }
 
-export function findRange<T>(items: T[], startValue: number, endValue: number, comparator: Comparator<T>): T[] {
+export function findRange<T>(
+    items: T[],
+    startValue: number,
+    endValue: number,
+    comparator: Comparator<T>,
+): T[] {
     const startIndex = findIndexOfClosestSmallerOrEqual(items, startValue, comparator)
     const endIndex = findIndexOfClosestSmallerOrEqual(items, endValue, comparator, startIndex)
     return items.slice(startIndex, endIndex + 1)
