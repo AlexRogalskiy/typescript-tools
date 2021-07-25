@@ -26,7 +26,7 @@ import { Checkers, Errors, Numbers, Objects, OptionType } from '..'
 import { Optional } from '../../typings/standard-types'
 
 import { createValueToken } from '../../tools/InjectionToken'
-import { List, find } from '../configuration/List'
+import { find, List } from '../configuration/List'
 
 export namespace CommonUtils {
     import withName = Checkers.withName
@@ -76,6 +76,47 @@ export namespace CommonUtils {
 
         return value !== undefined ? String(value) : defaultValue
     }
+
+    export const pickNotNil = (object: { [prop: string]: unknown }): { [prop: string]: unknown } => {
+        const result: { [prop: string]: unknown } = {}
+
+        for (const key in object) {
+            if (object.hasOwnProperty(key)) {
+                const value = object[key]
+                if (value !== undefined && value !== null) {
+                    result[key] = value
+                }
+            }
+        }
+        return result
+    }
+
+    export const toSignedInt32 = (x: number): number => x | 0x0
+
+    export const extractPolyPoints = (points: string): string => {
+        const polyPoints = Array.isArray(points) ? points.join(',') : points
+
+        return polyPoints
+            .replace(/[^e]-/, ' -')
+            .split(/\s+|\s*,\s*/g)
+            .join(' ')
+    }
+
+    export const alignEnum: { [align: string]: string } = [
+        'xMinYMin',
+        'xMidYMin',
+        'xMaxYMin',
+        'xMinYMid',
+        'xMidYMid',
+        'xMaxYMid',
+        'xMinYMax',
+        'xMidYMax',
+        'xMaxYMax',
+        'none',
+    ].reduce((prev: { [align: string]: string }, name) => {
+        prev[name] = name
+        return prev
+    }, {})
 
     export const nArray = (n: number): any[] => {
         return [...Array(n).keys()]

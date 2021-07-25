@@ -23,6 +23,91 @@ export namespace Regexes {
 export const ESCAPE_REGEX = /[.+\-^${}()|[\]\\]/g // all but * and ?
 export const WILDCARDS_REGEX = /~\*|(?<!~)\*|~\?|(?<!~)\?|~~/g
 
+export const idPattern = /#([^)]+)\)?$/
+
+export const percentReg = /^([+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)(%?)$/
+export const abbr = /^#([a-f0-9]{3,4})$/i
+export const hex = /^#([a-f0-9]{6})([a-f0-9]{2})?$/i
+export const rgba = /^rgba?\(\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*(?:,\s*([+-]?[\d.]+)\s*)?\)$/
+export const per =
+    /^rgba?\(\s*([+-]?[\d.]+)%\s*,\s*([+-]?[\d.]+)%\s*,\s*([+-]?[\d.]+)%\s*(?:,\s*([+-]?[\d.]+)\s*)?\)$/
+export const keyword = /(\D+)/
+export const hslRegEx =
+    /^hsla?\(\s*([+-]?(?:\d*\.)?\d+)(?:deg)?\s*,\s*([+-]?[\d.]+)%\s*,\s*([+-]?[\d.]+)%\s*(?:,\s*([+-]?[\d.]+)\s*)?\)$/
+export const hwbRegEx =
+    /^hwb\(\s*([+-]?\d*[.]?\d+)(?:deg)?\s*,\s*([+-]?[\d.]+)%\s*,\s*([+-]?[\d.]+)%\s*(?:,\s*([+-]?[\d.]+)\s*)?\)$/
+
+export const fontRegExp =
+    /^\s*((?:(?:normal|bold|italic)\s+)*)(?:(\d+(?:\.\d+)?(?:%|px|em|pt|pc|mm|cm|in]))*(?:\s*\/.*?)?\s+)?\s*"?([^"]*)/i
+export const fontFamilyPrefix = /^[\s"']*/
+export const fontFamilySuffix = /[\s"']*$/
+export const commaReg = /\s*,\s*/g
+export const spacesRegExp = /\s+/
+
+export const extractSingleFontFamily = (fontFamilyString?: string): any => {
+    // SVG on the web allows for multiple font-families to be specified.
+    // For compatibility, we extract the first font-family, hoping
+    // we'll get a match.
+    return fontFamilyString
+        ? fontFamilyString.split(commaReg)[0].replace(fontFamilyPrefix, '').replace(fontFamilySuffix, '')
+        : null
+}
+
+export const getMarker = (marker?: string): any => {
+    if (!marker) {
+        return undefined
+    }
+    const matched = marker.match(idPattern)
+
+    return matched ? matched[1] : undefined
+}
+
+export const hex2 = (ch: string): string => {
+    return ch.charCodeAt(0).toString(16).toUpperCase()
+}
+
+export const literalEscape = (s: string): string => {
+    return (
+        s
+            .replace(/\\/g, '\\\\')
+            .replace(/"/g, '\\"')
+            .replace(/\\0/g, '\\0')
+            .replace(/\t/g, '\\t')
+            .replace(/\n/g, '\\n')
+            .replace(/\r/g, '\\r')
+            // eslint-disable-next-line no-control-regex
+            .replace(/[\x00-\x0F]/g, function (ch) {
+                return `\\x0${hex2(ch)}`
+            })
+            // eslint-disable-next-line no-control-regex
+            .replace(/[\x10-\x1F\x7F-\x9F]/g, function (ch) {
+                return `\\x${hex2(ch)}`
+            })
+    )
+}
+
+export const classEscape = (s: string): string => {
+    return (
+        s
+            .replace(/\\/g, '\\\\')
+            .replace(/]/g, '\\]')
+            .replace(/\^/g, '\\^')
+            .replace(/-/g, '\\-')
+            .replace(/\\0/g, '\\0')
+            .replace(/\t/g, '\\t')
+            .replace(/\n/g, '\\n')
+            .replace(/\r/g, '\\r')
+            // eslint-disable-next-line no-control-regex
+            .replace(/[\x00-\x0F]/g, (ch: string): string => {
+                return `\\x0${hex2(ch)}`
+            })
+            // eslint-disable-next-line no-control-regex
+            .replace(/[\x10-\x1F\x7F-\x9F]/g, (ch: string): string => {
+                return `\\x${hex2(ch)}`
+            })
+    )
+}
+
 export const MAP = {
     '*': '.*',
     '~*': '\\*',
