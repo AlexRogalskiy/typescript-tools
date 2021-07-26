@@ -53,6 +53,8 @@ export interface NetworkInterfaceInfoIPv6 extends NetworkInterfaceBase {
 
 export type NetworkInterfaceInfo = NetworkInterfaceInfoIPv4 | NetworkInterfaceInfoIPv6
 // -------------------------------------------------------------------------------------------------
+export type Pixels = HTMLImageElement | HTMLCanvasElement | HTMLVideoElement
+// -------------------------------------------------------------------------------------------------
 export type rgbaArray = number[]
 export type Int32ARGBColor = number
 export type ColorType = Int32ARGBColor | rgbaArray | string

@@ -11,6 +11,7 @@ import {
     MOBILE_NAVIGATOR_CODE_REGEX,
     MOBILE_NAVIGATOR_TYPE_REGEX,
     Numbers,
+    OptionOf,
     PHONE_REGEX,
     Right,
     TOKEN_COMMENT,
@@ -54,6 +55,30 @@ export namespace Checkers {
     export const isSign = (code: number): boolean => code === 0x002b || code === 0x002d
 
     export const isDigit2 = (code: number): boolean => code >= 0x0030 && code <= 0x0039
+
+    export const isWebGLSupported = (): boolean => {
+        try {
+            const canvas: HTMLCanvasElement = document.createElement('canvas')
+
+            return (
+                !!window.WebGLRenderingContext &&
+                (!!canvas.getContext('webgl') || !!canvas.getContext('experimental-webgl'))
+            )
+        } catch (e) {
+            return false
+        }
+    }
+
+    export const isCanvasFilterSupported = (): boolean => {
+        try {
+            const canvas: HTMLCanvasElement = document.createElement('canvas')
+            const context: CanvasRenderingContext2D | null = canvas.getContext('2d')
+
+            return context != null
+        } catch (e) {
+            return false
+        }
+    }
 
     export const isWS = (code: number): boolean =>
         code === 0x0009 || // \t
@@ -356,7 +381,7 @@ export namespace Checkers {
     export const extractFromString = (str: string): OptionType<number> => {
         const match = str.match(/.*?attribute.id=(\d+?)"/)
 
-        return OptionType(match).map(results => +results[1])
+        return OptionOf(match).map(results => +results[1])
     }
 
     // validateNumber('10'); // true

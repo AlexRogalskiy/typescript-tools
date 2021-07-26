@@ -19,6 +19,7 @@ export * from './configuration/decorator'
 export * from './configuration/simpleMemoize'
 export * from './configuration/binaryArraySearch'
 export * from './configuration/Matrix2D'
+export * from './configuration/profiler'
 
 export * from './constant/constants'
 export * from './constant/codes'

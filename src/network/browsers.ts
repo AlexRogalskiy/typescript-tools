@@ -4,6 +4,7 @@ import { DomElement, Optional } from '../../typings/standard-types'
 import { Keys, Size } from '../../typings/general-types'
 
 import { Checkers, ColorsUtils, CommonUtils, Errors, Formats, Strings, URL_REGEX4 } from '..'
+import { Pixels } from '../../typings/domain-types'
 
 export namespace Browsers {
     import isDomElement = Checkers.isDomElement
@@ -53,6 +54,22 @@ export namespace Browsers {
         if (activeElement instanceof HTMLElement) {
             activeElement.focus()
         }
+    }
+
+    export const canvasFromPixels = (pixels: Pixels, size?: number | null): HTMLCanvasElement | null => {
+        const canvas: HTMLCanvasElement = document.createElement<'canvas'>('canvas')
+        canvas.width = size || pixels.width
+        canvas.height = size || pixels.height
+
+        const context: CanvasRenderingContext2D | null = canvas.getContext('2d')
+
+        if (!context) {
+            return null
+        }
+
+        context.drawImage(pixels, 0, 0, canvas.width, canvas.height)
+
+        return canvas
     }
 
     export const getCanvasSize = (canvasSize: Size, { height, width }: Size): Size => {
