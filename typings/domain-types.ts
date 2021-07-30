@@ -55,6 +55,10 @@ export type NetworkInterfaceInfo = NetworkInterfaceInfoIPv4 | NetworkInterfaceIn
 // -------------------------------------------------------------------------------------------------
 export type Pixels = HTMLImageElement | HTMLCanvasElement | HTMLVideoElement
 // -------------------------------------------------------------------------------------------------
+export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
+    timeStyle?: 'full' | 'long' | 'medium' | 'short'
+}
+// -------------------------------------------------------------------------------------------------
 export type rgbaArray = number[]
 export type Int32ARGBColor = number
 export type ColorType = Int32ARGBColor | rgbaArray | string
