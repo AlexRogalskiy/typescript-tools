@@ -3,17 +3,18 @@ import { isBoolean, isInteger, isNull, isNumber, isString, mergeWith, union } fr
 import { CpuInfo, cpus } from 'os'
 import * as crypto from 'crypto'
 import { randomBytes, scrypt } from 'crypto'
-import { spawn, SpawnOptionsWithoutStdio } from 'child_process'
+import { spawn, SpawnOptionsWithoutStdio, exec } from 'child_process'
 import fs from 'fs-extra'
 import path from 'path'
 import objectHash from 'node-object-hash'
 import buildCuid from 'cuid'
 import { v4 as uuidv4 } from 'uuid'
 import { Readable } from 'stream'
+import * as util from 'util'
 
 import {
     CellPosition,
-    Grid,
+    Grid, HelmRepository,
     IMousePosition,
     Location,
     Point,
@@ -92,6 +93,22 @@ export namespace CommonUtils {
     }
 
     export const toSignedInt32 = (x: number): number => x | 0x0
+
+    export const promiseExec = util.promisify(exec);
+
+    export async function listHelmRepositories(): Promise<HelmRepository[]>{
+        for (let i = 0; i < 10; i += 1) {
+            try {
+                const { stdout } = await promiseExec("helm repo list -o json");
+
+                return JSON.parse(stdout);
+            } catch {
+                await new Promise(r => setTimeout(r, 2000)); // if no repositories, wait for Lens adding bitnami repository
+            }
+        }
+
+        return [];
+    }
 
     export const extractPolyPoints = (points: string): string => {
         const polyPoints = Array.isArray(points) ? points.join(',') : points

@@ -63,6 +63,11 @@ export type rgbaArray = number[]
 export type Int32ARGBColor = number
 export type ColorType = Int32ARGBColor | rgbaArray | string
 // -------------------------------------------------------------------------------------------------
+export type HelmRepository = {
+    name: string;
+    url: string;
+}
+// -------------------------------------------------------------------------------------------------
 export type IpLogger = {
     ip: string | null
 }
