@@ -63,7 +63,7 @@ export type rgbaArray = number[]
 export type Int32ARGBColor = number
 export type ColorType = Int32ARGBColor | rgbaArray | string
 // -------------------------------------------------------------------------------------------------
-export type ClassConstructor<T> = { new (...args: any[]): T };
+export type ClassConstructor<T> = { new (...args: any[]): T }
 // -------------------------------------------------------------------------------------------------
 export interface ShutdownHandler {
     (): Promise<any> | any
