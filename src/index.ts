@@ -20,6 +20,7 @@ export * from './configuration/simpleMemoize'
 export * from './configuration/binaryArraySearch'
 export * from './configuration/Matrix2D'
 export * from './configuration/profiler'
+export * from './configuration/MicroframeworkSettings'
 
 export * from './constant/constants'
 export * from './constant/codes'
@@ -41,6 +42,8 @@ export * from './logging/logging'
 
 export * from './error/errors'
 export * from './error/BaseError'
+export * from './error/MicroframeworkAsciiArtNotInstalledError'
+export * from './error/MicroframeworkNotBootstrappedError'
 
 export * from './datetime/datetimes'
 export * from './datetime/sleep'
