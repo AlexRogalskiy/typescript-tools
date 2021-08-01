@@ -14,7 +14,8 @@ import * as util from 'util'
 
 import {
     CellPosition,
-    Grid, HelmRepository,
+    Grid,
+    HelmRepository,
     IMousePosition,
     Location,
     Point,
@@ -94,20 +95,20 @@ export namespace CommonUtils {
 
     export const toSignedInt32 = (x: number): number => x | 0x0
 
-    export const promiseExec = util.promisify(exec);
+    export const promiseExec = util.promisify(exec)
 
-    export async function listHelmRepositories(): Promise<HelmRepository[]>{
+    export async function listHelmRepositories(): Promise<HelmRepository[]> {
         for (let i = 0; i < 10; i += 1) {
             try {
-                const { stdout } = await promiseExec("helm repo list -o json");
+                const { stdout } = await promiseExec('helm repo list -o json')
 
-                return JSON.parse(stdout);
+                return JSON.parse(stdout)
             } catch {
-                await new Promise(r => setTimeout(r, 2000)); // if no repositories, wait for Lens adding bitnami repository
+                await new Promise(r => setTimeout(r, 2000)) // if no repositories, wait for Lens adding bitnami repository
             }
         }
 
-        return [];
+        return []
     }
 
     export const extractPolyPoints = (points: string): string => {
