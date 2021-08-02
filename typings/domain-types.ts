@@ -63,6 +63,150 @@ export type rgbaArray = number[]
 export type Int32ARGBColor = number
 export type ColorType = Int32ARGBColor | rgbaArray | string
 // -------------------------------------------------------------------------------------------------
+/**
+ * Action Parameter metadata.
+ */
+export interface ParamMetadata {
+    /**
+     * Parameter type.
+     */
+    type: ParamType
+
+    /**
+     * Parameter name.
+     */
+    name: string
+
+    /**
+     * Parameter target type.
+     */
+    targetType?: any
+
+    /**
+     * Parameter target type's name in lowercase.
+     */
+    targetName: string
+
+    /**
+     * Indicates if target type is an object.
+     */
+    isTargetObject: boolean
+
+    /**
+     * Parameter target.
+     */
+    target: any
+
+    /**
+     * Specifies if parameter should be parsed as json or not.
+     */
+    parse: boolean
+
+    /**
+     * Indicates if this parameter is required or not
+     */
+    required: boolean
+}
+// -------------------------------------------------------------------------------------------------
+/**
+ * Controller action properties.
+ */
+export interface Action {
+    /**
+     * Action Request object.
+     */
+    request: any
+
+    /**
+     * Action Response object.
+     */
+    response: any
+
+    /**
+     * Content in which action is executed.
+     * Koa-specific property.
+     */
+    context?: any
+
+    /**
+     * "Next" function used to call next middleware.
+     */
+    next?: Function
+}
+// -------------------------------------------------------------------------------------------------
+/**
+ * Controller action's parameter type.
+ */
+export type ParamType =
+    | 'body'
+    | 'body-param'
+    | 'query'
+    | 'queries'
+    | 'header'
+    | 'headers'
+    | 'file'
+    | 'files'
+    | 'param'
+    | 'params'
+    | 'session'
+    | 'session-param'
+    | 'state'
+    | 'cookie'
+    | 'cookies'
+    | 'request'
+    | 'response'
+    | 'context'
+    | 'current-user'
+    | 'custom-converter'
+// -------------------------------------------------------------------------------------------------
+/**
+ * Response handler type.
+ */
+export type ResponseHandlerType =
+    | 'success-code'
+    | 'error-code'
+    | 'content-type'
+    | 'header'
+    | 'rendered-template'
+    | 'redirect'
+    | 'location'
+    | 'on-null'
+    | 'on-undefined'
+    | 'response-class-transform-options'
+    | 'authorized'
+// -------------------------------------------------------------------------------------------------
+/**
+ * Controller action type.
+ */
+export type ActionType =
+    | 'all'
+    | 'checkout'
+    | 'connect'
+    | 'copy'
+    | 'delete'
+    | 'get'
+    | 'head'
+    | 'lock'
+    | 'merge'
+    | 'mkactivity'
+    | 'mkcol'
+    | 'move'
+    | 'm-search'
+    | 'notify'
+    | 'options'
+    | 'patch'
+    | 'post'
+    | 'propfind'
+    | 'proppatch'
+    | 'purge'
+    | 'put'
+    | 'report'
+    | 'search'
+    | 'subscribe'
+    | 'trace'
+    | 'unlock'
+    | 'unsubscribe'
+// -------------------------------------------------------------------------------------------------
 export type ClassConstructor<T> = { new (...args: any[]): T }
 // -------------------------------------------------------------------------------------------------
 export interface ShutdownHandler {

@@ -4,6 +4,7 @@ import minimatch from 'minimatch'
 import { Callback, Executor, GenericValueCallback, Processor, Supplier } from '../../typings/function-types'
 
 import { Checkers, CommonUtils, Errors } from '..'
+import { ClassConstructor } from '../../typings/domain-types'
 
 export namespace Functions {
     import normalize = CommonUtils.normalize
@@ -70,6 +71,23 @@ export namespace Functions {
 
         return values.filter(key => typeof obj[key] === 'function')
     }
+
+    /**
+     * Container to be used by this library for inversion control. If container was not implicitly set then by default
+     * container simply creates a new instance of the given class.
+     */
+    export const defaultContainer: { get<T>(someClass: ClassConstructor<T> | Function): T } = new (class {
+        private instances: { type: Function; object: any }[] = []
+        get<T>(someClass: ClassConstructor<T>): T {
+            let instance = this.instances.find(instance => instance.type === someClass)
+            if (!instance) {
+                instance = { type: someClass, object: new someClass() }
+                this.instances.push(instance)
+            }
+
+            return instance.object
+        }
+    })()
 
     // const numbers = Array(10000).fill().map((_, i) => i);
     //

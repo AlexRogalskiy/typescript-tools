@@ -108,6 +108,20 @@ export const classEscape = (s: string): string => {
     )
 }
 
+/**
+ * Appends base route to a given regexp route.
+ */
+export function appendBaseRoute(baseRoute: string, route: RegExp | string): RegExp | string {
+    const prefix = `${baseRoute.length > 0 && !baseRoute.includes('/') ? '/' : ''}${baseRoute}`
+    if (typeof route === 'string') return `${prefix}${route}`
+
+    if (!baseRoute || baseRoute === '') return route
+
+    const fullPath = `^${prefix}${route.toString().substr(1)}?$`
+
+    return new RegExp(fullPath, route.flags)
+}
+
 export const isEmailProvider = (domain: string): boolean => {
     if (/@gmail.com\s*$/.test(domain)) return true
     if (/@outlook.com\s*$/.test(domain)) return true
@@ -119,9 +133,8 @@ export const isEmailProvider = (domain: string): boolean => {
     if (/@hey.com\s*$/.test(domain)) return true
     if (/@msn.com\s*$/.test(domain)) return true
     if (/@live.com\s*$/.test(domain)) return true
-    if (/@test.com\s*$/.test(domain)) return true
 
-    return false
+    return /@test.com\s*$/.test(domain)
 }
 
 export const MAP = {
