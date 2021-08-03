@@ -1,16 +1,16 @@
-import {Optional} from '../../typings/standard-types'
-import {Comparator, ComparatorMode, PropertyComparator} from '../../typings/function-types'
+import { Optional } from '../../typings/standard-types'
+import { Comparator, ComparatorMode, PropertyComparator } from '../../typings/function-types'
 
-import {Checkers, Errors, Files, Logging} from '..'
+import { Checkers, Errors, Files, Logging } from '..'
 
 export namespace Comparators {
-    import errorLogs = Logging.errorLogs;
-    import isString = Checkers.isString;
-    import isObject = Checkers.isObject;
-    import valueError = Errors.valueError;
-    import isFunction = Checkers.isFunction;
-    import getSegmentName = Files.getSegmentName;
-    import isNotNullOrUndefined = Checkers.isNotNullOrUndefined;
+    import errorLogs = Logging.errorLogs
+    import isString = Checkers.isString
+    import isObject = Checkers.isObject
+    import valueError = Errors.valueError
+    import isFunction = Checkers.isFunction
+    import getSegmentName = Files.getSegmentName
+    import isNotNullOrUndefined = Checkers.isNotNullOrUndefined
 
     const TYPE_BOOLEAN = 1
     const TYPE_NAN = 2
@@ -136,10 +136,10 @@ export namespace Comparators {
     }
 
     export const sortEntities = (
-        items: Array<{
+        items: {
             name: string
             mesh: string
-        }>,
+        }[],
     ): { name: string; mesh: string }[] => {
         return items.sort((a, b) =>
             a.name > b.name ? 1 : a.name === b.name ? (a.mesh > b.mesh ? 1 : -1) : -1,
@@ -544,11 +544,11 @@ export namespace Comparators {
 
             return (
                 [compareByCollator, compareByLocale]
-                .map(func => func.call(null, a_, b_))
-                .find(isNotNullOrUndefined) || 0
+                    .map(func => func.call(null, a_, b_))
+                    .find(isNotNullOrUndefined) || 0
             )
         }
-    })({locale: 'en', options: {sensitivity: 'base'}})
+    })({ locale: 'en', options: { sensitivity: 'base' } })
 
     /**
      * @public
