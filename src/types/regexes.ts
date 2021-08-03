@@ -108,6 +108,8 @@ export const classEscape = (s: string): string => {
     )
 }
 
+export const uuidRegEx = '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+
 /**
  * Appends base route to a given regexp route.
  */

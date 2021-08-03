@@ -1,5 +1,7 @@
 import path from 'path'
 
+import { Optional } from '../../typings/standard-types'
+
 export interface Location {
     pathname: string
     hash: string
@@ -15,6 +17,36 @@ export const normalizePathname = (pathname: string): string => {
     }
 
     return normalizedPathname
+}
+
+/**
+ * stripUrl
+ *
+ * Returns all of a URL after the last slash so that it does not
+ * include the root of the URL that we don't need (e.g. when fetching from
+ * an API).
+ *
+ * @param {String} url
+ */
+export const stripUrl = (url: string): Optional<string> => {
+    const regex = new RegExp(/([^/]+$)/g)
+
+    return url.match(regex)?.[0]
+}
+
+/**
+ * getOffset
+ *
+ * Returns the offset from an API query so that it can be used
+ * for things like next and prev controls in pagination.
+ *
+ * @param {String} url The URL you want to find `offset` in and
+ * simply return the value for.
+ */
+export const getOffset = (url: string): Optional<string> => {
+    const regex = new RegExp(/offset=(\w+)/)
+
+    return url.match(regex)?.[0].replace('offset=', '')
 }
 
 export const URLJoin = (...args: string[]): string =>

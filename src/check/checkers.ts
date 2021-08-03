@@ -16,6 +16,7 @@ import {
     Right,
     TOKEN_COMMENT,
     URL_REGEX2,
+    uuidRegEx,
 } from '..'
 
 import { OptionType } from '../configuration/Option'
@@ -402,6 +403,34 @@ export namespace Checkers {
 
     export const isNotNullOrUndefined = (value: any): boolean => {
         return isNotNull(value) && isNotUndefined(value)
+    }
+
+    /**
+     * Test if a string is a valid uuid
+     * @param {String} str - the string to test
+     * @returns {boolean}
+     */
+    export const isValidUuid = (str: string): boolean => {
+        return str.length === 36 && new RegExp(`^${uuidRegEx}$`).test(str)
+    }
+
+    /**
+     * A method to easily check if an object is empty or not
+     * @param {Object} Object to check
+     * @return {Boolean}
+     */
+    export const isObjectEmpty = (obj: any): boolean => {
+        return Object.keys(obj).length === 0
+    }
+
+    /**
+     * Compares two objects
+     * @param {Object} Object A
+     * @param {Object} Object B
+     * @return {Boolean}
+     */
+    export const compareObjects = (a: any, b: any): boolean => {
+        return JSON.stringify(a) === JSON.stringify(b)
     }
 
     // isOf(Array, [1]); // true

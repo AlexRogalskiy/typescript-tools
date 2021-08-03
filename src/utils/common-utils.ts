@@ -33,6 +33,7 @@ import { find, List } from '../configuration/List'
 export namespace CommonUtils {
     import withName = Checkers.withName
     import withId = Checkers.withId
+    import isPlainObject = Checkers.isPlainObject
     export type Fn<T> = (key: string) => T
     export type Color = (1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9) & { _tag: '__Color__' }
     export type Empty = 0 & { _tag: '__Empty__' }
@@ -63,6 +64,78 @@ export namespace CommonUtils {
         p1 = p1.replace(/\/$/, '')
         p2 = p2.replace(/^\//, '')
         return `${p1}/${p2}`
+    }
+
+    export const forEach = (array: any[], callback: (...args: any) => void, scope: any): void => {
+        for (let i = 0; i < array.length; i++) {
+            callback.call(scope, i, array[i])
+        }
+    }
+
+    /**
+     * Takes an object with dot notated keys (key.nested.values)
+     * and returns an object with nested objects (key: { nested: values })
+     * @param {Object} obj
+     * @returns {Object}
+     */
+    export const unFlattenObject = (obj: any): any => {
+        const result = {}
+
+        // Loop object and reduce each key to build
+        // nested structure
+        for (const key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                const keys = key.split('.')
+
+                keys.reduce((acc: any, cur: any, curIdx: any) => {
+                    return (
+                        acc[cur] ||
+                        // If current key in acc is the next
+                        // item in the split array (dot notation)
+                        // set its value
+                        (acc[cur] = isNaN(keys[curIdx + 1] as any)
+                            ? keys.length - 1 === curIdx
+                                ? obj[key]
+                                : {}
+                            : [])
+                    )
+                }, result)
+            }
+        }
+
+        return result
+    }
+
+    export const applyPropsToObject = (props: any = {}, object: any = {}): any => {
+        for (const [key, value] of Object.entries(props)) {
+            if (isPlainObject(value)) {
+                applyPropsToObject(value, object[key])
+            }
+
+            object[key] = value
+        }
+    }
+
+    export const filterResourceByMesh = (resources: { mesh: string }[]): any => {
+        return (wantMesh: undefined | 'all') => {
+            if (!wantMesh || wantMesh === 'all') {
+                return resources
+            }
+
+            return resources.filter(({ mesh }) => mesh === wantMesh)
+        }
+    }
+
+    export const removeObjectKeys = (object: Record<string, any>, key: string): any => {
+        const obj = object
+
+        for (const field of Object.keys(obj)) {
+            if (field.startsWith(key)) {
+                delete obj[field]
+            }
+        }
+
+        return obj
     }
 
     // // Prefer command line arguments over environment variables

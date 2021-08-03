@@ -730,7 +730,7 @@ export namespace Arrays {
                 },
                 Array.from({
                     length: Math.max(...arr.map(x => x.length)),
-                }).map(x => []),
+                }).map(_ => []),
             )
             .map(val => fn(...val))
 
@@ -752,6 +752,22 @@ export namespace Arrays {
 
     // uniqueElements([1, 2, 2, 3, 4, 4, 5]); // [1, 2, 3, 4, 5]
     export const uniqueElements = (arr: any[]): any[] => [...new Set(arr)]
+
+    /**
+     * Takes an object or array and only returns the keys and
+     * values you want based on the `items` value.
+     * @param {Object, Array} original
+     * @param {Object} desired
+     */
+    export const getSome = (original: any, desired: any): any => {
+        // we have to determine if we're dealing with an array or an object
+        const cleaned =
+            original && typeof original === 'object' && original.constructor === Array
+                ? Object.assign({}, ...original)
+                : original
+
+        return desired.reduce((obj: any, key: any) => ({ ...obj, [key]: cleaned[key] }), {})
+    }
 
     // unionWith(
     //     [1, 1.2, 1.5, 3, 0],

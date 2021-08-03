@@ -1,6 +1,7 @@
 import vagueTime from 'vague-time'
 import dayjs from 'dayjs'
 import preciseDiff from 'dayjs-precise-range'
+import { DateTimeFormatOptions } from '../../typings/domain-types'
 
 export namespace DateTimes {
     dayjs.extend(preciseDiff)
@@ -23,6 +24,95 @@ export namespace DateTimes {
         const b = `0${date.getMonth() + 1}`.slice(-2, date.getFullYear())
 
         return `${a}/${b}`
+    }
+
+    /**
+     * Formats a unix timestamp into a formatted date string
+     * @param {Number} timestamp a unix timestamp in seconds
+     * @returns a date string with format YYYY-MM-DD HH:mm:ss ZZ
+     */
+    export const formatDate5 = (timestamp: number): string => {
+        const date = new Date(timestamp * 1000)
+        const day = date.getDate().toString().padStart(2, '0')
+        const month = (date.getMonth() + 1).toString().padStart(2, '0')
+        const year = date.getFullYear()
+        const time = date.toTimeString().split(' ')
+
+        return `${year}-${month}-${day} ${time[0]} ${time[1].substring(3, time[1].length)}`
+    }
+
+    /**
+     * Outputs a friendly human-readable timeframe between now and the date string entered
+     * @param {String} tdate
+     */
+    export const humanReadableDate = (tdate: string): string => {
+        const systemDate = new Date(Date.parse(tdate))
+        const userDate = new Date()
+
+        const diff = Math.floor((+userDate - +systemDate) / 1000)
+
+        if (diff <= 1) {
+            return 'just now'
+        }
+
+        if (diff < 20) {
+            return `${diff} seconds ago`
+        }
+
+        if (diff < 40) {
+            return 'half a minute ago'
+        }
+
+        if (diff < 60) {
+            return 'less than a minute ago'
+        }
+
+        if (diff <= 90) {
+            return 'one minute ago'
+        }
+
+        if (diff <= 3540) {
+            return `${Math.round(diff / 60)} minutes ago`
+        }
+
+        if (diff <= 5400) {
+            return '1 hour ago'
+        }
+
+        if (diff <= 86400) {
+            return `${Math.round(diff / 3600)} hours ago`
+        }
+
+        if (diff <= 129600) {
+            return '1 day ago'
+        }
+
+        if (diff < 604800) {
+            return `${Math.round(diff / 86400)} days ago`
+        }
+
+        if (diff <= 777600) {
+            return '1 week ago'
+        }
+
+        // return 'on ' + systemDate
+        return `on ${systemDate.toLocaleDateString()}`
+    }
+
+    /**
+     * rawReadableDate
+     */
+    export const rawReadableDate = (date: string): string => {
+        const rawDate = new Date(Date.parse(date))
+        const options: DateTimeFormatOptions = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        }
+        const formattedDate = rawDate.toLocaleDateString('en-US', options)
+        const formattedTime = `${rawDate.getHours()}:${rawDate.getMinutes()}:${rawDate.getSeconds()}`
+
+        return `${formattedDate} @ ${formattedTime}`
     }
 
     export const getNow = (): string => {

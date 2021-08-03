@@ -32,8 +32,6 @@ import { buildTimeRegex, githubRegex } from './regexes'
 
 export namespace Strings {
     import isEmpty = Checkers.isEmpty
-    const ACCEPTABLE_RANDOM_CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklnopqrstuvwxyz0123456789'
-
     import Helpers = Maths.Helpers
 
     import isString = Checkers.isString
@@ -52,6 +50,7 @@ export namespace Strings {
     import defineStaticProperty = CommonUtils.defineStaticProperty
     import errorLogs = Logging.errorLogs
     import makeArray3 = Arrays.makeArray3
+    const ACCEPTABLE_RANDOM_CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklnopqrstuvwxyz0123456789'
 
     export const fixedEncode = (value: string, ...pairs: RegexStringPair[]): string => {
         let result = value
@@ -108,6 +107,43 @@ export namespace Strings {
             if (r !== -1) [count, i] = [count + 1, r + 1]
             else return count
         }
+    }
+
+    /**
+     * camelCaseToWords
+     *
+     * Converts camelcase to human-readable words in titlecase format
+     *
+     * @param {String} str
+     */
+    export const camelCaseToWords = (str: string): Optional<string> => {
+        const search = /^[a-z]+|[A-Z][a-z]*/g
+
+        return str
+            .match(search)
+            ?.map((x: string) => {
+                return x[0].toUpperCase() + x.substr(1).toLowerCase()
+            })
+            .join(' ')
+    }
+
+    /**
+     * kebabCase
+     *
+     * @param {*} value
+     */
+    export const kebabCase = (value: string): string => {
+        const newValue = value
+            .replace(/[^a-zA-Z0-9 -]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-')
+            .trim()
+
+        if (!value) {
+            return ''
+        }
+
+        return newValue
     }
 
     // hashNode(JSON.stringify({ a: 'a', b: [1, 2, 3, 4], foo: { c: 'bar' } })).then(
