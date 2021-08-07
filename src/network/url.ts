@@ -1,6 +1,6 @@
 import path from 'path'
 
-import { Optional } from '../../typings/standard-types'
+import {Optional} from '../../typings/standard-types'
 
 export interface Location {
     pathname: string
@@ -34,13 +34,12 @@ export const stripUrl = (url: string): Optional<string> => {
     return url.match(regex)?.[0]
 }
 
-export const isLocalhost = Boolean(
+export const isLocalhost =
     window.location.hostname === 'localhost' ||
-        // [::1] is the IPv6 localhost address.
-        window.location.hostname === '[::1]' ||
-        // 127.0.0.0/8 are considered localhost for IPv4.
-        window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/),
-)
+    // [::1] is the IPv6 localhost address.
+    window.location.hostname === '[::1]' ||
+    // 127.0.0.0/8 are considered localhost for IPv4.
+    window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
 
 /**
  * getOffset
@@ -59,15 +58,15 @@ export const getOffset = (url: string): Optional<string> => {
 
 export const URLJoin = (...args: string[]): string =>
     args
-        .join('/')
-        .replace(/[/]+/g, '/')
-        .replace(/^(.+):\//, '$1://')
-        .replace(/^file:/, 'file:/')
-        .replace(/\/(\?|&|#[^!])/g, '$1')
-        .replace(/\?/g, '&')
-        .replace('&', '?')
+    .join('/')
+    .replace(/[/]+/g, '/')
+    .replace(/^(.+):\//, '$1://')
+    .replace(/^file:/, 'file:/')
+    .replace(/\/(\?|&|#[^!])/g, '$1')
+    .replace(/\?/g, '&')
+    .replace('&', '?')
 
-export const normalizeLocation = ({ pathname, ...otherProps }: Location): Location => {
+export const normalizeLocation = ({pathname, ...otherProps}: Location): Location => {
     return {
         pathname: normalizePathname(pathname),
         ...otherProps,
@@ -90,11 +89,11 @@ export const redirect = (url: string, asLink = true): string | void =>
 // slugify('Hello World!'); // 'hello-world'
 export const slugify = (str: string): string =>
     str
-        .toLowerCase()
-        .trim()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/[\s_-]+/g, '-')
-        .replace(/^-+|-+$/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
 
 // serializeCookie('foo', 'bar'); // 'foo=bar'
 export const serializeCookie = (name: string | number | boolean, val: string | number | boolean): string =>
