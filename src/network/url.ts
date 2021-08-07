@@ -1,6 +1,6 @@
 import path from 'path'
 
-import {Optional} from '../../typings/standard-types'
+import { Optional } from '../../typings/standard-types'
 
 export interface Location {
     pathname: string
@@ -58,15 +58,15 @@ export const getOffset = (url: string): Optional<string> => {
 
 export const URLJoin = (...args: string[]): string =>
     args
-    .join('/')
-    .replace(/[/]+/g, '/')
-    .replace(/^(.+):\//, '$1://')
-    .replace(/^file:/, 'file:/')
-    .replace(/\/(\?|&|#[^!])/g, '$1')
-    .replace(/\?/g, '&')
-    .replace('&', '?')
+        .join('/')
+        .replace(/[/]+/g, '/')
+        .replace(/^(.+):\//, '$1://')
+        .replace(/^file:/, 'file:/')
+        .replace(/\/(\?|&|#[^!])/g, '$1')
+        .replace(/\?/g, '&')
+        .replace('&', '?')
 
-export const normalizeLocation = ({pathname, ...otherProps}: Location): Location => {
+export const normalizeLocation = ({ pathname, ...otherProps }: Location): Location => {
     return {
         pathname: normalizePathname(pathname),
         ...otherProps,
@@ -89,11 +89,11 @@ export const redirect = (url: string, asLink = true): string | void =>
 // slugify('Hello World!'); // 'hello-world'
 export const slugify = (str: string): string =>
     str
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '')
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_-]+/g, '-')
+        .replace(/^-+|-+$/g, '')
 
 // serializeCookie('foo', 'bar'); // 'foo=bar'
 export const serializeCookie = (name: string | number | boolean, val: string | number | boolean): string =>
