@@ -74,6 +74,24 @@ export namespace Files {
         )}-${`0${now.getMinutes()}`.slice(-2)}-${`0${now.getSeconds()}`.slice(-2)}${fileFormat}`
     }
 
+    // https://gist.github.com/kethinov/6658166
+    export const walk = async (dir: string, fileList: string[] = []): Promise<string[]> => {
+        const files = await fsReadDir(dir)
+
+        for (const file of files) {
+            const filepath = join(dir, file)
+            const stat = statSync(filepath)
+
+            if (stat.isDirectory()) {
+                fileList = await walk(filepath, fileList)
+            } else {
+                fileList.push(filepath)
+            }
+        }
+
+        return fileList
+    }
+
     // Takes a filename or foldername, strips the extension
     // gets the part between the "[]" brackets.
     // It will return `null` if there are no brackets
