@@ -753,6 +753,41 @@ export namespace Arrays {
     // uniqueElements([1, 2, 2, 3, 4, 4, 5]); // [1, 2, 3, 4, 5]
     export const uniqueElements = (arr: any[]): any[] => [...new Set(arr)]
 
+    export const arity = (fn: any, n: any): any => {
+        return function (...args2: any[]) {
+            const args = Array.prototype.slice.call(args2, 0, n)
+            return fn(...args)
+        }
+    }
+
+    export const partial = (fn: any, ...args: any[]): any => {
+        const items = Array.prototype.slice.call(args, 1) as any[]
+
+        return function (...args2: any[]) {
+            const args = [...items, ...Array.prototype.slice.call(args2)]
+            return fn(...args)
+        }
+    }
+
+    export const partialRight = (fn: any, ...args: any[]): any => {
+        const items: any[] = Array.prototype.slice.call(args, 1)
+
+        return function (...args2: any[]) {
+            const args = [...Array.prototype.slice.call(args2), ...items]
+            return fn(...args)
+        }
+    }
+
+    export const kind = (thing: string): string => {
+        return Object.prototype.toString.call(thing).slice(8, -1)
+    }
+
+    export const isA = (type: string): any => {
+        return function (thing) {
+            return kind(thing) === type
+        }
+    }
+
     /**
      * Takes an object or array and only returns the keys and
      * values you want based on the `items` value.

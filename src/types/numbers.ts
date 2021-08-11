@@ -101,6 +101,54 @@ export namespace Numbers {
             return null
         }
 
+        /**
+         * Converts a number from a current scale to a 0 - 1 scale.
+         *
+         * @param {Number} value number to scale by
+         * @param {Number} start low point of scale to convert from
+         * @param {Number} end high point of scale to convert from
+         * @example
+         * (5).fromScale(0, 10) //=> 0.5
+         * @return {Number} the scaled value
+         */
+        export const fromScale = (value: number, start: number, end: number): number => {
+            const val = (value - Math.min(start, end)) / (Math.max(start, end) - Math.min(start, end))
+
+            if (val > 1) {
+                return 1
+            }
+
+            if (val < 0) {
+                return 0
+            }
+
+            return val
+        }
+
+        /**
+         * Converts a number from a 0 - 1 scale to the specified scale.
+         *
+         * @param {Number} value number to scale by
+         * @param {Number} start low point of scale to convert to
+         * @param {Number} end high point of scale to convert to
+         * @example
+         * (0.5).toScale(0, 10) //=> 5
+         * @return {Number} the scaled value
+         */
+        export const toScale = (value: number, start: number, end: number): number => {
+            const i = value * (Math.max(start, end) - Math.min(start, end)) + Math.min(start, end)
+
+            if (i < start) {
+                return start
+            }
+
+            if (i > end) {
+                return end
+            }
+
+            return i
+        }
+
         /** @param {number[]} values */
         export const max = (values: number[]): number =>
             values.length ? values.reduce((m, v) => (m > v ? m : v), Number.MIN_SAFE_INTEGER) : 0
