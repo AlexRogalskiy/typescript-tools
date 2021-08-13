@@ -110,6 +110,13 @@ export const classEscape = (s: string): string => {
 
 export const uuidRegEx = '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 
+/* Match only links that are fully qualified with https */
+export const fullMarkdownRegEx = /^\[([\w\s\d]+)]\((https?:\/\/[\w\d./?=#]+)\)$/
+
+/* Match full links and relative paths */
+export const markdownRegEx = /^\[([\w\s\d]+)]\(((?:\/|https?:\/\/)[\w\d./?=#]+)\)$/
+
+export const functionRegEx = /(?<!^)> function /
 /**
  * Appends base route to a given regexp route.
  */
