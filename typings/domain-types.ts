@@ -109,18 +109,18 @@ export interface ParamMetadata {
     required: boolean
 }
 // -------------------------------------------------------------------------------------------------
-export type CamelCasedPropsGlobal<T> = { [K in keyof T as TypeFest.CamelCase<K>]: T[K] };
+export type CamelCasedPropsGlobal<T> = { [K in keyof T as TypeFest.CamelCase<K>]: T[K] }
 // -------------------------------------------------------------------------------------------------
 export interface AxiosProxyConfig {
-    host: string;
-    port?: number;
+    host: string
+    port?: number
     auth?: {
-        username: string;
-        password: string;
-    };
+        username: string
+        password: string
+    }
 }
 // -------------------------------------------------------------------------------------------------
-export type ClientLogLevel = 'error' | 'warning' | 'info';
+export type ClientLogLevel = 'error' | 'warning' | 'info'
 // -------------------------------------------------------------------------------------------------
 /**
  * Controller action properties.
