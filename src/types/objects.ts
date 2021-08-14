@@ -107,6 +107,14 @@ export namespace Objects {
     export const deepGet = (obj: any, keys: string[]): any =>
         keys.reduce((xs, x) => (xs && xs[x] !== null && xs[x] !== undefined ? xs[x] : null), obj)
 
+    export const mapObjValues = (object: any, mapFunction: any): any => {
+        return Object.fromEntries(Object.entries(object).map(([key, value]) => [key, mapFunction(value)]))
+    }
+
+    export const mapObjKeys = (object: any, mapFunction: any): any => {
+        return Object.fromEntries(Object.entries(object).map(([key, value]) => [mapFunction(key), value]))
+    }
+
     // const data = {
     //     level1: {
     //         level2: {
