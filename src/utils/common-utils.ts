@@ -4,7 +4,7 @@ import { CpuInfo, cpus } from 'os'
 import * as crypto from 'crypto'
 import { randomBytes, scrypt } from 'crypto'
 import { spawn, SpawnOptionsWithoutStdio, exec } from 'child_process'
-import {access, PathLike} from 'fs'
+import { access, PathLike } from 'fs'
 import fs from 'fs-extra'
 import path from 'path'
 import objectHash from 'node-object-hash'
@@ -118,7 +118,8 @@ export namespace CommonUtils {
         return words[index]
     }
 
-    export const fileExists = (s: PathLike): Promise<boolean> => new Promise(r => access(s, fs.F_OK, e => r(!e)))
+    export const fileExists = async (s: PathLike): Promise<boolean> =>
+        new Promise(r => access(s, fs.F_OK, e => r(!e)))
 
     export const applyPropsToObject = (props: any = {}, object: any = {}): any => {
         for (const [key, value] of Object.entries(props)) {
