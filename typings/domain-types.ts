@@ -1,4 +1,5 @@
 import boxen from 'boxen'
+import * as TypeFest from 'type-fest'
 
 import { ObjectMap, Optional, Primitive, PropertyRecord, StringRecord } from './standard-types'
 import { Profile } from './enum-types'
@@ -107,6 +108,19 @@ export interface ParamMetadata {
      */
     required: boolean
 }
+// -------------------------------------------------------------------------------------------------
+export type CamelCasedPropsGlobal<T> = { [K in keyof T as TypeFest.CamelCase<K>]: T[K] };
+// -------------------------------------------------------------------------------------------------
+export interface AxiosProxyConfig {
+    host: string;
+    port?: number;
+    auth?: {
+        username: string;
+        password: string;
+    };
+}
+// -------------------------------------------------------------------------------------------------
+export type ClientLogLevel = 'error' | 'warning' | 'info';
 // -------------------------------------------------------------------------------------------------
 /**
  * Controller action properties.

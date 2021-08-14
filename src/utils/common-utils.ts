@@ -110,6 +110,13 @@ export namespace CommonUtils {
         return Object.keys(object).some(key => keys.includes(key))
     }
 
+    export const pick = <T>(words: T[], difficulty: number): T => {
+        const rand = Math.random() ** difficulty
+        const index = Math.round((words.length - 1) * rand)
+
+        return words[index]
+    }
+
     export const applyPropsToObject = (props: any = {}, object: any = {}): any => {
         for (const [key, value] of Object.entries(props)) {
             if (isPlainObject(value)) {
