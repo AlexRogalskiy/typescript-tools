@@ -6,6 +6,9 @@ import { DateTimeFormatOptions } from '../../typings/domain-types'
 export namespace DateTimes {
     dayjs.extend(preciseDiff)
 
+    const NANOSECOND_DIGITS = 9
+    const SECOND_TO_NANOSECONDS = Math.pow(10, NANOSECOND_DIGITS)
+
     const measures = {
         years: ['year', 'years'],
         months: ['month', 'months'],
@@ -97,6 +100,10 @@ export namespace DateTimes {
 
         // return 'on ' + systemDate
         return `on ${systemDate.toLocaleDateString()}`
+    }
+
+    export const nanosecondsToHrTime = (nanosecondsTime: number): number[] => {
+        return [Math.floor(nanosecondsTime / SECOND_TO_NANOSECONDS), nanosecondsTime % SECOND_TO_NANOSECONDS]
     }
 
     /**

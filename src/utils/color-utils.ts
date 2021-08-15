@@ -72,6 +72,25 @@ export namespace ColorsUtils {
         } ${x2.toFixed(1)},${y2.toFixed(1)}` // end point
     }
 
+    export const hexToBytesArray = (hexStr: string): Uint8Array => {
+        const hexStrLen = hexStr.length
+        const bytesArray: number[] = []
+
+        for (let i = 0; i < hexStrLen; i += 2) {
+            const hexPair = hexStr.substring(i, i + 2)
+            const hexVal = parseInt(hexPair, 16)
+            bytesArray.push(hexVal)
+        }
+
+        return Uint8Array.from(bytesArray)
+    }
+
+    export const bytesArrayToHex = (bytes: Uint8Array): string => {
+        return Array.from(bytes, byte => {
+            return `0${(byte & 0xff).toString(16)}`.slice(-2)
+        }).join()
+    }
+
     export const handRect = (x: number, y: number, w: number, h: number): any => {
         //assert(_.every([x, y, w, h], _.isFinite), 'x, y, w, h must be numeric')
         return `M${x},${y}${wobble(x, y, x + w, y)}${wobble(x + w, y, x + w, y + h)}${wobble(
