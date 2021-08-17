@@ -1,8 +1,4 @@
-export function address(
-    headers: Record<string, string>,
-    user: string,
-    host: string,
-): string {
+export function address(headers: Record<string, string>, user: string, host: string): string {
     // Check request-header for username
     const remoteUser = headers['remote-user']
     if (remoteUser) {
