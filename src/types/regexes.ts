@@ -117,6 +117,21 @@ export const fullMarkdownRegEx = /^\[([\w\s\d]+)]\((https?:\/\/[\w\d./?=#]+)\)$/
 export const markdownRegEx = /^\[([\w\s\d]+)]\(((?:\/|https?:\/\/)[\w\d./?=#]+)\)$/
 
 export const functionRegEx = /(?<!^)> function /
+
+export const dateRegex = /[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])-/g
+
+export const emailRegex = /^([\w_.\-+])+@([\w-]+\.)+([\w]{2,10})+$/
+
+export const phoneRegex = /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3,4})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/
+
+export const urlRegex = /^(?:\w+:)?\/\/([^\s.]+\.\S{2}|localhost[:?\d]*)\S*$/
+
+export const domainRegex = /^[a-zA-Z0-9_-]+\.[.a-zA-Z0-9_-]+$/
+
+export const zipcodeRegex = /^\d{5}([ -]?\d{4})?$/
+
+export const gitUrlRegex = /(?:git|ssh|https?|git@[-\w.]+):(\/\/)?(.*?)(\.git)(\/?|#[-\d\w._]+?)$/
+
 /**
  * Appends base route to a given regexp route.
  */
