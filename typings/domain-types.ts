@@ -55,14 +55,17 @@ export interface NetworkInterfaceInfoIPv6 extends NetworkInterfaceBase {
 export type NetworkInterfaceInfo = NetworkInterfaceInfoIPv4 | NetworkInterfaceInfoIPv6
 // -------------------------------------------------------------------------------------------------
 export type Pixels = HTMLImageElement | HTMLCanvasElement | HTMLVideoElement
+
 // -------------------------------------------------------------------------------------------------
 export interface DateTimeFormatOptions extends Intl.DateTimeFormatOptions {
     timeStyle?: 'full' | 'long' | 'medium' | 'short'
 }
+
 // -------------------------------------------------------------------------------------------------
 export type rgbaArray = number[]
 export type Int32ARGBColor = number
 export type ColorType = Int32ARGBColor | rgbaArray | string
+
 // -------------------------------------------------------------------------------------------------
 /**
  * Action Parameter metadata.
@@ -108,8 +111,10 @@ export interface ParamMetadata {
      */
     required: boolean
 }
+
 // -------------------------------------------------------------------------------------------------
 export type CamelCasedPropsGlobal<T> = { [K in keyof T as TypeFest.CamelCase<K>]: T[K] }
+
 // -------------------------------------------------------------------------------------------------
 export interface AxiosProxyConfig {
     host: string
@@ -119,6 +124,7 @@ export interface AxiosProxyConfig {
         password: string
     }
 }
+
 // -------------------------------------------------------------------------------------------------
 export type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined
 
@@ -131,6 +137,7 @@ export type DeepPartial<T> = T extends Builtin
     : T extends {}
     ? { [K in keyof T]?: DeepPartial<T[K]> }
     : Partial<T>
+
 // -------------------------------------------------------------------------------------------------
 export enum TestAttributes {
     /** Name of the testing framework executing the test */
@@ -154,10 +161,22 @@ export enum TestAttributes {
     /** the retry attempt to run this test */
     TEST_CURRENT_RETRY = 'test.current_retry',
 }
+
 // -------------------------------------------------------------------------------------------------
 export type BufferEncodingOption = 'buffer' | { encoding: 'buffer' }
 // -------------------------------------------------------------------------------------------------
 export type ClientLogLevel = 'error' | 'warning' | 'info'
+// -------------------------------------------------------------------------------------------------
+export type ErrorConstructor = new (...args: any[]) => Error
+
+// -------------------------------------------------------------------------------------------------
+export interface TryFn<Context = unknown> {
+    /**
+     * Attempt to run some assertions. The result must be explicitly committed or discarded or else
+     * the test will fail. The title may help distinguish attempts from one another.
+     */ <Args extends unknown[]>(title: string, context: Context, ...args: Args): Promise<any>
+}
+
 // -------------------------------------------------------------------------------------------------
 /**
  * Controller action properties.
@@ -184,6 +203,7 @@ export interface Action {
      */
     next?: Function
 }
+
 // -------------------------------------------------------------------------------------------------
 /**
  * Controller action's parameter type.
@@ -259,10 +279,12 @@ export type ActionType =
     | 'unsubscribe'
 // -------------------------------------------------------------------------------------------------
 export type ClassConstructor<T> = { new (...args: any[]): T }
+
 // -------------------------------------------------------------------------------------------------
 export interface ShutdownHandler {
     (): Promise<any> | any
 }
+
 // -------------------------------------------------------------------------------------------------
 export type HelmRepository = {
     name: string
