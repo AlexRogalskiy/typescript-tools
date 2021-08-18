@@ -31,7 +31,7 @@ export type LockRelease = {
 export type Reservation = {
     type: MessageType.RESERVE
     contextId: string
-    values: Array<bigint | number | string>
+    values: (bigint | number | string)[]
 }
 
 export type ReservedIndexes = {
