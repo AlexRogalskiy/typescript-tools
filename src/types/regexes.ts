@@ -15,6 +15,8 @@ const isRegex = require('is-regex')
 
 export const VERSION_REGEX = /(\d+\.\d+\.\d+)/
 
+export const BUILD_VERSION = /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/i
+
 export namespace Regexes {
     // # dockerfile_lint  ignore | # dockerfile_lint  -  ignore  | # dockerfile_lint = ignore
     export const TOKEN_INLINE_IGNORE = RegExp(/^#.*dockerfile_lint[ ]*\W[ ]*ignore.*$/)
