@@ -1,6 +1,7 @@
 import vagueTime from 'vague-time'
 import dayjs from 'dayjs'
 import preciseDiff from 'dayjs-precise-range'
+import moment from 'moment'
 import { DateTimeFormatOptions } from '../../typings/domain-types'
 
 export namespace DateTimes {
@@ -22,11 +23,17 @@ export namespace DateTimes {
         return d !== undefined && y !== undefined ? new Date(y, mOrTimestamp, d) : new Date(mOrTimestamp)
     }
 
+    export const rangeToDate = (range): [Date, Date] => [range[0].toDate(), range[1].toDate()]
+
     export const formatDate3 = (date: Date): string => {
         const a = `0${date.getDate()}`.slice(-2)
         const b = `0${date.getMonth() + 1}`.slice(-2, date.getFullYear())
 
         return `${a}/${b}`
+    }
+
+    export const convertDate = (d: Date) => {
+        return moment(d);
     }
 
     /**

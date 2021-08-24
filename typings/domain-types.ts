@@ -9,6 +9,37 @@ import { Color } from '../tools/color'
 import { Vector } from '../tools/vector'
 
 // -------------------------------------------------------------------------------------------------
+export type DurationLabelType = 'long' | 'standard' | 'short'
+export type DurationTemplate = 'HMS' | 'HM' | 'MS'
+export type DurationToken =
+    | 'S'
+    | 'SS'
+    | 'SSS'
+    | 's'
+    | 'ss'
+    | 'sss'
+    | 'm'
+    | 'mm'
+    | 'mmm'
+    | 'h'
+    | 'hh'
+    | 'hhh'
+    | 'd'
+    | 'dd'
+    | 'ddd'
+    | 'w'
+    | 'ww'
+    | 'www'
+    | 'M'
+    | 'MM'
+    | 'MMM'
+    | 'y'
+    | 'yy'
+    | 'yyy'
+
+export type DurationLabelDef = { [duration in DurationToken]: string }
+export type DurationTimeDef = { [template in DurationTemplate]: string }
+// -------------------------------------------------------------------------------------------------
 /** All built-in and custom scalars, mapped to their actual values */
 export interface Scalars {
     ID: string
