@@ -9,6 +9,17 @@ import { Color } from '../tools/color'
 import { Vector } from '../tools/vector'
 
 // -------------------------------------------------------------------------------------------------
+// A single T object or an array of this T object
+export type SingleOrArray<T> = T | T[]
+// -------------------------------------------------------------------------------------------------
+// A function which can have a T argument and a R result, both
+// set to void by default
+export type Function<T = void, R = void> = (param?: T) => R
+
+// A string or a function which can have a T argument and a R result,
+// both set to void by default
+export type StringOrFunction<T = void, R = void> = string | Function<T, R>
+// -------------------------------------------------------------------------------------------------
 export type DurationLabelType = 'long' | 'standard' | 'short'
 export type DurationTemplate = 'HMS' | 'HM' | 'MS'
 export type DurationToken =
