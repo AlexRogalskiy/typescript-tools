@@ -111,6 +111,23 @@ export namespace CommonUtils {
         return Object.keys(object).some(key => keys.includes(key))
     }
 
+    export const getConstantName = (name: string): string =>
+        name
+            .split('-')
+            .join('_')
+            .split(' ')
+            .join('_')
+            .toUpperCase()
+
+    export const toArray = (stringOrArray: string | string[]): string[] =>
+        Array.isArray(stringOrArray) ? stringOrArray : [stringOrArray]
+
+    export const stringifyVariables = <T extends { variables: { [key: string]: any } }>(request: T): T => {
+        const variables = request.variables || {}
+        const variablesString = JSON.stringify(variables)
+        return (Object as any).assign({}, request, { variables: variablesString })
+    }
+
     export const pick = <T>(words: T[], difficulty: number): T => {
         const rand = Math.random() ** difficulty
         const index = Math.round((words.length - 1) * rand)

@@ -12,6 +12,63 @@ import { Vector } from '../tools/vector'
 // A single T object or an array of this T object
 export type SingleOrArray<T> = T | T[]
 // -------------------------------------------------------------------------------------------------
+export type JSON = string | number | boolean | JSON[] | JSONDoc[] | JSONDoc
+
+export interface JSONDoc {
+    [key: string]: JSON | undefined
+}
+// -------------------------------------------------------------------------------------------------
+// Describes the Raft role of the broker for a given partition
+export enum PartitionBrokerRole {
+    LEADER = 0,
+    BROKER = 1,
+    INACTIVE = 2,
+}
+
+// Describes the current health of the partition
+export enum PartitionBrokerHealth {
+    HEALTHY = 0,
+    UNHEALTHY = 1,
+}
+
+export interface Partition {
+    partitionId: number
+    // the role of the broker for this partition
+    role: PartitionBrokerRole
+    // the health of this partition
+    health: PartitionBrokerHealth
+}
+
+export interface BrokerInfo {
+    nodeId: number
+    host: string
+    port: number
+    partitions: Partition[]
+}
+
+/* either process key or bpmn process id and version has to be specified*/
+export type GetProcessRequest =
+    | GetProcessRequestWithBpmnProcessId
+    | GetProcessRequestWithProcessKey
+
+export interface GetProcessRequestWithProcessKey {
+    readonly processKey: string
+}
+
+export interface GetProcessRequestWithBpmnProcessId {
+    /** by default set version = -1 to indicate to use the latest version */
+    version?: number
+    bpmnProcessId: string
+}
+
+export interface GetProcessResponse {
+    readonly processKey: string
+    readonly version: number
+    readonly bpmnProcessId: string
+    readonly resourceName: string
+    readonly bpmnXml: string
+}
+// -------------------------------------------------------------------------------------------------
 // A function which can have a T argument and a R result, both
 // set to void by default
 export type Function<T = void, R = void> = (param?: T) => R

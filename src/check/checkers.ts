@@ -81,6 +81,16 @@ export namespace Checkers {
         }
     }
 
+    /**
+     * Throw an Error if the variable passed is not a number
+     */
+     export const validateNumber = (variable: string | number, field: string): void => {
+        const value = Number(variable)
+        if (!Number.isInteger(value)) {
+            throw new Error(`${field} is malformed, value : ${variable}`)
+        }
+    }
+
     export const isWS = (code: number): boolean =>
         code === 0x0009 || // \t
         code === 0x000a || // \n

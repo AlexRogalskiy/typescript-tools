@@ -115,6 +115,11 @@ export namespace Objects {
         return Object.fromEntries(Object.entries(object).map(([key, value]) => [mapFunction(key), value]))
     }
 
+    export const cleanEmpty = (obj: any): any =>
+        Object.entries(obj)
+            .map(([k, v]) => [k, v && typeof v === 'object' ? cleanEmpty(v) : v])
+            .reduce((a, [k, v]) => (v == null ? a : { ...a, [k]: v }), {})
+
     // const data = {
     //     level1: {
     //         level2: {
