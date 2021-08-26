@@ -7,7 +7,7 @@ repos:
         entry: sh -c 'npm run lint:all'
         files: .js$
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v4.0.1
     hooks:
       - id: check-json
       - id: check-yaml
