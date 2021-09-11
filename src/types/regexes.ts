@@ -1,12 +1,12 @@
-import { cloneDeep, merge } from 'lodash'
+import _, {cloneDeep, merge} from 'lodash'
 
-import { Keys, Pair } from '../../typings/general-types'
-import { GradleDependency } from '../../typings/domain-types'
-import { Optional } from '../../typings/standard-types'
-import { TokenType } from '../../typings/enum-types'
+import {Keys, Pair} from '../../typings/general-types'
+import {GradleDependency} from '../../typings/domain-types'
+import {Optional} from '../../typings/standard-types'
+import {TokenType} from '../../typings/enum-types'
 
-import { Strings } from './strings'
-import { CommonUtils } from '../utils/common-utils'
+import {Strings} from './strings'
+import {CommonUtils} from '../utils/common-utils'
 import quote = Strings.quote
 import pipe = CommonUtils.pipe
 
@@ -134,6 +134,37 @@ export const zipcodeRegex = /^\d{5}([ -]?\d{4})?$/
 
 export const gitUrlRegex = /(?:git|ssh|https?|git@[-\w.]+):(\/\/)?(.*?)(\.git)(\/?|#[-\d\w._]+?)$/
 
+export const isUserNotInAllowList = (input: string, committer: string): boolean => {
+    const allowListPatterns: string[] = input.split(',')
+
+    return allowListPatterns.filter(pattern => {
+        pattern = pattern.trim()
+        if (pattern.includes('*')) {
+            const regex = _.escapeRegExp(pattern).split('\\*').join('.*')
+
+            return new RegExp(regex).test(committer)
+        }
+
+        return pattern === committer
+    }).length > 0
+}
+
+export const highlightTerm = (content: string, term: string): string[] => {
+    if (!term) {
+        return []
+    }
+
+    const re = new RegExp('(' + _.escapeRegExp(term) + ')', 'gi')
+    const result: any = content.split(re)
+
+    // Apply highlight to all odd elements
+    for (let i = 1, length = result.length; i < length; i += 2) {
+        result[i] = `${result[i]}`
+    }
+
+    return result
+}
+
 /**
  * Appends base route to a given regexp route.
  */
@@ -226,7 +257,7 @@ export const isHex = /^([-+])?([0-9a-f]+)$/i
 
 export const isOct = /^([-+])?([0-7]+)$/
 
-export const isNr = { test: nr => !isNaN(nr) && isFinite(nr) }
+export const isNr = {test: nr => !isNaN(nr) && isFinite(nr)}
 
 export const noMatch = (pivot: string): any => {
     const _match = match2(pivot)
@@ -463,19 +494,19 @@ export const regexChars = (() => {
 
     /** @const {Array} */
     const regex_pairs = [
-        { left: 'a', right: regex_a },
-        { left: 'e', right: regex_e },
-        { left: 'i', right: regex_i },
-        { left: 'o', right: regex_o },
-        { left: 'u', right: regex_u },
-        { left: 'y', right: regex_y },
-        { left: 'n', right: regex_n },
-        { left: 'k', right: regex_c },
-        { left: 's', right: regex_s },
-        { left: ' and ', right: regex_and },
-        { left: ' ', right: regex_space },
-        { left: '', right: regex_strip },
-        { left: ' ', right: regex_whitespace },
+        {left: 'a', right: regex_a},
+        {left: 'e', right: regex_e},
+        {left: 'i', right: regex_i},
+        {left: 'o', right: regex_o},
+        {left: 'u', right: regex_u},
+        {left: 'y', right: regex_y},
+        {left: 'n', right: regex_n},
+        {left: 'k', right: regex_c},
+        {left: 's', right: regex_s},
+        {left: ' and ', right: regex_and},
+        {left: ' ', right: regex_space},
+        {left: '', right: regex_strip},
+        {left: ' ', right: regex_whitespace},
     ]
 
     return (str: string): string => {
@@ -917,7 +948,7 @@ export const skipCommentLines = (
         ln += 1
     }
 
-    return { line: lines[ln], lineNumber: ln }
+    return {line: lines[ln], lineNumber: ln}
 }
 
 export const versionLikeSubstring = (input: string): Optional<string> => {
@@ -962,7 +993,7 @@ export const getPluginCommands = (content: string): string[] => {
         const match = PLUGIN_REGEX.exec(line)
         if (match) {
             // @ts-ignore
-            const { plugin } = match.groups
+            const {plugin} = match.groups
             result.add(`gem install ${quote(plugin)}`)
         }
     }
@@ -982,34 +1013,34 @@ export const transformRegUrl = (url: string): string => {
 }
 
 export const ESCAPE_CHARS = {
-    [TokenType.LineComment]: { match: regex('//.*?$') },
-    [TokenType.MultiComment]: { match: regex('(.*?)\\*.*?\\*\\/') },
-    [TokenType.Newline]: { match: regex('\r?\n/') },
-    [TokenType.Space]: { match: regex('[ \t\r]+/ ') },
-    [TokenType.Semicolon]: { match: regex(';') },
-    [TokenType.Colon]: { match: regex(':') },
-    [TokenType.Dot]: { match: regex('.') },
-    [TokenType.Comma]: { match: regex(',') },
+    [TokenType.LineComment]: {match: regex('//.*?$')},
+    [TokenType.MultiComment]: {match: regex('(.*?)\\*.*?\\*\\/')},
+    [TokenType.Newline]: {match: regex('\r?\n/')},
+    [TokenType.Space]: {match: regex('[ \t\r]+/ ')},
+    [TokenType.Semicolon]: {match: regex(';')},
+    [TokenType.Colon]: {match: regex(':')},
+    [TokenType.Dot]: {match: regex('.')},
+    [TokenType.Comma]: {match: regex(',')},
     // [TokenType.Operator]: { match: regex(':==|+=?|-=?|/=?|**?|.+|:') },
-    [TokenType.Assignment]: { match: regex('=') },
-    [TokenType.SingleQuoted]: { match: regex("'") },
-    [TokenType.DoubleQuoted]: { match: regex('"') },
+    [TokenType.Assignment]: {match: regex('=')},
+    [TokenType.SingleQuoted]: {match: regex("'")},
+    [TokenType.DoubleQuoted]: {match: regex('"')},
     [TokenType.Substitute]: {
         match: regex(
             '${s*[a-zA-Z_][a-zA-Z0-9_]*(?:s*.s*[a-zA-Z_][a-zA-Z0-9_]*)*s*}|$[a-zA-Z_][a-zA-Z0-9_]*(?:.[a-zA-Z_][a-zA-Z0-9_]*)*',
         ),
         value: (value: string): string => value.replace(/^\${?\s*/, '').replace(/\s*}$/, ''),
     },
-    [TokenType.Unknown]: { match: regex('.') },
-    [TokenType.Word]: { match: regex('[a-zA-Z$_][a-zA-Z0-9$_]+/') },
+    [TokenType.Unknown]: {match: regex('.')},
+    [TokenType.Word]: {match: regex('[a-zA-Z$_][a-zA-Z0-9$_]+/')},
     // [TokenType.LeftParen]: { match: regex('\\(') },
     // [TokenType.RightParen]: { match: regex('\\)') },
-    [TokenType.LeftBracket]: { match: regex('\\[') },
-    [TokenType.RightBracket]: { match: regex('\\]') },
-    [TokenType.LeftBrace]: { match: regex('\\{') },
-    [TokenType.RightBrace]: { match: regex('\\}') },
-    [TokenType.TripleSingleQuoted]: { match: regex("'''") },
-    [TokenType.TripleDoubleQuoted]: { match: regex('"""') },
+    [TokenType.LeftBracket]: {match: regex('\\[')},
+    [TokenType.RightBracket]: {match: regex('\\]')},
+    [TokenType.LeftBrace]: {match: regex('\\{')},
+    [TokenType.RightBrace]: {match: regex('\\}')},
+    [TokenType.TripleSingleQuoted]: {match: regex("'''")},
+    [TokenType.TripleDoubleQuoted]: {match: regex('"""')},
     [TokenType.EscapedChar]: {
         match: regex('\\[\'"bfnrt\\]'),
         value: (value: string): string => {
@@ -1050,7 +1081,7 @@ export const isHostname = (value: string): boolean => {
     return matchPattern(value, regExp)
 }
 
-export const inRange = (value, { min, max, inclusive = true }): boolean => {
+export const inRange = (value, {min, max, inclusive = true}): boolean => {
     if (min > max) {
         throw new Error('Max value must be bigger then min value')
     }

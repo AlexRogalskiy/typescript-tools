@@ -69,6 +69,28 @@ export interface GetProcessResponse {
     readonly bpmnXml: string
 }
 // -------------------------------------------------------------------------------------------------
+export interface SearchBoxProps {
+    placeholder: string;
+    value?: string;
+    onSearch?: (string) => void;
+}
+
+export interface SearchBoxState {
+    value: string;
+}
+// -------------------------------------------------------------------------------------------------
+export interface GraphViewportProps {
+    svgRenderer: any;
+    typeGraph: any;
+    displayOptions: any;
+
+    selectedTypeID: string;
+    selectedEdgeID: string;
+
+    onSelectNode: (id: string) => void;
+    onSelectEdge: (id: string) => void;
+}
+// -------------------------------------------------------------------------------------------------
 // A function which can have a T argument and a R result, both
 // set to void by default
 export type Function<T = void, R = void> = (param?: T) => R

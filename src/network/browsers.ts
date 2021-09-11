@@ -176,6 +176,48 @@ export namespace Browsers {
         return [...document.querySelectorAll('*')[Symbol.iterator]].filter(el => el.offsetWidth > docWidth)
     }
 
+    export const forEachNode = (parent: Element, selector: string, fn): void => {
+        const $nodes = parent.querySelectorAll(selector)
+        for (let i = 0; i < $nodes.length; i++) {
+            fn($nodes[i])
+        }
+    }
+
+    export const withClass = (parent: Element, selector: string, className: string): void => {
+        forEachNode(parent, selector, (node) => node.classList.add(className))
+    }
+
+    export const withoutClass = (
+        parent: Element,
+        selector: string,
+        className: string,
+    ): void => {
+        forEachNode(parent, selector, (node) => node.classList.remove(className))
+    }
+
+    export const stringToSvg = (svgString: string): SVGElement => {
+        const svgDoc = new DOMParser().parseFromString(svgString, 'image/svg+xml')
+
+        return <SVGElement>(document.importNode(svgDoc.documentElement, true) as any)
+    }
+
+    export const getParent = (elem: Element, className: string): Element | null => {
+        while (elem && elem.tagName !== 'svg') {
+            if (elem.classList.contains(className)) return elem
+            elem = elem.parentNode as Element
+        }
+
+        return null;
+    }
+
+    export const isNode = (elem: Element): boolean => {
+        return getParent(elem, 'node') != null
+    }
+
+    export const isEdge = (elem: Element): boolean => {
+        return getParent(elem, 'edge') != null
+    }
+
     export const getScrollPosition = (el = window): any => ({
         x: el.pageXOffset !== undefined ? el.pageXOffset : el['scrollLeft'],
         y: el.pageYOffset !== undefined ? el.pageYOffset : el['scrollTop'],

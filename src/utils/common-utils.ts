@@ -128,6 +128,12 @@ export namespace CommonUtils {
         return (Object as any).assign({}, request, { variables: variablesString })
     }
 
+    export const normalizeDisplayOptions = (options: any[], defaultDisplayOptions: any[]): any[] => {
+        return options != null
+            ? { ...defaultDisplayOptions, ...options }
+            : defaultDisplayOptions
+    }
+
     export const pick = <T>(words: T[], difficulty: number): T => {
         const rand = Math.random() ** difficulty
         const index = Math.round((words.length - 1) * rand)

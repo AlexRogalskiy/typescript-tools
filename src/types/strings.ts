@@ -146,6 +146,32 @@ export namespace Strings {
         return newValue
     }
 
+
+    export const buildId = (...parts: any[]): string => {
+        return parts.join('::')
+    }
+
+    export const typeNameToId = (name: string): string => {
+        return buildId('TYPE', name)
+    }
+
+    export const extractTypeId = (id: string): string => {
+        const [, type] = id.split('::')
+
+        return buildId('TYPE', type)
+    }
+
+    export const objectValues = <X>(
+        object: Record<string, X>,
+        stringify: (X) => string,
+    ): string => {
+        return _.values(object).map(stringify).join('\n')
+    }
+
+    export const array = <X>(array: [X], stringify: (X) => string): string => {
+        return array ? array.map(stringify).join('\n') : ''
+    }
+
     // hashNode(JSON.stringify({ a: 'a', b: [1, 2, 3, 4], foo: { c: 'bar' } })).then(
     //     console.log
     // );
