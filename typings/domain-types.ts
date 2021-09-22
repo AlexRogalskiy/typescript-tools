@@ -79,6 +79,13 @@ export interface SearchBoxState {
     value: string;
 }
 // -------------------------------------------------------------------------------------------------
+export type PromiseOrValue<T> = Promise<T> | T
+// -------------------------------------------------------------------------------------------------
+/**
+ * A KeyMap describes each the traversable properties of each kind of node.
+ */
+export type VisitorKeyMap<T> = { [P in keyof T]: ReadonlyArray<keyof T[P]> }
+// -------------------------------------------------------------------------------------------------
 export interface GraphViewportProps {
     svgRenderer: any;
     typeGraph: any;
@@ -550,7 +557,7 @@ export type SignalConstants = {
     [key in NodeJS.Signals]: number
 }
 // -------------------------------------------------------------------------------------------------
-export type Maybe<T> = T
+export type Maybe<T> = Optional<T>
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> }
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> }
