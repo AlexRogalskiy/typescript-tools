@@ -233,6 +233,16 @@ export namespace Arrays {
         return res
     }
 
+    export const isArrayLike = (x: any): boolean => {
+        return (
+            typeof x === 'object' &&
+            x !== null &&
+            typeof x.length === 'number' &&
+            (x.length === 0 ||
+                (x.length > 0 && Object.prototype.hasOwnProperty.call(x, x.length - 1)))
+        )
+    }
+
     // findLastN([1, 2, 4, 6], n => n % 2 === 0, 2); // [4, 6]
     // findLastN([1, 2, 4, 6], n => n % 2 === 0, 5); // [2, 4, 6]
     export const findLastN = (arr: any[], matcher: any, n = 1): any => {

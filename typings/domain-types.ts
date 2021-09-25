@@ -553,6 +553,14 @@ export interface Sampler<T> {
 }
 
 // -------------------------------------------------------------------------------------------------
+// If a custom cache is provided, it must be of this type (a subset of ES6 Map).
+export type CacheMap<K, V> = {
+    get(key: K): V | void;
+    set(key: K, value: V): any;
+    delete(key: K): any;
+    clear(): any;
+}
+// -------------------------------------------------------------------------------------------------
 export type SignalConstants = {
     [key in NodeJS.Signals]: number
 }
