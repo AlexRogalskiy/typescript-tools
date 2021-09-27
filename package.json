@@ -74,7 +74,7 @@
         "@material/button": "^4.0.0",
         "@material/checkbox": "^4.0.0",
         "@material/elevation": "^4.0.0",
-        "@material/layout-grid": "^4.0.0",
+        "@material/layout-grid": "^13.0.0",
         "@material/radio": "^4.0.0",
         "@material/ripple": "^4.0.0",
         "@material/switch": "^4.0.0",
