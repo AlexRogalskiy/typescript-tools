@@ -172,6 +172,9 @@ export namespace Strings {
         return array ? array.map(stringify).join('\n') : ''
     }
 
+    export const replaceOddChars = (str: string): string =>
+        str.replace(/[^_a-zA-Z0-9]/g, '_');
+
     // hashNode(JSON.stringify({ a: 'a', b: [1, 2, 3, 4], foo: { c: 'bar' } })).then(
     //     console.log
     // );
