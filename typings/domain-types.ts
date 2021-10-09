@@ -616,6 +616,68 @@ export const isArrayType = (
     (Object.keys(jsonSchema).includes('items') || jsonSchema.type === 'array');
 
 // -------------------------------------------------------------------------------------------------
+export type EventOptions = {
+    /**
+     * Callback called when the event is successfully sent.
+     */
+    readonly callback?: () => void;
+    /**
+     * Properties to be bound to the event.
+     */
+    readonly props?: { readonly [propName: string]: string };
+}
+
+export type Locations = {
+    readonly [propName: string]: string
+}
+
+export type PlausibleInitOptions = {
+    /**
+     * If true, pageviews will be tracked when the URL hash changes.
+     * Enable this if you are using a frontend that uses hash-based routing.
+     */
+    readonly hashMode?: boolean;
+    /**
+     * Set to true if you want events to be tracked when running the site locally.
+     */
+    readonly trackLocalhost?: boolean;
+    /**
+     * The domain to bind the event to.
+     * Defaults to `location.hostname`
+     */
+    readonly domain?: Locations["hostname"];
+    /**
+     * The API host where the events will be sent.
+     * Defaults to `'https://plausible.io'`
+     */
+    readonly apiHost?: string;
+}
+
+export type PlausibleEventData = {
+    /**
+     * The URL to bind the event to.
+     * Defaults to `location.href`.
+     */
+    readonly url?: Locations["href"];
+    /**
+     * The referrer to bind the event to.
+     * Defaults to `document.referrer`
+     */
+    readonly referrer?: Document['referrer'] | null;
+    /**
+     * The current device's width.
+     * Defaults to `window.innerWidth`
+     */
+    readonly deviceWidth?: Window['innerWidth'];
+}
+
+export type PlausibleOptions = PlausibleInitOptions & PlausibleEventData
+
+export type TrackPageview = (
+    eventData?: PlausibleOptions,
+    options?: EventOptions
+) => void
+// -------------------------------------------------------------------------------------------------
 // If a custom cache is provided, it must be of this type (a subset of ES6 Map).
 export type CacheMap<K, V> = {
     get(key: K): V | void;
