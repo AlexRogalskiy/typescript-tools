@@ -686,6 +686,53 @@ export type CacheMap<K, V> = {
     clear(): any;
 }
 // -------------------------------------------------------------------------------------------------
+export type Exact<T extends { [key: string]: unknown }> = {
+    [K in keyof T]: T[K];
+}
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
+    { [SubKey in K]?: Maybe<T[SubKey]> }
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
+    { [SubKey in K]: Maybe<T[SubKey]> }
+// -------------------------------------------------------------------------------------------------
+export type PromiseReturnType<T> = T extends PromiseLike<infer U> ? U : T
+export type ClientResponse<
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    T extends (args?: any) => Record<string, any>
+    > = PromiseReturnType<ReturnType<T>>
+// -------------------------------------------------------------------------------------------------
+/** All built-in and custom scalars, mapped to their actual values */
+export type Scalars = {
+    ID: string;
+    String: string;
+    Boolean: boolean;
+    Int: number;
+    Float: number;
+    json: any;
+    jsonb: any;
+    timestamp: any;
+    timestamptz: any;
+    uuid: any;
+}
+
+export type Alertmanager = {
+    config?: Maybe<Scalars["String"]>;
+    online: Scalars["Boolean"];
+    tenant_id: Scalars["String"];
+}
+
+/** expression to compare columns of type Boolean. All fields are combined with logical 'AND'. */
+export type Boolean_Comparison_Exp = {
+    _eq?: Maybe<Scalars["Boolean"]>;
+    _gt?: Maybe<Scalars["Boolean"]>;
+    _gte?: Maybe<Scalars["Boolean"]>;
+    _in?: Maybe<Array<Scalars["Boolean"]>>;
+    _is_null?: Maybe<Scalars["Boolean"]>;
+    _lt?: Maybe<Scalars["Boolean"]>;
+    _lte?: Maybe<Scalars["Boolean"]>;
+    _neq?: Maybe<Scalars["Boolean"]>;
+    _nin?: Maybe<Array<Scalars["Boolean"]>>;
+}
+// -------------------------------------------------------------------------------------------------
 export type SignalConstants = {
     [key in NodeJS.Signals]: number
 }
