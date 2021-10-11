@@ -701,18 +701,18 @@ export type ClientResponse<
     > = PromiseReturnType<ReturnType<T>>
 // -------------------------------------------------------------------------------------------------
 /** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
-    ID: string;
-    String: string;
-    Boolean: boolean;
-    Int: number;
-    Float: number;
-    json: any;
-    jsonb: any;
-    timestamp: any;
-    timestamptz: any;
-    uuid: any;
-}
+// export type Scalars = {
+//     ID: string;
+//     String: string;
+//     Boolean: boolean;
+//     Int: number;
+//     Float: number;
+//     json: any;
+//     jsonb: any;
+//     timestamp: any;
+//     timestamptz: any;
+//     uuid: any;
+// }
 
 export type Alertmanager = {
     config?: Maybe<Scalars["String"]>;
@@ -733,14 +733,160 @@ export type Boolean_Comparison_Exp = {
     _nin?: Maybe<Array<Scalars["Boolean"]>>;
 }
 // -------------------------------------------------------------------------------------------------
+export interface Credentials {
+    username: string;
+    password: string;
+    authcode?: string;
+}
+
+export type TokenType = "admin" | "api";
+
+export type AccessToken = {
+    access_token: string;
+    expired_in: number;
+    refresh_token: string;
+    expired_at: number;
+};
+
+export interface TokenProvider {
+    getToken(): Promise<AccessToken>;
+    clearToken(): void;
+    getAuthHeader(): string;
+}
+
+export interface TokenStore {
+    set(token: AccessToken | undefined): void;
+    get(): Promise<AccessToken | undefined>;
+    clear(): void;
+}
+
+
+export interface HttpClient {
+    get: <T extends object>(path: string, params: object) => Promise<T>;
+    getData: (path: string, params: object) => Promise<ArrayBuffer>;
+    post: <T extends object>(path: string, params: object) => Promise<T>;
+    postData: <T extends object>(path: string, params: FormData) => Promise<T>;
+    put: <T extends object>(path: string, params: object) => Promise<T>;
+    delete: <T extends object>(path: string, params: object) => Promise<T>;
+}
+
+export type ErrorResponse<T = any> = {
+    data: T;
+    status: number;
+    statusText: string;
+    headers: any;
+};
+
+export type HttpResponse<T = any> = {
+    data: T;
+    headers: any;
+};
+
+// export type HttpMethod = "get" | "post" | "put" | "delete";
+export type Params = { [key: string]: unknown };
+
+export type ProxyConfig = {
+    host: string;
+    port: number;
+    auth?: {
+        username: string;
+        password: string;
+    };
+};
+
+export interface HttpClientError<T = ErrorResponse> extends Error {
+    response?: T;
+}
+export interface ResponseHandler {
+    handle: <T = any>(response: Promise<HttpResponse<T>>) => Promise<T>;
+}
+
+export type RequestConfig = {
+    method: HttpMethod;
+    url: string;
+    headers: any;
+    httpsAgent?: any;
+    data?: any;
+    proxy?: ProxyConfig;
+};
+
+export interface RequestConfigBuilder {
+    build: (
+        method: HttpMethod,
+        path: string,
+        params: Params | FormData | Array<any>,
+        options?: { responseType: "arraybuffer" }
+    ) => Promise<RequestConfig>;
+    getTokenProvider(): TokenProvider | undefined;
+}
+
+export type AdminTokenAuth = {
+    type: "adminToken";
+    adminToken: string;
+};
+
+export type ApiTokenAuth = {
+    type: "apiToken";
+    apiToken: string | string[];
+};
+
+export type PasswordAuth = {
+    type: "password";
+    username: string;
+    password: string;
+};
+
+export type SessionAuth = {
+    type: "session";
+};
+
+export type OAuthTokenAuth = {
+    type: "oAuthToken";
+    oAuthToken: string;
+};
+
+export type CustomizeAuth = {
+    type: "customizeAuth";
+    authHeader: string;
+    getToken(): string;
+};
+
+export type DiscriminatedAuth =
+    | AdminTokenAuth
+    | ApiTokenAuth
+    | PasswordAuth
+    | SessionAuth
+    | OAuthTokenAuth
+    | CustomizeAuth;
+
+export type BasicAuth = {
+    username: string;
+    password: string;
+}
+
+export const SESSION_TOKEN_KEY = "__REQUEST_TOKEN__";
+
+export type PlatformDeps = {
+    readFileFromPath: (
+        filePath: string
+    ) => Promise<{ name: string; data: unknown }>;
+    getRequestToken: () => Promise<string>;
+    getDefaultAuth: () => DiscriminatedAuth;
+    buildPlatformDependentConfig: (params: object) => object;
+    buildHeaders: (params: { userAgent?: string }) => Record<string, string>;
+    buildFormDataValue: (data: unknown) => unknown;
+    buildBaseUrl: (baseUrl?: string) => string;
+    getVersion: () => string;
+}
+// -------------------------------------------------------------------------------------------------
 export type SignalConstants = {
     [key in NodeJS.Signals]: number
 }
 // -------------------------------------------------------------------------------------------------
 export type Maybe<T> = Optional<T>
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> }
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> }
+// export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
+// export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> }
+// export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> }
 
 // -------------------------------------------------------------------------------------------------
 export type ILocaleProvider = (locale: string) => Promise<string[][]> | string[][]
