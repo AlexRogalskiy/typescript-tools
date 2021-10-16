@@ -879,6 +879,36 @@ export type PlatformDeps = {
     getVersion: () => string;
 }
 // -------------------------------------------------------------------------------------------------
+export interface LogLevel {
+    TRACE: 0;
+    DEBUG: 1;
+    INFO: 2;
+    WARN: 3;
+    ERROR: 4;
+    SILENT: 5;
+}
+
+/**
+ * Possible log level numbers.
+ */
+export type LogLevelNumbers = LogLevel[keyof LogLevel];
+
+/**
+ * Possible log level descriptors, may be string, lower or upper case, or number.
+ */
+export type LogLevelDesc = LogLevelNumbers
+    | 'trace'
+    | 'debug'
+    | 'info'
+    | 'warn'
+    | 'error'
+    | 'silent'
+    | keyof LogLevel;
+
+export type LoggingMethod = (...message: any[]) => void;
+
+export type MethodFactory = (methodName: string, level: LogLevelNumbers, loggerName: string | symbol) => LoggingMethod;
+// -------------------------------------------------------------------------------------------------
 export type Nullable<T> = T | null
 
 export type Undefinable<T> = T | undefined
