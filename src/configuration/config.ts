@@ -87,3 +87,17 @@ export function list(dir: string, fn: (f: string) => boolean): Promise<string[]>
         })
     })
 }
+
+function isReadStream(obj) {
+    // some streams are readable but do not have `read()`, however
+    // we can reliably detect readability by testing for `resume()`
+    return isStream(obj) && typeof obj.resume === 'function';
+}
+
+function isWriteStream(obj) {
+    return isStream(obj) && typeof obj.write === 'function';
+}
+
+function isStream(obj) {
+    return obj && typeof obj.pipe === 'function';
+}
