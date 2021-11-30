@@ -146,7 +146,7 @@
         "jest-circus": "^27.0.4",
         "js-beautify": "^1.14.0",
         "js-yaml": "^4.1.0",
-        "jsdom": "16.6.0",
+        "jsdom": "18.1.1",
         "jsdom-global": "3.0.2",
         "json-schemify": "0.0.10",
         "json2yaml": "^1.1.0",
