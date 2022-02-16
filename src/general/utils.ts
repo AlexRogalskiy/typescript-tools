@@ -14,6 +14,12 @@ export function classes(...args: Array<string | {[cls: string]: boolean}>) {
     return classes.join(' ');
 }
 
+export const getISODate = (dateOffset?: number): string => {
+    let d = new Date();
+    dateOffset && d.setDate(d.getDate() + dateOffset);
+    return d.toISOString().split("T")[0];
+}
+
 export function compose<T extends Malevic.Component>(type: T, ...wrappers: Array<(t: T) => T>) {
     return wrappers.reduce((t, w) => w(t), type);
 }
