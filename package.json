@@ -134,7 +134,7 @@
         "got": "^11.8.2",
         "gradient-string": "^1.2.0",
         "grommet": "^2.17.3",
-        "gzip-size": "^6.0.0",
+        "gzip-size": "^7.0.0",
         "hasha": "5.2.2",
         "http-errors": "^1.8.0",
         "humanize-duration": "^3.27.0",
