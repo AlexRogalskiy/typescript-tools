@@ -131,7 +131,7 @@
         "fs-extra": "^10.0.0",
         "functools-ts": "^1.0.3",
         "github-url-parse": "^0.1.0",
-        "got": "^11.8.2",
+        "got": "^12.0.0",
         "gradient-string": "^1.2.0",
         "grommet": "^2.17.3",
         "gzip-size": "^6.0.0",
