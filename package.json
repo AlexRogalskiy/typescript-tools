@@ -195,7 +195,7 @@
         "utility-types": "^3.10.0",
         "uuid": "^8.3.2",
         "vague-time": "^2.4.2",
-        "winston": "^2.4.5",
+        "winston": "^3.0.0",
         "ws": "^7.4.3",
         "xmldoc": "^1.1.2",
         "xmldom": "^0.6.0",
