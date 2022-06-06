@@ -27,7 +27,7 @@ jobs:
           key: npm-v14-${{ runner.os }}-refs/heads/master-${{ hashFiles('package.json') }}
 
       - name: Install Node.js and npm
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3.3.0
         with:
           node-version: 14.x
           registry-url: https://registry.npmjs.org
