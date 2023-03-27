@@ -156,7 +156,7 @@
         "license-checker": "^25.0.1",
         "markdown-link-check": "^3.8.7",
         "mime-types": "^2.1.31",
-        "minimatch": "^3.0.4",
+        "minimatch": "^7.0.0",
         "mkdirp": "^1.0.4",
         "mobx": "^6.3.2",
         "node-object-hash": "^2.3.7",
