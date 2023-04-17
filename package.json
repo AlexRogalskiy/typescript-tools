@@ -152,7 +152,7 @@
         "json2yaml": "^1.1.0",
         "jsonlint": "^1.6.3",
         "jsonwebtoken": "^8.5.1",
-        "license-badger": "^0.19.0",
+        "license-badger": "^0.21.0",
         "license-checker": "^25.0.1",
         "markdown-link-check": "^3.8.7",
         "mime-types": "^2.1.31",
