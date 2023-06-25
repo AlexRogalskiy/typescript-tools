@@ -157,7 +157,7 @@
         "markdown-link-check": "^3.8.7",
         "mime-types": "^2.1.31",
         "minimatch": "^3.0.4",
-        "mkdirp": "^1.0.4",
+        "mkdirp": "^3.0.0",
         "mobx": "^6.3.2",
         "node-object-hash": "^2.3.7",
         "object-hash": "^2.2.0",
