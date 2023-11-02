@@ -163,7 +163,7 @@
         "object-hash": "^2.2.0",
         "opener": "^1.5.2",
         "ow": "^0.24.1",
-        "parse-json": "^5.2.0",
+        "parse-json": "^8.0.0",
         "path-type": "^4.0.0",
         "prettier": "^2.1.2",
         "pretty-quick": "^3.1.0",
