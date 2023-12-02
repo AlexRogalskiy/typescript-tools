@@ -110,7 +110,7 @@
         "d3-array": "^1.2.1",
         "d3-scale": "^2.0.0",
         "d3-shape": "^1.2.0",
-        "date-fns": "^2.22.1",
+        "date-fns": "^3.0.0-alpha",
         "dateformat": "^4.5.1",
         "dayjs": "^1.10.5",
         "dayjs-precise-range": "^1.0.1",
