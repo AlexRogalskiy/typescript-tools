@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Mark issue stale
-      - uses: actions/stale@v3
+      - uses: actions/stale@v9
         with:
           days-before-pr-stale: 30
           days-before-pr-close: 14
