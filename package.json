@@ -193,7 +193,7 @@
         "unzip-stream": "^0.3.1",
         "util.promisify": "^1.1.1",
         "utility-types": "^3.10.0",
-        "uuid": "^8.3.2",
+        "uuid": "^10.0.0",
         "vague-time": "^2.4.2",
         "winston": "^2.4.5",
         "ws": "^7.4.3",
