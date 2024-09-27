@@ -132,7 +132,7 @@
         "functools-ts": "^1.0.3",
         "github-url-parse": "^0.1.0",
         "got": "^11.8.2",
-        "gradient-string": "^1.2.0",
+        "gradient-string": "^3.0.0",
         "grommet": "^2.17.3",
         "gzip-size": "^6.0.0",
         "hasha": "5.2.2",
