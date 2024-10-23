@@ -8,6 +8,6 @@ jobs:
   lint-md:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: npm install --legacy-peer-deps
       - run: npx remark --use validate-links . .github
