@@ -90,7 +90,7 @@
         "@types/humps": "^2.0.0",
         "@types/jest": "^26.0.23",
         "@types/lodash.mergewith": "^4.6.6",
-        "@types/minimatch": "^3.0.4",
+        "@types/minimatch": "^6.0.0",
         "@types/prettier": "^2.2.3",
         "@types/shelljs": "^0.8.8",
         "@types/winston": "^2.4.4",
