@@ -183,7 +183,7 @@
         "styled-components": "^5.3.0",
         "ts-jest": "^27.0.3",
         "ts-node": "^10.0.0",
-        "tsdx": "^0.14.1",
+        "tsdx": "^2.0.0",
         "type-fest": "^0.20.2",
         "typed-rest-client": "^1.8.4",
         "typedoc": "^0.21.1",
